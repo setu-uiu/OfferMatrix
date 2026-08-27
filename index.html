@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OfferMatrix – Bangladesh's Smart Deal Platform | Compare Everything, Save More</title>
+  <meta name="description"
+    content="OfferMatrix – Compare food, rides, skin care & more across 100+ stores. Best prices, best offers, all in one place in Bangladesh." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --pink: #ff4d8d;
+      --pink2: #ff1a6e;
+      --green: #22c55e;
+      --purple: #a855f7;
+      --orange: #f97316;
+      --text-dark: #111827;
+      --text-mid: #4b5563;
+      --text-light: #9ca3af;
+      --font: 'Inter', sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--text-dark);
+      background: #fff;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+      padding: 0 2.5rem;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .nav-inner {
+      max-width: 1260px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      height: 64px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-shrink: 0;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #ff4d8d, #ff6b35);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(255, 77, 141, 0.38);
+    }
+
+    .logo-text {
+      font-size: 1.28rem;
+      font-weight: 800;
+      color: #111827;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-green {
+      color: #22c55e;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.1rem;
+      flex: 1;
+    }
+
+    .nav-link {
+      font-size: 0.86rem;
+      font-weight: 500;
+      color: #4b5563;
+      padding: 6px 13px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--pink);
+      background: rgba(255, 77, 141, 0.06);
+    }
+
+    .nav-link.active {
+      color: var(--pink);
+      font-weight: 700;
+      position: relative;
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 22px;
+      height: 2.5px;
+      background: var(--pink);
+      border-radius: 2px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-shrink: 0;
+    }
+
+    .nav-saved {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .83rem;
+      font-weight: 500;
+      color: #4b5563;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: all .2s;
+    }
+
+    .nav-saved:hover {
+      color: var(--pink);
+    }
+
+    .nav-bell {
+      background: none;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      width: 37px;
+      height: 37px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #6b7280;
+      transition: all .2s;
+    }
+
+    .nav-bell:hover {
+      border-color: var(--pink);
+      color: var(--pink);
+    }
+
+    .btn-find-deal {
+      background: linear-gradient(135deg, #ff4d8d, #ff1a6e);
+      color: #fff;
+      font-size: .86rem;
+      font-weight: 700;
+      padding: 10px 22px;
+      border-radius: 50px;
+      transition: all .3s;
+      box-shadow: 0 4px 16px rgba(255, 77, 141, .38);
+    }
+
+    .btn-find-deal:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(255, 77, 141, .5);
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(150deg, #fff0f7 0%, #fff5ef 18%, #f0fff9 52%, #eef8ff 78%, #f5f0ff 100%);
+      min-height: calc(100vh - 64px);
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(72px);
+      pointer-events: none;
+    }
+
+    .b1 {
+      width: 640px;
+      height: 640px;
+      background: radial-gradient(circle, #ffd6e7 0%, #ffe8f2 55%, transparent 78%);
+      top: -210px;
+      left: -170px;
+      opacity: .75;
+      animation: bF 9s ease-in-out infinite;
+    }
+
+    .b2 {
+      width: 520px;
+      height: 520px;
+      background: radial-gradient(circle, #c6f6e1 0%, #d4faea 55%, transparent 78%);
+      bottom: -80px;
+      right: 220px;
+      opacity: .65;
+      animation: bF 11s ease-in-out infinite reverse;
+    }
+
+    .b3 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, #e9d5ff 0%, #f3e8ff 55%, transparent 78%);
+      top: 28%;
+      right: -40px;
+      opacity: .55;
+      animation: bF 13s ease-in-out infinite;
+    }
+
+    @keyframes bF {
+
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1)
+      }
+
+      40% {
+        transform: translate(18px, -18px) scale(1.04)
+      }
+
+      70% {
+        transform: translate(-12px, 14px) scale(.97)
+      }
+    }
+
+    .leaf {
+      position: absolute;
+      font-size: 1.9rem;
+      pointer-events: none;
+      z-index: 1;
+      animation: lS 6s ease-in-out infinite;
+    }
+
+    .l1 {
+      top: 11%;
+      left: 34%;
+      animation-delay: 0s;
+    }
+
+    .l2 {
+      top: 5%;
+      right: 27%;
+      animation-delay: 1.8s;
+    }
+
+    .l3 {
+      top: 37%;
+      right: 13%;
+      font-size: 1.4rem;
+      animation-delay: 3.2s;
+    }
+
+    .l4 {
+      top: 57%;
+      left: 46%;
+      font-size: 1.1rem;
+      animation-delay: 2s;
+    }
+
+    @keyframes lS {
+
+      0%,
+      100% {
+        transform: rotate(-12deg) translateY(0)
+      }
+
+      50% {
+        transform: rotate(12deg) translateY(-13px)
+      }
+    }
+
+    /* GRID */
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 1260px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr;
+      gap: 1.8rem;
+      padding: 2.8rem 2.5rem 2rem;
+      align-items: start;
+    }
+
+    /* LEFT */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, .85);
+      border: 1.5px solid rgba(34, 197, 94, .35);
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: .67rem;
+      font-weight: 700;
+      letter-spacing: 1.1px;
+      color: #065f46;
+      margin-bottom: 1.1rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .bdot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pu 2s infinite;
+    }
+
+    @keyframes pu {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: .55;
+        transform: scale(.8)
+      }
+    }
+
+    .hero-title {
+      font-size: 2.78rem;
+      font-weight: 900;
+      line-height: 1.12;
+      color: #111827;
+      margin-bottom: .7rem;
+      letter-spacing: -1.5px;
+    }
+
+    .hg {
+      background: linear-gradient(130deg, #ff4d8d 0%, #ff7e5f 55%, #ffb347 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      display: inline-block;
+    }
+
+    .hg::after {
+      content: '';
+      position: absolute;
+      bottom: 3px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #ff4d8d, #ffb347);
+      border-radius: 2px;
+      opacity: .42;
+    }
+
+    .hero-sub {
+      font-size: .97rem;
+      color: #4b5563;
+      line-height: 1.7;
+      margin-bottom: 1.6rem;
+    }
+
+    .cat-wrap {
+      display: flex;
+      gap: 1.1rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .cat-it {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      color: #4b5563;
+      font-size: .78rem;
+      font-weight: 600;
+      transition: transform .2s;
+    }
+
+    .cat-it:hover {
+      transform: translateY(-3px);
+    }
+
+    .cat-ic {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.45rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+    }
+
+    .co {
+      background: linear-gradient(135deg, #fff0e6, #ffe0cc);
+    }
+
+    .cg {
+      background: linear-gradient(135deg, #e6fff0, #ccffe0);
+    }
+
+    .cb {
+      background: linear-gradient(135deg, #e8eeff, #d0dcff);
+    }
+
+    .cy {
+      background: linear-gradient(135deg, #fffbe6, #fff5cc);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 50px;
+      padding: 5px 5px 5px 14px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, .1);
+      border: 1.5px solid rgba(0, 0, 0, .06);
+      gap: 6px;
+      margin-bottom: .85rem;
+      transition: box-shadow .2s;
+    }
+
+    .search-bar:focus-within {
+      box-shadow: 0 4px 24px rgba(255, 77, 141, .22);
+      border-color: rgba(255, 77, 141, .3);
+    }
+
+    .si {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: .87rem;
+      color: #111827;
+      background: transparent;
+      font-family: var(--font);
+    }
+
+    .si::placeholder {
+      color: #9ca3af;
+    }
+
+    .sdv {
+      width: 1px;
+      height: 19px;
+      background: #e5e7eb;
+      flex-shrink: 0;
+    }
+
+    .ss {
+      border: none;
+      outline: none;
+      font-size: .83rem;
+      color: #4b5563;
+      background: transparent;
+      cursor: pointer;
+      font-family: var(--font);
+      font-weight: 500;
+      padding-right: 3px;
+    }
+
+    .btn-srch {
+      background: linear-gradient(135deg, #ff4d8d, #ff1a6e);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 22px;
+      font-size: .86rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font);
+      flex-shrink: 0;
+      transition: all .2s;
+    }
+
+    .btn-srch:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 16px rgba(255, 77, 141, .45);
+    }
+
+    .popular {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .pl {
+      font-size: .75rem;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .pt {
+      font-size: .75rem;
+      color: #374151;
+      background: rgba(255, 255, 255, .88);
+      border: 1.5px solid rgba(0, 0, 0, .1);
+      border-radius: 50px;
+      padding: 4px 11px;
+      transition: all .2s;
+      font-weight: 500;
+    }
+
+    .pt:hover {
+      border-color: var(--pink);
+      color: var(--pink);
+      transform: translateY(-1px);
+    }
+
+    /* CENTER */
+    .hero-center {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .food-card {
+      background: rgba(255, 255, 255, .93);
+      backdrop-filter: blur(20px);
+      border-radius: 22px;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, .13);
+      border: 1px solid rgba(255, 255, 255, .85);
+      overflow: hidden;
+      animation: flt 5s ease-in-out infinite;
+    }
+
+    @keyframes flt {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-8px)
+      }
+    }
+
+    .fc-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 16px 8px;
+      font-size: .8rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .fc-heart {
+      color: var(--pink);
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    /* ===== FOOD IMAGE SVG ===== */
+    .food-img-box {
+      width: 100%;
+      height: 178px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 30%, #b45309 60%, #92400e 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .food-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .fc-body {
+      padding: 13px 16px 15px;
+    }
+
+    .fc-name {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+
+    .fc-sub {
+      font-size: .73rem;
+      color: #9ca3af;
+      margin-bottom: 7px;
+    }
+
+    .fc-pr {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 11px;
+    }
+
+    .fc-pm {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: var(--pink);
+    }
+
+    .fc-po {
+      font-size: .87rem;
+      color: #9ca3af;
+      text-decoration: line-through;
+    }
+
+    .cmp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+
+    .cmp-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: .77rem;
+    }
+
+    .bdoti {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dfp {
+      background: #e81d6f;
+    }
+
+    .dhn {
+      background: #ff6b00;
+    }
+
+    .dpt {
+      background: #ff4d8d;
+    }
+
+    .bn {
+      flex: 1;
+      color: #4b5563;
+      font-weight: 500;
+    }
+
+    .bp {
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .bt {
+      color: #9ca3af;
+      margin-left: auto;
+      font-size: .72rem;
+    }
+
+    .btn-bd {
+      width: 100%;
+      background: linear-gradient(135deg, #ff4d8d, #ff7e5f);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 11px;
+      font-size: .88rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all .2s;
+      box-shadow: 0 4px 16px rgba(255, 77, 141, .35);
+    }
+
+    .btn-bd:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(255, 77, 141, .45);
+    }
+
+    /* SAVE BADGES */
+    .sbadge {
+      position: absolute;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      font-weight: 700;
+      text-align: center;
+      color: #fff;
+      line-height: 1.2;
+      z-index: 10;
+      animation: pb 2.5s ease-in-out infinite;
+    }
+
+    .sbadge strong {
+      font-size: .82rem;
+    }
+
+    @keyframes pb {
+
+      0%,
+      100% {
+        transform: scale(1)
+      }
+
+      50% {
+        transform: scale(1.07)
+      }
+    }
+
+    .sb-food {
+      width: 64px;
+      height: 64px;
+      top: 195px;
+      left: -25px;
+      background: linear-gradient(135deg, #ff7e5f, #ffb347);
+      box-shadow: 0 4px 16px rgba(255, 126, 95, .4);
+    }
+
+    /* COUPON */
+    .coupon {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #fff9e6, #fff0f5);
+      border: 2.5px dashed #ffb347;
+      border-radius: 18px;
+      padding: 13px 16px;
+      gap: .9rem;
+      animation: flt 7s ease-in-out infinite reverse;
+    }
+
+    .cp-l {
+      text-align: center;
+    }
+
+    .cp-ex {
+      font-size: .67rem;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: .9px;
+    }
+
+    .cp-of {
+      font-size: .95rem;
+      font-weight: 900;
+      color: var(--pink);
+      line-height: 1;
+    }
+
+    .cp-big {
+      font-size: 1.45rem;
+    }
+
+    .cp-sb {
+      font-size: .67rem;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    .cp-m {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      gap: 3px;
+    }
+
+    .cp-u {
+      font-size: .7rem;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .cp-c {
+      font-size: .98rem;
+      font-weight: 900;
+      color: var(--pink);
+      letter-spacing: 2px;
+      background: rgba(255, 77, 141, .08);
+      padding: 3px 11px;
+      border-radius: 8px;
+    }
+
+    .btn-cp {
+      background: linear-gradient(135deg, #ff4d8d, #ff1a6e);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 14px;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all .2s;
+      white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(255, 77, 141, .3);
+    }
+
+    .btn-cp:hover {
+      transform: scale(1.04);
+      box-shadow: 0 6px 20px rgba(255, 77, 141, .45);
+    }
+
+    /* RIGHT */
+    .hero-right {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .fcard {
+      background: rgba(255, 255, 255, .93);
+      backdrop-filter: blur(20px);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, .12);
+      border: 1px solid rgba(255, 255, 255, .85);
+      overflow: hidden;
+    }
+
+    /* RIDE CARD */
+    .ride-card {
+      padding: 14px;
+      animation: flt 6s ease-in-out infinite;
+      animation-delay: 1s;
+    }
+
+    .ride-hdr {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .75rem;
+      font-weight: 700;
+      color: #065f46;
+      background: #d1fae5;
+      border-radius: 50px;
+      padding: 4px 12px;
+      margin-bottom: 10px;
+    }
+
+    .ride-rt strong {
+      display: block;
+      font-size: .9rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .ride-rt span {
+      font-size: .7rem;
+      color: #9ca3af;
+    }
+
+    .ride-rt {
+      margin-bottom: 10px;
+    }
+
+    .ride-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 9px;
+    }
+
+    .ride-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: .79rem;
+      padding: 6px 9px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, .02);
+    }
+
+    .ride-row.cheapest {
+      background: #d1fae5;
+      border: 1px solid #34d399;
+    }
+
+    .rb {
+      flex: 1;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .rp {
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .rt2 {
+      color: #9ca3af;
+      font-size: .7rem;
+      margin-left: auto;
+    }
+
+    .r-chp {
+      background: #22c55e;
+      color: #fff;
+      font-size: .62rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 50px;
+    }
+
+    .ride-save {
+      font-size: .77rem;
+      font-weight: 700;
+      color: #16a34a;
+      background: #d1fae5;
+      padding: 6px 12px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    /* ===== CAR SVG ===== */
+    .car-box {
+      width: 100%;
+      height: 70px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .car-svg {
+      width: 90%;
+      height: auto;
+    }
+
+    .sb-ride {
+      width: 64px;
+      height: 64px;
+      top: -22px;
+      right: -22px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 4px 16px rgba(22, 197, 94, .4);
+    }
+
+    .pin {
+      position: absolute;
+      font-size: 1.6rem;
+      pointer-events: none;
+      animation: lS 5s ease-in-out infinite;
+    }
+
+    .p1 {
+      top: 10px;
+      right: 3px;
+      animation-delay: 0s;
+    }
+
+    .p2 {
+      top: 72px;
+      right: 46px;
+      font-size: 1.05rem;
+      animation-delay: 1.5s;
+    }
+
+    /* SKIN CARE CARD */
+    .sk-card {
+      padding: 14px;
+      animation: flt 6.5s ease-in-out infinite;
+      animation-delay: 2s;
+      background: linear-gradient(135deg, rgba(237, 233, 254, .92), rgba(255, 255, 255, .96));
+    }
+
+    .sk-hdr {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: .75rem;
+      font-weight: 700;
+      color: #6d28d9;
+      background: #ede9fe;
+      border-radius: 50px;
+      padding: 4px 12px;
+      margin-bottom: 9px;
+    }
+
+    .sk-body {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .sk-info {
+      flex: 1;
+    }
+
+    .sk-name {
+      font-size: .92rem;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+
+    .sk-sub {
+      font-size: .7rem;
+      color: #9ca3af;
+      margin-bottom: 5px;
+    }
+
+    .sk-pr {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .sk-pm {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--purple);
+    }
+
+    .sk-po {
+      font-size: .78rem;
+      color: #9ca3af;
+      text-decoration: line-through;
+    }
+
+    .sk-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sk-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .74rem;
+    }
+
+    .skb {
+      color: #4b5563;
+      font-weight: 500;
+    }
+
+    .skp {
+      color: #111827;
+      font-weight: 700;
+    }
+
+    /* ===== SERUM SVG ===== */
+    .sk-img-box {
+      flex-shrink: 0;
+      width: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .serum-svg {
+      width: 58px;
+      height: 92px;
+    }
+
+    .sb-sk {
+      width: 66px;
+      height: 66px;
+      bottom: 55px;
+      right: -25px;
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+      box-shadow: 0 4px 16px rgba(168, 85, 247, .42);
+    }
+
+    /* CREAM DECOR */
+    .cream-decor {
+      position: absolute;
+      bottom: -12px;
+      right: -26px;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .cream-svg {
+      width: 90px;
+      height: 65px;
+    }
+
+    /* SALAD DECOR */
+    .salad-decor {
+      position: absolute;
+      bottom: 90px;
+      left: -28px;
+      width: 230px;
+      height: 150px;
+      overflow: hidden;
+      border-radius: 16px;
+      z-index: 1;
+      pointer-events: none;
+      opacity: .88;
+    }
+
+    .salad-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* TOMATO */
+    .tomato {
+      position: absolute;
+      bottom: 195px;
+      left: 165px;
+      z-index: 5;
+      font-size: 2.2rem;
+      transform: rotate(-15deg);
+      animation: lS 7s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      position: relative;
+      z-index: 2;
+      max-width: 1260px;
+      margin: 2.5rem 2.5rem 2.5rem;
+      background: rgba(255, 255, 255, .93);
+      backdrop-filter: blur(20px);
+      border-radius: 22px;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, .1);
+      border: 1px solid rgba(255, 255, 255, .85);
+      display: flex;
+      align-items: stretch;
+      padding: 1.4rem 2rem;
+    }
+
+    .stat-it {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      flex: 1;
+      padding: 0 1.15rem;
+    }
+
+    .stat-dv {
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, #e5e7eb, transparent);
+      flex-shrink: 0;
+      align-self: stretch;
+    }
+
+    .si2 {
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .sip {
+      background: linear-gradient(135deg, #ffe0ec, #ffd6e7);
+    }
+
+    .sib {
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    }
+
+    .sig {
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    }
+
+    .sio {
+      background: linear-gradient(135deg, #ffedd5, #fed7aa);
+    }
+
+    .siu {
+      background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+    }
+
+    .st strong {
+      display: block;
+      font-size: .91rem;
+      font-weight: 800;
+      color: #111827;
+      line-height: 1.2;
+    }
+
+    .st span {
+      display: block;
+      font-size: .79rem;
+      font-weight: 600;
+      color: #4b5563;
+      line-height: 1.3;
+    }
+
+    .st p {
+      font-size: .71rem;
+      color: #9ca3af;
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <a href="#" class="logo" id="logo-link">
+        <div class="logo-icon">%</div>
+        <span class="logo-text">Offer<span class="logo-green">Matrix</span></span>
+      </a>
+      <nav class="nav-links" id="main-nav">
+        <a href="#" class="nav-link active" id="nav-home">Home</a>
+        <a href="#" class="nav-link" id="nav-food">Food</a>
+        <a href="#" class="nav-link" id="nav-rides">Rides</a>
+        <a href="#" class="nav-link" id="nav-skincare">Skin Care</a>
+        <a href="#" class="nav-link" id="nav-coupons">Coupons</a>
+        <a href="#" class="nav-link" id="nav-deals">Deals</a>
+        <a href="#" class="nav-link" id="nav-more">More ▾</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="#" class="nav-saved" id="btn-saved-deals">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+          Saved Deals
+        </a>
+        <button class="nav-bell" id="btn-notifications">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+        </button>
+        <a href="#" class="btn-find-deal" id="btn-find-best-deal">Find Best Deal</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="hero-section">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="leaf l1">🌿</div>
+    <div class="leaf l2">🍃</div>
+    <div class="leaf l3">🌿</div>
+    <div class="leaf l4">🍃</div>
+    <div class="tomato">🍅</div>
+
+    <div class="hero-inner">
+      <!-- LEFT -->
+      <div class="hero-left">
+        <div class="hero-badge" id="hero-badge"><span class="bdot"></span> BANGLADESH'S SMART DEAL PLATFORM</div>
+        <h1 class="hero-title">Compare Everything.<br /><span class="hg">Save More.</span></h1>
+        <p class="hero-sub">Food, Rides, Skin Care &amp; more —<br />Best prices, best offers, all in one place.</p>
+        <div class="cat-wrap" id="category-icons">
+          <a href="#" class="cat-it" id="cat-food">
+            <div class="cat-ic co">🍔</div><span>Food</span>
+          </a>
+          <a href="#" class="cat-it" id="cat-rides">
+            <div class="cat-ic cg">🚗</div><span>Rides</span>
+          </a>
+          <a href="#" class="cat-it" id="cat-skincare">
+            <div class="cat-ic cb">🧴</div><span>Skin Care</span>
+          </a>
+          <a href="#" class="cat-it" id="cat-coupons">
+            <div class="cat-ic cy">🎫</div><span>Coupons</span>
+          </a>
+        </div>
+        <div class="search-bar" id="search-bar">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" id="search-input" placeholder="What are you looking for?" class="si" />
+          <div class="sdv"></div>
+          <select class="ss" id="search-category">
+            <option>All Categories</option>
+            <option>Food</option>
+            <option>Rides</option>
+            <option>Skin Care</option>
+            <option>Coupons</option>
+          </select>
+          <button class="btn-srch" id="btn-search">Search</button>
+        </div>
+        <div class="popular">
+          <span class="pl">Popular Searches:</span>
+          <a href="#" class="pt" id="tag-biryani">Chicken Biryani</a>
+          <a href="#" class="pt" id="tag-gulshan">Ride to Gulshan</a>
+          <a href="#" class="pt" id="tag-serum">Niacinamide Serum</a>
+          <a href="#" class="pt" id="tag-chittagong">Dhaka → Chittagong</a>
+        </div>
+      </div>
+
+      <!-- CENTER -->
+      <div class="hero-center">
+        <div class="food-card" id="food-deal-card">
+          <div class="fc-top">
+            <span>🔥 Best Food Deal</span>
+            <span class="fc-heart">♡</span>
+          </div>
+
+          <!-- BIRYANI REAL PHOTO -->
+          <div class="food-img-box" style="background:#f5e6c8;">
+            <img
+              id="food-biryani-img"
+              style="width:100%;height:178px;object-fit:cover;display:block;"
+              src="https://www.themealdb.com/images/media/meals/xrysxr1511451225.jpg"
+              alt="Chicken Biryani"
+              onerror="
+                const s=['https://www.themealdb.com/images/media/meals/wyxwsp1486979827.jpg','https://images.pexels.com/photos/7394819/pexels-photo-7394819.jpeg?auto=compress&cs=tinysrgb&w=400','https://images.pexels.com/photos/12737656/pexels-photo-12737656.jpeg?auto=compress&cs=tinysrgb&w=400'];
+                if(!this._i)this._i=0;if(this._i<s.length)this.src=s[this._i++];
+              "
+            />
+          </div>
+
+
+          <div class="fc-body">
+
+            <div class="fc-name">Chicken Biryani</div>
+            <div class="fc-sub">Best total price</div>
+            <div class="fc-pr">
+              <span class="fc-pm">৳195</span>
+              <span class="fc-po">৳260</span>
+            </div>
+            <div class="cmp-list">
+              <div class="cmp-row">
+                <div class="bdoti dfp"></div><span class="bn">FoodPanda</span><span class="bp">৳195</span><span
+                  class="bt">20-30 min</span>
+              </div>
+              <div class="cmp-row">
+                <div class="bdoti dhn"></div><span class="bn">HungryNaki</span><span class="bp">৳210</span><span
+                  class="bt">25-30 min</span>
+              </div>
+              <div class="cmp-row">
+                <div class="bdoti dpt"></div><span class="bn">Pathao Food</span><span class="bp">৳220</span><span
+                  class="bt">30-40 min</span>
+              </div>
+            </div>
+            <button class="btn-bd" id="btn-food-best-deal">🔥 Best Deal</button>
+          </div>
+        </div>
+
+        <!-- Save badge -->
+        <div class="sbadge sb-food" id="save-badge-food">Save<br /><strong>৳65</strong></div>
+
+        <!-- Coupon -->
+        <div class="coupon" id="coupon-strip">
+          <div class="cp-l">
+            <div class="cp-ex">EXTRA</div>
+            <div class="cp-of"><span class="cp-big">10%</span> OFF</div>
+            <div class="cp-sb">On All Orders</div>
+          </div>
+          <div class="cp-m">
+            <span class="cp-u">Use Code:</span>
+            <span class="cp-c">SAVE10</span>
+          </div>
+          <button class="btn-cp" id="btn-copy-code">Copy Code 📋</button>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="hero-right">
+        <div class="pin p1">📍</div>
+        <div class="pin p2">📍</div>
+
+        <!-- Ride Card -->
+        <div class="fcard ride-card" id="ride-deal-card" style="position:relative;">
+          <div class="ride-hdr">🚗 Cheapest Ride</div>
+          <div class="ride-rt">
+            <strong>Dhanmondi → Gulshan</strong>
+            <span>Compare &amp; Save More</span>
+          </div>
+          <div class="ride-list">
+            <div class="ride-row"><span class="rb">Pathao</span><span class="rp">৳185</span><span class="rt2">18
+                min</span></div>
+            <div class="ride-row"><span class="rb">Uber</span><span class="rp">৳210</span><span class="rt2">16
+                min</span></div>
+            <div class="ride-row cheapest"><span class="rb">Shohoz</span><span class="rp">৳175</span><span
+                class="rt2">21 min</span><span class="r-chp">Cheapest</span></div>
+          </div>
+          <div class="ride-save">You Save ৳35</div>
+
+          <!-- CAR REAL PHOTO -->
+          <div class="car-box" style="background:linear-gradient(135deg,#e0f2fe,#bae6fd);padding:0;">
+            <img
+              id="car-img"
+              style="width:100%;height:70px;object-fit:cover;border-radius:10px;display:block;"
+              src="https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=400"
+              alt="White Car"
+              onerror="
+                const s=['https://images.pexels.com/photos/1335077/pexels-photo-1335077.jpeg?auto=compress&cs=tinysrgb&w=400','https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&cs=tinysrgb&w=400'];
+                if(!this._i)this._i=0;if(this._i<s.length)this.src=s[this._i++];
+              "
+            />
+          </div>
+        </div>
+        <div class="sbadge sb-ride" id="save-badge-ride">Save<br /><strong>৳35</strong></div>
+
+        <!-- Skin Care Card -->
+        <div class="fcard sk-card" id="skincare-deal-card" style="position:relative;">
+          <div class="sk-hdr">✨ Skin Care Deal</div>
+          <div class="sk-body">
+            <div class="sk-info">
+              <div class="sk-name">Niacinamide 10%</div>
+              <div class="sk-sub">Best price</div>
+              <div class="sk-pr">
+                <span class="sk-pm">৳850</span>
+                <span class="sk-po">৳1,200</span>
+              </div>
+              <div class="sk-list">
+                <div class="sk-row"><span class="skb">Daraz</span><span class="skp">৳850</span></div>
+                <div class="sk-row"><span class="skb">Beauty.com.bd</span><span class="skp">৳890</span></div>
+                <div class="sk-row"><span class="skb">Pickaboo</span><span class="skp">৳950</span></div>
+              </div>
+            </div>
+
+            <!-- THE ORDINARY REAL PHOTO -->
+            <div class="sk-img-box">
+              <img
+                id="serum-bottle-img"
+                class="serum-svg"
+                style="width:58px;height:92px;object-fit:cover;border-radius:6px;display:block;"
+                src="https://images.pexels.com/photos/4041392/pexels-photo-4041392.jpeg?auto=compress&cs=tinysrgb&w=150"
+                alt="The Ordinary Niacinamide Serum"
+                onerror="
+                  const s=['https://images.pexels.com/photos/3621234/pexels-photo-3621234.jpeg?auto=compress&cs=tinysrgb&w=150','https://images.pexels.com/photos/7797822/pexels-photo-7797822.jpeg?auto=compress&cs=tinysrgb&w=150'];
+                  if(!this._i)this._i=0;if(this._i<s.length)this.src=s[this._i++];
+                "
+              />
+            </div>
+          </div>
+        </div>
+        <div class="sbadge sb-sk" id="save-badge-skincare">Save<br /><strong>৳350</strong></div>
+
+        <!-- CREAM JAR DECORATION -->
+        <div class="cream-decor">
+          <svg class="cream-svg" viewBox="0 0 90 65" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="jarg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#f8fafc" />
+                <stop offset="100%" stop-color="#e2e8f0" />
+              </linearGradient>
+            </defs>
+            <!-- jar shadow -->
+            <ellipse cx="45" cy="60" rx="35" ry="5" fill="#94a3b8" opacity="0.2" />
+            <!-- jar body -->
+            <rect x="8" y="30" width="74" height="28" rx="8" fill="url(#jarg)" stroke="#cbd5e1" stroke-width="1" />
+            <!-- jar lid -->
+            <rect x="6" y="20" width="78" height="14" rx="7" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1" />
+            <!-- lid top highlight -->
+            <rect x="10" y="22" width="70" height="5" rx="3" fill="white" opacity="0.7" />
+            <!-- jar label -->
+            <rect x="16" y="35" width="58" height="18" rx="4" fill="white" opacity="0.8" />
+            <text x="45" y="46" text-anchor="middle" font-size="7" font-weight="700" fill="#374151"
+              font-family="Arial">CREAM</text>
+            <!-- cream texture at top of jar -->
+            <ellipse cx="45" cy="30" rx="33" ry="4" fill="white" opacity="0.5" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- SALAD DECORATION (bottom-left) -->
+    <div class="salad-decor">
+      <svg class="salad-svg" viewBox="0 0 230 150" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="saladg" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="#f0fdf4" />
+            <stop offset="100%" stop-color="#dcfce7" />
+          </radialGradient>
+        </defs>
+        <rect width="230" height="150" fill="url(#saladg)" />
+        <!-- Bowl -->
+        <ellipse cx="115" cy="120" rx="100" ry="30" fill="#e2e8f0" opacity="0.6" />
+        <ellipse cx="115" cy="110" rx="95" ry="28" fill="white" opacity="0.5" />
+        <!-- Lettuce leaves big -->
+        <ellipse cx="80" cy="75" rx="55" ry="38" fill="#4ade80" opacity="0.8" transform="rotate(-20,80,75)" />
+        <ellipse cx="145" cy="70" rx="50" ry="35" fill="#22c55e" opacity="0.75" transform="rotate(15,145,70)" />
+        <ellipse cx="115" cy="60" rx="45" ry="32" fill="#16a34a" opacity="0.7" transform="rotate(-5,115,60)" />
+        <!-- Inner lighter leaves -->
+        <ellipse cx="90" cy="65" rx="35" ry="24" fill="#86efac" opacity="0.9" transform="rotate(-15,90,65)" />
+        <ellipse cx="140" cy="63" rx="32" ry="22" fill="#4ade80" opacity="0.85" transform="rotate(10,140,63)" />
+        <ellipse cx="115" cy="55" rx="30" ry="20" fill="#bbf7d0" opacity="0.9" transform="rotate(2,115,55)" />
+        <!-- tomatoes -->
+        <circle cx="75" cy="55" r="12" fill="#ef4444" opacity="0.9" />
+        <circle cx="75" cy="52" r="5" fill="#dc2626" opacity="0.6" />
+        <circle cx="155" cy="52" r="10" fill="#f97316" opacity="0.9" />
+        <circle cx="155" cy="49" r="4" fill="#ea580c" opacity="0.6" />
+        <!-- cucumber slices -->
+        <circle cx="118" cy="48" r="9" fill="#86efac" />
+        <circle cx="118" cy="48" r="6" fill="#4ade80" />
+        <line x1="109" y1="48" x2="127" y2="48" stroke="#16a34a" stroke-width="0.8" opacity="0.6" />
+        <line x1="118" y1="39" x2="118" y2="57" stroke="#16a34a" stroke-width="0.8" opacity="0.6" />
+        <!-- radish/carrot bits -->
+        <ellipse cx="95" cy="85" rx="8" ry="5" fill="#f97316" opacity="0.8" transform="rotate(20,95,85)" />
+        <ellipse cx="140" cy="82" rx="7" ry="4" fill="#fb923c" opacity="0.8" transform="rotate(-15,140,82)" />
+        <!-- stems -->
+        <path d="M75 43 Q78 38 80 35" stroke="#16a34a" stroke-width="1.5" fill="none" stroke-linecap="round" />
+        <path d="M155 42 Q158 37 157 34" stroke="#16a34a" stroke-width="1.5" fill="none" stroke-linecap="round" />
+        <!-- dressing drizzle -->
+        <path d="M85 68 Q100 58 115 65 Q130 72 145 62" stroke="#fef08a" stroke-width="2.5" fill="none" opacity="0.7"
+          stroke-linecap="round" />
+      </svg>
+    </div>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar" id="stats-bar">
+      <div class="stat-it">
+        <div class="si2 sip">🛍️</div>
+        <div class="st">
+          <strong>100+</strong>
+          <span>Stores Compared</span>
+          <p>Food, Rides, Skin Care &amp; more</p>
+        </div>
+      </div>
+      <div class="stat-dv"></div>
+      <div class="stat-it">
+        <div class="si2 sib">📊</div>
+        <div class="st">
+          <strong>30/90 Days</strong>
+          <span>Price History</span>
+          <p>Check price trends &amp; buy at the best time</p>
+        </div>
+      </div>
+      <div class="stat-dv"></div>
+      <div class="stat-it">
+        <div class="si2 sig">🏷️</div>
+        <div class="st">
+          <strong>Best Price</strong>
+          <span>Guarantee</span>
+          <p>We find the lowest price so you save more</p>
+        </div>
+      </div>
+      <div class="stat-dv"></div>
+      <div class="stat-it">
+        <div class="si2 sio">💳</div>
+        <div class="st">
+          <strong>Multiple Payment</strong>
+          <span>Offers</span>
+          <p>bKash, Nagad, Cards &amp; more payment options</p>
+        </div>
+      </div>
+      <div class="stat-dv"></div>
+      <div class="stat-it">
+        <div class="si2 siu">🛡️</div>
+        <div class="st">
+          <strong>Safe &amp; Trusted</strong>
+          <span>&nbsp;</span>
+          <p>Verified deals, secure payments, reliable platform</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <script>
+    document.getElementById('btn-copy-code').addEventListener('click', function () {
+      try { navigator.clipboard.writeText('SAVE10'); } catch (e) { }
+      const orig = this.textContent;
+      this.textContent = 'Copied! ✓';
+      this.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+      setTimeout(() => { this.textContent = orig; this.style.background = ''; }, 2000);
+    });
+  </script>
+</body>
+
+</html>
