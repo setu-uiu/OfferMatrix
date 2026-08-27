@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In – OfferMatrix</title>
+  <meta name="description"
+    content="Sign in to OfferMatrix – Compare prices, find the best deals and save more on everything you love in Bangladesh." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --pink: #ff4d8d;
+      --pink2: #ff1a6e;
+      --green: #22c55e;
+      --green2: #16a34a;
+      --purple: #7c3aed;
+      --orange: #f97316;
+      --text-dark: #111827;
+      --text-mid: #4b5563;
+      --text-light: #9ca3af;
+      --font: 'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      color: var(--text-dark);
+      background: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; }
+
+    /* ═══════════════════════════════════════════
+       NAVBAR
+    ═══════════════════════════════════════════ */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      padding: 0 2.5rem;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    }
+
+    .nav-inner {
+      max-width: 1260px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg,#ff4d8d,#ff6b35);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(255,77,141,.38);
+    }
+
+    .logo-text {
+      font-size: 1.28rem;
+      font-weight: 800;
+      color: #111827;
+      letter-spacing: -.5px;
+    }
+
+    .logo-green { color: #22c55e; }
+
+    .nav-secure {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .secure-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg,#22c55e,#16a34a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .secure-text strong {
+      display: block;
+      font-size: .85rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .secure-text span {
+      font-size: .73rem;
+      color: #6b7280;
+    }
+
+    /* ═══════════════════════════════════════════
+       TWO-COLUMN LAYOUT
+    ═══════════════════════════════════════════ */
+    .page-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* ═══════════════════════════════════════════
+       LEFT  — colourful panel
+    ═══════════════════════════════════════════ */
+    .left-panel {
+      position: relative;
+      background: linear-gradient(150deg, #fff0f7 0%, #fff5ef 20%, #f0fff9 55%, #eef8ff 80%, #f5f0ff 100%);
+      overflow: hidden;
+      padding: 3.5rem 3rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(65px);
+      pointer-events: none;
+    }
+
+    .bl1 {
+      width: 480px; height: 480px;
+      background: radial-gradient(circle,#ffd6e7 0%,#ffe8f2 55%,transparent 78%);
+      top: -160px; left: -120px;
+      opacity: .75;
+      animation: bF 9s ease-in-out infinite;
+    }
+
+    .bl2 {
+      width: 380px; height: 380px;
+      background: radial-gradient(circle,#c6f6e1 0%,#d4faea 55%,transparent 78%);
+      bottom: -80px; right: 60px;
+      opacity: .65;
+      animation: bF 11s ease-in-out infinite reverse;
+    }
+
+    .bl3 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle,#e9d5ff 0%,#f3e8ff 55%,transparent 78%);
+      top: 35%; right: -40px;
+      opacity: .5;
+      animation: bF 13s ease-in-out infinite;
+    }
+
+    @keyframes bF {
+      0%,100%{ transform:translate(0,0) scale(1) }
+      40%    { transform:translate(15px,-15px) scale(1.04) }
+      70%    { transform:translate(-10px,12px) scale(.97) }
+    }
+
+    /* decorative floating items */
+    .deco {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes flt {
+      0%,100%{ transform:translateY(0) rotate(-5deg) }
+      50%    { transform:translateY(-14px) rotate(5deg) }
+    }
+
+    /* small coloured dots */
+    .sdot {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      animation: bF 6s ease-in-out infinite;
+    }
+
+    /* left panel content */
+    .lp-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .welcome-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.88);
+      border: 1.5px solid rgba(255,77,141,.2);
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .8px;
+      color: #374151;
+      margin-bottom: 1.4rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .lp-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      line-height: 1.15;
+      color: #111827;
+      letter-spacing: -1.2px;
+      margin-bottom: 1rem;
+    }
+
+    .lp-title .brand { color: #22c55e; }
+
+    .lp-sub {
+      font-size: .92rem;
+      color: #4b5563;
+      line-height: 1.65;
+      margin-bottom: 2rem;
+      max-width: 340px;
+    }
+
+    /* 3 feature pills */
+    .feature-row {
+      display: flex;
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .feat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-align: center;
+    }
+
+    .feat-ic {
+      width: 50px; height: 50px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    }
+
+    .fi-g { background: linear-gradient(135deg,#d1fae5,#a7f3d0); }
+    .fi-p { background: linear-gradient(135deg,#ffe0ec,#ffd6e7); }
+    .fi-b { background: linear-gradient(135deg,#ede9fe,#ddd6fe); }
+
+    .feat-name {
+      font-size: .78rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .feat-desc {
+      font-size: .68rem;
+      color: #6b7280;
+      line-height: 1.35;
+    }
+
+    /* quote card */
+    .quote-card {
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(14px);
+      border-radius: 18px;
+      padding: 1.3rem 1.5rem;
+      border: 1px solid rgba(255,255,255,.85);
+      box-shadow: 0 8px 28px rgba(0,0,0,.08);
+      max-width: 340px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .quote-mark {
+      font-size: 1.8rem;
+      color: #22c55e;
+      line-height: 1;
+      margin-bottom: .3rem;
+      font-family: Georgia, serif;
+    }
+
+    .quote-text {
+      font-size: .92rem;
+      font-weight: 700;
+      color: #111827;
+      line-height: 1.5;
+      font-style: italic;
+      margin-bottom: .6rem;
+    }
+
+    .quote-author {
+      font-size: .75rem;
+      color: #6b7280;
+    }
+
+    .quote-author .brand { color: #22c55e; font-weight: 700; }
+
+    /* ═══════════════════════════════════════════
+       RIGHT — sign-in form
+    ═══════════════════════════════════════════ */
+    .right-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      padding: 3rem 3.5rem;
+    }
+
+    .signin-box {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .si-title {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #111827;
+      letter-spacing: -.8px;
+      margin-bottom: .35rem;
+    }
+
+    .si-sub {
+      font-size: .85rem;
+      color: #6b7280;
+      margin-bottom: 2rem;
+    }
+
+    /* form fields */
+    .field-label {
+      font-size: .78rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: .5rem;
+      display: block;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: .5rem;
+    }
+
+    .field-row .field-label { margin-bottom: 0; }
+
+    .forgot-link {
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--pink);
+      transition: color .2s;
+    }
+
+    .forgot-link:hover { color: var(--pink2); text-decoration: underline; }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.1rem;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: .88rem 1rem .88rem 2.8rem;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 14px;
+      font-size: .87rem;
+      color: #111827;
+      font-family: var(--font);
+      font-weight: 500;
+      background: #f9fafb;
+      outline: none;
+      transition: all .25s;
+    }
+
+    .form-input::placeholder { color: #9ca3af; font-weight: 400; }
+
+    .form-input:focus {
+      border-color: var(--green);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(34,197,94,.1);
+    }
+
+    .eye-btn {
+      position: absolute;
+      right: 14px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      transition: color .2s;
+    }
+
+    .eye-btn:hover { color: var(--green); }
+
+    /* remember me */
+    .remember-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 1.4rem;
+    }
+
+    .remember-row input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 5px;
+      cursor: pointer;
+      accent-color: var(--green2);
+    }
+
+    .remember-row label {
+      font-size: .83rem;
+      color: #4b5563;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    /* sign in button */
+    .btn-signin {
+      width: 100%;
+      background: linear-gradient(135deg,#1a9e4e,#22c55e,#16a34a);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all .3s;
+      box-shadow: 0 6px 24px rgba(34,197,94,.35);
+      margin-bottom: 1.5rem;
+      letter-spacing: .2px;
+    }
+
+    .btn-signin:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(34,197,94,.45);
+    }
+
+    .btn-signin:active { transform: translateY(0); }
+
+    .btn-signin svg { transition: transform .3s; }
+    .btn-signin:hover svg { transform: translateX(4px); }
+
+    /* or divider */
+    .or-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .or-line {
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    .or-text {
+      font-size: .78rem;
+      color: #9ca3af;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* social buttons */
+    .social-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .8rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .btn-social {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      padding: .72rem 1rem;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: .82rem;
+      font-weight: 600;
+      color: #374151;
+      cursor: pointer;
+      background: #fff;
+      transition: all .2s;
+      font-family: var(--font);
+    }
+
+    .btn-social:hover {
+      border-color: #d1d5db;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      transform: translateY(-1px);
+    }
+
+    .google-icon { width: 18px; height: 18px; flex-shrink: 0; }
+
+    .fb-icon {
+      width: 20px; height: 20px;
+      background: #1877f2;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    /* create account link */
+    .create-link {
+      text-align: center;
+      font-size: .83rem;
+      color: #6b7280;
+      margin-bottom: 1.4rem;
+    }
+
+    .create-link a {
+      color: var(--green2);
+      font-weight: 700;
+    }
+
+    .create-link a:hover { text-decoration: underline; }
+
+    /* bottom meta */
+    .si-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .55rem;
+    }
+
+    .si-secure {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .75rem;
+      color: #9ca3af;
+    }
+
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: .78rem;
+      font-weight: 600;
+      color: #6b7280;
+      transition: color .2s;
+    }
+
+    .back-link:hover { color: var(--green2); }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 860px) {
+      .page-grid { grid-template-columns: 1fr; }
+      .left-panel { display: none; }
+      .right-panel { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="logo" id="logo-link">
+        <div class="logo-icon">%</div>
+        <span class="logo-text">Offer<span class="logo-green">Matrix</span></span>
+      </a>
+      <div class="nav-secure">
+        <div class="secure-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="secure-text">
+          <strong>Secure & Trusted</strong>
+          <span>Your data is 100% protected</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-grid">
+
+    <!-- ══════════════════════════
+         LEFT PANEL
+    ══════════════════════════ -->
+    <div class="left-panel">
+
+      <!-- blobs -->
+      <div class="blob bl1"></div>
+      <div class="blob bl2"></div>
+      <div class="blob bl3"></div>
+
+      <!-- coloured dots -->
+      <div class="sdot" style="width:9px;height:9px;background:#ff4d8d;opacity:.5;top:14%;left:60%;animation-delay:.5s;"></div>
+      <div class="sdot" style="width:7px;height:7px;background:#22c55e;opacity:.5;top:52%;left:72%;animation-delay:1.2s;"></div>
+      <div class="sdot" style="width:6px;height:6px;background:#a855f7;opacity:.4;top:70%;left:55%;animation-delay:2s;"></div>
+      <div class="sdot" style="width:8px;height:8px;background:#f97316;opacity:.45;top:30%;left:78%;animation-delay:.8s;"></div>
+
+      <!-- floating decorations -->
+      <!-- % tag top-left -->
+      <div class="deco" style="top:6%;left:4%;animation:flt 5s ease-in-out infinite;">
+        <div style="width:52px;height:64px;background:linear-gradient(135deg,#ff4d8d,#ff1a6e);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;font-weight:900;box-shadow:0 6px 20px rgba(255,77,141,.4);position:relative;">
+          <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:12px;height:12px;border:3px solid #ff1a6e;border-radius:50%;background:transparent;"></div>
+          %
+        </div>
+      </div>
+
+      <!-- gift box -->
+      <div class="deco" style="top:34%;left:3%;font-size:3.2rem;animation:flt 6s ease-in-out infinite 1s;">🎁</div>
+
+      <!-- shopping bag -->
+      <div class="deco" style="bottom:6%;left:3%;font-size:3.8rem;animation:flt 7s ease-in-out infinite .5s;">🛍️</div>
+
+      <!-- pin -->
+      <div class="deco" style="top:46%;right:14%;font-size:2rem;animation:flt 5s ease-in-out infinite 1.5s;">📍</div>
+
+      <!-- checkmark circle (right side, mid) -->
+      <div class="deco" style="top:22%;right:11%;animation:flt 6s ease-in-out infinite 2s;">
+        <div style="width:52px;height:52px;background:rgba(255,255,255,.9);border-radius:50%;box-shadow:0 6px 20px rgba(255,77,141,.25);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,77,141,.15);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="12" fill="#ff4d8d" opacity=".15"/>
+            <path d="M7 12l3 3 7-7" stroke="#ff4d8d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- food bowl -->
+      <div class="deco" style="bottom:22%;right:6%;font-size:3.2rem;animation:flt 8s ease-in-out infinite .3s;">🍛</div>
+
+      <!-- car -->
+      <div class="deco" style="bottom:8%;right:8%;font-size:2.8rem;animation:flt 7s ease-in-out infinite 1.2s;">🚗</div>
+
+      <!-- CONTENT -->
+      <div class="lp-content">
+
+        <div class="welcome-badge">🎉 WELCOME BACK</div>
+
+        <h1 class="lp-title">
+          Welcome Back to<br />
+          <span class="brand">OfferMatrix</span>
+        </h1>
+
+        <p class="lp-sub">
+          Sign in to continue comparing the best prices,
+          finding top deals and saving more every day.
+        </p>
+
+        <!-- 3 features -->
+        <div class="feature-row">
+          <div class="feat">
+            <div class="feat-ic fi-g">🏷️</div>
+            <div class="feat-name">Best Prices</div>
+            <div class="feat-desc">Compare & find<br/>lowest prices</div>
+          </div>
+          <div class="feat">
+            <div class="feat-ic fi-p">%</div>
+            <div class="feat-name">Top Offers</div>
+            <div class="feat-desc">Exclusive deals<br/>&amp; coupons</div>
+          </div>
+          <div class="feat">
+            <div class="feat-ic fi-b">🛡️</div>
+            <div class="feat-name">Safe &amp; Secure</div>
+            <div class="feat-desc">Your data is 100%<br/>safe with us</div>
+          </div>
+        </div>
+
+        <!-- quote -->
+        <div class="quote-card">
+          <div class="quote-mark">"</div>
+          <p class="quote-text">
+            "Smart people don't pay more —<br />they find better deals."
+          </p>
+          <div class="quote-author">
+            — Save Smarter. Live Better with <span class="brand">OfferMatrix</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════════
+         RIGHT PANEL — FORM
+    ══════════════════════════ -->
+    <div class="right-panel">
+      <div class="signin-box">
+
+        <h2 class="si-title">Sign In</h2>
+        <p class="si-sub">Enter your credentials to continue your journey</p>
+
+        <form id="signin-form" onsubmit="handleSignIn(event)">
+
+          <!-- Email / Phone -->
+          <label class="field-label" for="si-email">Email or Phone Number</label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </span>
+            <input type="text" class="form-input" id="si-email"
+              placeholder="setumeherunnesa59@gmail.com" required />
+          </div>
+
+          <!-- Password -->
+          <div class="field-row">
+            <label class="field-label" for="si-password">Password</label>
+            <a href="#" class="forgot-link" id="link-forgot">Forgot password?</a>
+          </div>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </span>
+            <input type="password" class="form-input" id="si-password"
+              placeholder="••••••••••••••" required />
+            <button type="button" class="eye-btn" id="eye-toggle" onclick="togglePass()" tabindex="-1">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Remember Me -->
+          <div class="remember-row">
+            <input type="checkbox" id="remember-me" />
+            <label for="remember-me">Remember me</label>
+          </div>
+
+          <!-- Sign In Button -->
+          <button type="submit" class="btn-signin" id="btn-signin">
+            Sign In
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+
+        </form>
+
+        <!-- Or divider -->
+        <div class="or-row">
+          <div class="or-line"></div>
+          <span class="or-text">or continue with</span>
+          <div class="or-line"></div>
+        </div>
+
+        <!-- Social buttons -->
+        <div class="social-row">
+          <button class="btn-social" id="btn-google" type="button">
+            <svg class="google-icon" viewBox="0 0 24 24">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Continue with Google
+          </button>
+          <button class="btn-social" id="btn-facebook" type="button">
+            <div class="fb-icon">f</div>
+            Continue with Facebook
+          </button>
+        </div>
+
+        <!-- Create account link -->
+        <div class="create-link">
+          Don't have an account? <a href="signup.html" id="link-create">Create Account</a>
+        </div>
+
+        <!-- Bottom meta -->
+        <div class="si-meta">
+          <div class="si-secure">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            Secure &amp; Encrypted
+          </div>
+          <a href="index.html" class="back-link" id="link-back-home">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"/>
+              <polyline points="12 19 5 12 12 5"/>
+            </svg>
+            Back to Landing Page
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /page-grid -->
+
+  <script>
+    // ─── Toggle password visibility ───────────────────────────────────────────
+    function togglePass() {
+      const input = document.getElementById('si-password');
+      const btn   = document.getElementById('eye-toggle');
+      const show  = input.type === 'password';
+      input.type  = show ? 'text' : 'password';
+      btn.innerHTML = show
+        ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+             <line x1="1" y1="1" x2="23" y2="23"/>
+           </svg>`
+        : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+             <circle cx="12" cy="12" r="3"/>
+           </svg>`;
+    }
+
+    // ─── Sign-in submit ───────────────────────────────────────────────────────
+    function handleSignIn(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-signin');
+      btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Signing in…`;
+      btn.disabled = true;
+      btn.style.opacity = '.8';
+      // Simulate sign-in (replace with real auth)
+      setTimeout(() => {
+        btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Welcome Back!`;
+        btn.style.opacity = '1';
+      }, 1400);
+    }
+  </script>
+
+</body>
+</html>

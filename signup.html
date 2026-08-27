@@ -806,10 +806,9 @@
         <div class="account-types" id="account-types">
 
           <!-- User Account -->
-          <div class="type-card active" id="type-user" onclick="selectType('type-user')">
+          <div class="type-card active" id="type-user" onclick="selectType('type-user', 'user')">
             <div class="check-badge">✓</div>
             <div class="type-icon ti-user">
-              <!-- User SVG Icon -->
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="8" r="4" fill="#ff4d8d" />
                 <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="#ffd6e7" />
@@ -820,10 +819,9 @@
           </div>
 
           <!-- Merchant Account -->
-          <div class="type-card" id="type-merchant" onclick="selectType('type-merchant')">
+          <div class="type-card" id="type-merchant" onclick="selectType('type-merchant', 'merchant')">
             <div class="check-badge">✓</div>
             <div class="type-icon ti-merchant">
-              <!-- Store SVG Icon -->
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
                 <rect x="3" y="10" width="18" height="11" rx="1" fill="#22c55e" opacity="0.3" />
                 <path d="M3 10 L5 4 H19 L21 10 Z" fill="#22c55e" opacity="0.6" />
@@ -837,10 +835,9 @@
           </div>
 
           <!-- Admin Account -->
-          <div class="type-card" id="type-admin" onclick="selectType('type-admin')">
+          <div class="type-card" id="type-admin" onclick="selectType('type-admin', 'admin')">
             <div class="check-badge">✓</div>
             <div class="type-icon ti-admin">
-              <!-- Shield SVG Icon -->
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
                 <path d="M12 3L4 7v5c0 5.25 3.5 10.15 8 11.25C16.5 22.15 20 17.25 20 12V7L12 3z" fill="#3b82f6" opacity="0.3" />
                 <path d="M12 3L4 7v5c0 5.25 3.5 10.15 8 11.25C16.5 22.15 20 17.25 20 12V7L12 3z" stroke="#3b82f6" stroke-width="1.5" fill="none" />
@@ -879,7 +876,7 @@
 
         <!-- SIGN IN LINK -->
         <div class="signin-link">
-          Already have an account? <a href="#" id="link-signin">Sign In</a>
+          Already have an account? <a href="signin.html" id="link-signin">Sign In</a>
         </div>
       </div>
     </div>
@@ -898,13 +895,21 @@
   </footer>
 
   <script>
-    function selectType(id) {
+    function selectType(id, type) {
       // Remove active from all
       document.querySelectorAll('.type-card').forEach(card => {
         card.classList.remove('active');
       });
-      // Add active to selected
-      document.getElementById(id).classList.add('active');
+      // Add active to selected card
+      const card = document.getElementById(id);
+      card.classList.add('active');
+
+      // Brief visual pause then navigate to register page
+      card.style.transform = 'scale(0.97)';
+      setTimeout(() => {
+        card.style.transform = '';
+        window.location.href = 'register.html?type=' + type;
+      }, 320);
     }
   </script>
 

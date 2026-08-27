@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account – OfferMatrix</title>
+  <meta name="description"
+    content="Create your OfferMatrix account. Compare prices, find the best deals and save more on everything you love in Bangladesh." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --pink: #ff4d8d;
+      --pink2: #ff1a6e;
+      --green: #22c55e;
+      --purple: #7c3aed;
+      --purple-light: #a78bfa;
+      --purple-mid: #8b5cf6;
+      --text-dark: #111827;
+      --text-mid: #4b5563;
+      --text-light: #9ca3af;
+      --font: 'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      color: var(--text-dark);
+      background: linear-gradient(135deg, #f0f0ff 0%, #e8eaff 30%, #f5f0ff 60%, #eef0ff 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; }
+
+    /* NAVBAR */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+      padding: 0 2.5rem;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .nav-inner {
+      max-width: 1260px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #ff4d8d, #ff6b35);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(255, 77, 141, 0.38);
+    }
+
+    .logo-text {
+      font-size: 1.28rem;
+      font-weight: 800;
+      color: #111827;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-green { color: #22c55e; }
+
+    .nav-secure {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .secure-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    .secure-text strong {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .secure-text span {
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+
+    /* BACKGROUND BLOBS */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .b1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, #c4b5fd 0%, #ddd6fe 55%, transparent 78%);
+      top: -150px; left: -100px;
+      opacity: .5;
+      animation: bF 9s ease-in-out infinite;
+    }
+
+    .b2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #a5b4fc 0%, #c7d2fe 55%, transparent 78%);
+      bottom: -80px; right: 100px;
+      opacity: .45;
+      animation: bF 11s ease-in-out infinite reverse;
+    }
+
+    .b3 {
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, #fbb6ce 0%, #fce7f3 55%, transparent 78%);
+      top: 40%; right: -60px;
+      opacity: .4;
+      animation: bF 13s ease-in-out infinite;
+    }
+
+    @keyframes bF {
+      0%, 100% { transform: translate(0,0) scale(1) }
+      40% { transform: translate(15px,-15px) scale(1.04) }
+      70% { transform: translate(-10px,12px) scale(.97) }
+    }
+
+    /* FLOATING DECORATIONS */
+    .deco {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      animation: floatDeco 6s ease-in-out infinite;
+    }
+
+    @keyframes floatDeco {
+      0%, 100% { transform: translateY(0) rotate(-5deg) }
+      50% { transform: translateY(-14px) rotate(5deg) }
+    }
+
+    /* MAIN LAYOUT */
+    .page-wrapper {
+      position: relative;
+      z-index: 1;
+      min-height: calc(100vh - 64px);
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 2.5rem 2.5rem;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    /* LEFT SECTION */
+    .left-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: var(--purple-mid);
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: none;
+      border: none;
+      font-family: var(--font);
+      padding: 0;
+    }
+
+    .back-btn:hover { color: var(--purple); transform: translateX(-3px); }
+
+    .account-type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(124, 58, 237, 0.1);
+      border: 1.5px solid rgba(124, 58, 237, 0.2);
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: var(--purple);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    .join-title {
+      font-size: 2.3rem;
+      font-weight: 900;
+      color: #111827;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 0.4rem;
+    }
+
+    .join-title .brand {
+      background: linear-gradient(130deg, #ff4d8d 0%, #ff7e5f 55%, #22c55e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .join-subtitle {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-bottom: 2rem;
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .feature-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .fi-green  { background: linear-gradient(135deg,#d1fae5,#a7f3d0); }
+    .fi-pink   { background: linear-gradient(135deg,#ffe0ec,#ffd6e7); }
+    .fi-blue   { background: linear-gradient(135deg,#dbeafe,#bfdbfe); }
+    .fi-purple { background: linear-gradient(135deg,#ede9fe,#ddd6fe); }
+
+    .feature-text strong {
+      display: block;
+      font-size: 0.87rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+
+    .feature-text span {
+      font-size: 0.77rem;
+      color: #6b7280;
+      line-height: 1.4;
+    }
+
+    /* RIGHT SECTION */
+    .right-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* REGISTER CARD */
+    .register-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px);
+      border-radius: 28px;
+      box-shadow: 0 20px 60px rgba(124, 58, 237, 0.12), 0 4px 16px rgba(0,0,0,0.06);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      padding: 2.4rem 2rem;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    /* STEP INDICATOR */
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .step-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .step.done .step-circle {
+      background: var(--purple-mid);
+      color: #fff;
+    }
+
+    .step.active .step-circle {
+      background: linear-gradient(135deg, var(--purple-mid), var(--purple));
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(124,58,237,0.35);
+    }
+
+    .step.inactive .step-circle {
+      background: #e5e7eb;
+      color: #9ca3af;
+    }
+
+    .step-label {
+      color: #6b7280;
+      font-size: 0.72rem;
+    }
+    .step.active .step-label { color: var(--purple); font-weight: 700; }
+    .step.done .step-label { color: var(--purple-mid); }
+
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, var(--purple-mid), var(--purple-light));
+      border-radius: 2px;
+      max-width: 50px;
+    }
+    .step-line.inactive { background: #e5e7eb; }
+
+    /* CARD HEADER */
+    .card-header {
+      text-align: center;
+      margin-bottom: 1.6rem;
+    }
+
+    .type-badge-display {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(139,92,246,0.1));
+      border: 1.5px solid rgba(124,58,237,0.2);
+      border-radius: 50px;
+      padding: 5px 14px;
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: var(--purple);
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #111827;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.3rem;
+    }
+
+    .card-subtitle {
+      font-size: 0.82rem;
+      color: #6b7280;
+    }
+
+    /* FORM */
+    .reg-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.9rem;
+    }
+
+    .input-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.85rem 1rem 0.85rem 2.8rem;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 14px;
+      font-size: 0.87rem;
+      color: #111827;
+      font-family: var(--font);
+      font-weight: 500;
+      background: rgba(248, 248, 255, 0.8);
+      transition: all 0.25s;
+      outline: none;
+    }
+
+    .form-input::placeholder {
+      color: #9ca3af;
+      font-weight: 400;
+    }
+
+    .form-input:focus {
+      border-color: var(--purple-mid);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+    }
+
+    .eye-btn {
+      position: absolute;
+      right: 14px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      transition: color 0.2s;
+    }
+
+    .eye-btn:hover { color: var(--purple-mid); }
+
+    /* FULL WIDTH INPUT */
+    .input-full { grid-column: 1 / -1; }
+
+    /* CHECKBOX */
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 0.2rem;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 5px;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+      accent-color: var(--purple-mid);
+    }
+
+    .checkbox-label {
+      font-size: 0.82rem;
+      color: #4b5563;
+      line-height: 1.5;
+    }
+
+    .checkbox-label a {
+      color: var(--purple-mid);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* CREATE ACCOUNT BUTTON */
+    .btn-create {
+      width: 100%;
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed, #6d28d9);
+      color: #fff;
+      border: none;
+      border-radius: 16px;
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.3s;
+      box-shadow: 0 6px 24px rgba(124,58,237,0.35);
+      margin-top: 0.3rem;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-create:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(124,58,237,0.45);
+    }
+
+    .btn-create:active { transform: translateY(0); }
+
+    .btn-create svg { transition: transform 0.3s; }
+    .btn-create:hover svg { transform: translateX(4px); }
+
+    /* SIGN IN LINK */
+    .signin-link {
+      text-align: center;
+      font-size: 0.82rem;
+      color: #6b7280;
+      margin-top: 0.5rem;
+    }
+
+    .signin-link a {
+      color: var(--purple-mid);
+      font-weight: 700;
+    }
+
+    .signin-link a:hover { text-decoration: underline; }
+
+    /* PREMIUM FEATURES */
+    .premium-section {
+      margin-top: 1.2rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid #f3f4f6;
+    }
+
+    .premium-title {
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #9ca3af;
+      letter-spacing: 1px;
+      margin-bottom: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .premium-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
+    }
+
+    .premium-item {
+      text-align: center;
+      padding: 0.6rem 0.4rem;
+      background: rgba(139,92,246,0.06);
+      border-radius: 10px;
+      border: 1px solid rgba(139,92,246,0.1);
+    }
+
+    .premium-item-icon {
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    .premium-item-text {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #6b7280;
+      line-height: 1.3;
+    }
+
+    /* FOOTER */
+    .footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 1.2rem;
+      font-size: 0.78rem;
+      color: #9ca3af;
+    }
+
+    .footer a { color: #6b7280; transition: color 0.2s; }
+    .footer a:hover { color: var(--purple-mid); }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+    }
+
+    .footer-dot {
+      width: 3px; height: 3px;
+      background: #d1d5db;
+      border-radius: 50%;
+    }
+
+    /* SMALL DOTS */
+    .small-dot {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @media (max-width: 900px) {
+      .page-wrapper { grid-template-columns: 1fr; padding: 1.5rem; }
+      .left-section { display: none; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Background -->
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+
+  <!-- Floating small dots -->
+  <div class="small-dot" style="width:8px;height:8px;background:#8b5cf6;opacity:.4;top:18%;left:32%;animation:bF 5s ease-in-out infinite;"></div>
+  <div class="small-dot" style="width:6px;height:6px;background:#ff4d8d;opacity:.4;top:8%;right:30%;animation:bF 7s ease-in-out infinite reverse;"></div>
+  <div class="small-dot" style="width:5px;height:5px;background:#a78bfa;opacity:.5;top:55%;left:45%;animation:bF 6s ease-in-out infinite;"></div>
+  <div class="small-dot" style="width:7px;height:7px;background:#6d28d9;opacity:.3;top:75%;right:40%;animation:bF 8s ease-in-out infinite reverse;"></div>
+
+  <!-- Floating Decorations -->
+  <div class="deco" style="left:2%;top:38%;font-size:3rem;animation-delay:0s;">🎁</div>
+  <div class="deco" style="left:1.5%;bottom:10%;font-size:3.5rem;animation-delay:1s;">🛍️</div>
+  <div class="deco" style="right:2%;top:18%;font-size:2.5rem;animation-delay:0.5s;">
+    <div style="width:52px;height:66px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.3rem;font-weight:900;box-shadow:0 8px 24px rgba(124,58,237,.4);position:relative;">
+      <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:12px;height:12px;border:3px solid #6d28d9;border-radius:50%;background:transparent;"></div>
+      %
+    </div>
+  </div>
+  <div class="deco" style="right:6%;bottom:22%;font-size:2rem;animation-delay:1.5s;">📍</div>
+  <div class="deco" style="right:2%;top:52%;font-size:2.5rem;animation-delay:2s;">🚗</div>
+  <div class="deco" style="right:2%;bottom:6%;font-size:3rem;animation-delay:0.8s;">🍛</div>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="logo" id="logo-link">
+        <div class="logo-icon">%</div>
+        <span class="logo-text">Offer<span class="logo-green">Matrix</span></span>
+      </a>
+      <div class="nav-secure">
+        <div class="secure-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="secure-text">
+          <strong>Secure & Trusted</strong>
+          <span>Your data is protected</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE WRAPPER -->
+  <div class="page-wrapper">
+
+    <!-- LEFT SECTION -->
+    <div class="left-section">
+      <button class="back-btn" onclick="history.back()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Back to account types
+      </button>
+
+      <div class="account-type-badge" id="left-type-badge">
+        <span>👤</span> <span id="left-type-label">User Account</span>
+      </div>
+
+      <h1 class="join-title">Join <span class="brand">OfferMatrix</span></h1>
+      <p class="join-subtitle">Complete your registration to get started</p>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon fi-green">🏷️</div>
+          <div class="feature-text">
+            <strong>Best Prices</strong>
+            <span>Compare and get the<br/>lowest prices</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon fi-pink">%</div>
+          <div class="feature-text">
+            <strong>Top Offers</strong>
+            <span>Exclusive deals & coupons<br/>just for you</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon fi-blue">৳</div>
+          <div class="feature-text">
+            <strong>Save More</strong>
+            <span>Stack offers and save<br/>extra every time</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon fi-purple">🛡️</div>
+          <div class="feature-text">
+            <strong>Safe & Secure</strong>
+            <span>Your data is 100% safe<br/>and secure</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SECTION -->
+    <div class="right-section">
+      <div class="register-card">
+
+        <!-- STEP INDICATOR -->
+        <div class="step-indicator">
+          <div class="step done">
+            <div class="step-circle">✓</div>
+            <span class="step-label">Account Type</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step active">
+            <div class="step-circle">2</div>
+            <span class="step-label">Your Details</span>
+          </div>
+          <div class="step-line inactive"></div>
+          <div class="step inactive">
+            <div class="step-circle">3</div>
+            <span class="step-label">Verify</span>
+          </div>
+        </div>
+
+        <!-- CARD HEADER -->
+        <div class="card-header">
+          <div class="type-badge-display" id="type-badge-display">
+            <span id="badge-icon">👤</span>
+            <span id="badge-label">User Account</span>
+          </div>
+          <h2 class="card-title">Create Your Account</h2>
+          <p class="card-subtitle">Fill in your details to get started</p>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <form class="reg-form" id="reg-form" onsubmit="handleSubmit(event)">
+
+          <!-- Full Name + Email -->
+          <div class="form-row">
+            <div class="input-group">
+              <span class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </span>
+              <input type="text" class="form-input" id="full-name" placeholder="Full Name" required />
+            </div>
+            <div class="input-group">
+              <span class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </span>
+              <input type="email" class="form-input" id="email" placeholder="Email Address" required />
+            </div>
+          </div>
+
+          <!-- Phone + Password -->
+          <div class="form-row">
+            <div class="input-group">
+              <span class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.5 2 2 0 0 1 3.59 1.31h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/>
+                </svg>
+              </span>
+              <input type="tel" class="form-input" id="phone" placeholder="Phone Number" required />
+            </div>
+            <div class="input-group">
+              <span class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </span>
+              <input type="password" class="form-input" id="password" placeholder="Password" required />
+              <button type="button" class="eye-btn" onclick="togglePass('password', this)" tabindex="-1">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Confirm Password (full width) -->
+          <div class="form-row">
+            <div class="input-group input-full">
+              <span class="input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </span>
+              <input type="password" class="form-input" id="confirm-password" placeholder="Confirm Password" required />
+              <button type="button" class="eye-btn" onclick="togglePass('confirm-password', this)" tabindex="-1">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Terms Checkbox -->
+          <div class="checkbox-row">
+            <input type="checkbox" id="terms-check" required />
+            <label class="checkbox-label" for="terms-check">
+              I agree to the <a href="#" id="terms-link">Terms of Service</a> and <a href="#" id="privacy-link">Privacy Policy</a>
+            </label>
+          </div>
+
+          <!-- Create Account Button -->
+          <button type="submit" class="btn-create" id="btn-create-account">
+            Create Account
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+
+          <!-- Sign In Link -->
+          <div class="signin-link">
+            Already have an account? <a href="signin.html" id="link-signin">Sign In</a>
+          </div>
+
+        </form>
+
+        <!-- PREMIUM FEATURES SECTION -->
+        <div class="premium-section">
+          <div class="premium-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            PREMIUM CARE FEATURES
+          </div>
+          <div class="premium-grid">
+            <div class="premium-item">
+              <div class="premium-item-icon">🔔</div>
+              <div class="premium-item-text">Price Alerts</div>
+            </div>
+            <div class="premium-item">
+              <div class="premium-item-icon">💰</div>
+              <div class="premium-item-text">Exclusive Deals</div>
+            </div>
+            <div class="premium-item">
+              <div class="premium-item-icon">⚡</div>
+              <div class="premium-item-text">Flash Sales</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2025 OfferMatrix. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="#" id="footer-terms">Terms of Service</a>
+      <div class="footer-dot"></div>
+      <a href="#" id="footer-privacy">Privacy Policy</a>
+      <div class="footer-dot"></div>
+      <a href="#" id="footer-help">Help Center</a>
+    </div>
+  </footer>
+
+  <script>
+    // ─── Read account type from URL ───────────────────────────────────────────
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get('type') || 'user';
+
+    const typeInfo = {
+      user:     { label: 'User Account',     icon: '👤', leftLabel: 'User Account'     },
+      merchant: { label: 'Merchant Account', icon: '🏪', leftLabel: 'Merchant Account' },
+      admin:    { label: 'Admin Account',    icon: '🛡️', leftLabel: 'Admin Account'    },
+    };
+
+    const info = typeInfo[type] || typeInfo.user;
+
+    // Update badge labels
+    document.getElementById('badge-icon').textContent    = info.icon;
+    document.getElementById('badge-label').textContent   = info.label;
+    document.getElementById('left-type-label').textContent = info.leftLabel;
+
+    // Inject type icon into left badge
+    document.querySelector('#left-type-badge span:first-child').textContent = info.icon;
+
+    // ─── Toggle password visibility ──────────────────────────────────────────
+    function togglePass(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const isText = input.type === 'text';
+      input.type = isText ? 'password' : 'text';
+      btn.innerHTML = isText
+        ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+             <circle cx="12" cy="12" r="3"/>
+           </svg>`
+        : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+             <line x1="1" y1="1" x2="23" y2="23"/>
+           </svg>`;
+    }
+
+    // ─── Form submit handler ──────────────────────────────────────────────────
+    function handleSubmit(e) {
+      e.preventDefault();
+      const pwd  = document.getElementById('password').value;
+      const cpwd = document.getElementById('confirm-password').value;
+
+      if (pwd !== cpwd) {
+        alert('Passwords do not match. Please try again.');
+        return;
+      }
+
+      const btn = document.getElementById('btn-create-account');
+      btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Account Created!`;
+      btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+      btn.style.boxShadow  = '0 6px 24px rgba(34,197,94,0.4)';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        alert('🎉 Welcome to OfferMatrix! Your account has been created successfully.');
+      }, 600);
+    }
+  </script>
+
+</body>
+</html>
