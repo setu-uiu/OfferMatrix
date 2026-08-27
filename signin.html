@@ -875,10 +875,17 @@
       btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Signing in…`;
       btn.disabled = true;
       btn.style.opacity = '.8';
-      // Simulate sign-in (replace with real auth)
+      // Save user name and redirect to dashboard
+      const emailInput = document.getElementById('si-email');
+      if (emailInput && emailInput.value) {
+        const emailName = emailInput.value.split('@')[0];
+        const displayName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+        localStorage.setItem('om_user_name', displayName);
+      }
       setTimeout(() => {
         btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Welcome Back!`;
         btn.style.opacity = '1';
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 400);
       }, 1400);
     }
   </script>

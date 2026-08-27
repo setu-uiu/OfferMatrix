@@ -965,9 +965,14 @@
       btn.style.boxShadow  = '0 6px 24px rgba(34,197,94,0.4)';
       btn.disabled = true;
 
+      // Save user name and redirect to dashboard
+      const nameInput = document.getElementById('full-name') || document.getElementById('name');
+      if (nameInput && nameInput.value) {
+        localStorage.setItem('om_user_name', nameInput.value.trim());
+      }
       setTimeout(() => {
-        alert('🎉 Welcome to OfferMatrix! Your account has been created successfully.');
-      }, 600);
+        window.location.href = 'dashboard.html';
+      }, 1200);
     }
   </script>
 
