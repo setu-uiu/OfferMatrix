@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -6,6 +6,7 @@
 <title>Dashboard - OfferMatrix</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="js/om-store.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -127,7 +128,7 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none;}
 
 /* RIGHT PANEL */
 .rtabs{display:flex;background:#f1f5f9;border-radius:50px;padding:4px;align-items:center;}
-.rtab{flex:1;padding:.6rem .2rem;font-size:.85rem;font-weight:700;color:#334155;text-align:center;border-radius:50px;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .2s;}
+.rtab{flex:1;padding:.6rem .2rem;font-size:.85rem;font-weight:700;color:#334155;text-align:center;border-radius:50px;display:flex;align-items:center;justify-content:center;gap:4px;border:none;background:none;font-family:inherit;cursor:pointer;white-space:nowrap;}
 .rtab.on{background:#fff;color:var(--pink);box-shadow:0 2px 8px rgba(0,0,0,.05);}
 
 .sv-card{background:#fff;border-radius:16px;border:1px solid var(--border);padding:1.5rem;}
@@ -205,6 +206,198 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none;}
 .wc-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .wc-t1 { font-size:.85rem; font-weight:700; margin-bottom:2px; color:#111827; }
 .wc-t2 { font-size:.7rem; color:var(--mid); }
+
+/* ── REFINED DASHBOARD DESIGN STYLES ── */
+.dash-hdr-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.2rem; }
+.dash-hi { font-size: .88rem; color: var(--mid); margin-bottom: 2px; }
+.dash-title { font-size: 1.65rem; font-weight: 900; color: #111827; letter-spacing: -.4px; margin-bottom: 3px; }
+.dash-sub { font-size: .82rem; color: var(--light); }
+
+.dash-stats-grid { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.2rem; overflow-x: auto; padding-bottom: 4px; }
+.d-stat-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.1rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,.02); min-width: 150px; }
+.d-stat-label { font-size: .72rem; color: var(--light); font-weight: 600; margin-bottom: 4px; }
+.d-stat-val { font-size: 1.5rem; font-weight: 900; color: #111827; margin-bottom: 4px; }
+.d-stat-delta { font-size: .7rem; font-weight: 700; color: var(--green); display: flex; align-items: center; gap: 3px; }
+.d-stat-link { font-size: .7rem; font-weight: 700; color: var(--pink); text-decoration: none; }
+.d-stat-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+
+.dash-shortcuts-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: .8rem 1.2rem; display: flex; align-items: center; gap: 1rem; margin-bottom: 1.2rem; }
+.dash-sc-label { font-size: .8rem; font-weight: 800; color: #111827; white-space: nowrap; }
+.dash-sc-list { display: flex; gap: .6rem; overflow-x: auto; flex: 1; padding-bottom: 2px; }
+.sc-pill { display: flex; align-items: center; gap: 5px; padding: .45rem .9rem; border: 1px solid #f1f5f9; border-radius: 50px; background: #fafafa; font-size: .75rem; font-weight: 600; color: #374151; white-space: nowrap; cursor: pointer; transition: all .2s; }
+.sc-pill:hover { border-color: var(--pink); color: var(--pink); background: #fff; }
+
+.dash-charts-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem; min-width: 0; }
+.d-chart-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.2rem; display: flex; flex-direction: column; min-width: 0; }
+.d-chart-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.d-chart-title { font-size: .9rem; font-weight: 800; color: #111827; }
+.d-chart-legends { display: flex; gap: .8rem; font-size: .72rem; font-weight: 600; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+.d-chart-select { border: 1px solid var(--border); border-radius: 8px; padding: 3px 8px; font-size: .72rem; color: var(--mid); outline: none; background: #fff; }
+
+.donut-box { display: flex; align-items: center; gap: 1.2rem; flex: 1; margin-top: .4rem; min-width: 0; }
+.donut-svg-wrap { position: relative; width: 120px; height: 120px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.donut-center-txt { text-align: center; position: absolute; }
+.donut-center-txt span { font-size: .62rem; color: var(--light); display: block; text-transform: uppercase; letter-spacing: .5px; }
+.donut-center-txt strong { font-size: .95rem; font-weight: 900; color: #111827; }
+.cat-breakdown { flex: 1; display: flex; flex-direction: column; gap: .6rem; min-width: 0; }
+.cat-bd-row { display: flex; align-items: center; justify-content: space-between; font-size: .76rem; }
+.cat-bd-left { display: flex; align-items: center; gap: 8px; font-weight: 600; color: #374151; }
+.cat-bd-pct { font-size: .7rem; color: var(--light); margin-left: 4px; }
+.cat-bd-val { font-weight: 800; color: #111827; }
+
+/* EXPLORE TOP APPS */
+.eta-grid { display: grid; grid-template-columns: repeat(3, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.2rem; min-width: 0; overflow-x: auto; padding-bottom: 4px; }
+.eta-column { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1rem; min-width: 200px; }
+.eta-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: .8rem; }
+.eta-title { font-size: .85rem; font-weight: 800; color: #111827; }
+.eta-link { font-size: .72rem; font-weight: 700; color: var(--pink); text-decoration: none; }
+.eta-apps-row { display: flex; justify-content: space-around; align-items: center; gap: .6rem; padding-top: .4rem; }
+.eta-app { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: .68rem; font-weight: 700; color: #374151; cursor: pointer; }
+.eta-logo { width: 50px; height: 50px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,.06); overflow: hidden; text-align: center; }
+
+.d-mid-widgets { display: grid; grid-template-columns: repeat(3, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.2rem; min-width: 0; overflow-x: auto; padding-bottom: 4px; }
+.d-mw-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.1rem; min-width: 200px; }
+.d-mw-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: .9rem; }
+.d-mw-title { font-size: .88rem; font-weight: 800; color: #111827; }
+.d-mw-link { font-size: .75rem; font-weight: 700; color: var(--pink); text-decoration: none; }
+
+.cpn-list { display: flex; flex-direction: column; gap: .6rem; }
+.cpn-row { display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding-bottom: .5rem; border-bottom: 1px solid #f3f4f6; }
+.cpn-row:last-child { border-bottom: none; padding-bottom: 0; }
+.cpn-badge { background: #fff0f5; border: 1px dashed var(--pink); color: var(--pink); font-size: .65rem; font-weight: 800; padding: 4px 8px; border-radius: 6px; }
+.cpn-info { flex: 1; }
+.cpn-val { font-size: .75rem; font-weight: 800; color: #111827; }
+.cpn-min { font-size: .62rem; color: var(--light); }
+.cpn-copy-btn { border: 1px solid var(--pink); color: var(--pink); background: #fff; font-size: .62rem; font-weight: 800; padding: 3px 10px; border-radius: 50px; cursor: pointer; }
+.cpn-copy-btn:hover { background: var(--pink); color: #fff; }
+
+.pa-list { display: flex; flex-direction: column; gap: .6rem; }
+.pa-row { display: flex; align-items: center; gap: .6rem; padding-bottom: .5rem; border-bottom: 1px solid #f3f4f6; }
+.pa-row:last-child { border-bottom: none; padding-bottom: 0; }
+.pa-img { width: 32px; height: 32px; border-radius: 8px; background: #f8fafc; object-fit: contain; flex-shrink: 0; }
+.pa-info { flex: 1; }
+.pa-title { font-size: .74rem; font-weight: 800; color: #111827; }
+.pa-prices { font-size: .7rem; font-weight: 800; color: var(--pink); }
+.pa-old-p { font-size: .62rem; color: var(--light); text-decoration: line-through; margin-left: 4px; font-weight: 400; }
+.pa-drop-badge { font-size: .58rem; font-weight: 800; color: var(--green); margin-left: 6px; }
+.pa-bell-btn { color: var(--light); font-size: .85rem; cursor: pointer; background: none; border: none; }
+
+.goal-card { background: linear-gradient(135deg, #f0fdf4, #ffffff); border: 1px solid #bbf7d0; border-radius: 16px; padding: 1.1rem; min-width: 200px; }
+.goal-sub { font-size: .7rem; color: var(--mid); margin-bottom: .5rem; }
+.goal-progress-wrap { margin-bottom: .8rem; }
+.goal-nums { display: flex; justify-content: space-between; font-size: .82rem; font-weight: 900; color: var(--green); margin-bottom: 4px; }
+.goal-track { height: 8px; background: #e2e8f0; border-radius: 50px; overflow: hidden; }
+.goal-fill { height: 100%; width: 62%; background: var(--green); border-radius: 50px; }
+.goal-mini-stats { display: flex; justify-content: space-between; background: #fff; border-radius: 10px; padding: .6rem .8rem; border: 1px solid #dcfce7; margin-bottom: .6rem; text-align: center; }
+.gms-item span { font-size: .6rem; color: var(--light); display: block; }
+.gms-item strong { font-size: .78rem; font-weight: 800; color: #111827; }
+.goal-foot { font-size: .65rem; color: var(--mid); display: flex; align-items: center; gap: 4px; }
+
+/* PAYMENT OFFERS CARD */
+.pay-offers-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.1rem; margin-bottom: 1.2rem; }
+.po-grid { display: flex; gap: .8rem; overflow-x: auto; padding-bottom: 4px; }
+.po-item { flex: 1; min-width: 140px; background: #fafafa; border: 1px solid #f1f5f9; border-radius: 12px; padding: .7rem .8rem; display: flex; align-items: center; gap: .6rem; }
+.po-logo { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: #fff; flex-shrink: 0; }
+.po-title { font-size: .72rem; font-weight: 800; color: #111827; }
+.po-off { font-size: .65rem; font-weight: 800; color: var(--green); }
+.po-min { font-size: .58rem; color: var(--light); }
+
+/* PRODUCT COMPARISON RIGHT COLUMN */
+.pc-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.pc-title { font-size: .88rem; font-weight: 800; color: #111827; display: flex; align-items: center; gap: 6px; }
+.pc-actions { display: flex; gap: 8px; color: var(--mid); font-size: .9rem; cursor: pointer; }
+
+.pc-prod-card { background: #fafafa; border: 1px solid var(--border); border-radius: 16px; padding: 1.1rem; text-align: center; margin-bottom: 1.2rem; }
+.pc-prod-img { width: 70px; height: 70px; object-fit: contain; margin: 0 auto .6rem; }
+.pc-prod-cat { font-size: .65rem; color: var(--light); font-weight: 600; }
+.pc-prod-name { font-size: .85rem; font-weight: 800; color: #111827; margin: 2px 0; line-height: 1.3; }
+.pc-prod-size { font-size: .68rem; color: var(--mid); margin-bottom: .6rem; }
+.pc-prod-sub { font-size: .62rem; color: var(--light); }
+
+.pc-store-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: .9rem; margin-bottom: .8rem; position: relative; }
+.pc-rec-badge { position: absolute; top: 8px; right: 8px; background: #dcfce7; color: #166534; font-size: .58rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; }
+.pc-store-logo { font-size: .9rem; font-weight: 900; color: #111827; margin-bottom: .4rem; }
+.pc-price-row { display: flex; align-items: center; gap: 6px; margin-bottom: .4rem; }
+.pc-price { font-size: 1.1rem; font-weight: 900; color: var(--pink); }
+.pc-old-price { font-size: .7rem; color: var(--light); text-decoration: line-through; }
+.pc-off-badge { background: #dcfce7; color: var(--green); font-size: .6rem; font-weight: 800; padding: 2px 5px; border-radius: 4px; }
+.pc-store-foot { display: flex; justify-content: space-between; align-items: center; font-size: .65rem; color: var(--mid); }
+.btn-view-store { border: 1px solid var(--pink); color: var(--pink); background: #fff; border-radius: 50px; padding: 3px 10px; font-size: .65rem; font-weight: 800; cursor: pointer; }
+.btn-view-store:hover { background: var(--pink); color: #fff; }
+
+.pc-payment-panel { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.1rem; margin-bottom: 1.2rem; }
+.pc-pay-item { display: flex; align-items: center; justify-content: space-between; padding: .5rem 0; border-bottom: 1px solid #f3f4f6; }
+.pc-pay-item:last-child { border-bottom: none; }
+.pc-pay-left { display: flex; align-items: center; gap: .6rem; }
+.pc-pay-logo { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: #fff; }
+.pc-pay-title { font-size: .72rem; font-weight: 800; color: var(--green); }
+.pc-pay-min { font-size: .6rem; color: var(--light); }
+.pc-pay-link { font-size: .65rem; font-weight: 700; color: var(--pink); text-decoration: none; }
+
+.pc-how-card { background: #fff0f5; border: 1px solid #fecdd3; border-radius: 16px; padding: 1.1rem; text-align: center; }
+.pc-how-title { font-size: .85rem; font-weight: 800; color: #111827; margin-bottom: .8rem; }
+.pc-how-steps { display: flex; justify-content: space-around; align-items: center; position: relative; }
+.pc-step { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: .62rem; font-weight: 700; color: #111827; }
+.pc-step-ico { width: 36px; height: 36px; border-radius: 50%; background: #fff; border: 1px solid #fecdd3; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--pink); }
+.pc-arrow { color: #fecdd3; font-size: .9rem; font-weight: 900; }
+.compare-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: .8rem; }
+.compare-title { font-size: .88rem; font-weight: 800; color: #111827; }
+.compare-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.comp-group { background: #fafafa; border: 1px solid #f1f5f9; border-radius: 12px; padding: .8rem; }
+.cg-lbl { font-size: .68rem; font-weight: 800; color: var(--mid); text-transform: uppercase; letter-spacing: .5px; margin-bottom: .6rem; }
+.cg-items { display: flex; gap: .4rem; }
+.cg-box { flex: 1; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: .5rem .3rem; text-align: center; font-size: .65rem; }
+.cg-logo-mark { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 900; color: #fff; margin: 0 auto 4px; }
+.cg-price-txt { font-weight: 800; color: var(--pink); font-size: .72rem; }
+.cg-time-txt { font-size: .58rem; color: var(--light); margin-top: 1px; }
+
+.w-balance-card { background: linear-gradient(135deg, #fff0f5, #ffffff); border: 1px solid #ffc6dc; border-radius: 16px; padding: 1.2rem; }
+.w-bal-hd { font-size: .75rem; font-weight: 700; color: var(--mid); margin-bottom: 4px; }
+.w-bal-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: .8rem; }
+.w-bal-val { font-size: 1.8rem; font-weight: 900; color: var(--pink); }
+.w-add-btn { background: var(--pink); color: #fff; border-radius: 50px; padding: .4rem 1rem; font-size: .72rem; font-weight: 700; }
+.w-bal-foot { display: flex; justify-content: space-between; font-size: .7rem; color: var(--mid); border-top: 1px solid #ffe4ec; padding-top: .6rem; }
+.w-bal-foot strong { color: #111827; }
+
+.tx-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.1rem; }
+.tx-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: .8rem; }
+.tx-title { font-size: .88rem; font-weight: 800; color: #111827; }
+.tx-list { display: flex; flex-direction: column; gap: .6rem; }
+.tx-row { display: flex; align-items: center; justify-content: space-between; padding-bottom: .5rem; border-bottom: 1px solid #f3f4f6; }
+.tx-row:last-child { border-bottom: none; padding-bottom: 0; }
+.tx-ico { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.tx-mid { flex: 1; margin: 0 .6rem; }
+.tx-name { font-size: .75rem; font-weight: 700; color: #111827; }
+.tx-date { font-size: .62rem; color: var(--light); }
+.tx-val { font-size: .75rem; font-weight: 800; color: #111827; }
+
+.bank-cards-panel { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.1rem; }
+.bc-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: .8rem; }
+.bc-title { font-size: .88rem; font-weight: 800; color: #111827; }
+.credit-card-visual { background: linear-gradient(135deg, #6366f1, #3b82f6); border-radius: 14px; padding: 1.1rem; color: #fff; position: relative; overflow: hidden; box-shadow: 0 6px 16px rgba(59, 130, 246, .25); }
+.cc-top { display: flex; justify-content: space-between; align-items: center; font-size: .72rem; font-weight: 800; letter-spacing: .5px; opacity: .9; }
+.cc-num { font-size: 1.05rem; font-weight: 800; letter-spacing: 2px; margin: 1rem 0 .6rem; font-family: monospace; }
+.cc-bottom { display: flex; justify-content: space-between; align-items: center; font-size: .68rem; opacity: .9; }
+.cc-brand { font-size: .9rem; font-weight: 900; font-style: italic; }
+.cc-dots { display: flex; justify-content: center; gap: 4px; margin-top: .6rem; }
+.cc-dot { width: 6px; height: 6px; border-radius: 50%; background: #cbd5e1; }
+.cc-dot.active { background: var(--pink); width: 18px; border-radius: 50px; }
+
+.bank-promo-box { background: #fff0f5; border: 1px solid #fecdd3; border-radius: 16px; padding: 1.1rem; text-align: center; }
+.bp-icon { font-size: 1.8rem; margin-bottom: 4px; }
+.bp-title { font-size: .82rem; font-weight: 800; color: var(--pink); margin-bottom: 3px; }
+.bp-sub { font-size: .68rem; color: var(--mid); margin-bottom: .6rem; }
+.bp-code { background: #fff; border: 1px dashed var(--pink); color: var(--pink); font-size: .7rem; font-weight: 800; padding: 3px 10px; border-radius: 6px; display: inline-block; margin-bottom: .5rem; }
+.bp-foot { font-size: .6rem; color: var(--light); display: flex; justify-content: space-between; }
+
+.benefits-promo-box { background: linear-gradient(135deg, #faf5ff, #ffffff); border: 1px solid #e9d5ff; border-radius: 16px; padding: 1.1rem; position: relative; overflow: hidden; }
+.bp-hdr { font-size: .88rem; font-weight: 800; color: #111827; margin-bottom: .6rem; }
+.bp-ul { list-style: none; padding: 0; margin: 0 0 1rem; font-size: .72rem; color: var(--mid); display: flex; flex-direction: column; gap: 6px; }
+.bp-ul li { display: flex; align-items: center; gap: 6px; }
+.bp-ul li span { color: var(--green); font-weight: 900; }
+.btn-unlock { background: linear-gradient(135deg, #8b5cf6, #6366f1); color: #fff; border-radius: 50px; padding: .55rem 1.2rem; font-size: .78rem; font-weight: 700; width: 100%; cursor: pointer; text-align: center; border: none; }
+.crown-img { position: absolute; right: -5px; bottom: -5px; width: 70px; opacity: .85; pointer-events: none; }
 </style>
 </head><body>
 <aside class="sb">
@@ -214,22 +407,21 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none;}
   </div>
   <nav class="sb-nav">
     <div class="sb-group">MAIN</div>
-    <button class="sb-item on" onclick="location.reload()"><span class="sb-ico">&#127968;</span> Dashboard</button>
+    <button class="sb-item on" id="sb-dashboard" onclick="switchMainTab('dashboard')"><span class="sb-ico">&#127968;</span> Dashboard</button>
     <button class="sb-item" id="sb-food" onclick="switchMainTab('food')"><span class="sb-ico">&#127860;</span> Food</button>
     <button class="sb-item" id="sb-ride" onclick="switchMainTab('ride')"><span class="sb-ico" style="color:inherit;">&#128663;</span> Ride</button>
-    <button class="sb-item"><span class="sb-ico">&#128167;</span> Skincare</button>
-    
-    <button class="sb-item"><span class="sb-ico">&#128230;</span> Orders <span class="sb-badge" style="background:#ef4444;">3</span></button>
-    <button class="sb-item"><span class="sb-ico">&#10084;</span> Saved Deals</button>
-    <button class="sb-item"><span class="sb-ico">&#128276;</span> Price Alerts <span class="sb-badge" style="background:#ef4444;">5</span></button>
+    <button class="sb-item" onclick="window.location.href='skincare.html'"><span class="sb-ico">&#128167;</span> Skincare</button>
+    <button class="sb-item" onclick="window.location.href='orders.html'"><span class="sb-ico">&#128230;</span> Orders <span class="sb-badge" style="background:var(--pink);color:#fff;">6</span></button>
+    <button class="sb-item" id="sb-saved" onclick="goSavedDeals()"><span class="sb-ico">&#10084;</span> Saved Deals</button>
+    <button class="sb-item" id="sb-alerts" onclick="goPriceAlerts()"><span class="sb-ico">&#128276;</span> Price Alerts <span class="sb-badge" style="background:#ef4444;">5</span></button>
     <button class="sb-item"><span class="sb-ico">&#127915;</span> Coupons</button>
     <button class="sb-item"><span class="sb-ico">&#11088;</span> Reviews</button>
     
     <div class="sb-group">COMMUNITY</div>
-    <button class="sb-item sb-red" id="sb-viral"><span class="sb-ico">&#128680;</span> Viral Restaurants <span class="sb-badge red">New</span></button>
-    <button class="sb-item sb-red" id="sb-exposed" style="display:none;"><span class="sb-ico" style="color:var(--red);">&#128680;</span> Exposed Riders <span class="sb-badge red">New</span></button>
+    <button class="sb-item sb-red"><span class="sb-ico">&#128680;</span> Fraud Pages <span class="sb-badge red">New</span></button>
     <button class="sb-item"><span class="sb-ico">&#128179;</span> My Wallet</button>
-    <button class="sb-item"><span class="sb-ico">&#127873;</span> Refer & Earn</button>
+    <button class="sb-item"><span class="sb-ico">&#128179;</span> Bank Cards</button>
+    <button class="sb-item"><span class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
     
     <div class="sb-group">ACCOUNT</div>
     <button class="sb-item"><span class="sb-ico">&#9881;</span> Settings</button>
@@ -256,7 +448,7 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none;}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <div class="notif-dot"></div>
       </button>
-      <button class="tb-saved"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Saved</button>
+      <button class="tb-saved" onclick="goSavedDeals()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Saved</button>
       <div class="tb-user">
         <div class="tb-avatar"><img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100" alt="Avatar"/></div>
         <div>
@@ -268,7 +460,504 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none;}
     </div>
   </div>
   
-  <div class="pg on" id="pg-food">
+  <!-- ══════════════ DASHBOARD MAIN OVERVIEW VIEW ══════════════ -->
+  <div class="pg on" id="pg-dashboard">
+    <div class="col-c">
+
+      <!-- DASHBOARD HEADER WITH TOP TABS -->
+      <div class="dash-hdr-row">
+        <div class="dash-hdr">
+          <div class="dash-hi">Hey Setu! &#128075;</div>
+          <div class="dash-title">Smart Savings, Smarter You!</div>
+          <div class="dash-sub">Compare, save &amp; enjoy the best from Food, Ride &amp; Skincare.</div>
+        </div>
+
+        <!-- HEADER TOP RIGHT TABS -->
+        <div class="rtabs" style="margin-top:6px">
+          <button class="rtab" onclick="switchMainTab('food')">&#127860; Food</button>
+          <button class="rtab" onclick="switchMainTab('ride')">&#128663; Ride</button>
+          <button class="rtab" onclick="window.location.href='skincare.html'">&#10024; Skincare</button>
+        </div>
+      </div>
+
+      <!-- 4 TOP STAT CARDS -->
+      <div class="dash-stats-grid">
+        <div class="d-stat-card" style="cursor:pointer" onclick="window.location.href='saved-deals.html'">
+          <div>
+            <div class="d-stat-label">Total Saved Deals</div>
+            <div class="d-stat-val" id="dash-stat-saved">6</div>
+            <div class="d-stat-delta">&#9650; 28% <span style="color:var(--light);font-weight:400">vs last month</span></div>
+          </div>
+          <div class="d-stat-icon" style="background:#fff0f5;color:var(--pink);">&#128157;</div>
+        </div>
+
+        <div class="d-stat-card" style="cursor:pointer" onclick="window.location.href='orders.html'">
+          <div>
+            <div class="d-stat-label">Total Orders</div>
+            <div class="d-stat-val" id="dash-stat-orders">6</div>
+            <div class="d-stat-delta">&#9650; 15% <span style="color:var(--light);font-weight:400">vs last month</span></div>
+          </div>
+          <div class="d-stat-icon" style="background:#eff6ff;color:#3b82f6;">&#128092;</div>
+        </div>
+
+        <div class="d-stat-card" style="cursor:pointer" onclick="window.location.href='price-alerts.html'">
+          <div>
+            <div class="d-stat-label">Active Price Alerts</div>
+            <div class="d-stat-val" id="dash-stat-alerts">5</div>
+            <div class="d-stat-delta">&#9650; 20% <span style="color:var(--light);font-weight:400">vs last month</span></div>
+          </div>
+          <div class="d-stat-icon" style="background:#f0fdf4;color:var(--green);">&#128276;</div>
+        </div>
+
+        <div class="d-stat-card" style="cursor:pointer" onclick="window.location.href='saved-deals.html'">
+          <div>
+            <div class="d-stat-label">Total Savings</div>
+            <div class="d-stat-val">&#2547;8,450</div>
+            <a class="d-stat-link" href="saved-deals.html">View saved deals &gt;</a>
+          </div>
+          <div class="d-stat-icon" style="background:#fff7ed;color:#f97316;">&#127873;</div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <div class="dash-shortcuts-card">
+        <div class="dash-sc-label">Quick Actions</div>
+        <div class="dash-sc-list">
+          <div class="sc-pill" onclick="window.location.href='saved-deals.html'"><span style="color:#ef4444">&#127925;</span> Saved Deals</div>
+          <div class="sc-pill" onclick="window.location.href='price-alerts.html'"><span style="color:#3b82f6">&#128276;</span> Price Alerts</div>
+          <div class="sc-pill" onclick="window.location.href='orders.html'"><span style="color:#a855f7">&#128230;</span> My Orders</div>
+          <div class="sc-pill" onclick="switchMainTab('food')"><span style="color:#ec4899">&#127860;</span> Food Deals</div>
+          <div class="sc-pill" onclick="switchMainTab('ride')"><span style="color:#f59e0b">&#128663;</span> Ride Offers</div>
+          <div class="sc-pill" onclick="window.location.href='skincare.html'"><span style="color:#eab308">&#128167;</span> Skincare Deals</div>
+        </div>
+      </div>
+
+      <!-- ANALYTICS CHARTS ROW -->
+      <div class="dash-charts-grid">
+        <!-- SPENDING OVERVIEW (LINE CHART) -->
+        <div class="d-chart-card">
+          <div class="d-chart-hd">
+            <div class="d-chart-title">Spending Overview</div>
+            <div class="d-chart-legends">
+              <span><span class="legend-dot" style="background:#ff1a6e"></span>Food</span>
+              <span><span class="legend-dot" style="background:#3b82f6"></span>Ride</span>
+              <span><span class="legend-dot" style="background:#a855f7"></span>Skincare</span>
+            </div>
+            <select class="d-chart-select"><option>This Month</option></select>
+          </div>
+          <div style="flex:1;min-height:160px;position:relative;display:flex;align-items:flex-end;padding-top:1rem;">
+            <svg width="100%" height="160" viewBox="0 0 450 160" preserveAspectRatio="none">
+              <line x1="0" y1="20" x2="450" y2="20" stroke="#f1f5f9" stroke-dasharray="4"/>
+              <line x1="0" y1="60" x2="450" y2="60" stroke="#f1f5f9" stroke-dasharray="4"/>
+              <line x1="0" y1="100" x2="450" y2="100" stroke="#f1f5f9" stroke-dasharray="4"/>
+              <line x1="0" y1="140" x2="450" y2="140" stroke="#e2e8f0"/>
+
+              <path d="M 20,120 Q 90,60 160,80 T 300,30 T 430,45" fill="none" stroke="#ff1a6e" stroke-width="3"/>
+              <path d="M 20,100 Q 90,110 160,85 T 300,70 T 430,90" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+              <path d="M 20,135 Q 90,120 160,110 T 300,100 T 430,115" fill="none" stroke="#a855f7" stroke-width="2.5"/>
+
+              <circle cx="20" cy="120" r="4" fill="#ff1a6e"/>
+              <circle cx="120" cy="70" r="4" fill="#ff1a6e"/>
+              <circle cx="230" cy="40" r="4" fill="#ff1a6e"/>
+              <circle cx="340" cy="30" r="4" fill="#ff1a6e"/>
+              <circle cx="430" cy="45" r="4" fill="#ff1a6e"/>
+
+              <circle cx="20" cy="100" r="3.5" fill="#3b82f6"/>
+              <circle cx="120" cy="98" r="3.5" fill="#3b82f6"/>
+              <circle cx="230" cy="78" r="3.5" fill="#3b82f6"/>
+              <circle cx="340" cy="70" r="3.5" fill="#3b82f6"/>
+              <circle cx="430" cy="90" r="3.5" fill="#3b82f6"/>
+
+              <circle cx="20" cy="135" r="3.5" fill="#a855f7"/>
+              <circle cx="120" cy="115" r="3.5" fill="#a855f7"/>
+              <circle cx="230" cy="105" r="3.5" fill="#a855f7"/>
+              <circle cx="340" cy="100" r="3.5" fill="#a855f7"/>
+              <circle cx="430" cy="115" r="3.5" fill="#a855f7"/>
+            </svg>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--light);margin-top:6px;padding:0 10px;">
+            <span>1 May</span><span>7 May</span><span>14 May</span><span>21 May</span><span>28 May</span>
+          </div>
+        </div>
+
+        <!-- SPENDING BY CATEGORY (DONUT CHART) -->
+        <div class="d-chart-card">
+          <div class="d-chart-hd">
+            <div class="d-chart-title">Spending by Category</div>
+            <select class="d-chart-select"><option>This Month</option></select>
+          </div>
+          <div class="donut-box">
+            <div class="donut-svg-wrap">
+              <svg width="120" height="120" viewBox="0 0 36 36">
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f1f5f9" stroke-width="4.5"/>
+                <path d="M18 2.0845 a 15.9155 15.9155 0 1 1 -15.14 20.84" fill="none" stroke="#ff1a6e" stroke-width="4.5" stroke-dasharray="60, 100"/>
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 15.14 10.96" fill="none" stroke="#3b82f6" stroke-width="4.5" stroke-dasharray="25, 100" stroke-dashoffset="-60"/>
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" fill="none" stroke="#a855f7" stroke-width="4.5" stroke-dasharray="15, 100" stroke-dashoffset="-85"/>
+              </svg>
+              <div class="donut-center-txt">
+                <span>Total</span>
+                <strong>&#2547;8,450</strong>
+              </div>
+            </div>
+            <div class="cat-breakdown">
+              <div class="cat-bd-row">
+                <div class="cat-bd-left"><span class="legend-dot" style="background:#ff1a6e"></span>&#127860; Food <span class="cat-bd-pct">60%</span></div>
+                <div class="cat-bd-val">&#2547;5,070</div>
+              </div>
+              <div class="cat-bd-row">
+                <div class="cat-bd-left"><span class="legend-dot" style="background:#3b82f6"></span>&#128663; Ride <span class="cat-bd-pct">25%</span></div>
+                <div class="cat-bd-val">&#2547;2,110</div>
+              </div>
+              <div class="cat-bd-row">
+                <div class="cat-bd-left"><span class="legend-dot" style="background:#a855f7"></span>&#128167; Skincare <span class="cat-bd-pct">15%</span></div>
+                <div class="cat-bd-val">&#2547;1,270</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPLORE TOP APPS GRID -->
+      <div class="eta-grid">
+        <!-- Food Delivery -->
+        <div class="eta-column">
+          <div class="eta-hd">
+            <div class="eta-title" style="color:var(--pink)">Food Delivery</div>
+            <a class="eta-link" href="#" onclick="switchMainTab('food')">View All</a>
+          </div>
+          <div class="eta-apps-row">
+            <div class="eta-app" onclick="switchMainTab('food')">
+              <div class="eta-logo" style="background:#d70f64">foodpanda</div>
+              <span>foodpanda</span>
+            </div>
+            <div class="eta-app" onclick="switchMainTab('food')">
+              <div class="eta-logo" style="background:#f97316">foodi</div>
+              <span>foodi</span>
+            </div>
+            <div class="eta-app" onclick="switchMainTab('food')">
+              <div class="eta-logo" style="background:#ef4444">pathao</div>
+              <span>pathao</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ride Services -->
+        <div class="eta-column">
+          <div class="eta-hd">
+            <div class="eta-title" style="color:#111827">Ride Services</div>
+            <a class="eta-link" href="#" onclick="switchMainTab('ride')">View All</a>
+          </div>
+          <div class="eta-apps-row">
+            <div class="eta-app" onclick="switchMainTab('ride')">
+              <div class="eta-logo" style="background:#111827">Uber</div>
+              <span>Uber</span>
+            </div>
+            <div class="eta-app" onclick="switchMainTab('ride')">
+              <div class="eta-logo" style="background:#eab308;color:#111827">OBHAI</div>
+              <span>OBHAI</span>
+            </div>
+            <div class="eta-app" onclick="switchMainTab('ride')">
+              <div class="eta-logo" style="background:#22c55e">iD</div>
+              <span>InDrive</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skincare Stores -->
+        <div class="eta-column">
+          <div class="eta-hd">
+            <div class="eta-title" style="color:#a855f7">Skincare Stores</div>
+            <a class="eta-link" href="skincare.html">View All</a>
+          </div>
+          <div class="eta-apps-row">
+            <div class="eta-app" onclick="window.location.href='skincare.html'">
+              <div class="eta-logo" style="background:#fafafa;color:#111827;border:1px solid #e2e8f0;font-size:9px">choice LEGACY</div>
+              <span>Choice Legacy</span>
+            </div>
+            <div class="eta-app" onclick="window.location.href='skincare.html'">
+              <div class="eta-logo" style="background:#fff0f5;color:#ec4899;font-size:9px">kirei</div>
+              <span>kirei</span>
+            </div>
+            <div class="eta-app" onclick="window.location.href='skincare.html'">
+              <div class="eta-logo" style="background:#fff0f5;color:#f43f5e;font-size:9px">Makeup Chari</div>
+              <span>Makeup Chari</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MIDDLE WIDGETS GRID (3 COLUMNS) -->
+      <div class="d-mid-widgets">
+        <!-- Exclusive Coupons -->
+        <div class="d-mw-card">
+          <div class="d-mw-hd">
+            <div class="d-mw-title">Exclusive Coupons</div>
+            <a class="d-mw-link" href="#">View All</a>
+          </div>
+          <div class="cpn-list">
+            <div class="cpn-row">
+              <span class="cpn-badge">FOOD50</span>
+              <div class="cpn-info">
+                <div class="cpn-val">&#2547;50 OFF</div>
+                <div class="cpn-min">Min. spend &#2547;300</div>
+              </div>
+              <button class="cpn-copy-btn" onclick="this.textContent='Copied!'">Copy Code</button>
+            </div>
+            <div class="cpn-row">
+              <span class="cpn-badge" style="background:#eff6ff;border-color:#3b82f6;color:#3b82f6">RIDE100</span>
+              <div class="cpn-info">
+                <div class="cpn-val">&#2547;100 OFF</div>
+                <div class="cpn-min">Min. spend &#2547;250</div>
+              </div>
+              <button class="cpn-copy-btn" onclick="this.textContent='Copied!'">Copy Code</button>
+            </div>
+            <div class="cpn-row">
+              <span class="cpn-badge" style="background:#faf5ff;border-color:#a855f7;color:#a855f7">SKIN10</span>
+              <div class="cpn-info">
+                <div class="cpn-val">10% OFF</div>
+                <div class="cpn-min">Min. spend &#2547;1,000</div>
+              </div>
+              <button class="cpn-copy-btn" onclick="this.textContent='Copied!'">Copy Code</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Price Alerts -->
+        <div class="d-mw-card">
+          <div class="d-mw-hd">
+            <div class="d-mw-title">Price Alerts</div>
+            <a class="d-mw-link" href="#">View All</a>
+          </div>
+          <div class="pa-list">
+            <div class="pa-row">
+              <img class="pa-img" src="https://images.pexels.com/photos/6621465/pexels-photo-6621465.jpeg?auto=compress&cs=tinysrgb&w=80" alt="Serum"/>
+              <div class="pa-info">
+                <div class="pa-title">Vitamin C Serum</div>
+                <div class="pa-prices">&#2547;890 <span class="pa-old-p">&#2547;1,260</span> <span class="pa-drop-badge">Price Drop 29%</span></div>
+              </div>
+              <button class="pa-bell-btn">&#128276;</button>
+            </div>
+            <div class="pa-row">
+              <img class="pa-img" src="https://images.pexels.com/photos/4041391/pexels-photo-4041391.jpeg?auto=compress&cs=tinysrgb&w=80" alt="Ordinary"/>
+              <div class="pa-info">
+                <div class="pa-title">The Ordinary Niacinamide</div>
+                <div class="pa-prices">&#2547;650 <span class="pa-old-p">&#2547;1,200</span> <span class="pa-drop-badge">Price Drop 23%</span></div>
+              </div>
+              <button class="pa-bell-btn">&#128276;</button>
+            </div>
+            <div class="pa-row">
+              <img class="pa-img" src="https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg?auto=compress&cs=tinysrgb&w=80" alt="iPhone"/>
+              <div class="pa-info">
+                <div class="pa-title">iPhone 14 (128GB)</div>
+                <div class="pa-prices">&#2547;105,000 <span class="pa-old-p">&#2547;125,000</span> <span class="pa-drop-badge">Price Drop 16%</span></div>
+              </div>
+              <button class="pa-bell-btn">&#128276;</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monthly Savings Goal -->
+        <div class="goal-card">
+          <div class="d-mw-hd" style="margin-bottom:2px">
+            <div class="d-mw-title" style="font-size:.85rem">Monthly Savings Goal</div>
+            <a class="d-mw-link" href="#" style="font-size:.7rem">Edit Goal</a>
+          </div>
+          <div class="goal-sub">You are doing great! Keep it up.</div>
+          <div class="goal-progress-wrap">
+            <div class="goal-nums"><span>&#2547;6,250</span> <span style="font-size:.7rem;color:var(--light);font-weight:600">/ &#2547;10,000</span> <span style="font-size:.7rem;float:right">62%</span></div>
+            <div class="goal-track"><div class="goal-fill"></div></div>
+          </div>
+          <div class="goal-mini-stats">
+            <div class="gms-item"><span>Top Category</span><strong>Food</strong></div>
+            <div class="gms-item"><span>Best Saving</span><strong>&#2547;2,150</strong></div>
+            <div class="gms-item"><span>Cashback Earned</span><strong>&#2547;1,250</strong></div>
+          </div>
+          <div class="goal-foot">&#9200; 6 days left in this month</div>
+        </div>
+      </div>
+
+      <!-- PAYMENT OFFERS CARD -->
+      <div class="pay-offers-card">
+        <div class="d-mw-hd">
+          <div class="d-mw-title">Payment Offers</div>
+          <a class="d-mw-link" href="#">View All</a>
+        </div>
+        <div class="po-grid">
+          <div class="po-item">
+            <div class="po-logo" style="background:#d12053">bKash</div>
+            <div>
+              <div class="po-title">bKash</div>
+              <div class="po-off">Up to 10% OFF</div>
+              <div class="po-min">Min. spend &#2547;300</div>
+            </div>
+          </div>
+          <div class="po-item">
+            <div class="po-logo" style="background:#f97316">Nagad</div>
+            <div>
+              <div class="po-title">Nagad</div>
+              <div class="po-off">Up to 8% OFF</div>
+              <div class="po-min">Min. spend &#2547;300</div>
+            </div>
+          </div>
+          <div class="po-item">
+            <div class="po-logo" style="background:#8b5cf6">Rocket</div>
+            <div>
+              <div class="po-title">Rocket</div>
+              <div class="po-off">Up to 10% OFF</div>
+              <div class="po-min">Min. spend &#2547;300</div>
+            </div>
+          </div>
+          <div class="po-item">
+            <div class="po-logo" style="background:#1d4ed8">Visa</div>
+            <div>
+              <div class="po-title">Visa Cards</div>
+              <div class="po-off">Up to 15% OFF</div>
+              <div class="po-min">Selected cards</div>
+            </div>
+          </div>
+          <div class="po-item">
+            <div class="po-logo" style="background:#eb001b">MC</div>
+            <div>
+              <div class="po-title">Mastercard</div>
+              <div class="po-off">Up to 15% OFF</div>
+              <div class="po-min">Selected cards</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── RIGHT COLUMN (PRODUCT COMPARISON SIDEBAR) ── -->
+    <div class="col-r">
+
+      <!-- TOP HEADER ACTION -->
+      <div class="pc-hd">
+        <div class="pc-title"><span>&larr;</span> Product Comparison</div>
+        <div class="pc-actions">
+          <span>&#10084;</span>
+          <span>&#128257;</span>
+        </div>
+      </div>
+
+      <!-- FEATURED PRODUCT CARD -->
+      <div class="pc-prod-card">
+        <img class="pc-prod-img" src="https://images.pexels.com/photos/4041391/pexels-photo-4041391.jpeg?auto=compress&cs=tinysrgb&w=200" alt="The Ordinary"/>
+        <div class="pc-prod-cat">Skincare</div>
+        <div class="pc-prod-name">The Ordinary Niacinamide 10% + Zinc 1%</div>
+        <div class="pc-prod-size">30ml</div>
+        <div class="pc-prod-sub">Compare prices &amp; offers from top stores</div>
+      </div>
+
+      <!-- TOP STORE OFFERS -->
+      <div style="font-size:.85rem;font-weight:800;color:#111827;margin-bottom:.8rem">Top Store Offers</div>
+
+      <!-- Choice Legacy Card -->
+      <div class="pc-store-card">
+        <span class="pc-rec-badge">Recommended</span>
+        <div class="pc-store-logo">choice <span style="font-size:.7rem;font-weight:400">LEGACY</span></div>
+        <div class="pc-price-row">
+          <span class="pc-price">&#2547;500</span>
+          <span class="pc-old-price">&#2547;525</span>
+          <span class="pc-off-badge">5% OFF</span>
+        </div>
+        <div class="pc-store-foot">
+          <div>Free Delivery | 4.6 &#9733;</div>
+          <button class="btn-view-store" onclick="window.location.href='skincare.html'">View Store</button>
+        </div>
+      </div>
+
+      <!-- Kirei Card -->
+      <div class="pc-store-card">
+        <div class="pc-store-logo" style="color:#ec4899">kirei</div>
+        <div class="pc-price-row">
+          <span class="pc-price">&#2547;300</span>
+          <span class="pc-old-price">&#2547;600</span>
+          <span class="pc-off-badge">50% OFF</span>
+        </div>
+        <div class="pc-store-foot">
+          <div>Free Delivery | 4.7 &#9733;</div>
+          <button class="btn-view-store" onclick="window.location.href='skincare.html'">View Store</button>
+        </div>
+      </div>
+
+      <!-- Makeup Chari Card -->
+      <div class="pc-store-card">
+        <div class="pc-store-logo" style="color:#f43f5e">Makeup Chari</div>
+        <div class="pc-price-row">
+          <span class="pc-price">&#2547;446</span>
+          <span class="pc-old-price">&#2547;525</span>
+          <span class="pc-off-badge">15% OFF</span>
+        </div>
+        <div class="pc-store-foot">
+          <div>Free Delivery | 4.5 &#9733;</div>
+          <button class="btn-view-store" onclick="window.location.href='skincare.html'">View Store</button>
+        </div>
+      </div>
+
+      <!-- PAYMENT OFFERS (EXTRA DISCOUNTS) -->
+      <div class="pc-payment-panel">
+        <div style="font-size:.8rem;font-weight:800;color:#111827;margin-bottom:.6rem">Payment Offers <span style="font-weight:400;font-size:.7rem;color:var(--mid)">(Extra Discounts)</span></div>
+        <div class="pc-pay-item">
+          <div class="pc-pay-left">
+            <div class="pc-pay-logo" style="background:#d12053">bK</div>
+            <div>
+              <div class="pc-pay-title">Up to 10% OFF</div>
+              <div class="pc-pay-min">Min. spend &#2547;500</div>
+            </div>
+          </div>
+          <a class="pc-pay-link" href="#">View Offers</a>
+        </div>
+        <div class="pc-pay-item">
+          <div class="pc-pay-left">
+            <div class="pc-pay-logo" style="background:#f97316">Ng</div>
+            <div>
+              <div class="pc-pay-title">Up to 8% OFF</div>
+              <div class="pc-pay-min">Min. spend &#2547;500</div>
+            </div>
+          </div>
+          <a class="pc-pay-link" href="#">View Offers</a>
+        </div>
+        <div class="pc-pay-item">
+          <div class="pc-pay-left">
+            <div class="pc-pay-logo" style="background:#8b5cf6">Ro</div>
+            <div>
+              <div class="pc-pay-title">Up to 10% OFF</div>
+              <div class="pc-pay-min">Min. spend &#2547;500</div>
+            </div>
+          </div>
+          <a class="pc-pay-link" href="#">View Offers</a>
+        </div>
+        <div style="text-align:center;margin-top:.8rem">
+          <a class="pc-pay-link" href="#" style="font-size:.7rem">View All Payment Offers</a>
+        </div>
+      </div>
+
+      <!-- HOW IT WORKS? -->
+      <div class="pc-how-card">
+        <div class="pc-how-title">How it works?</div>
+        <div class="pc-how-steps">
+          <div class="pc-step">
+            <div class="pc-step-ico">&#128269;</div>
+            <span><strong>1. Compare</strong><br/>Check prices from top stores</span>
+          </div>
+          <span class="pc-arrow">&rarr;</span>
+          <div class="pc-step">
+            <div class="pc-step-ico">&#128076;</div>
+            <span><strong>2. Choose</strong><br/>Pick the best deal</span>
+          </div>
+          <span class="pc-arrow">&rarr;</span>
+          <div class="pc-step">
+            <div class="pc-step-ico">&#128176;</div>
+            <span><strong>3. Save More</strong><br/>Apply payment offers</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="pg" id="pg-food">
     <div class="col-c">
       <div class="hero">
         <div class="hero-txt">
@@ -479,9 +1168,9 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none;}
     
     <div class="col-r">
       <div class="rtabs" id="food-tabs">
-        <div class="rtab on" onclick="switchMainTab('food')"><span style="color:#ff1a6e;font-size:1.1rem;">&#127860;</span> <span style="color:#ff1a6e;">Food</span></div>
-        <div class="rtab" onclick="switchMainTab('ride')"><span style="color:#3b82f6;font-size:1.1rem;">&#128663;</span> <span style="color:#3b82f6;">Ride</span></div>
-        <div class="rtab"><span style="color:#a855f7;font-size:1.1rem;">&#10024;</span> <span style="color:#a855f7;">Skincare</span></div>
+        <div class="rtab on" onclick="switchMainTab('food')">&#127860; Food</div>
+        <div class="rtab" onclick="switchMainTab('ride')">&#128663; Ride</div>
+        <div class="rtab" onclick="window.location.href='skincare.html'">&#10024; Skincare</div>
       </div>
       
       <div class="sv-card">
@@ -695,10 +1384,10 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none;}
   </div>
   
   <div class="col-r">
-    <div class="rtabs">
-      <div class="rtab" onclick="switchMainTab('food')"><span>&#127860;</span> <span>Food</span></div>
-      <div class="rtab on" onclick="switchMainTab('ride')" style="background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.05);"><span style="color:var(--pink);font-size:1.1rem;">&#128663;</span> <span style="color:var(--pink);">Ride</span></div>
-      <div class="rtab"><span style="color:#a855f7;font-size:1.1rem;">&#10024;</span> <span style="color:#a855f7;">Skincare</span></div>
+    <div class="rtabs" id="ride-tabs">
+      <button class="rtab" onclick="switchMainTab('food')">&#127860; Food</button>
+      <button class="rtab on" onclick="switchMainTab('ride')">&#128663; Ride</button>
+      <button class="rtab" onclick="window.location.href='skincare.html'">&#10024; Skincare</button>
     </div>
     
     <div class="rs-summary">
@@ -807,37 +1496,86 @@ function switchMainTab(tabName) {
 </style>
 </div>
 <script>
+var activeTabState = 'dashboard';
 function switchMainTab(tabName) {
-  document.getElementById('pg-food').style.display = 'none';
-  document.getElementById('pg-ride').style.display = 'none';
+  activeTabState = tabName;
+  const pgDash = document.getElementById('pg-dashboard');
+  const pgFood = document.getElementById('pg-food');
+  const pgRide = document.getElementById('pg-ride');
+
+  if (pgDash) pgDash.style.display = 'none';
+  if (pgFood) pgFood.style.display = 'none';
+  if (pgRide) pgRide.style.display = 'none';
   
   const sbViral = document.getElementById('sb-viral');
   const sbExposed = document.getElementById('sb-exposed');
   
-  if(tabName === 'food') {
-    document.getElementById('pg-food').style.display = 'flex';
-    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('on'));
+  // Sync the Food-panel rtabs
+  const foodTabs = document.querySelectorAll('#food-tabs .rtab');
+  foodTabs.forEach(t => t.classList.remove('on'));
+
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('on'));
+
+  if (tabName === 'dashboard') {
+    if (pgDash) pgDash.style.display = 'flex';
+    const dSb = document.getElementById('sb-dashboard');
+    if (dSb) dSb.classList.add('on');
+    if (sbViral) sbViral.style.display = 'flex';
+    if (sbExposed) sbExposed.style.display = 'none';
+  } else if (tabName === 'food') {
+    if (pgFood) pgFood.style.display = 'flex';
     const fSb = document.getElementById('sb-food');
-    if(fSb) fSb.classList.add('on');
-    if(sbViral) sbViral.style.display = 'flex';
-    if(sbExposed) sbExposed.style.display = 'none';
-  } else if(tabName === 'ride') {
-    document.getElementById('pg-ride').style.display = 'flex';
-    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('on'));
+    if (fSb) fSb.classList.add('on');
+    if (sbViral) sbViral.style.display = 'flex';
+    if (sbExposed) sbExposed.style.display = 'none';
+    if (foodTabs[0]) foodTabs[0].classList.add('on');
+  } else if (tabName === 'ride') {
+    if (pgRide) pgRide.style.display = 'flex';
     const rSb = document.getElementById('sb-ride');
-    if(rSb) rSb.classList.add('on');
-    if(sbViral) sbViral.style.display = 'none';
-    if(sbExposed) sbExposed.style.display = 'flex';
-    // set name again if needed
+    if (rSb) rSb.classList.add('on');
+    if (sbViral) sbViral.style.display = 'none';
+    if (sbExposed) sbExposed.style.display = 'flex';
     const fn = (localStorage.getItem('om_user_name') || 'Setu').split(' ')[0];
     document.querySelectorAll('.hero-fname-ride').forEach(el => el.textContent = fn);
   }
 }
+
+function goSavedDeals() {
+  if (activeTabState === 'food') {
+    window.location.href = 'saved-deals.html?cat=food';
+  } else if (activeTabState === 'ride') {
+    window.location.href = 'saved-deals.html?cat=ride';
+  } else {
+    window.location.href = 'saved-deals.html';
+  }
+}
+
+function goPriceAlerts() {
+  if (activeTabState === 'food') {
+    window.location.href = 'price-alerts.html?cat=food';
+  } else if (activeTabState === 'ride') {
+    window.location.href = 'price-alerts.html?cat=ride';
+  } else {
+    window.location.href = 'price-alerts.html';
+  }
+}
 document.addEventListener("DOMContentLoaded", function() {
-  // Toggle sidebar items
+  // Auto-switch tab based on ?tab= URL param
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabParam = urlParams.get('tab');
+  if (tabParam === 'food') {
+    switchMainTab('food');
+  } else if (tabParam === 'ride') {
+    switchMainTab('ride');
+  }
+
+  // Toggle sidebar items — skip buttons that navigate away
   const sbItems = document.querySelectorAll('.sb-item:not(.sb-red)');
   sbItems.forEach(item => {
-    item.addEventListener('click', () => {
+    item.addEventListener('click', (e) => {
+      // If this button navigates away via onclick, don't toggle active
+      const onclickAttr = item.getAttribute('onclick') || '';
+      if (onclickAttr.includes('location.href') || onclickAttr.includes('location.reload') || onclickAttr.includes('goSavedDeals') || onclickAttr.includes('goPriceAlerts')) return;
       sbItems.forEach(i => i.classList.remove('on'));
       item.classList.add('on');
     });
@@ -861,23 +1599,50 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
-  // Toggle Right Tabs (Food, Ride, Skincare)
-  const rtabs = document.querySelectorAll('.rtab');
-  rtabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      rtabs.forEach(t => t.classList.remove('on'));
-      tab.classList.add('on');
-    });
-  });
+  // Right Tabs: navigation only — NO dynamic .on toggling (state is fixed per tab/page)
+  // Food and Ride tabs use onclick="switchMainTab()" directly in HTML
+  // Skincare tab uses onclick="window.location.href='skincare.html'" — navigates away
 
-  // Generic click alert for cards and buttons
+  // Render Live Price Alerts Widget from OMStore
+  function renderDashPriceAlerts() {
+    const list = document.querySelector('.pa-list');
+    if (!list || !window.OMStore) return;
+    const alerts = window.OMStore.getPriceAlerts().slice(0, 3);
+    if (alerts.length === 0) {
+      list.innerHTML = '<div style="font-size:.78rem;color:var(--light);padding:.5rem 0;">No active price alerts</div>';
+      return;
+    }
+    list.innerHTML = alerts.map(a => `
+      <div class="pa-row">
+        <img class="pa-img" src="${a.img}" alt="${a.title}"/>
+        <div class="pa-info">
+          <div class="pa-title">${a.title}</div>
+          <div class="pa-prices">&#2547;${a.currentPrice} <span class="pa-old-p">&#2547;${a.oldPrice}</span> <span class="pa-drop-badge">${a.drop}</span></div>
+        </div>
+        <button class="pa-bell-btn" title="View Alert" onclick="goPriceAlerts()">&#128276;</button>
+      </div>
+    `).join('');
+  }
+
+  // Sync dashboard top stat values
+  function syncDashStats() {
+    if (!window.OMStore) return;
+    const sElem = document.getElementById('dash-stat-saved');
+    const oElem = document.getElementById('dash-stat-orders');
+    const aElem = document.getElementById('dash-stat-alerts');
+    if (sElem) sElem.textContent = window.OMStore.getSavedDeals().length;
+    if (oElem) oElem.textContent = window.OMStore.getOrders().length;
+    if (aElem) aElem.textContent = window.OMStore.getPriceAlerts().length;
+  }
+
+  renderDashPriceAlerts();
+  syncDashStats();
+
+  // Generic click feedback for cards and buttons
   const clickables = document.querySelectorAll('.food-card, .vr-item, .btn-search, .btn-invite, .btn-outline, .card-link, .tb-icon-btn, .tb-saved, .tb-user');
   clickables.forEach(el => {
     el.addEventListener('click', (e) => {
-      // Don't trigger if it's already a link
       if (e.target.tagName.toLowerCase() === 'a') return;
-      
-      // Visual feedback for buttons
       if (el.classList.contains('btn-outline')) {
         const orig = el.innerText;
         el.innerText = 'Copied!';

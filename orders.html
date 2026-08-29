@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Your Orders - OfferMatrix</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="js/om-store.js"></script>
+<style>
+  :root {
+    --pink: #ff1a6e;
+    --pink-light: #fff0f5;
+    --pink-mid: #ffe4ec;
+    --dark: #111827;
+    --mid: #4b5563;
+    --light: #9ca3af;
+    --bg: #f8fafc;
+    --border: #f1f5f9;
+    --green: #10b981;
+    --green-bg: #dcfce7;
+    --font: 'Plus Jakarta Sans', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font); }
+  body { background: var(--bg); color: var(--dark); display: flex; min-height: 100vh; }
+
+  /* SIDEBAR STYLES (STANDARDIZED) */
+  .sb { width: 240px; background: #fff; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 1.2rem 0; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; overflow-y: auto; }
+  .sb-logo { display: flex; align-items: center; gap: .6rem; padding: 0 1.4rem 1.2rem; border-bottom: 1px solid var(--border); }
+  .sb-logo-icon { width: 34px; height: 34px; background: var(--pink); border-radius: 10px; color: #fff; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+  .sb-logo-text { font-size: 1.3rem; font-weight: 800; color: #111827; }
+  .sb-nav { flex: 1; padding: .8rem 0; }
+  .sb-group { font-size: .7rem; font-weight: 700; color: var(--light); letter-spacing: 1px; padding: 1rem 1.4rem .4rem; text-transform: uppercase; }
+  .sb-item { display: flex; align-items: center; gap: .8rem; padding: .7rem 1.4rem; font-size: .9rem; font-weight: 600; color: var(--mid); width: 100%; text-align: left; cursor: pointer; transition: all .2s; white-space: nowrap; border: none; background: transparent; text-decoration: none; }
+  .sb-item:hover { color: var(--pink); }
+  .sb-item.on { background: var(--pink); color: #fff; border-radius: 10px; margin: 0 .8rem; padding: .7rem .6rem; width: calc(100% - 1.6rem); font-weight: 800; }
+  .sb-item.on .sb-ico { color: #fff; }
+  .sb-ico { font-size: 1.1rem; width: 22px; text-align: center; color: #6b7280; transition: all .2s; flex-shrink: 0; }
+  .sb-badge { margin-left: auto; font-size: .65rem; font-weight: 800; padding: 2px 8px; border-radius: 50px; background: var(--pink); color: #fff; display: inline-flex; align-items: center; justify-content: center; }
+  .sb-badge.red { background: #fff; color: #ef4444; border: 1.5px solid #ef4444; }
+  .sb-red { color: #ef4444 !important; }
+  .sb-invite { margin: 1rem; background: var(--pink-light); border-radius: 16px; padding: 1.2rem; text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .sb-invite-emoji { font-size: 2rem; margin-bottom: .5rem; }
+  .sb-invite-title { font-size: .9rem; font-weight: 800; color: var(--pink); margin-bottom: .3rem; }
+  .sb-invite-sub { font-size: .75rem; color: var(--mid); margin-bottom: .8rem; line-height: 1.4; }
+  .btn-invite { background: var(--pink); color: #fff; border-radius: 50px; padding: .5rem 1.2rem; font-size: .8rem; font-weight: 700; width: 100%; transition: all .2s; border: none; cursor: pointer; }
+
+  /* MAIN CONTENT AREA */
+  .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .topbar { height: 65px; background: #fff; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; position: sticky; top: 0; z-index: 90; }
+  .tb-search { display: flex; align-items: center; gap: .6rem; background: #f8fafc; border: 1px solid var(--border); border-radius: 50px; padding: .45rem 1rem; width: 340px; }
+  .tb-search input { border: none; background: transparent; outline: none; font-size: .82rem; width: 100%; }
+  .tb-actions { display: flex; align-items: center; gap: 1rem; }
+  .tb-icon-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border); background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; color: var(--mid); }
+  .notif-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--pink); border: 2px solid #fff; }
+  .tb-user { display: flex; align-items: center; gap: .6rem; cursor: pointer; }
+  .tb-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+  .tb-uname { font-size: .82rem; font-weight: 800; color: #111827; }
+  .tb-umeta { font-size: .68rem; color: var(--light); }
+
+  /* PAGE CONTENT LAYOUT */
+  .pg { display: flex; flex: 1; min-height: calc(100vh - 65px); }
+  .col-c { flex: 1; min-width: 0; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; overflow-x: hidden; }
+  .col-r { width: 340px; flex-shrink: 0; padding: 1.5rem 1.5rem 1.5rem 0; display: flex; flex-direction: column; gap: 1.2rem; }
+
+  /* HEADER ROW WITH PREMIUM BANNER */
+  .orders-hdr-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+  .ord-hi { font-size: .88rem; color: var(--mid); margin-bottom: 2px; }
+  .ord-title { font-size: 1.7rem; font-weight: 900; color: #111827; letter-spacing: -.4px; margin-bottom: 3px; }
+  .ord-sub { font-size: .82rem; color: var(--light); }
+
+  .prem-banner-card { background: linear-gradient(135deg, #fff0f5, #ffffff); border: 1px solid #fecdd3; border-radius: 16px; padding: .8rem 1.1rem; display: flex; align-items: center; gap: .9rem; box-shadow: 0 2px 8px rgba(255,26,110,.04); }
+  .prem-crown-ico { width: 36px; height: 36px; border-radius: 10px; background: #fff; border: 1px solid #fecdd3; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #eab308; flex-shrink: 0; }
+  .prem-info { flex: 1; }
+  .prem-title { font-size: .8rem; font-weight: 800; color: #111827; margin-bottom: 2px; }
+  .prem-sub { font-size: .65rem; color: var(--mid); max-width: 220px; line-height: 1.2; }
+  .btn-upgrade { background: var(--pink); color: #fff; border: none; border-radius: 50px; padding: .45rem 1rem; font-size: .72rem; font-weight: 800; cursor: pointer; white-space: nowrap; }
+
+  /* CATEGORY FILTER TABS */
+  .ord-tabs-bar { display: flex; gap: .6rem; overflow-x: auto; padding-bottom: 2px; }
+  .ord-tab-pill { display: flex; align-items: center; gap: 6px; padding: .55rem 1.1rem; border: 1px solid var(--border); border-radius: 50px; background: #fff; font-size: .8rem; font-weight: 700; color: var(--mid); cursor: pointer; white-space: nowrap; transition: all .2s; }
+  .ord-tab-pill:hover { border-color: var(--pink); color: var(--pink); }
+  .ord-tab-pill.active { background: var(--pink); color: #fff; border-color: var(--pink); }
+  .ord-tab-badge { font-size: .65rem; font-weight: 800; padding: 2px 6px; border-radius: 50px; background: rgba(0,0,0,.08); }
+  .ord-tab-pill.active .ord-tab-badge { background: #fff; color: var(--pink); }
+
+  /* ACTIVE ORDERS CARD */
+  .act-ord-sec { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.1rem; }
+  .sec-hd-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: .9rem; }
+  .sec-title { font-size: .9rem; font-weight: 800; color: #111827; }
+  .sec-link { font-size: .75rem; font-weight: 700; color: var(--pink); text-decoration: none; }
+
+  .act-ord-card { background: #fafafa; border: 1px solid #f1f5f9; border-radius: 14px; padding: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .ao-left { display: flex; align-items: center; gap: .8rem; }
+  .ao-logo { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: #fff; flex-shrink: 0; }
+  .ao-item-name { font-size: .88rem; font-weight: 800; color: #111827; margin-bottom: 2px; }
+  .ao-rest { font-size: .72rem; color: var(--mid); margin-bottom: 4px; }
+  .ao-meta { font-size: .65rem; color: var(--light); }
+  .ao-thumb { width: 54px; height: 54px; border-radius: 10px; object-fit: cover; }
+  .ao-status-box { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+  .badge-preparing { background: #fff0f5; color: var(--pink); font-size: .7rem; font-weight: 800; padding: 4px 10px; border-radius: 50px; border: 1px solid #fecdd3; }
+  .ao-est { font-size: .65rem; color: var(--mid); font-weight: 600; }
+  .btn-view-det { border: 1px solid var(--pink); color: var(--pink); background: #fff; border-radius: 50px; padding: .5rem 1.1rem; font-size: .75rem; font-weight: 800; cursor: pointer; transition: all .2s; }
+  .btn-view-det:hover { background: var(--pink); color: #fff; }
+
+  /* RECENT ORDERS TABLE */
+  .rec-ord-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.1rem; }
+  .ro-list { display: flex; flex-direction: column; gap: .8rem; }
+  .ro-row { display: flex; align-items: center; justify-content: space-between; padding-bottom: .8rem; border-bottom: 1px solid #f3f4f6; gap: 1rem; }
+  .ro-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .ro-left { display: flex; align-items: center; gap: .8rem; width: 240px; }
+  .ro-logo { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: #fff; flex-shrink: 0; }
+  .ro-name { font-size: .8rem; font-weight: 800; color: #111827; margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ro-sub { font-size: .68rem; color: var(--light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ro-date { font-size: .72rem; color: var(--mid); display: flex; align-items: center; gap: 4px; }
+  .badge-delivered { background: #dcfce7; color: #166534; font-size: .68rem; font-weight: 800; padding: 3px 10px; border-radius: 50px; }
+  .badge-completed { background: #e0e7ff; color: #3730a3; font-size: .68rem; font-weight: 800; padding: 3px 10px; border-radius: 50px; }
+  .ro-price { font-size: .88rem; font-weight: 900; color: #111827; }
+
+  /* QUICK ACTIONS 5 GRID */
+  .qa-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: .8rem; margin-top: .4rem; }
+  .qa-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: .9rem; display: flex; flex-direction: column; gap: 8px; cursor: pointer; transition: all .2s; }
+  .qa-card:hover { transform: translateY(-2px); border-color: var(--pink); }
+  .qa-ico { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .qa-title { font-size: .78rem; font-weight: 800; color: #111827; }
+  .qa-sub { font-size: .62rem; color: var(--light); line-height: 1.2; }
+  .qa-arr { font-size: .75rem; color: var(--pink); font-weight: 900; margin-top: auto; align-self: flex-end; }
+
+  /* RIGHT SIDEBAR: ORDER SUMMARY PANEL */
+  .os-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.2rem; }
+  .os-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .os-title { font-size: .95rem; font-weight: 900; color: #111827; }
+  .badge-live { background: #ffe4ec; color: var(--pink); font-size: .62rem; font-weight: 800; padding: 3px 8px; border-radius: 50px; display: flex; align-items: center; gap: 4px; }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pink); animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%{opacity:1} 50%{opacity:.3} 100%{opacity:1} }
+
+  .os-id-row { font-size: .85rem; font-weight: 800; color: #111827; margin-bottom: 2px; }
+  .os-placed-time { font-size: .68rem; color: var(--light); margin-bottom: 1.2rem; }
+
+  /* PROGRESS TIMELINE TRACKER */
+  .timeline-tracker { display: flex; justify-content: space-between; align-items: center; position: relative; margin-bottom: 1.4rem; padding: 0 10px; }
+  .timeline-tracker::before { content:''; position: absolute; top: 12px; left: 20px; right: 20px; height: 2px; background: #e2e8f0; z-index: 1; }
+  .timeline-tracker::after { content:''; position: absolute; top: 12px; left: 20px; width: 33%; height: 2px; background: var(--pink); z-index: 2; }
+  .tl-step { display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; z-index: 3; }
+  .tl-node { width: 24px; height: 24px; border-radius: 50%; background: #e2e8f0; color: var(--light); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; border: 2px solid #fff; }
+  .tl-node.done { background: var(--pink); color: #fff; }
+  .tl-node.active { background: #fff; border: 2px solid var(--pink); color: var(--pink); }
+  .tl-lbl { font-size: .6rem; font-weight: 700; color: var(--light); white-space: nowrap; }
+  .tl-lbl.on { color: #111827; font-weight: 800; }
+
+  /* DELIVERY PARTNER CARD */
+  .dp-card { background: #fafafa; border: 1px solid #f1f5f9; border-radius: 14px; padding: .8rem 1rem; margin-bottom: 1.2rem; }
+  .dp-hd { font-size: .72rem; font-weight: 800; color: var(--mid); margin-bottom: .6rem; }
+  .dp-main { display: flex; align-items: center; justify-content: space-between; }
+  .dp-user { display: flex; align-items: center; gap: .6rem; }
+  .dp-img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
+  .dp-name { font-size: .78rem; font-weight: 800; color: #111827; }
+  .dp-phone { font-size: .65rem; color: var(--light); }
+  .dp-actions { display: flex; gap: 6px; }
+  .dp-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--pink); cursor: pointer; }
+
+  /* ORDER ITEMS LIST */
+  .os-items-hd { font-size: .78rem; font-weight: 800; color: #111827; margin-bottom: .6rem; }
+  .os-item-row { display: flex; align-items: center; justify-content: space-between; padding: .4rem 0; font-size: .75rem; }
+  .os-item-left { display: flex; align-items: center; gap: .6rem; }
+  .os-item-img { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
+  .os-item-title { font-weight: 700; color: #111827; }
+  .os-item-qty { font-size: .65rem; color: var(--light); }
+  .os-item-price { font-weight: 800; color: #111827; }
+
+  /* BILL BREAKDOWN */
+  .bill-box { border-top: 1px solid #f3f4f6; margin-top: .8rem; padding-top: .8rem; display: flex; flex-direction: column; gap: 6px; font-size: .75rem; }
+  .bill-row { display: flex; justify-content: space-between; color: var(--mid); }
+  .bill-total-row { display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; font-weight: 900; color: var(--pink); border-top: 1px solid #f3f4f6; padding-top: .8rem; margin-top: 4px; }
+
+  /* PAYMENT METHOD CARD */
+  .pm-card { background: #fff0f5; border: 1px solid #fecdd3; border-radius: 14px; padding: .8rem 1rem; margin: 1.2rem 0; }
+  .pm-hd { display: flex; justify-content: space-between; font-size: .7rem; color: var(--mid); margin-bottom: .4rem; }
+  .pm-hd a { color: var(--pink); font-weight: 800; text-decoration: none; }
+  .pm-main { display: flex; align-items: center; justify-content: space-between; }
+  .pm-left { display: flex; align-items: center; gap: .6rem; }
+  .pm-logo { width: 28px; height: 28px; border-radius: 6px; background: #d12053; color: #fff; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
+  .pm-title { font-size: .8rem; font-weight: 800; color: #111827; }
+  .pm-val { font-size: .8rem; font-weight: 800; color: var(--pink); }
+
+  .btn-track-order { background: var(--pink); color: #fff; border: none; border-radius: 50px; padding: .75rem 1.2rem; font-size: .85rem; font-weight: 800; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 14px rgba(255,26,110,.25); }
+  .btn-track-order:hover { opacity: .95; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR NAVIGATION (STANDARDIZED) -->
+<aside class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">%</div>
+    <span class="sb-logo-text">Offer<span style="color:#22c55e">Matrix</span></span>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-group">MAIN</div>
+    <button class="sb-item" onclick="window.location.href='dashboard.html'"><span class="sb-ico">&#127968;</span> Dashboard</button>
+    <button class="sb-item" onclick="window.location.href='dashboard.html?tab=food'"><span class="sb-ico">&#127860;</span> Food</button>
+    <button class="sb-item" onclick="window.location.href='dashboard.html?tab=ride'"><span class="sb-ico" style="color:inherit;">&#128663;</span> Ride</button>
+    <button class="sb-item" onclick="window.location.href='skincare.html'"><span class="sb-ico">&#128167;</span> Skincare</button>
+    <button class="sb-item on"><span class="sb-ico">&#128230;</span> Orders <span class="sb-badge" style="background:#ff1a6e;color:#fff;">6</span></button>
+    <button class="sb-item" onclick="window.location.href='saved-deals.html'"><span class="sb-ico">&#10084;</span> Saved Deals</button>
+    <button class="sb-item" onclick="window.location.href='price-alerts.html'"><span class="sb-ico">&#128276;</span> Price Alerts <span class="sb-badge" style="background:#ff1a6e;color:#fff;">5</span></button>
+    <button class="sb-item"><span class="sb-ico">&#127915;</span> Coupons</button>
+    <button class="sb-item"><span class="sb-ico">&#11088;</span> Reviews</button>
+    
+    <div class="sb-group">COMMUNITY</div>
+    <button class="sb-item sb-red"><span class="sb-ico">&#128680;</span> Fraud Pages <span class="sb-badge red">New</span></button>
+    <button class="sb-item"><span class="sb-ico">&#128179;</span> My Wallet</button>
+    <button class="sb-item"><span class="sb-ico">&#128179;</span> Bank Cards</button>
+    <button class="sb-item"><span class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
+    
+    <div class="sb-group">ACCOUNT</div>
+    <button class="sb-item"><span class="sb-ico">&#9881;</span> Settings</button>
+    <button class="sb-item"><span class="sb-ico">&#10067;</span> Help &amp; Support</button>
+    <button class="sb-item sb-red" onclick="window.location.href='index.html'"><span class="sb-ico">&#128682;</span> Log Out</button>
+  </nav>
+  
+  <div class="sb-invite">
+    <div class="sb-invite-emoji">&#127873;</div>
+    <div class="sb-invite-title">Invite &amp; Earn</div>
+    <div class="sb-invite-sub">Invite your friends and earn exciting rewards</div>
+    <button class="btn-invite">Invite Now</button>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search orders, restaurants..."/>
+    </div>
+    <div class="tb-actions">
+      <button class="tb-icon-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </button>
+      <button class="tb-icon-btn">&#10084;</button>
+      <div class="tb-user">
+        <img class="tb-avatar" src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=80" alt="User"/>
+        <div>
+          <div class="tb-uname">Setu Meherunnesa</div>
+          <div class="tb-umeta">Premium Member</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDERS PAGE VIEW CONTAINER -->
+  <div class="pg">
+    <div class="col-c">
+
+      <!-- HEADER ROW WITH PREMIUM BANNER -->
+      <div class="orders-hdr-row">
+        <div>
+          <div class="ord-hi">Hey Setu! &#128075;</div>
+          <div class="ord-title">Your Orders</div>
+          <div class="ord-sub">Track, manage and enjoy your orders &ndash; all in one place.</div>
+        </div>
+
+        <div class="prem-banner-card">
+          <div class="prem-crown-ico">&#128081;</div>
+          <div class="prem-info">
+            <div class="prem-title">Premium Member</div>
+            <div class="prem-sub">Get faster delivery, exclusive offers and extra savings!</div>
+          </div>
+          <button class="btn-upgrade">Upgrade Now</button>
+        </div>
+      </div>
+
+      <!-- CATEGORY TABS PILL BAR -->
+      <div class="ord-tabs-bar">
+        <button class="ord-tab-pill active" id="tab-all" onclick="filterOrderCategory('all')">&#127915; All Orders <span class="ord-tab-badge" id="badge-all">6</span></button>
+        <button class="ord-tab-pill" id="tab-food" onclick="filterOrderCategory('food')">&#127860; Food <span class="ord-tab-badge" id="badge-food">3</span></button>
+        <button class="ord-tab-pill" id="tab-ride" onclick="filterOrderCategory('ride')">&#128663; Ride <span class="ord-tab-badge" id="badge-ride">1</span></button>
+        <button class="ord-tab-pill" id="tab-skincare" onclick="filterOrderCategory('skincare')">&#128167; Skincare <span class="ord-tab-badge" id="badge-skincare">2</span></button>
+      </div>
+
+      <!-- ACTIVE ORDERS SECTION -->
+      <div class="act-ord-sec">
+        <div class="sec-hd-row">
+          <div class="sec-title">Active Orders</div>
+          <span class="sec-link" style="color:var(--pink);font-weight:700" id="cnt-active-label">Live Tracker</span>
+        </div>
+        <div id="active-orders-container">
+          <!-- Active orders rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- RECENT ORDERS LIST -->
+      <div class="rec-ord-card">
+        <div class="sec-hd-row">
+          <div class="sec-title">Order History</div>
+          <span class="sec-link" style="color:var(--pink);font-weight:700" id="cnt-total-label">6 Orders Total</span>
+        </div>
+        <div class="ro-list" id="recent-orders-container">
+          <!-- Recent orders rendered dynamically -->
+
+          <!-- Row 1: foodpanda -->
+          <div class="ro-row">
+            <div class="ro-left">
+              <div class="ro-logo" style="background:#d70f64">fp</div>
+              <div>
+                <div class="ro-name">Chicken Biryani + 2 Items</div>
+                <div class="ro-sub">Foodpanda Restaurant</div>
+              </div>
+            </div>
+            <div class="ro-date">&#128197; 28 May, 12:45 PM</div>
+            <span class="badge-delivered">Delivered</span>
+            <div class="ro-price">&#2547;299</div>
+            <button class="btn-view-det">View Details &rarr;</button>
+          </div>
+
+          <!-- Row 2: Uber -->
+          <div class="ro-row">
+            <div class="ro-left">
+              <div class="ro-logo" style="background:#111827">Uber</div>
+              <div>
+                <div class="ro-name">Uber Ride</div>
+                <div class="ro-sub">To Dhanmondi</div>
+              </div>
+            </div>
+            <div class="ro-date">&#128197; 27 May, 09:30 PM</div>
+            <span class="badge-completed">Completed</span>
+            <div class="ro-price">&#2547;120</div>
+            <button class="btn-view-det">View Details &rarr;</button>
+          </div>
+
+          <!-- Row 3: Kirei -->
+          <div class="ro-row">
+            <div class="ro-left">
+              <div class="ro-logo" style="background:#fff0f5;color:#ec4899;border:1px solid #fecdd3">kirei</div>
+              <div>
+                <div class="ro-name">Skincare Product</div>
+                <div class="ro-sub">Kirei</div>
+              </div>
+            </div>
+            <div class="ro-date">&#128197; 25 May, 04:15 PM</div>
+            <span class="badge-delivered">Delivered</span>
+            <div class="ro-price">&#2547;1,250</div>
+            <button class="btn-view-det">View Details &rarr;</button>
+          </div>
+
+          <!-- Row 4: Foodi -->
+          <div class="ro-row">
+            <div class="ro-left">
+              <div class="ro-logo" style="background:#f97316">foodi</div>
+              <div>
+                <div class="ro-name">Pizza + Drink</div>
+                <div class="ro-sub">Foodi Restaurant</div>
+              </div>
+            </div>
+            <div class="ro-date">&#128197; 22 May, 07:20 PM</div>
+            <span class="badge-delivered">Delivered</span>
+            <div class="ro-price">&#2547;450</div>
+            <button class="btn-view-det">View Details &rarr;</button>
+          </div>
+
+          <!-- Row 5: InDrive -->
+          <div class="ro-row">
+            <div class="ro-left">
+              <div class="ro-logo" style="background:#22c55e">iD</div>
+              <div>
+                <div class="ro-name">Ride</div>
+                <div class="ro-sub">To Gulshan</div>
+              </div>
+            </div>
+            <div class="ro-date">&#128197; 20 May, 08:10 AM</div>
+            <span class="badge-completed">Completed</span>
+            <div class="ro-price">&#2547;180</div>
+            <button class="btn-view-det">View Details &rarr;</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS 5 CARDS -->
+      <div style="font-size:.9rem;font-weight:800;color:#111827;margin-top:.4rem">Quick Actions</div>
+      <div class="qa-grid">
+        <div class="qa-card" style="background:#fff0f5;">
+          <div class="qa-ico" style="background:#fff;color:var(--pink);">&#8635;</div>
+          <div>
+            <div class="qa-title">Reorder</div>
+            <div class="qa-sub">Your favorite items one click away</div>
+          </div>
+          <div class="qa-arr">&rarr;</div>
+        </div>
+
+        <div class="qa-card" style="background:#faf5ff;">
+          <div class="qa-ico" style="background:#fff;color:#8b5cf6;">&#128205;</div>
+          <div>
+            <div class="qa-title">Track All Orders</div>
+            <div class="qa-sub">See real-time updates</div>
+          </div>
+          <div class="qa-arr" style="color:#8b5cf6">&rarr;</div>
+        </div>
+
+        <div class="qa-card" style="background:#fffbeb;">
+          <div class="qa-ico" style="background:#fff;color:#eab308;">&#10024;</div>
+          <div>
+            <div class="qa-title">Rate & Review</div>
+            <div class="qa-sub">Share your experience</div>
+          </div>
+          <div class="qa-arr" style="color:#eab308">&rarr;</div>
+        </div>
+
+        <div class="qa-card" style="background:#eff6ff;">
+          <div class="qa-ico" style="background:#fff;color:#3b82f6;">&#127911;</div>
+          <div>
+            <div class="qa-title">Need Help?</div>
+            <div class="qa-sub">Get support anytime</div>
+          </div>
+          <div class="qa-arr" style="color:#3b82f6">&rarr;</div>
+        </div>
+
+        <div class="qa-card" style="background:#fff0f5;">
+          <div class="qa-ico" style="background:#fff;color:var(--pink);">&#127915;</div>
+          <div>
+            <div class="qa-title">View Coupons</div>
+            <div class="qa-sub">Save more on next order</div>
+          </div>
+          <div class="qa-arr">&rarr;</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN (ORDER SUMMARY SIDEBAR) -->
+    <div class="col-r">
+      <div class="os-card">
+
+        <div class="os-hd">
+          <div class="os-title">Order Summary</div>
+          <span class="badge-live"><span class="live-dot"></span> Live</span>
+        </div>
+
+        <div class="os-id-row">Order #OM123456</div>
+        <div class="os-placed-time">Placed on 28 May, 2025 &bull; 12:45 PM</div>
+
+        <!-- TIMELINE TRACKER -->
+        <div class="timeline-tracker">
+          <div class="tl-step">
+            <div class="tl-node done">&#10003;</div>
+            <span class="tl-lbl on">Confirmed</span>
+          </div>
+          <div class="tl-step">
+            <div class="tl-node active">%</div>
+            <span class="tl-lbl on">Preparing</span>
+          </div>
+          <div class="tl-step">
+            <div class="tl-node">&#128757;</div>
+            <span class="tl-lbl">On the way</span>
+          </div>
+          <div class="tl-step">
+            <div class="tl-node">&#127873;</div>
+            <span class="tl-lbl">Delivered</span>
+          </div>
+        </div>
+
+        <!-- DELIVERY PARTNER CARD -->
+        <div class="dp-card">
+          <div class="dp-hd">Delivery Partner</div>
+          <div class="dp-main">
+            <div class="dp-user">
+              <img class="dp-img" src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=80" alt="Rider"/>
+              <div>
+                <div class="dp-name">Rider: Rahim</div>
+                <div class="dp-phone">Phone: 01712 345678</div>
+              </div>
+            </div>
+            <div class="dp-actions">
+              <button class="dp-btn">&#128222;</button>
+              <button class="dp-btn">&#128172;</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ORDER ITEMS -->
+        <div class="os-items-hd">Order Items</div>
+        <div class="os-item-row">
+          <div class="os-item-left">
+            <img class="os-item-img" src="https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=80" alt="Biryani"/>
+            <div>
+              <div class="os-item-title">Chicken Biryani</div>
+              <div class="os-item-qty">x1</div>
+            </div>
+          </div>
+          <div class="os-item-price">&#2547;189</div>
+        </div>
+
+        <div class="os-item-row">
+          <div class="os-item-left">
+            <img class="os-item-img" src="https://images.pexels.com/photos/50593/coca-cola-cold-drink-soft-drink-coke-50593.jpeg?auto=compress&cs=tinysrgb&w=80" alt="Coke"/>
+            <div>
+              <div class="os-item-title">Coca Cola (500ml)</div>
+              <div class="os-item-qty">x1</div>
+            </div>
+          </div>
+          <div class="os-item-price">&#2547;50</div>
+        </div>
+
+        <div class="os-item-row">
+          <div class="os-item-left">
+            <img class="os-item-img" src="https://images.pexels.com/photos/1213710/pexels-photo-1213710.jpeg?auto=compress&cs=tinysrgb&w=80" alt="Salad"/>
+            <div>
+              <div class="os-item-title">Green Salad</div>
+              <div class="os-item-qty">x1</div>
+            </div>
+          </div>
+          <div class="os-item-price">&#2547;60</div>
+        </div>
+
+        <!-- BILL BREAKDOWN -->
+        <div class="bill-box">
+          <div class="bill-row">
+            <span>Subtotal</span>
+            <span>&#2547;299</span>
+          </div>
+          <div class="bill-row">
+            <span>Delivery Fee</span>
+            <span>&#2547;30</span>
+          </div>
+          <div class="bill-row" style="color:var(--pink)">
+            <span>Discount (10%)</span>
+            <span>-&#2547;30</span>
+          </div>
+          <div class="bill-total-row">
+            <span>Total</span>
+            <span>&#2547;299</span>
+          </div>
+        </div>
+
+        <!-- PAYMENT METHOD CARD -->
+        <div class="pm-card">
+          <div class="pm-hd">
+            <span>Payment Method</span>
+            <a href="#">Change</a>
+          </div>
+          <div class="pm-main">
+            <div class="pm-left">
+              <div class="pm-logo">bKash</div>
+              <div class="pm-title">bKash</div>
+            </div>
+            <div class="pm-val">-&#2547;299</div>
+          </div>
+        </div>
+
+        <!-- TRACK ORDER BUTTON -->
+        <button class="btn-track-order">
+          <span>&#128205;</span> Track Order
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+<script>
+  let currentOrderCat = 'all';
+
+  function renderOrdersPage(cat) {
+    currentOrderCat = cat || currentOrderCat || 'all';
+    if (!window.OMStore) return;
+
+    const allOrders = window.OMStore.getOrders('all');
+    const filteredOrders = currentOrderCat === 'all' ? allOrders : allOrders.filter(o => o.category === currentOrderCat);
+
+    // Update active tab buttons
+    document.querySelectorAll('.ord-tab-pill').forEach(btn => btn.classList.remove('active'));
+    const activeTab = document.getElementById('tab-' + currentOrderCat);
+    if (activeTab) activeTab.classList.add('active');
+
+    // Update counts
+    document.getElementById('badge-all').textContent = allOrders.length;
+    document.getElementById('badge-food').textContent = allOrders.filter(o => o.category === 'food').length;
+    document.getElementById('badge-ride').textContent = allOrders.filter(o => o.category === 'ride').length;
+    document.getElementById('badge-skincare').textContent = allOrders.filter(o => o.category === 'skincare').length;
+
+    // Render Active Orders (status === 'in_transit' or 'preparing')
+    const activeContainer = document.getElementById('active-orders-container');
+    const activeOrders = filteredOrders.filter(o => o.status === 'in_transit' || o.status === 'preparing');
+
+    if (activeOrders.length === 0) {
+      activeContainer.innerHTML = '<div style="padding:1rem;color:var(--light);font-size:.82rem;text-align:center;">No active orders currently processing in this category.</div>';
+    } else {
+      activeContainer.innerHTML = activeOrders.map(o => `
+        <div class="act-ord-card" style="margin-bottom:.8rem">
+          <div class="ao-left">
+            <div class="ao-logo" style="background:${o.logoBg || '#d70f64'}">${o.logoText || 'OM'}</div>
+            <div>
+              <div class="ao-item-name">${o.items}</div>
+              <div class="ao-rest">${o.store}</div>
+              <div class="ao-meta">Order #${o.id} &bull; ${o.date}</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:1.2rem">
+            <img class="ao-thumb" src="${o.img}" alt="Thumb"/>
+            <div class="ao-status-box">
+              <span class="badge-preparing">In Transit</span>
+              <span class="ao-est">Est. Total: ৳${o.total}</span>
+            </div>
+            <button class="btn-view-det" onclick="alert('Order #${o.id} is currently being tracked live!')">Track &rarr;</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Render Recent Orders History
+    const recentContainer = document.getElementById('recent-orders-container');
+    const pastOrders = filteredOrders.filter(o => o.status !== 'in_transit' && o.status !== 'preparing');
+
+    const displayOrders = pastOrders.length > 0 ? pastOrders : filteredOrders;
+    if (displayOrders.length === 0) {
+      recentContainer.innerHTML = '<div style="padding:1.5rem;color:var(--light);font-size:.82rem;text-align:center;">No orders found.</div>';
+    } else {
+      recentContainer.innerHTML = displayOrders.map(o => `
+        <div class="ro-row">
+          <div class="ro-left">
+            <div class="ro-logo" style="background:${o.logoBg || '#d70f64'}">${o.logoText || 'OM'}</div>
+            <div>
+              <div class="ro-name">${o.items}</div>
+              <div class="ro-sub">${o.store}</div>
+            </div>
+          </div>
+          <div class="ro-date">&#128197; ${o.date}</div>
+          <span class="${o.status === 'delivered' ? 'badge-delivered' : 'badge-completed'}">${o.statusText || 'Completed'}</span>
+          <div class="ro-price">&#2547;${o.total}</div>
+          <button class="btn-view-det" onclick="handleReorder('${o.id}')">Reorder &circlearrowright;</button>
+        </div>
+      `).join('');
+    }
+  }
+
+  function filterOrderCategory(cat) {
+    renderOrdersPage(cat);
+  }
+
+  function handleReorder(orderId) {
+    if (window.OMStore) {
+      const newOrd = window.OMStore.reorder(orderId);
+      if (newOrd) {
+        alert('Reordered ' + newOrd.items + '! Placed into Active Orders.');
+        renderOrdersPage();
+      }
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', function() {
+    renderOrdersPage('all');
+  });
+</script>
+
+</body>
+</html>

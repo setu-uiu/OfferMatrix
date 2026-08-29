@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Saved Deals - OfferMatrix</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="js/om-store.js"></script>
+<style>
+  :root {
+    --pink: #ff1a6e;
+    --pink-light: #fff0f5;
+    --pink-mid: #ffe4ec;
+    --dark: #111827;
+    --mid: #4b5563;
+    --light: #9ca3af;
+    --bg: #f8fafc;
+    --border: #f1f5f9;
+    --green: #10b981;
+    --green-bg: #dcfce7;
+    --font: 'Plus Jakarta Sans', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font); }
+  body { background: var(--bg); color: var(--dark); display: flex; min-height: 100vh; }
+
+  /* SIDEBAR STYLES (STANDARDIZED) */
+  .sb { width: 240px; background: #fff; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 1.2rem 0; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; overflow-y: auto; }
+  .sb-logo { display: flex; align-items: center; gap: .6rem; padding: 0 1.4rem 1.2rem; border-bottom: 1px solid var(--border); }
+  .sb-logo-icon { width: 34px; height: 34px; background: var(--pink); border-radius: 10px; color: #fff; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+  .sb-logo-text { font-size: 1.3rem; font-weight: 800; color: #111827; }
+  .sb-nav { flex: 1; padding: .8rem 0; }
+  .sb-group { font-size: .7rem; font-weight: 700; color: var(--light); letter-spacing: 1px; padding: 1rem 1.4rem .4rem; text-transform: uppercase; }
+  .sb-item { display: flex; align-items: center; gap: .8rem; padding: .7rem 1.4rem; font-size: .9rem; font-weight: 600; color: var(--mid); width: 100%; text-align: left; cursor: pointer; transition: all .2s; white-space: nowrap; border: none; background: transparent; text-decoration: none; }
+  .sb-item:hover { color: var(--pink); }
+  .sb-item.on { background: var(--pink); color: #fff; border-radius: 10px; margin: 0 .8rem; padding: .7rem .6rem; width: calc(100% - 1.6rem); font-weight: 800; }
+  .sb-item.on .sb-ico { color: #fff; }
+  .sb-ico { font-size: 1.1rem; width: 22px; text-align: center; color: #6b7280; transition: all .2s; flex-shrink: 0; }
+  .sb-badge { margin-left: auto; font-size: .65rem; font-weight: 800; padding: 2px 8px; border-radius: 50px; background: var(--pink); color: #fff; display: inline-flex; align-items: center; justify-content: center; }
+  .sb-badge.red { background: #fff; color: #ef4444; border: 1.5px solid #ef4444; }
+  .sb-red { color: #ef4444 !important; }
+  .sb-invite { margin: 1rem; background: var(--pink-light); border-radius: 16px; padding: 1.2rem; text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .sb-invite-emoji { font-size: 2rem; margin-bottom: .5rem; }
+  .sb-invite-title { font-size: .9rem; font-weight: 800; color: var(--pink); margin-bottom: .3rem; }
+  .sb-invite-sub { font-size: .75rem; color: var(--mid); margin-bottom: .8rem; line-height: 1.4; }
+  .btn-invite { background: var(--pink); color: #fff; border-radius: 50px; padding: .5rem 1.2rem; font-size: .8rem; font-weight: 700; width: 100%; transition: all .2s; border: none; cursor: pointer; }
+
+  /* MAIN CONTENT AREA */
+  .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .topbar { height: 65px; background: #fff; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; position: sticky; top: 0; z-index: 90; }
+  .tb-search { display: flex; align-items: center; gap: .6rem; background: #f8fafc; border: 1px solid var(--border); border-radius: 50px; padding: .45rem 1rem; width: 340px; }
+  .tb-search input { border: none; background: transparent; outline: none; font-size: .82rem; width: 100%; }
+  .tb-actions { display: flex; align-items: center; gap: 1rem; }
+  .tb-icon-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border); background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; color: var(--mid); }
+  .notif-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--pink); border: 2px solid #fff; }
+  .tb-user { display: flex; align-items: center; gap: .6rem; cursor: pointer; }
+  .tb-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+  .tb-uname { font-size: .82rem; font-weight: 800; color: #111827; }
+  .tb-umeta { font-size: .68rem; color: var(--light); }
+
+  /* PAGE CONTENT */
+  .pg { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
+  
+  .sd-hdr-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+  .sd-hi { font-size: .88rem; color: var(--mid); margin-bottom: 2px; }
+  .sd-title { font-size: 1.7rem; font-weight: 900; color: #111827; letter-spacing: -.4px; margin-bottom: 3px; display: flex; align-items: center; gap: 8px; }
+  .sd-sub { font-size: .82rem; color: var(--light); }
+
+  .sd-stats-banner { display: flex; gap: 1rem; background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1rem 1.4rem; }
+  .sds-item { flex: 1; display: flex; align-items: center; gap: .8rem; }
+  .sds-ico { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .sds-val { font-size: 1.3rem; font-weight: 900; color: #111827; }
+  .sds-lbl { font-size: .7rem; color: var(--light); font-weight: 600; }
+
+  /* FILTER TABS BAR */
+  .sd-tabs-bar { display: flex; gap: .6rem; overflow-x: auto; padding-bottom: 2px; }
+  .sd-tab-pill { display: flex; align-items: center; gap: 6px; padding: .65rem 1.3rem; border: 1px solid var(--border); border-radius: 50px; background: #fff; font-size: .82rem; font-weight: 700; color: var(--mid); cursor: pointer; white-space: nowrap; transition: all .2s; }
+  .sd-tab-pill:hover { border-color: var(--pink); color: var(--pink); }
+  .sd-tab-pill.active { background: var(--pink); color: #fff; border-color: var(--pink); }
+  .sd-tab-badge { font-size: .65rem; font-weight: 800; padding: 2px 7px; border-radius: 50px; background: rgba(0,0,0,.08); }
+  .sd-tab-pill.active .sd-tab-badge { background: #fff; color: var(--pink); }
+
+  /* DEALS GRID */
+  .deals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; }
+  .deal-card { background: #fff; border: 1px solid var(--border); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; transition: all .25s ease; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,.02); }
+  .deal-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,.06); border-color: #fecdd3; }
+  .deal-img-wrap { position: relative; width: 100%; height: 160px; overflow: hidden; background: #f8fafc; }
+  .deal-img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+  .deal-card:hover .deal-img { transform: scale(1.04); }
+  .cat-badge { position: absolute; top: 12px; left: 12px; font-size: .65rem; font-weight: 800; padding: 4px 10px; border-radius: 50px; color: #fff; text-transform: uppercase; letter-spacing: .5px; z-index: 2; box-shadow: 0 2px 6px rgba(0,0,0,.15); }
+  .cat-food { background: #d70f64; }
+  .cat-ride { background: #111827; }
+  .cat-skincare { background: #ec4899; }
+  .heart-btn { position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; border-radius: 50%; background: #fff; border: none; color: var(--pink); font-size: 1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.12); transition: all .2s; z-index: 2; }
+  .heart-btn:hover { transform: scale(1.1); background: #fff0f5; }
+
+  .deal-body { padding: 1.1rem; display: flex; flex-direction: column; flex: 1; }
+  .deal-store { font-size: .7rem; color: var(--mid); font-weight: 700; margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
+  .deal-title { font-size: .95rem; font-weight: 800; color: #111827; margin-bottom: .4rem; line-height: 1.3; }
+  .deal-price-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: .8rem; }
+  .deal-price { font-size: 1.25rem; font-weight: 900; color: var(--pink); }
+  .deal-old-price { font-size: .75rem; color: var(--light); text-decoration: line-through; }
+  .deal-off-badge { background: #dcfce7; color: #166534; font-size: .65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; margin-left: auto; }
+
+  .deal-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: .6rem; border-top: 1px solid #f3f4f6; padding-top: .8rem; }
+  .deal-meta-txt { font-size: .65rem; color: var(--light); font-weight: 600; }
+  .btn-action { background: var(--pink); color: #fff; border: none; border-radius: 50px; padding: .5rem 1.1rem; font-size: .75rem; font-weight: 800; cursor: pointer; transition: all .2s; white-space: nowrap; }
+  .btn-action:hover { opacity: .9; }
+
+  .empty-state { text-align: center; padding: 3rem 1rem; color: var(--mid); grid-column: 1 / -1; display: none; }
+  .empty-ico { font-size: 3rem; margin-bottom: .8rem; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR NAVIGATION (STANDARDIZED) -->
+<aside class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">%</div>
+    <span class="sb-logo-text">Offer<span style="color:#22c55e">Matrix</span></span>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-group">MAIN</div>
+    <button class="sb-item" onclick="window.location.href='dashboard.html'"><span class="sb-ico">&#127968;</span> Dashboard</button>
+    <button class="sb-item" onclick="window.location.href='dashboard.html?tab=food'"><span class="sb-ico">&#127860;</span> Food</button>
+    <button class="sb-item" onclick="window.location.href='dashboard.html?tab=ride'"><span class="sb-ico" style="color:inherit;">&#128663;</span> Ride</button>
+    <button class="sb-item" onclick="window.location.href='skincare.html'"><span class="sb-ico">&#128167;</span> Skincare</button>
+    <button class="sb-item" onclick="window.location.href='orders.html'"><span class="sb-ico">&#128230;</span> Orders <span class="sb-badge" style="background:#ff1a6e;color:#fff;">6</span></button>
+    <button class="sb-item on"><span class="sb-ico">&#10084;</span> Saved Deals</button>
+    <button class="sb-item" onclick="window.location.href='price-alerts.html'"><span class="sb-ico">&#128276;</span> Price Alerts <span class="sb-badge" style="background:#ff1a6e;color:#fff;">5</span></button>
+    <button class="sb-item"><span class="sb-ico">&#127915;</span> Coupons</button>
+    <button class="sb-item"><span class="sb-ico">&#11088;</span> Reviews</button>
+    
+    <div class="sb-group">COMMUNITY</div>
+    <button class="sb-item sb-red"><span class="sb-ico">&#128680;</span> Fraud Pages <span class="sb-badge red">New</span></button>
+    <button class="sb-item"><span class="sb-ico">&#128179;</span> My Wallet</button>
+    <button class="sb-item"><span class="sb-ico">&#128179;</span> Bank Cards</button>
+    <button class="sb-item"><span class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
+    
+    <div class="sb-group">ACCOUNT</div>
+    <button class="sb-item"><span class="sb-ico">&#9881;</span> Settings</button>
+    <button class="sb-item"><span class="sb-ico">&#10067;</span> Help &amp; Support</button>
+    <button class="sb-item sb-red" onclick="window.location.href='index.html'"><span class="sb-ico">&#128682;</span> Log Out</button>
+  </nav>
+  
+  <div class="sb-invite">
+    <div class="sb-invite-emoji">&#127873;</div>
+    <div class="sb-invite-title">Invite &amp; Earn</div>
+    <div class="sb-invite-sub">Invite your friends and earn exciting rewards</div>
+    <button class="btn-invite">Invite Now</button>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT AREA -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search saved deals, products..."/>
+    </div>
+    <div class="tb-actions">
+      <button class="tb-icon-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </button>
+      <div class="tb-user">
+        <img class="tb-avatar" src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=80" alt="User"/>
+        <div>
+          <div class="tb-uname">Setu Meherunnesa</div>
+          <div class="tb-umeta">Premium Member</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAVED DEALS CONTAINER -->
+  <div class="pg">
+
+    <!-- HEADER ROW -->
+    <div class="sd-hdr-row">
+      <div>
+        <div class="sd-hi">Hey Setu! &#128075;</div>
+        <div class="sd-title">Saved Deals <span style="color:var(--pink)">&#10084;</span></div>
+        <div class="sd-sub" id="sd-subtitle-text">Your bookmarked food offers, ride discounts, and skincare products.</div>
+      </div>
+
+      <div class="sd-stats-banner">
+        <div class="sds-item">
+          <div class="sds-ico" style="background:#fff0f5;color:var(--pink)">&#10084;</div>
+          <div>
+            <div class="sds-val" id="cnt-total">12</div>
+            <div class="sds-lbl">Total Saved</div>
+          </div>
+        </div>
+        <div class="sds-item" style="border-left:1px solid #f1f5f9;padding-left:1rem">
+          <div class="sds-ico" style="background:#f0fdf4;color:var(--green)">&#2547;</div>
+          <div>
+            <div class="sds-val">&#2547;3,450</div>
+            <div class="sds-lbl">Potential Savings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTER TABS BAR -->
+    <div class="sd-tabs-bar">
+      <button class="sd-tab-pill active" id="tab-all" onclick="filterCategory('all')">&#10084; All Saved <span class="sd-tab-badge" id="badge-all">12</span></button>
+      <button class="sd-tab-pill" id="tab-food" onclick="filterCategory('food')">&#127860; Food Deals <span class="sd-tab-badge" id="badge-food">5</span></button>
+      <button class="sd-tab-pill" id="tab-ride" onclick="filterCategory('ride')">&#128663; Ride Deals <span class="sd-tab-badge" id="badge-ride">3</span></button>
+      <button class="sd-tab-pill" id="tab-skincare" onclick="filterCategory('skincare')">&#128167; Skincare Products <span class="sd-tab-badge" id="badge-skincare">4</span></button>
+    </div>
+
+    <!-- CARDS GRID -->
+    <div class="deals-grid" id="deals-container">
+
+      <!-- FOOD DEAL 1 -->
+      <div class="deal-card" data-cat="food">
+        <div class="deal-img-wrap">
+          <span class="cat-badge cat-food">Food</span>
+          <button class="heart-btn" onclick="removeCard(this)">&#10084;</button>
+          <img class="deal-img" src="https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Burger"/>
+        </div>
+        <div class="deal-body">
+          <div class="deal-store">&#127860; Burger King &bull; foodpanda</div>
+          <div class="deal-title">Double Beef Whopper Meal Deal</div>
+          <div class="deal-price-row">
+            <span class="deal-price">&#2547;350</span>
+            <span class="deal-old-price">&#2547;700</span>
+            <span class="deal-off-badge">50% OFF</span>
+          </div>
+          <div class="deal-foot">
+            <span class="deal-meta-txt">Valid till 5 June</span>
+            <button class="btn-action" onclick="window.location.href='dashboard.html?tab=food'">Order Now &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOD DEAL 2 -->
+      <div class="deal-card" data-cat="food">
+        <div class="deal-img-wrap">
+          <span class="cat-badge cat-food">Food</span>
+          <button class="heart-btn" onclick="removeCard(this)">&#10084;</button>
+          <img class="deal-img" src="https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Kacchi Biryani"/>
+        </div>
+        <div class="deal-body">
+          <div class="deal-store">&#127860; Sultan's Kacchi &bull; foodi</div>
+          <div class="deal-title">Mutton Kacchi + Borhani Combo</div>
+          <div class="deal-price-row">
+            <span class="deal-price">&#2547;420</span>
+            <span class="deal-old-price">&#2547;600</span>
+            <span class="deal-off-badge">30% OFF</span>
+          </div>
+          <div class="deal-foot">
+            <span class="deal-meta-txt">Code: KACCHI30</span>
+            <button class="btn-action" onclick="window.location.href='dashboard.html?tab=food'">Order Now &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOD DEAL 3 -->
+      <div class="deal-card" data-cat="food">
+        <div class="deal-img-wrap">
+          <span class="cat-badge cat-food">Food</span>
+          <button class="heart-btn" onclick="removeCard(this)">&#10084;</button>
+          <img class="deal-img" src="https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Pizza"/>
+        </div>
+        <div class="deal-body">
+          <div class="deal-store">&#127860; Pizza Hut &bull; Pathao Food</div>
+          <div class="deal-title">Large Loaded Pepperoni Pizza</div>
+          <div class="deal-price-row">
+            <span class="deal-price">&#2547;650</span>
+            <span class="deal-old-price">&#2547;950</span>
+            <span class="deal-off-badge">&#2547;300 OFF</span>
+          </div>
+          <div class="deal-foot">
+            <span class="deal-meta-txt">Free Delivery</span>
+            <button class="btn-action" onclick="window.location.href='dashboard.html?tab=food'">Order Now &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOD DEAL 4 -->
+      <div class="deal-card" data-cat="food">
+        <div class="deal-img-wrap">
+          <span class="cat-badge cat-food">Food</span>
+          <button class="heart-btn" onclick="removeCard(this)">&#10084;</button>
+          <img class="deal-img" src="https://images.pexels.com/photos/1059905/pexels-photo-1059905.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Sushi Bowl"/>
+        </div>
+        <div class="deal-body">
+          <div class="deal-store">&#127860; Yum Cha District &bull; foodpanda</div>
+          <div class="deal-title">Asian Dumplings & Noodle Combo</div>
+          <div class="deal-price-row">
+            <span class="deal-price">&#2547;480</span>
+            <span class="deal-old-price">&#2547;650</span>
+            <span class="deal-off-badge">26% OFF</span>
+          </div>
+          <div class="deal-foot">
+            <span class="deal-meta-txt">Valid today</span>
+            <button class="btn-action" onclick="window.location.href='dashboard.html?tab=food'">Order Now &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOD DEAL 5 -->
+      <div class="deal-card" data-cat="food">
+        <div class="deal-img-wrap">
+          <span class="cat-badge cat-food">Food</span>
+          <button class="heart-btn" onclick="removeCard(this)">&#10084;</button>
+          <img class="deal-img" src="https://images.pexels.com/photos/2983101/pexels-photo-2983101.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Burger Meal"/>
+        </div>
+        <div class="deal-body">
+          <div class="deal-store">&#127860; Takeout Burger &bull; foodi</div>
+          <div class="deal-title">Cheesy Beef Burger + Fries</div>
+          <div class="deal-price-row">
+            <span class="deal-price">&#2547;290</span>
+            <span class="deal-old-price">&#2547;400</span>
+            <span class="deal-off-badge">27% OFF</span>
+          </div>
+          <div class="deal-foot">
+            <span class="deal-meta-txt">Min spend &#2547;250</span>
+            <button class="btn-action" onclick="window.location.href='dashboard.html?tab=food'">Order Now &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIDE DEAL 1 -->
+      <div class="deal-card" data-cat="ride">
+        <div class="deal-img-wrap">
+          <span class="cat-badge cat-ride">Ride</span>
+          <button class="heart-btn" onclick="removeCard(this)">&#10084;</button>
+          <img class="deal-img" src="https://images.pexels.com/photos/3862632/pexels-photo-3862632.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Car Ride"/>
+        </div>
+        <div class="deal-body">
+          <div class="deal-store">&#128663; Uber Car &bull; Dhaka Intercity</div>
+          <div class="deal-title">25% Discount on Airport & Intercity Rides</div>
+          <div class="deal-price-row">
+            <span class="deal-price">&#2547;210</span>
+            <span class="deal-old-price">&#2547;280</span>
+            <span class="deal-off-badge">25% OFF</span>
+          </div>
+          <div class="deal-foot">
+            <span class="deal-meta-txt">Code: UBERAIR</span>
+            <button class="btn-action" onclick="window.location.href='dashboard.html?tab=ride'">Book Ride &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIDE DEAL 2 -->
+      <div class="deal-card" data-cat="ride">
+        <div class="deal-img-wrap">
+          <span class="cat-badge cat-ride">Ride</span>
+          <button class="heart-btn" onclick="removeCard(this)">&#10084;</button>
+          <img class="deal-img" src="https://images.pexels.com/photos/210182/pexels-photo-210182.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Bike Ride"/>
+        </div>
+        <div class="deal-body">
+          <div class="deal-store">&#128663; Pathao Bike &bull; Quick Ride</div>
+          <div class="deal-title">Flat &#2547;50 OFF on Bike Rides</div>
+          <div class="deal-price-row">
+            <span class="deal-price">&#2547;70</span>
+            <span class="deal-old-price">&#2547;120</span>
+            <span class="deal-off-badge">&#2547;50 OFF</span>
+          </div>
+          <div class="deal-foot">
+            <span class="deal-meta-txt">Valid for 3 rides</span>
+            <button class="btn-action" onclick="window.location.href='dashboard.html?tab=ride'">Book Ride &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIDE DEAL 3 -->
+      <div class="deal-card" data-cat="ride">
+        <div class="deal-img-wrap">
+          <span class="cat-badge cat-ride">Ride</span>
+          <button class="heart-btn" onclick="removeCard(this)">&#10084;</button>
+          <img class="deal-img" src="https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=500" alt="OBHAI Car"/>
+        </div>
+        <div class="deal-body">
+          <div class="deal-store">&#128663; OBHAI Car &bull; Safe Rides</div>
+          <div class="deal-title">Weekend Gateway &#2547;100 Cashback</div>
+          <div class="deal-price-row">
+            <span class="deal-price">&#2547;300</span>
+            <span class="deal-old-price">&#2547;400</span>
+            <span class="deal-off-badge">Cashback</span>
+          </div>
+          <div class="deal-foot">
+            <span class="deal-meta-txt">Code: OBHAI100</span>
+            <button class="btn-action" onclick="window.location.href='dashboard.html?tab=ride'">Book Ride &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SKINCARE DEAL 1 -->
+      <div class="deal-card" data-cat="skincare">
+        <div class="deal-img-wrap">
+          <span class="cat-badge cat-skincare">Skincare</span>
+          <button class="heart-btn" onclick="removeCard(this)">&#10084;</button>
+          <img class="deal-img" src="https://images.pexels.com/photos/4041391/pexels-photo-4041391.jpeg?auto=compress&cs=tinysrgb&w=500" alt="The Ordinary"/>
+        </div>
+        <div class="deal-body">
+          <div class="deal-store">&#128167; Choice Legacy &bull; Store Deal</div>
+          <div class="deal-title">The Ordinary Niacinamide 10% + Zinc 1% (30ml)</div>
+          <div class="deal-price-row">
+            <span class="deal-price">&#2547;500</span>
+            <span class="deal-old-price">&#2547;650</span>
+            <span class="deal-off-badge">23% OFF</span>
+          </div>
+          <div class="deal-foot">
+            <span class="deal-meta-txt">Free Delivery</span>
+            <button class="btn-action" onclick="window.location.href='skincare.html'">Shop Skincare &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SKINCARE DEAL 2 -->
+      <div class="deal-card" data-cat="skincare">
+        <div class="deal-img-wrap">
+          <span class="cat-badge cat-skincare">Skincare</span>
+          <button class="heart-btn" onclick="removeCard(this)">&#10084;</button>
+          <img class="deal-img" src="https://images.pexels.com/photos/6621465/pexels-photo-6621465.jpeg?auto=compress&cs=tinysrgb&w=500" alt="CeraVe Cleanser"/>
+        </div>
+        <div class="deal-body">
+          <div class="deal-store">&#128167; Kirei &bull; Korean Beauty</div>
+          <div class="deal-title">CeraVe Hydrating Cleanser (473ml)</div>
+          <div class="deal-price-row">
+            <span class="deal-price">&#2547;1,250</span>
+            <span class="deal-old-price">&#2547;1,600</span>
+            <span class="deal-off-badge">22% OFF</span>
+          </div>
+          <div class="deal-foot">
+            <span class="deal-meta-txt">Authentic Pick</span>
+            <button class="btn-action" onclick="window.location.href='skincare.html'">Shop Skincare &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SKINCARE DEAL 3 -->
+      <div class="deal-card" data-cat="skincare">
+        <div class="deal-img-wrap">
+          <span class="cat-badge cat-skincare">Skincare</span>
+          <button class="heart-btn" onclick="removeCard(this)">&#10084;</button>
+          <img class="deal-img" src="https://images.pexels.com/photos/3685530/pexels-photo-3685530.jpeg?auto=compress&cs=tinysrgb&w=500" alt="COSRX Snail Mucin"/>
+        </div>
+        <div class="deal-body">
+          <div class="deal-store">&#128167; Makeup Chari &bull; Beauty Sale</div>
+          <div class="deal-title">COSRX Advanced Snail 96 Mucin Power Essence</div>
+          <div class="deal-price-row">
+            <span class="deal-price">&#2547;1,150</span>
+            <span class="deal-old-price">&#2547;1,450</span>
+            <span class="deal-off-badge">20% OFF</span>
+          </div>
+          <div class="deal-foot">
+            <span class="deal-meta-txt">Top Rated</span>
+            <button class="btn-action" onclick="window.location.href='skincare.html'">Shop Skincare &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SKINCARE DEAL 4 -->
+      <div class="deal-card" data-cat="skincare">
+        <div class="deal-img-wrap">
+          <span class="cat-badge cat-skincare">Skincare</span>
+          <button class="heart-btn" onclick="removeCard(this)">&#10084;</button>
+          <img class="deal-img" src="https://images.pexels.com/photos/3785147/pexels-photo-3785147.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Anua Toner"/>
+        </div>
+        <div class="deal-body">
+          <div class="deal-store">&#128167; Choice Legacy &bull; Skincare</div>
+          <div class="deal-title">Anua Heartleaf 77% Soothing Toner</div>
+          <div class="deal-price-row">
+            <span class="deal-price">&#2547;1,450</span>
+            <span class="deal-old-price">&#2547;1,800</span>
+            <span class="deal-off-badge">19% OFF</span>
+          </div>
+          <div class="deal-foot">
+            <span class="deal-meta-txt">Viral Product</span>
+            <button class="btn-action" onclick="window.location.href='skincare.html'">Shop Skincare &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div class="empty-state" id="empty-state">
+        <div class="empty-ico">&#128546;</div>
+        <h3>No saved deals found in this category</h3>
+        <p style="font-size:.8rem;color:var(--light);margin-top:4px">Browse deals and click the heart icon to save them!</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  let currentCat = 'all';
+
+  function renderSavedDeals(cat) {
+    currentCat = cat || currentCat || 'all';
+    const container = document.getElementById('deals-container');
+    if (!container || !window.OMStore) return;
+
+    const deals = window.OMStore.getSavedDeals(currentCat);
+    const allDeals = window.OMStore.getSavedDeals('all');
+
+    // Update active tab styling
+    document.querySelectorAll('.sd-tab-pill').forEach(btn => btn.classList.remove('active'));
+    const activeTab = document.getElementById('tab-' + currentCat);
+    if (activeTab) activeTab.classList.add('active');
+
+    // Update Subtitle
+    const subTxt = document.getElementById('sd-subtitle-text');
+    if (subTxt) {
+      if (currentCat === 'food') subTxt.textContent = "Your bookmarked Food & Restaurant deals.";
+      else if (currentCat === 'ride') subTxt.textContent = "Your saved Ride & Travel promo discounts.";
+      else if (currentCat === 'skincare') subTxt.textContent = "Your saved Skincare products & store offers.";
+      else subTxt.textContent = "Your bookmarked food offers, ride discounts, and skincare products.";
+    }
+
+    // Update counts
+    document.getElementById('cnt-total').textContent = allDeals.length;
+    document.getElementById('badge-all').textContent = allDeals.length;
+    document.getElementById('badge-food').textContent = window.OMStore.getSavedDeals('food').length;
+    document.getElementById('badge-ride').textContent = window.OMStore.getSavedDeals('ride').length;
+    document.getElementById('badge-skincare').textContent = window.OMStore.getSavedDeals('skincare').length;
+
+    if (deals.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state" style="display:block">
+          <div class="empty-ico">&#128546;</div>
+          <h3>No saved deals found in this category</h3>
+          <p style="font-size:.8rem;color:var(--light);margin-top:4px">Browse deals and click the heart icon to save them!</p>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = deals.map(d => `
+      <div class="deal-card" data-cat="${d.category}" id="deal-${d.id}">
+        <div class="deal-img-wrap">
+          <span class="cat-badge cat-${d.category}">${d.category.toUpperCase()}</span>
+          <button class="heart-btn" title="Remove Saved Deal" onclick="handleRemoveSavedDeal('${d.id}')">&#10084;</button>
+          <img class="deal-img" src="${d.img}" alt="${d.title}"/>
+        </div>
+        <div class="deal-body">
+          <div class="deal-store">${d.store}</div>
+          <div class="deal-title">${d.title}</div>
+          <div class="deal-price-row">
+            <span class="deal-price">&#2547;${d.price}</span>
+            <span class="deal-old-price">&#2547;${d.oldPrice || Math.round(d.price * 1.3)}</span>
+            <span class="deal-off-badge">${d.discount || 'Special Offer'}</span>
+          </div>
+          <div class="deal-foot">
+            <span class="deal-meta-txt">Saved: ${d.savedAt || 'Recently'}</span>
+            <button class="btn-action" onclick="handleOrderDeal('${d.id}')">Order Now &rarr;</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterCategory(cat) {
+    renderSavedDeals(cat);
+  }
+
+  function handleRemoveSavedDeal(id) {
+    if (window.OMStore) {
+      window.OMStore.removeSavedDeal(id);
+      renderSavedDeals();
+    }
+  }
+
+  function handleOrderDeal(id) {
+    if (window.OMStore) {
+      const deal = window.OMStore.getSavedDeals().find(d => d.id === id);
+      if (deal) {
+        window.OMStore.addOrder({
+          items: deal.title,
+          store: deal.store,
+          category: deal.category,
+          total: deal.price,
+          img: deal.img
+        });
+        window.location.href = 'orders.html';
+      }
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', function() {
+    var params = new URLSearchParams(window.location.search);
+    var catParam = params.get('cat');
+    renderSavedDeals(catParam && ['food', 'ride', 'skincare'].includes(catParam) ? catParam : 'all');
+  });
+</script>
+
+</body>
+</html>
