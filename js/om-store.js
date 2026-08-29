@@ -1,9 +1,9 @@
 /**
  * OfferMatrix Central Data Store (OMStore)
- * Manages state across Dashboard, Price Alerts, Orders, and Saved Deals.
+ * Manages state across Dashboard, Price Alerts, Orders, Saved Deals, Coupons, Community Reviews, and Category Complain Modules.
  */
 (function() {
-  const STORE_KEY = 'offer_matrix_store_v1';
+  const STORE_KEY = 'offer_matrix_store_v4';
 
   const defaultState = {
     user: {
@@ -237,6 +237,298 @@
         logoText: 'CS',
         img: 'https://images.pexels.com/photos/3685530/pexels-photo-3685530.jpeg?auto=compress&cs=tinysrgb&w=200'
       }
+    ],
+    coupons: [
+      {
+        id: 'cpn-1',
+        code: 'BKASH20',
+        title: 'bKash 20% Instant Cashback',
+        discount: '20% Cashback (Max ৳100)',
+        minSpend: 300,
+        app: 'foodpanda & Pathao',
+        paymentMethod: 'bKash',
+        category: 'payment',
+        expiry: '30 Sep 2026',
+        verified: true,
+        bg: '#d12053',
+        usedCount: 4200
+      },
+      {
+        id: 'cpn-2',
+        code: 'NAGAD150',
+        title: 'Nagad Flat ৳150 Off Ride',
+        discount: '৳150 OFF',
+        minSpend: 500,
+        app: 'Uber & Pathao Car',
+        paymentMethod: 'Nagad',
+        category: 'payment',
+        expiry: '15 Oct 2026',
+        verified: true,
+        bg: '#f97316',
+        usedCount: 3100
+      },
+      {
+        id: 'cpn-3',
+        code: 'ROCKET10',
+        title: 'Rocket 10% Extra Savings',
+        discount: '10% OFF (Max ৳150)',
+        minSpend: 400,
+        app: 'Beautybooth & Choice Legacy',
+        paymentMethod: 'Rocket',
+        category: 'payment',
+        expiry: '20 Sep 2026',
+        verified: true,
+        bg: '#8b5cf6',
+        usedCount: 1850
+      },
+      {
+        id: 'cpn-4',
+        code: 'FOODPANDA50',
+        title: 'foodpanda Flat ৳50 Off Meal',
+        discount: '৳50 OFF',
+        minSpend: 250,
+        app: 'foodpanda',
+        paymentMethod: 'All Payment Methods',
+        category: 'food',
+        expiry: '10 Sep 2026',
+        verified: true,
+        bg: '#d70f64',
+        usedCount: 8900
+      },
+      {
+        id: 'cpn-5',
+        code: 'PATHAORIDE',
+        title: 'Pathao Car 25% Off Ride',
+        discount: '25% OFF',
+        minSpend: 200,
+        app: 'Pathao',
+        paymentMethod: 'bKash / Nagad',
+        category: 'ride',
+        expiry: '25 Sep 2026',
+        verified: true,
+        bg: '#ef4444',
+        usedCount: 5400
+      },
+      {
+        id: 'cpn-6',
+        code: 'SKINCARE15',
+        title: 'Beautybooth 15% Skincare Fest',
+        discount: '15% OFF',
+        minSpend: 1000,
+        app: 'Beautybooth BD',
+        paymentMethod: 'All Cards & MFS',
+        category: 'skincare',
+        expiry: '30 Sep 2026',
+        verified: true,
+        bg: '#ec4899',
+        usedCount: 2300
+      },
+      {
+        id: 'cpn-7',
+        code: 'VISAOFFER',
+        title: 'Visa Cards 15% Extra Discount',
+        discount: '15% OFF',
+        minSpend: 800,
+        app: 'Pizza Hut & Sultan\'s Kacchi',
+        paymentMethod: 'Visa Card',
+        category: 'payment',
+        expiry: '31 Oct 2026',
+        verified: true,
+        bg: '#1d4ed8',
+        usedCount: 1400
+      }
+    ],
+    reviews: [
+      {
+        id: 'rev-1',
+        userName: 'Tanvir Ahmed',
+        userAvatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100',
+        itemTitle: 'Kacchi Bhai Sultan Thali',
+        appName: 'foodpanda',
+        category: 'food',
+        rating: 5.0,
+        sentiment: 'best',
+        title: 'Best Biryani Value & bKash Cashback in Dhanmondi!',
+        reviewText: 'The portion size was generous and the mutton meat was tender and fragrant. Combined with bKash 20% cashback, it only cost ৳180 net! Best food deal right now.',
+        pros: ['Tender Mutton', 'Generous Rice', '20% bKash Cashback'],
+        cons: ['Packaging container could be sturdier'],
+        upvotes: 24,
+        date: '2 hours ago',
+        replies: [
+          {
+            id: 'rep-1',
+            userName: 'Setu Meherunnesa',
+            text: 'Totally agree! The bKash cashback makes this dish super affordable.',
+            date: '1 hour ago'
+          }
+        ]
+      },
+      {
+        id: 'rev-2',
+        userName: 'Sadia Islam',
+        userAvatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100',
+        itemTitle: 'Uber Intercity Airport Trip',
+        appName: 'Uber BD',
+        category: 'ride',
+        rating: 1.5,
+        sentiment: 'worst',
+        title: 'Driver Cancelled 3 Times & Asked Extra Cash',
+        reviewText: 'App wait time was shown as 5 mins but driver called and demanded ৳200 extra cash over app fare to go to Airport. When refused, he cancelled. Very frustrating during peak hours!',
+        pros: ['App UI is fast'],
+        cons: ['Driver Refused App Fare', 'Demanded Extra Cash', '3 Cancellations'],
+        upvotes: 45,
+        date: 'Yesterday',
+        replies: [
+          {
+            id: 'rep-2',
+            userName: 'Rafiq Hassan',
+            text: 'Pathao Car or InDrive is much more reliable for Airport routes right now.',
+            date: 'Yesterday'
+          }
+        ]
+      }
+    ],
+
+    // ── SKINCARE FRAUD DATA ──
+    skincareFraud: [
+      {
+        id: 'sk-frd-1',
+        brandName: 'Shajgoj Limited (Jamuna Branch & Online)',
+        socialWebLinks: 'shajgoj.com | fb.com/shajgojbd',
+        confiscatedProducts: ['120 Units Imported Sunscreen (Expired Relabeled)', '50 Units Fake CeraVe Foaming Cleanser'],
+        violations: 'Missing BSTI barcode certification sticker & relabeled manufacturing dates',
+        magistrateDetails: 'Executive Magistrate Sarwar Alam (Mobile Court Unit #4)',
+        penaltyFine: '৳50,000 Court Fine Imposed',
+        operationalStatus: 'Fined & Relabeled Stock Sealed',
+        date: '26 Aug 2026',
+        img: 'https://images.pexels.com/photos/3762879/pexels-photo-3762879.jpeg?auto=compress&cs=tinysrgb&w=400'
+      },
+      {
+        id: 'sk-frd-2',
+        brandName: 'CosmoCare BD (Facebook Page Seller)',
+        socialWebLinks: 'fb.com/cosmocarebd.official',
+        confiscatedProducts: ['450 Bottles Counterfeit CeraVe & The Ordinary', 'Diluted Chemical Mixing Drums'],
+        violations: 'Operating unauthorized packaging warehouse & mixing toxic chemical solutions',
+        magistrateDetails: 'DNCC Executive Mobile Court Raid',
+        penaltyFine: '৳2,00,000 Fine & Warehouse Sealed',
+        operationalStatus: 'Sealed & Page Admin Arrested',
+        date: '20 Aug 2026',
+        img: 'https://images.pexels.com/photos/3685530/pexels-photo-3685530.jpeg?auto=compress&cs=tinysrgb&w=400'
+      }
+    ],
+
+    // ── FOOD VIRAL RESTAURANT RAIDS ──
+    foodRaids: [
+      {
+        id: 'fd-rd-1',
+        restaurantName: 'Sultan\'s Kacchi',
+        branchLocation: 'Dhanmondi 27 Branch',
+        viralFoodItem: 'Mutton Sultan Thali (Viral Biryani)',
+        inspectionFindings: ['Unhygienic kitchen floor with uncovered cooked meat', 'No staff hairnets & stale oil reused'],
+        magistrateReport: 'Executive Magistrate Sarwar Alam (Safe Food Mobile Unit #3)',
+        fineAmount: '৳1,00,000 Fine Imposed',
+        closureNotice: '7-Day Hygiene Remediation Notice Issued',
+        date: '25 Aug 2026',
+        img: 'https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=400'
+      },
+      {
+        id: 'fd-rd-2',
+        restaurantName: 'Kacchi Bhai',
+        branchLocation: 'Gulshan-2 Circle',
+        viralFoodItem: 'Kacchi Platter Combo',
+        inspectionFindings: ['Rusted ghee oil drums stored near main stoves', 'Expired spices batch #982'],
+        magistrateReport: 'DNCC Mobile Court Inspection Report',
+        fineAmount: '৳50,000 Court Penalty',
+        closureNotice: 'Fine Paid & Kitchen Re-inspected',
+        date: '18 Aug 2026',
+        img: 'https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=400'
+      },
+      {
+        id: 'fd-rd-3',
+        restaurantName: 'Star Kabab & Restaurant',
+        branchLocation: 'Banani Outlet',
+        viralFoodItem: 'Star Special Mutton Leg Roast',
+        inspectionFindings: ['Stale cooked gravies stored in non-freezer room', 'Unhygienic washing sinks'],
+        magistrateReport: 'Bangladesh Safe Food Authority Inspector Team',
+        fineAmount: '৳1,50,000 Fine Imposed',
+        closureNotice: 'Warned & Action Plan Initiated',
+        date: '12 Aug 2026',
+        img: 'https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=400'
+      },
+      {
+        id: 'fd-rd-4',
+        restaurantName: 'Chillox',
+        branchLocation: 'Uttara Sector 11',
+        viralFoodItem: 'Cheesy Beef Burger (Viral Deal)',
+        inspectionFindings: ['Expired mayonnaise batch #34 used in sauces', 'Substandard cold room storage temperature'],
+        magistrateReport: 'DNCC Executive Magistrate Court Unit #2',
+        fineAmount: '৳80,000 Penalty Fine',
+        closureNotice: 'Fined & Staff Training Ordered',
+        date: '05 Aug 2026',
+        img: 'https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=400'
+      }
+    ],
+
+    // ── RIDE RIDER COMPLAIN ──
+    rideComplaints: [
+      {
+        id: 'rd-cmp-1',
+        incidentType: 'Meter Tampering & Extra Cash Extortion',
+        driverName: 'Rider #8492 (Abdul Karim)',
+        driverID: 'UBER-DRV-8492',
+        licensePlate: 'Dhaka Metro-Ga 24-8910',
+        serviceZone: 'Airport - Uttara Route',
+        details: 'Demanded ৳250 extra cash over app fare near Airport road and threatened to cancel ride mid-highway.',
+        driverPhoto: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=200',
+        escalationStatus: 'Suspended 30 Days & BRTA Escalated',
+        date: '27 Aug 2026'
+      },
+      {
+        id: 'rd-cmp-2',
+        incidentType: 'Reckless Overspeeding & Misbehavior',
+        driverName: 'Rider #3104 (Kamrul Hasan)',
+        driverID: 'PATHAO-DRV-3104',
+        licensePlate: 'Dhaka Metro-Ha 12-4521',
+        serviceZone: 'Farmgate Overpass Route',
+        details: 'Rider drove aggressively over speed limits and engaged in verbal misbehavior during evening rush hour.',
+        driverPhoto: 'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=200',
+        escalationStatus: 'Platform Ban & ID Blacklisted',
+        date: '22 Aug 2026'
+      }
+    ],
+
+    // ── DASHBOARD ALL COMPLAIN ISSUES ──
+    dashboardIssues: [
+      {
+        id: 'db-iss-1',
+        issueCategory: 'Coupon & Promotion Error',
+        promoCode: 'FOODPANDA50',
+        headline: 'Promo Code FOODPANDA50 Failed at Checkout',
+        details: 'Code failed during checkout, causing order #OM-8921 to be placed without applying valid ৳50 discount.',
+        trackerStatus: 'Refund Issued',
+        date: 'Today',
+        img: 'https://images.pexels.com/photos/404280/pexels-photo-404280.jpeg?auto=compress&cs=tinysrgb&w=300'
+      },
+      {
+        id: 'db-iss-2',
+        issueCategory: 'Food Safety Raid',
+        promoCode: 'N/A',
+        headline: 'Sultan\'s Kacchi Unhygienic Kitchen Penalty',
+        details: 'Mobile court fined Sultan\'s Kacchi ৳1,00,000 for unhygienic food storage and expired ingredients.',
+        trackerStatus: 'Magistrate Escalated',
+        date: '25 Aug 2026',
+        img: 'https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=300'
+      },
+      {
+        id: 'db-iss-3',
+        issueCategory: 'Rider Misconduct',
+        promoCode: 'N/A',
+        headline: 'Rider Extortion Attempt Near Airport Route',
+        details: 'Rider #8492 demanded ৳250 extra cash over app fare. Account suspended for 30 days.',
+        trackerStatus: 'Resolved',
+        date: '27 Aug 2026',
+        img: 'https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=300'
+      }
     ]
   };
 
@@ -255,7 +547,13 @@
             user: { ...defaultState.user, ...(parsed.user || {}) },
             savedDeals: parsed.savedDeals || defaultState.savedDeals,
             priceAlerts: parsed.priceAlerts || defaultState.priceAlerts,
-            orders: parsed.orders || defaultState.orders
+            orders: parsed.orders || defaultState.orders,
+            coupons: parsed.coupons || defaultState.coupons,
+            reviews: parsed.reviews || defaultState.reviews,
+            skincareFraud: parsed.skincareFraud || defaultState.skincareFraud,
+            foodRaids: parsed.foodRaids || defaultState.foodRaids,
+            rideComplaints: parsed.rideComplaints || defaultState.rideComplaints,
+            dashboardIssues: parsed.dashboardIssues || defaultState.dashboardIssues
           };
         }
       } catch (e) {
@@ -267,6 +565,7 @@
 
     saveState(stateToSave) {
       const s = stateToSave || this.state;
+      if (!s) return;
       try {
         localStorage.setItem(STORE_KEY, JSON.stringify(s));
       } catch (e) {
@@ -284,15 +583,11 @@
     }
 
     // ── USER PROFILE ──
-    getUser() {
-      return this.state.user;
-    }
+    getUser() { return this.state.user; }
 
     setUser(userObj) {
       this.state.user = { ...this.state.user, ...userObj };
-      if (userObj.name) {
-        localStorage.setItem('om_user_name', userObj.name);
-      }
+      if (userObj.name) localStorage.setItem('om_user_name', userObj.name);
       this.saveState();
     }
 
@@ -311,7 +606,7 @@
       if (idx >= 0) {
         this.state.savedDeals.splice(idx, 1);
         this.saveState();
-        return false; // now unsaved
+        return false;
       } else {
         const newDeal = {
           id: deal.id || 'sd-' + Date.now(),
@@ -328,7 +623,7 @@
         };
         this.state.savedDeals.unshift(newDeal);
         this.saveState();
-        return true; // now saved
+        return true;
       }
     }
 
@@ -414,18 +709,170 @@
       }
     }
 
+    // ── COUPONS ──
+    getCoupons(category) {
+      if (!category || category === 'all') return this.state.coupons;
+      if (category === 'payment') return this.state.coupons.filter(c => c.category === 'payment' || c.paymentMethod !== 'All Payment Methods');
+      return this.state.coupons.filter(c => c.category === category);
+    }
+
+    // ── REVIEWS ──
+    getReviews(filter) {
+      if (!filter || filter === 'all') return this.state.reviews;
+      if (filter === 'best') return this.state.reviews.filter(r => r.rating >= 4.0 || r.sentiment === 'best');
+      if (filter === 'worst') return this.state.reviews.filter(r => r.rating <= 2.5 || r.sentiment === 'worst');
+      return this.state.reviews.filter(r => r.category === filter);
+    }
+
+    addReview(review) {
+      const newReview = {
+        id: 'rev-' + Date.now(),
+        userName: this.state.user.name,
+        userAvatar: this.state.user.avatar,
+        itemTitle: review.itemTitle || 'OfferMatrix Service',
+        appName: review.appName || 'OfferMatrix App',
+        category: review.category || 'food',
+        rating: Number(review.rating) || 5.0,
+        sentiment: review.sentiment || (Number(review.rating) >= 4.0 ? 'best' : 'worst'),
+        title: review.title || 'User Community Review',
+        reviewText: review.reviewText || '',
+        pros: Array.isArray(review.pros) ? review.pros : (review.pros ? review.pros.split(',').map(s => s.trim()) : []),
+        cons: Array.isArray(review.cons) ? review.cons : (review.cons ? review.cons.split(',').map(s => s.trim()) : []),
+        upvotes: 1,
+        date: 'Just now',
+        replies: []
+      };
+      this.state.reviews.unshift(newReview);
+      this.saveState();
+      return newReview;
+    }
+
+    addReply(reviewId, text) {
+      const rev = this.state.reviews.find(r => r.id === reviewId);
+      if (rev) {
+        if (!rev.replies) rev.replies = [];
+        const newReply = {
+          id: 'rep-' + Date.now(),
+          userName: this.state.user.name,
+          text: text,
+          date: 'Just now'
+        };
+        rev.replies.push(newReply);
+        this.saveState();
+        return newReply;
+      }
+    }
+
+    upvoteReview(reviewId) {
+      const rev = this.state.reviews.find(r => r.id === reviewId);
+      if (rev) {
+        rev.upvotes = (rev.upvotes || 0) + 1;
+        this.saveState();
+        return rev.upvotes;
+      }
+    }
+
+    // ── SKINCARE FRAUD PAGES ──
+    getSkincareFraud() {
+      return this.state.skincareFraud || defaultState.skincareFraud;
+    }
+
+    submitFakeProductReport(data) {
+      const newReport = {
+        id: 'sk-frd-' + Date.now(),
+        brandName: data.brandName || 'Reported Cosmetics Seller',
+        socialWebLinks: data.socialWebLinks || 'Reported via User Submission',
+        confiscatedProducts: Array.isArray(data.confiscatedProducts) ? data.confiscatedProducts : [data.productName || 'Suspicious Cosmetic Item'],
+        violations: data.violations || 'User reported counterfeit formula & unverified packaging',
+        magistrateDetails: 'OfferMatrix Legal Cell Escalated',
+        penaltyFine: 'Under Investigation',
+        operationalStatus: 'Warned',
+        date: 'Just now',
+        img: data.img || 'https://images.pexels.com/photos/3762879/pexels-photo-3762879.jpeg?auto=compress&cs=tinysrgb&w=400'
+      };
+      this.state.skincareFraud.unshift(newReport);
+      this.saveState();
+      return newReport;
+    }
+
+    // ── FOOD VIRAL RESTAURANT RAIDS ──
+    getFoodRaids() {
+      return this.state.foodRaids || defaultState.foodRaids;
+    }
+
+    fileFoodSafetyComplain(data) {
+      const newComplain = {
+        id: 'fd-rd-' + Date.now(),
+        restaurantName: data.restaurantName || 'Reported Eatery',
+        branchLocation: data.branchLocation || 'Dhaka Outlet',
+        viralFoodItem: data.viralFoodItem || 'Featured Dish',
+        inspectionFindings: Array.isArray(data.findings) ? data.findings : [data.description || 'Spoiled food item / Hygiene issue'],
+        magistrateReport: 'Reported to Consumer Right Protection',
+        fineAmount: 'Inspection Pending',
+        closureNotice: 'Under Verification',
+        date: 'Just now',
+        img: data.img || 'https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=400'
+      };
+      this.state.foodRaids.unshift(newComplain);
+      this.saveState();
+      return newComplain;
+    }
+
+    // ── RIDE RIDER COMPLAIN ──
+    getRideComplaints() {
+      return this.state.rideComplaints || defaultState.rideComplaints;
+    }
+
+    lodgeRiderComplain(data) {
+      const newRiderComplain = {
+        id: 'rd-cmp-' + Date.now(),
+        incidentType: data.incidentType || 'Misbehavior / Overcharging',
+        driverName: data.driverName || 'Reported Driver',
+        driverID: data.driverID || 'DRV-' + Math.floor(1000 + Math.random() * 9000),
+        licensePlate: data.licensePlate || 'Dhaka Metro-Ga XX-XXXX',
+        serviceZone: data.serviceZone || 'Dhaka Metropolitan Route',
+        details: data.details || 'Passenger submitted incident report.',
+        driverPhoto: data.driverPhoto || 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=200',
+        escalationStatus: data.emergency ? '🚨 Emergency Authorities Escalated' : 'Platform Escalated & Ticket Opened',
+        date: 'Just now'
+      };
+      this.state.rideComplaints.unshift(newRiderComplain);
+      this.saveState();
+      return newRiderComplain;
+    }
+
+    // ── DASHBOARD ALL COMPLAIN ISSUES ──
+    getDashboardIssues() {
+      return this.state.dashboardIssues || defaultState.dashboardIssues;
+    }
+
+    raiseSupportTicket(data) {
+      const newTicket = {
+        id: 'db-iss-' + Date.now(),
+        issueCategory: data.issueCategory || 'Coupon / System Bug',
+        promoCode: data.promoCode || 'N/A',
+        headline: data.headline || 'User Raised Issue Ticket',
+        details: data.details || 'System ticket submitted by user.',
+        trackerStatus: 'Under Review',
+        date: 'Just now',
+        img: data.img || 'https://images.pexels.com/photos/404280/pexels-photo-404280.jpeg?auto=compress&cs=tinysrgb&w=300'
+      };
+      this.state.dashboardIssues.unshift(newTicket);
+      this.saveState();
+      return newTicket;
+    }
+
     // ── BADGE SYNCHRONIZATION ──
     updateBadges() {
-      const savedCount = this.state.savedDeals.length;
-      const alertsCount = this.state.priceAlerts.length;
-      const activeOrdersCount = this.state.orders.filter(o => o.status === 'in_transit' || o.status === 'preparing').length || this.state.orders.length;
+      if (!this.state || !this.state.savedDeals) return;
+      const savedCount = (this.state.savedDeals || []).length;
+      const alertsCount = (this.state.priceAlerts || []).length;
+      const activeOrdersCount = ((this.state.orders || []).filter(o => o.status === 'in_transit' || o.status === 'preparing').length) || (this.state.orders || []).length;
 
-      // Update sidebar & header badge elements across document
       document.querySelectorAll('.sb-badge-orders, #sb-badge-orders').forEach(el => el.textContent = activeOrdersCount);
       document.querySelectorAll('.sb-badge-alerts, #sb-badge-alerts').forEach(el => el.textContent = alertsCount);
       document.querySelectorAll('.sb-badge-saved, #sb-badge-saved').forEach(el => el.textContent = savedCount);
 
-      // Generic update for older sidebar badges matching specific text
       document.querySelectorAll('.sb-item').forEach(item => {
         const text = item.textContent.toLowerCase();
         const badge = item.querySelector('.sb-badge');
@@ -439,13 +886,11 @@
         }
       });
 
-      // Update topbar saved button count if present
       const tbSaved = document.querySelector('.tb-saved');
       if (tbSaved) {
         tbSaved.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Saved (${savedCount})`;
       }
 
-      // Update profile display names
       const name = this.state.user.name;
       const firstName = name.split(' ')[0];
       document.querySelectorAll('#tb-name, .tb-uname').forEach(el => el.textContent = name);
@@ -462,7 +907,6 @@
   // Initialize Global Store
   window.OMStore = new OMStoreManager();
 
-  // Run on DOM loaded to sync UI badges and names
   document.addEventListener('DOMContentLoaded', () => {
     window.OMStore.updateBadges();
   });

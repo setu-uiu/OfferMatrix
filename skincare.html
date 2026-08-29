@@ -1,605 +1,1539 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Skincare Deals - OfferMatrix</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
   <script src="js/om-store.js"></script>
   <style>
-    *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
-    :root {
-      --pink:#ff1a6e; --pink-light:#fff0f5; --green:#22c55e; --green-light:#dcfce7;
-      --red:#ef4444; --text:#111827; --mid:#4b5563; --light:#9ca3af;
-      --border:#e5e7eb; --bg:#fafafa; --white:#fff; --font:'Inter',sans-serif; --sb:240px;
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    body { font-family:var(--font); background:var(--bg); color:var(--text); display:flex; min-height:100vh; overflow-x:hidden; }
-    button { font-family:var(--font); cursor:pointer; border:none; background:none; }
-    a { color:inherit; text-decoration:none; }
-    ::-webkit-scrollbar { width:5px; height:5px; }
-    ::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:5px; }
+
+    :root {
+      --pink: #ff1a6e;
+      --pink-light: #fff0f5;
+      --green: #22c55e;
+      --green-light: #dcfce7;
+      --red: #ef4444;
+      --text: #111827;
+      --mid: #4b5563;
+      --light: #9ca3af;
+      --border: #e5e7eb;
+      --bg: #fafafa;
+      --white: #fff;
+      --font: 'Inter', sans-serif;
+      --sb: 240px;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    button {
+      font-family: var(--font);
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 5px;
+    }
 
     /* ── SIDEBAR ── */
-    .sb { width:var(--sb); min-height:100vh; background:var(--white); border-right:1px solid var(--border); display:flex; flex-direction:column; position:fixed; left:0; top:0; bottom:0; z-index:300; overflow-y:auto; }
-    .sb-logo { display:flex; align-items:center; gap:10px; padding:1.2rem 1.4rem; }
-    .sb-logo-icon { width:36px; height:36px; background:var(--pink); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:900; color:#fff; }
-    .sb-logo-text { font-size:1.3rem; font-weight:800; color:#111827; }
-    .sb-nav { flex:1; padding:1rem 0; }
-    .sb-group { font-size:.7rem; font-weight:700; color:var(--light); letter-spacing:1px; padding:1rem 1.4rem .4rem; text-transform:uppercase; }
-    .sb-item { display:flex; align-items:center; gap:.8rem; padding:.7rem 1.4rem; font-size:.9rem; font-weight:600; color:var(--mid); width:100%; text-align:left; cursor:pointer; transition:all .2s; white-space:nowrap; }
-    .sb-item:hover { color:var(--pink); }
-    .sb-item.on { background:var(--pink); color:#fff; border-radius:10px; margin:0 .8rem; padding:.7rem .6rem; width:calc(100% - 1.6rem); }
-    .sb-item.on .sb-ico { color:#fff; }
-    .sb-ico { font-size:1.2rem; width:24px; text-align:center; color:#6b7280; transition:all .2s; flex-shrink:0; }
-    .sb-badge { margin-left:auto; font-size:.65rem; font-weight:800; min-width:22px; height:22px; padding:0 6px; border-radius:50px; background:var(--red); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-    .sb-badge.red { background:#fff; color:var(--red); border:1.5px solid var(--red); }
-    .sb-red { color:var(--red)!important; }
-    .sb-invite { margin:1rem; background:var(--pink-light); border-radius:16px; padding:1.2rem; text-align:center; display:flex; flex-direction:column; align-items:center; }
-    .sb-invite-emoji { font-size:2rem; margin-bottom:.5rem; }
-    .sb-invite-title { font-size:.9rem; font-weight:800; color:var(--pink); margin-bottom:.3rem; }
-    .sb-invite-sub { font-size:.75rem; color:var(--mid); margin-bottom:.8rem; line-height:1.4; }
-    .btn-invite { background:var(--pink); color:#fff; border-radius:50px; padding:.5rem 1.2rem; font-size:.8rem; font-weight:700; width:100%; transition:all .2s; }
+    .sb {
+      width: var(--sb);
+      min-height: 100vh;
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 300;
+      overflow-y: auto;
+    }
+
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 1.2rem 1.4rem;
+    }
+
+    .sb-logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--pink);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .sb-logo-text {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .sb-nav {
+      flex: 1;
+      padding: 1rem 0;
+    }
+
+    .sb-group {
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--light);
+      letter-spacing: 1px;
+      padding: 1rem 1.4rem .4rem;
+      text-transform: uppercase;
+    }
+
+    .sb-item {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      padding: .7rem 1.4rem;
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--mid);
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+
+    .sb-item:hover {
+      color: var(--pink);
+    }
+
+    .sb-item.on {
+      background: var(--pink);
+      color: #fff;
+      border-radius: 10px;
+      margin: 0 .8rem;
+      padding: .7rem .6rem;
+      width: calc(100% - 1.6rem);
+    }
+
+    .sb-item.on .sb-ico {
+      color: #fff;
+    }
+
+    .sb-ico {
+      font-size: 1.2rem;
+      width: 24px;
+      text-align: center;
+      color: #6b7280;
+      transition: all .2s;
+      flex-shrink: 0;
+    }
+
+    .sb-badge {
+      margin-left: auto;
+      font-size: .65rem;
+      font-weight: 800;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      border-radius: 50px;
+      background: var(--red);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sb-badge.red {
+      background: #fff;
+      color: var(--red);
+      border: 1.5px solid var(--red);
+    }
+
+    .sb-red {
+      color: var(--red) !important;
+    }
+
+    .sb-invite {
+      margin: 1rem;
+      background: var(--pink-light);
+      border-radius: 16px;
+      padding: 1.2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sb-invite-emoji {
+      font-size: 2rem;
+      margin-bottom: .5rem;
+    }
+
+    .sb-invite-title {
+      font-size: .9rem;
+      font-weight: 800;
+      color: var(--pink);
+      margin-bottom: .3rem;
+    }
+
+    .sb-invite-sub {
+      font-size: .75rem;
+      color: var(--mid);
+      margin-bottom: .8rem;
+      line-height: 1.4;
+    }
+
+    .btn-invite {
+      background: var(--pink);
+      color: #fff;
+      border-radius: 50px;
+      padding: .5rem 1.2rem;
+      font-size: .8rem;
+      font-weight: 700;
+      width: 100%;
+      transition: all .2s;
+    }
 
     /* ── MAIN WRAPPER ── */
-    .main { margin-left:var(--sb); flex:1; display:flex; flex-direction:column; width:calc(100% - var(--sb)); }
+    .main {
+      margin-left: var(--sb);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: calc(100% - var(--sb));
+    }
 
     /* TOPBAR */
-    .topbar { background:var(--white); border-bottom:1px solid var(--border); padding:.8rem 1.5rem; display:flex; align-items:center; gap:1rem; position:sticky; top:0; z-index:100; }
-    .tb-actions { display:flex; align-items:center; gap:1rem; margin-left:auto; }
-    .tb-icon-btn { width:40px; height:40px; border-radius:50%; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:#4b5563; font-size:1.1rem; }
-    .tb-saved { display:flex; align-items:center; gap:6px; font-size:.85rem; font-weight:600; color:var(--mid); padding:.5rem 1rem; border:1px solid var(--border); border-radius:50px; }
-    .tb-user { display:flex; align-items:center; gap:.6rem; padding:.3rem .6rem; border-radius:50px; cursor:pointer; }
-    .tb-avatar { width:38px; height:38px; border-radius:50%; overflow:hidden; }
-    .tb-avatar img { width:100%; height:100%; object-fit:cover; }
-    .tb-uname { font-size:.85rem; font-weight:700; color:#111827; }
-    .tb-umeta { font-size:.7rem; color:var(--light); }
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: .8rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .tb-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-left: auto;
+    }
+
+    .tb-icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4b5563;
+      font-size: 1.1rem;
+    }
+
+    .tb-saved {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--mid);
+      padding: .5rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+    }
+
+    .tb-user {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .3rem .6rem;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+
+    .tb-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .tb-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .tb-uname {
+      font-size: .85rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .tb-umeta {
+      font-size: .7rem;
+      color: var(--light);
+    }
 
     /* PAGE BODY */
-    .page-body { display:flex; flex:1; gap:1.5rem; padding:1.5rem; }
-    .col-main { flex:1; min-width:0; display:flex; flex-direction:column; gap:1.4rem; overflow-x:hidden; }
-    .col-right { width:280px; flex-shrink:0; display:flex; flex-direction:column; gap:1rem; }
+    .page-body {
+      display: flex;
+      flex: 1;
+      gap: 1.5rem;
+      padding: 1.5rem;
+    }
+
+    .col-main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+      overflow-x: hidden;
+    }
+
+    .col-right {
+      width: 280px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
 
     /* HERO */
-    .hero { background:linear-gradient(135deg,#fff1f2,#fffbeb); border-radius:20px; padding:1.8rem 2.2rem; display:flex; align-items:center; gap:1.5rem; overflow:hidden; min-height:170px; }
-    .hero-txt { flex:1; }
-    .hero-hi { font-size:.95rem; color:var(--mid); margin-bottom:.3rem; }
-    .hero-title { font-size:1.65rem; font-weight:900; line-height:1.25; color:#111827; letter-spacing:-.4px; margin-bottom:.5rem; }
-    .hero-title span { color:var(--pink); }
-    .hero-sub { font-size:.82rem; color:var(--mid); }
-    .hero-img { width:240px; flex-shrink:0; }
-    .hero-img img { width:100%; height:140px; object-fit:cover; border-radius:14px; }
+    .hero {
+      background: linear-gradient(135deg, #fff1f2, #fffbeb);
+      border-radius: 20px;
+      padding: 1.8rem 2.2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      overflow: hidden;
+      min-height: 170px;
+    }
+
+    .hero-txt {
+      flex: 1;
+    }
+
+    .hero-hi {
+      font-size: .95rem;
+      color: var(--mid);
+      margin-bottom: .3rem;
+    }
+
+    .hero-title {
+      font-size: 1.65rem;
+      font-weight: 900;
+      line-height: 1.25;
+      color: #111827;
+      letter-spacing: -.4px;
+      margin-bottom: .5rem;
+    }
+
+    .hero-title span {
+      color: var(--pink);
+    }
+
+    .hero-sub {
+      font-size: .82rem;
+      color: var(--mid);
+    }
+
+    .hero-img {
+      width: 240px;
+      flex-shrink: 0;
+    }
+
+    .hero-img img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 14px;
+    }
 
     /* SEARCH */
-    .search-bar { background:#fff; border-radius:50px; border:1px solid var(--border); display:flex; align-items:center; padding:.35rem; box-shadow:0 2px 10px rgba(0,0,0,.04); }
-    .search-inner { display:flex; align-items:center; gap:.7rem; padding:0 1rem; flex:1; }
-    .search-inner input { border:none; background:transparent; outline:none; font-size:.88rem; width:100%; font-family:var(--font); }
-    .search-loc { font-size:.82rem; color:var(--mid); padding:0 1rem; white-space:nowrap; border-left:1px solid var(--border); }
-    .btn-search { background:var(--pink); color:#fff; border-radius:50px; padding:.62rem 1.6rem; font-size:.88rem; font-weight:700; }
+    .search-bar {
+      background: #fff;
+      border-radius: 50px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: .35rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .04);
+    }
+
+    .search-inner {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      padding: 0 1rem;
+      flex: 1;
+    }
+
+    .search-inner input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: .88rem;
+      width: 100%;
+      font-family: var(--font);
+    }
+
+    .search-loc {
+      font-size: .82rem;
+      color: var(--mid);
+      padding: 0 1rem;
+      white-space: nowrap;
+      border-left: 1px solid var(--border);
+    }
+
+    .btn-search {
+      background: var(--pink);
+      color: #fff;
+      border-radius: 50px;
+      padding: .62rem 1.6rem;
+      font-size: .88rem;
+      font-weight: 700;
+    }
 
     /* SECTION HEADER */
-    .sec-hd { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:.75rem; }
-    .sec-title { font-size:.98rem; font-weight:800; color:#111827; }
-    .sec-sub { font-size:.72rem; color:var(--light); margin-top:2px; }
-    .sec-link { font-size:.8rem; font-weight:700; color:var(--pink); cursor:pointer; white-space:nowrap; }
+    .sec-hd {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: .75rem;
+    }
+
+    .sec-title {
+      font-size: .98rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .sec-sub {
+      font-size: .72rem;
+      color: var(--light);
+      margin-top: 2px;
+    }
+
+    .sec-link {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--pink);
+      cursor: pointer;
+      white-space: nowrap;
+    }
 
     /* CATEGORIES */
-    .cat-scroll { display:flex; gap:.5rem; overflow-x:auto; padding-bottom:4px; }
-    .cat-pill { display:flex; align-items:center; gap:5px; padding:.45rem .9rem; border:1px solid var(--border); border-radius:50px; background:#fff; cursor:pointer; font-size:.8rem; font-weight:600; white-space:nowrap; color:var(--text); transition:all .2s; }
-    .cat-pill:hover { border-color:var(--pink); color:var(--pink); }
-    .cat-pill.active { background:var(--pink); color:#fff; border-color:var(--pink); }
-    .cat-icon { width:20px; height:20px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; }
+    .cat-scroll {
+      display: flex;
+      gap: .5rem;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .cat-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: .45rem .9rem;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      background: #fff;
+      cursor: pointer;
+      font-size: .8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      color: var(--text);
+      transition: all .2s;
+    }
+
+    .cat-pill:hover {
+      border-color: var(--pink);
+      color: var(--pink);
+    }
+
+    .cat-pill.active {
+      background: var(--pink);
+      color: #fff;
+      border-color: var(--pink);
+    }
+
+    .cat-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
 
     /* BENEFITS */
-    .benefit-scroll { display:flex; gap:.7rem; overflow-x:auto; padding-bottom:4px; }
-    .benefit-card { display:flex; align-items:center; gap:.55rem; padding:.65rem .9rem; background:#fff; border:1px solid var(--border); border-radius:10px; flex-shrink:0; }
-    .benefit-icon { width:26px; height:26px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; }
-    .benefit-name { font-size:.76rem; font-weight:700; color:#111827; white-space:nowrap; }
-    .benefit-desc { font-size:.63rem; color:var(--light); margin-top:1px; white-space:nowrap; }
+    .benefit-scroll {
+      display: flex;
+      gap: .7rem;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .benefit-card {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      padding: .65rem .9rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    .benefit-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .benefit-name {
+      font-size: .76rem;
+      font-weight: 700;
+      color: #111827;
+      white-space: nowrap;
+    }
+
+    .benefit-desc {
+      font-size: .63rem;
+      color: var(--light);
+      margin-top: 1px;
+      white-space: nowrap;
+    }
 
     /* DEAL CARDS */
-    .deal-scroll { display:flex; gap:1rem; overflow-x:auto; padding-bottom:8px; }
-    .deal-card { width:195px; flex-shrink:0; background:#fff; border-radius:14px; border:1px solid var(--border); overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.04); transition:transform .2s; }
-    .deal-card:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(0,0,0,.08); }
-    .deal-img { height:155px; position:relative; background:#f8f9fb; display:flex; align-items:center; justify-content:center; }
-    .deal-img img { width:100%; height:100%; object-fit:contain; padding:8px; }
-    .deal-badge-best { position:absolute; top:8px; left:8px; background:var(--green); color:#fff; font-size:.58rem; font-weight:800; padding:3px 8px; border-radius:6px; letter-spacing:.5px; text-transform:uppercase; }
-    .deal-body { padding:.9rem; }
-    .deal-name { font-size:.85rem; font-weight:800; color:#111827; margin-bottom:2px; }
-    .deal-sub { font-size:.68rem; color:var(--mid); margin-bottom:2px; }
-    .deal-size { font-size:.63rem; color:var(--light); margin-bottom:6px; }
-    .deal-rating { font-size:.68rem; color:#f59e0b; margin-bottom:8px; }
-    .deal-rating span { color:var(--mid); }
-    .deal-price-row { display:flex; align-items:center; gap:5px; margin-bottom:3px; flex-wrap:wrap; }
-    .deal-price { font-size:.98rem; font-weight:900; color:var(--pink); }
-    .deal-old { font-size:.68rem; color:var(--light); text-decoration:line-through; }
-    .deal-off { font-size:.6rem; font-weight:800; color:var(--green); background:var(--green-light); padding:2px 5px; border-radius:4px; }
-    .deal-save { font-size:.68rem; font-weight:700; color:var(--green); margin-bottom:8px; }
-    .deal-store { font-size:.68rem; color:var(--mid); display:flex; align-items:center; gap:5px; border-top:1px solid #f3f4f6; padding-top:7px; }
-    .store-dot { width:16px; height:16px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:8px; font-weight:800; color:#fff; flex-shrink:0; }
+    .deal-scroll {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .deal-card {
+      width: 195px;
+      flex-shrink: 0;
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+      transition: transform .2s;
+    }
+
+    .deal-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
+    }
+
+    .deal-img {
+      height: 155px;
+      position: relative;
+      background: #f8f9fb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .deal-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 8px;
+    }
+
+    .deal-badge-best {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: var(--green);
+      color: #fff;
+      font-size: .58rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .deal-body {
+      padding: .9rem;
+    }
+
+    .deal-name {
+      font-size: .85rem;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+
+    .deal-sub {
+      font-size: .68rem;
+      color: var(--mid);
+      margin-bottom: 2px;
+    }
+
+    .deal-size {
+      font-size: .63rem;
+      color: var(--light);
+      margin-bottom: 6px;
+    }
+
+    .deal-rating {
+      font-size: .68rem;
+      color: #f59e0b;
+      margin-bottom: 8px;
+    }
+
+    .deal-rating span {
+      color: var(--mid);
+    }
+
+    .deal-price-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 3px;
+      flex-wrap: wrap;
+    }
+
+    .deal-price {
+      font-size: .98rem;
+      font-weight: 900;
+      color: var(--pink);
+    }
+
+    .deal-old {
+      font-size: .68rem;
+      color: var(--light);
+      text-decoration: line-through;
+    }
+
+    .deal-off {
+      font-size: .6rem;
+      font-weight: 800;
+      color: var(--green);
+      background: var(--green-light);
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+
+    .deal-save {
+      font-size: .68rem;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+
+    .deal-store {
+      font-size: .68rem;
+      color: var(--mid);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      border-top: 1px solid #f3f4f6;
+      padding-top: 7px;
+    }
+
+    .store-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
 
     /* TRENDING */
-    .trend-scroll { display:flex; gap:.8rem; overflow-x:auto; padding-bottom:4px; }
-    .trend-card { display:flex; align-items:center; gap:.65rem; padding:.75rem 1rem; background:#fff; border:1px solid var(--border); border-radius:10px; flex-shrink:0; min-width:155px; cursor:pointer; transition:all .2s; }
-    .trend-card:hover { border-color:var(--pink); }
-    .trend-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
-    .trend-name { font-size:.8rem; font-weight:700; color:#111827; }
-    .trend-sub { font-size:.63rem; color:var(--light); margin-top:1px; }
+    .trend-scroll {
+      display: flex;
+      gap: .8rem;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .trend-card {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      padding: .75rem 1rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      flex-shrink: 0;
+      min-width: 155px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .trend-card:hover {
+      border-color: var(--pink);
+    }
+
+    .trend-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .trend-name {
+      font-size: .8rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .trend-sub {
+      font-size: .63rem;
+      color: var(--light);
+      margin-top: 1px;
+    }
 
     /* FRAUD BANNER */
-    .fraud-banner { background:linear-gradient(135deg,#fff0f5,#fef2f2); border:1px solid #fecdd3; border-radius:14px; padding:1.2rem 1.5rem; display:flex; align-items:center; gap:1rem; }
-    .fraud-txt { flex:1; }
-    .fraud-title { font-size:.92rem; font-weight:800; color:#111827; margin-bottom:3px; }
-    .fraud-sub { font-size:.72rem; color:var(--mid); }
-    .btn-report { background:var(--pink); color:#fff; border-radius:50px; padding:.55rem 1.3rem; font-size:.78rem; font-weight:700; white-space:nowrap; flex-shrink:0; }
-    .fraud-icon { font-size:2.2rem; flex-shrink:0; }
+    .fraud-banner {
+      background: linear-gradient(135deg, #fff0f5, #fef2f2);
+      border: 1px solid #fecdd3;
+      border-radius: 14px;
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .fraud-txt {
+      flex: 1;
+    }
+
+    .fraud-title {
+      font-size: .92rem;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 3px;
+    }
+
+    .fraud-sub {
+      font-size: .72rem;
+      color: var(--mid);
+    }
+
+    .btn-report {
+      background: var(--pink);
+      color: #fff;
+      border-radius: 50px;
+      padding: .55rem 1.3rem;
+      font-size: .78rem;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .fraud-icon {
+      font-size: 2.2rem;
+      flex-shrink: 0;
+    }
 
     /* ── RIGHT PANEL ── */
-    .rtabs { display:flex; background:#f1f5f9; border-radius:50px; padding:4px; align-items:center; }
-    .rtab { flex:1; padding:.6rem .2rem; font-size:.85rem; font-weight:700; color:#334155; text-align:center; border-radius:50px; display:flex; align-items:center; justify-content:center; gap:4px; border:none; background:none; font-family:inherit; cursor:pointer; white-space:nowrap; }
-    .rtab.on { background:#fff; color:var(--pink); box-shadow:0 2px 8px rgba(0,0,0,.05); }
+    .rtabs {
+      display: flex;
+      background: #f1f5f9;
+      border-radius: 50px;
+      padding: 4px;
+      align-items: center;
+    }
 
-    .panel { background:#fff; border-radius:14px; border:1px solid var(--border); padding:1.2rem; }
-    .panel-hd { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
-    .panel-title { font-size:.88rem; font-weight:800; color:#111827; }
-    .panel-link { font-size:.76rem; font-weight:700; color:var(--pink); }
-    .panel-sub { font-size:.7rem; color:var(--light); }
+    .rtab {
+      flex: 1;
+      padding: .6rem .2rem;
+      font-size: .85rem;
+      font-weight: 700;
+      color: #334155;
+      text-align: center;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border: none;
+      background: none;
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+    }
 
-    .saving-amt { font-size:2rem; font-weight:900; color:var(--pink); margin-bottom:.25rem; }
-    .saving-delta { font-size:.72rem; color:var(--green); font-weight:700; margin-bottom:1rem; }
-    .saving-stats { display:flex; justify-content:space-between; margin-bottom:1rem; }
-    .stat-label { font-size:.68rem; color:var(--light); margin-bottom:2px; }
-    .stat-val { font-size:.95rem; font-weight:800; }
-    .saving-bar-lbl { font-size:.7rem; color:var(--mid); margin-bottom:.4rem; }
-    .saving-bar { height:6px; background:#f1f5f9; border-radius:50px; }
-    .saving-bar-fill { height:100%; width:78%; background:var(--pink); border-radius:50px; }
+    .rtab.on {
+      background: #fff;
+      color: var(--pink);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+    }
 
-    .brand-row { display:flex; align-items:center; gap:.65rem; padding:.6rem 0; border-bottom:1px solid #f3f4f6; }
-    .brand-row:last-child { border-bottom:none; padding-bottom:0; }
-    .brand-logo { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:.5rem; font-weight:800; color:#fff; flex-shrink:0; overflow:hidden; text-align:center; line-height:1.2; }
-    .brand-name { font-size:.8rem; font-weight:700; color:#111827; }
-    .brand-stars { font-size:.63rem; color:#f59e0b; margin-top:1px; }
-    .brand-stars span { color:var(--light); }
+    .panel {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 1.2rem;
+    }
 
-    .coupon-panel { background:var(--pink-light); border:1.5px dashed var(--pink); border-radius:14px; padding:1.2rem; text-align:center; }
-    .coupon-icon { font-size:2rem; margin-bottom:.5rem; }
-    .coupon-title { font-size:.95rem; font-weight:800; color:var(--pink); margin-bottom:.4rem; }
-    .coupon-sub { font-size:.7rem; color:var(--mid); line-height:1.5; margin-bottom:1rem; }
-    .btn-copy { background:#fff; border:1px solid var(--pink); color:var(--pink); border-radius:50px; padding:.5rem 1.5rem; font-size:.8rem; font-weight:700; width:100%; cursor:pointer; font-family:var(--font); }
-    .btn-copy:hover { background:var(--pink); color:#fff; }
+    .panel-hd {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .panel-title {
+      font-size: .88rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .panel-link {
+      font-size: .76rem;
+      font-weight: 700;
+      color: var(--pink);
+    }
+
+    .panel-sub {
+      font-size: .7rem;
+      color: var(--light);
+    }
+
+    .saving-amt {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--pink);
+      margin-bottom: .25rem;
+    }
+
+    .saving-delta {
+      font-size: .72rem;
+      color: var(--green);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .saving-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .stat-label {
+      font-size: .68rem;
+      color: var(--light);
+      margin-bottom: 2px;
+    }
+
+    .stat-val {
+      font-size: .95rem;
+      font-weight: 800;
+    }
+
+    .saving-bar-lbl {
+      font-size: .7rem;
+      color: var(--mid);
+      margin-bottom: .4rem;
+    }
+
+    .saving-bar {
+      height: 6px;
+      background: #f1f5f9;
+      border-radius: 50px;
+    }
+
+    .saving-bar-fill {
+      height: 100%;
+      width: 78%;
+      background: var(--pink);
+      border-radius: 50px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      padding: .6rem 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .brand-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .5rem;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+      overflow: hidden;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .brand-name {
+      font-size: .8rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .brand-stars {
+      font-size: .63rem;
+      color: #f59e0b;
+      margin-top: 1px;
+    }
+
+    .brand-stars span {
+      color: var(--light);
+    }
+
+    .coupon-panel {
+      background: var(--pink-light);
+      border: 1.5px dashed var(--pink);
+      border-radius: 14px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+
+    .coupon-icon {
+      font-size: 2rem;
+      margin-bottom: .5rem;
+    }
+
+    .coupon-title {
+      font-size: .95rem;
+      font-weight: 800;
+      color: var(--pink);
+      margin-bottom: .4rem;
+    }
+
+    .coupon-sub {
+      font-size: .7rem;
+      color: var(--mid);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .btn-copy {
+      background: #fff;
+      border: 1px solid var(--pink);
+      color: var(--pink);
+      border-radius: 50px;
+      padding: .5rem 1.5rem;
+      font-size: .8rem;
+      font-weight: 700;
+      width: 100%;
+      cursor: pointer;
+      font-family: var(--font);
+    }
+
+    .btn-copy:hover {
+      background: var(--pink);
+      color: #fff;
+    }
   </style>
 </head>
+
 <body>
 
-<!-- ══════════════ SIDEBAR ══════════════ -->
-<aside class="sb">
-  <div class="sb-logo">
-    <div class="sb-logo-icon">%</div>
-    <span class="sb-logo-text">Offer<span style="color:#22c55e">Matrix</span></span>
-  </div>
-  <nav class="sb-nav">
-    <div class="sb-group">MAIN</div>
-    <button class="sb-item" onclick="window.location.href='dashboard.html'"><span class="sb-ico">&#127968;</span> Dashboard</button>
-    <button class="sb-item" onclick="window.location.href='dashboard.html?tab=food'"><span class="sb-ico">&#127860;</span> Food</button>
-    <button class="sb-item" onclick="window.location.href='dashboard.html?tab=ride'"><span class="sb-ico">&#128663;</span> Ride</button>
-    <button class="sb-item on"><span class="sb-ico">&#128167;</span> Skincare</button>
-    <button class="sb-item" onclick="window.location.href='orders.html'"><span class="sb-ico">&#128230;</span> Orders <span class="sb-badge" style="background:var(--pink);color:#fff;">6</span></button>
-    <button class="sb-item" onclick="window.location.href='saved-deals.html?cat=skincare'"><span class="sb-ico">&#10084;</span> Saved Deals</button>
-    <button class="sb-item" onclick="window.location.href='price-alerts.html?cat=skincare'"><span class="sb-ico">&#128276;</span> Price Alerts <span class="sb-badge" style="background:#ef4444;color:#fff;">5</span></button>
-    <button class="sb-item"><span class="sb-ico">&#127915;</span> Coupons</button>
-    <button class="sb-item"><span class="sb-ico">&#11088;</span> Reviews</button>
-    <div class="sb-group">COMMUNITY</div>
-    <button class="sb-item sb-red"><span class="sb-ico">&#128680;</span> Fraud Pages <span class="sb-badge red">New</span></button>
-    <button class="sb-item"><span class="sb-ico">&#128179;</span> My Wallet</button>
-    <button class="sb-item"><span class="sb-ico">&#128179;</span> Bank Cards</button>
-    <button class="sb-item"><span class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
-    <div class="sb-group">ACCOUNT</div>
-    <button class="sb-item"><span class="sb-ico">&#9881;</span> Settings</button>
-    <button class="sb-item"><span class="sb-ico">&#10067;</span> Help &amp; Support</button>
-    <button class="sb-item sb-red" onclick="window.location.href='index.html'"><span class="sb-ico">&#128682;</span> Log Out</button>
-  </nav>
-  <div class="sb-invite">
-    <div class="sb-invite-emoji">&#127873;</div>
-    <div class="sb-invite-title">Invite &amp; Earn</div>
-    <div class="sb-invite-sub">Invite your friends and earn exciting rewards</div>
-    <button class="btn-invite">Invite Now</button>
-  </div>
-</aside>
+  <!-- ══════════════ SIDEBAR ══════════════ -->
+  <aside class="sb">
+    <div class="sb-logo">
+      <div class="sb-logo-icon">%</div>
+      <span class="sb-logo-text">Offer<span style="color:#22c55e">Matrix</span></span>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-group">MAIN</div>
+      <button class="sb-item" onclick="window.location.href='dashboard.html'"><span class="sb-ico">&#127968;</span>
+        Dashboard</button>
+      <button class="sb-item" onclick="window.location.href='dashboard.html?tab=food'"><span
+          class="sb-ico">&#127860;</span> Food</button>
+      <button class="sb-item" onclick="window.location.href='dashboard.html?tab=ride'"><span
+          class="sb-ico">&#128663;</span> Ride</button>
+      <button class="sb-item on"><span class="sb-ico">&#128167;</span> Skincare</button>
+      <button class="sb-item" onclick="window.location.href='orders.html'"><span class="sb-ico">&#128230;</span> Orders
+        <span class="sb-badge" style="background:var(--pink);color:#fff;">6</span></button>
+      <button class="sb-item" onclick="window.location.href='saved-deals.html?cat=skincare'"><span
+          class="sb-ico">&#10084;</span> Saved Deals</button>
+      <button class="sb-item" onclick="window.location.href='price-alerts.html?cat=skincare'"><span
+          class="sb-ico">&#128276;</span> Price Alerts <span class="sb-badge"
+          style="background:#ef4444;color:#fff;">5</span></button>
+      <button class="sb-item" onclick="window.location.href='coupons.html'"><span class="sb-ico">&#127915;</span>
+        Coupons</button>
+      <button class="sb-item" onclick="window.location.href='reviews.html'"><span class="sb-ico">&#11088;</span>
+        Reviews</button>
+      <div class="sb-group">COMMUNITY</div>
+      <button class="sb-item sb-red" onclick="document.getElementById('sc-fraud-section') && document.getElementById('sc-fraud-section').scrollIntoView({behavior:'smooth'})"><span class="sb-ico">&#128680;</span> Fraud Pages <span class="sb-badge red">Alert</span></button>
+      <button class="sb-item"><span class="sb-ico">&#128179;</span> My Wallet</button>
+      <button class="sb-item"><span class="sb-ico">&#128179;</span> Bank Cards</button>
+      <button class="sb-item"><span class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
+      <div class="sb-group">ACCOUNT</div>
+      <button class="sb-item"><span class="sb-ico">&#9881;</span> Settings</button>
+      <button class="sb-item"><span class="sb-ico">&#10067;</span> Help &amp; Support</button>
+      <button class="sb-item sb-red" onclick="window.location.href='index.html'"><span class="sb-ico">&#128682;</span>
+        Log Out</button>
+    </nav>
+    <div class="sb-invite">
+      <div class="sb-invite-emoji">&#127873;</div>
+      <div class="sb-invite-title">Invite &amp; Earn</div>
+      <div class="sb-invite-sub">Invite your friends and earn exciting rewards</div>
+      <button class="btn-invite">Invite Now</button>
+    </div>
+  </aside>
 
-<!-- ══════════════ MAIN ══════════════ -->
-<div class="main">
+  <!-- ══════════════ MAIN ══════════════ -->
+  <div class="main">
 
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="tb-actions">
-      <button class="tb-icon-btn">&#128276;</button>
-      <button class="tb-saved" onclick="window.location.href='saved-deals.html?cat=skincare'">&#9825; Saved</button>
-      <div class="tb-user">
-        <div class="tb-avatar">
-          <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=80" alt="Setu Meherunnesa"/>
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="tb-actions">
+        <button class="tb-icon-btn">&#128276;</button>
+        <button class="tb-saved" onclick="window.location.href='saved-deals.html?cat=skincare'">&#9825; Saved</button>
+        <div class="tb-user">
+          <div class="tb-avatar">
+            <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=80"
+              alt="Setu Meherunnesa" />
+          </div>
+          <div>
+            <div class="tb-uname">Setu Meherunnesa</div>
+            <div class="tb-umeta">Premium Member</div>
+          </div>
         </div>
+      </div>
+    </div>
+
+    <!-- PAGE BODY -->
+    <div class="page-body">
+
+      <!-- ── LEFT / MAIN COLUMN ── -->
+      <div class="col-main">
+
+        <!-- HERO -->
+        <div class="hero">
+          <div class="hero-txt">
+            <div class="hero-hi">Hey Setu! &#128075;</div>
+            <div class="hero-title">Find the best <span>skincare deals</span><br />from top brands &amp; stores</div>
+            <div class="hero-sub">Compare prices, read reviews, and save more on your skincare.</div>
+          </div>
+          <div class="hero-img">
+            <img
+              src="https://images.pexels.com/photos/4041392/pexels-photo-4041392.jpeg?auto=compress&cs=tinysrgb&w=600"
+              alt="Skincare products" />
+          </div>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="search-bar">
+          <div class="search-inner">
+            <span style="color:#9ca3af">&#128269;</span>
+            <input placeholder="Search for products, brands or stores..." />
+          </div>
+          <span class="search-loc">&#128205; Dhaka</span>
+          <button class="btn-search">Search</button>
+        </div>
+
+        <!-- TOP CATEGORIES -->
         <div>
-          <div class="tb-uname">Setu Meherunnesa</div>
-          <div class="tb-umeta">Premium Member</div>
+          <div class="sec-hd">
+            <div>
+              <div class="sec-title">Top Skincare Categories</div>
+            </div>
+          </div>
+          <div class="cat-scroll">
+            <div class="cat-pill active"><span class="cat-icon"
+                style="background:rgba(255,255,255,.3)">&#128138;</span>Face Wash</div>
+            <div class="cat-pill"><span class="cat-icon"
+                style="background:#ecfdf5;color:#16a34a">&#128167;</span>Moisturizer</div>
+            <div class="cat-pill"><span class="cat-icon" style="background:#faf5ff;color:#9333ea">&#10024;</span>Serum
+            </div>
+            <div class="cat-pill"><span class="cat-icon"
+                style="background:#fff7ed;color:#f97316">&#9728;</span>Sunscreen</div>
+            <div class="cat-pill"><span class="cat-icon"
+                style="background:#eff6ff;color:#2563eb">&#128138;</span>Cleanser</div>
+            <div class="cat-pill"><span class="cat-icon" style="background:#ecfeff;color:#0891b2">&#128167;</span>Toner
+            </div>
+            <div class="cat-pill"><span class="cat-icon"
+                style="background:#f0fdf4;color:#15803d;font-weight:900">+</span>More Categories</div>
+          </div>
         </div>
+
+        <!-- BENEFITS -->
+        <div class="benefit-scroll">
+          <div class="benefit-card">
+            <div class="benefit-icon" style="background:#ecfdf5;color:#16a34a">&#10003;</div>
+            <div>
+              <div class="benefit-name">Best Prices</div>
+              <div class="benefit-desc">Find lowest price</div>
+            </div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon" style="background:#fff7ed;color:#f97316">&#10003;</div>
+            <div>
+              <div class="benefit-name">100% Authentic</div>
+              <div class="benefit-desc">Original products</div>
+            </div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon" style="background:#fdf2f8;color:#ec4899">&#9733;</div>
+            <div>
+              <div class="benefit-name">Top Brands</div>
+              <div class="benefit-desc">Trusted &amp; popular</div>
+            </div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon" style="background:#faf5ff;color:#9333ea">&#9998;</div>
+            <div>
+              <div class="benefit-name">Expert Reviews</div>
+              <div class="benefit-desc">Read before you buy</div>
+            </div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon" style="background:#fffbeb;color:#d97706">&#127873;</div>
+            <div>
+              <div class="benefit-name">Exclusive Offers</div>
+              <div class="benefit-desc">Save more today</div>
+            </div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon" style="background:#f0fdf4;color:#15803d">&#8635;</div>
+            <div>
+              <div class="benefit-name">Easy Returns</div>
+              <div class="benefit-desc">Hassle-free return</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BEST DEALS -->
+        <div>
+          <div class="sec-hd">
+            <div>
+              <div class="sec-title">Best Skincare Deals for You</div>
+              <div class="sec-sub">Handpicked deals from top stores</div>
+            </div>
+            <span class="sec-link">View All Deals</span>
+          </div>
+          <div class="deal-scroll">
+
+            <!-- Card 1: CeraVe -->
+            <div class="deal-card">
+              <div class="deal-img">
+                <img
+                  src="https://images.pexels.com/photos/4465124/pexels-photo-4465124.jpeg?auto=compress&cs=tinysrgb&w=300"
+                  alt="CeraVe Hydrating Cleanser" />
+                <span class="deal-badge-best">Best Deal</span>
+              </div>
+              <div class="deal-body">
+                <div class="deal-name">CeraVe Hydrating</div>
+                <div class="deal-sub">Facial Cleanser</div>
+                <div class="deal-size">236ml</div>
+                <div class="deal-rating">&#9733; 4.5 <span>(2.1k)</span></div>
+                <div class="deal-price-row">
+                  <span class="deal-price">&#2547;1,250</span>
+                  <span class="deal-old">&#2547;1,650</span>
+                  <span class="deal-off">24% OFF</span>
+                </div>
+                <div class="deal-save">You Save &#2547;400</div>
+                <div class="deal-store"><span class="store-dot"
+                    style="background:#fafafa;color:#111827;border:1px solid #cbd5e1">CL</span>Choice Legacy</div>
+              </div>
+            </div>
+
+            <!-- Card 2: The Ordinary -->
+            <div class="deal-card">
+              <div class="deal-img">
+                <img
+                  src="https://images.pexels.com/photos/6621465/pexels-photo-6621465.jpeg?auto=compress&cs=tinysrgb&w=300"
+                  alt="The Ordinary Niacinamide" />
+              </div>
+              <div class="deal-body">
+                <div class="deal-name">The Ordinary</div>
+                <div class="deal-sub">Niacinamide 10% + Zinc 1%</div>
+                <div class="deal-size">30ml</div>
+                <div class="deal-rating">&#9733; 4.5 <span>(1.8k)</span></div>
+                <div class="deal-price-row">
+                  <span class="deal-price">&#2547;890</span>
+                  <span class="deal-old">&#2547;1,200</span>
+                  <span class="deal-off">26% OFF</span>
+                </div>
+                <div class="deal-save">You Save &#2547;310</div>
+                <div class="deal-store"><span class="store-dot" style="background:#fff0f5;color:#ec4899">Ki</span>kirei
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: La Roche-Posay -->
+            <div class="deal-card">
+              <div class="deal-img">
+                <img
+                  src="https://images.pexels.com/photos/3735641/pexels-photo-3735641.jpeg?auto=compress&cs=tinysrgb&w=300"
+                  alt="La Roche-Posay Sunscreen" />
+              </div>
+              <div class="deal-body">
+                <div class="deal-name">La Roche-Posay</div>
+                <div class="deal-sub">Anthelios Sunscreen</div>
+                <div class="deal-size">50ml</div>
+                <div class="deal-rating">&#9733; 4.7 <span>(3.2k)</span></div>
+                <div class="deal-price-row">
+                  <span class="deal-price">&#2547;1,690</span>
+                  <span class="deal-old">&#2547;2,200</span>
+                  <span class="deal-off">23% OFF</span>
+                </div>
+                <div class="deal-save">You Save &#2547;510</div>
+                <div class="deal-store"><span class="store-dot" style="background:#fff0f5;color:#f43f5e">MC</span>Makeup
+                  Chari</div>
+              </div>
+            </div>
+
+            <!-- Card 4: Simple -->
+            <div class="deal-card">
+              <div class="deal-img">
+                <img
+                  src="https://images.pexels.com/photos/3762879/pexels-photo-3762879.jpeg?auto=compress&cs=tinysrgb&w=300"
+                  alt="Simple Kind To Skin" />
+              </div>
+              <div class="deal-body">
+                <div class="deal-name">Simple Kind To Skin</div>
+                <div class="deal-sub">Moisturising Facial Wash</div>
+                <div class="deal-size">150ml</div>
+                <div class="deal-rating">&#9733; 4.4 <span>(1.2k)</span></div>
+                <div class="deal-price-row">
+                  <span class="deal-price">&#2547;650</span>
+                  <span class="deal-old">&#2547;850</span>
+                  <span class="deal-off">24% OFF</span>
+                </div>
+                <div class="deal-save">You Save &#2547;200</div>
+                <div class="deal-store"><span class="store-dot"
+                    style="background:#fafafa;color:#111827;border:1px solid #cbd5e1">CL</span>Choice Legacy</div>
+              </div>
+            </div>
+
+            <!-- Card 5: COSRX -->
+            <div class="deal-card">
+              <div class="deal-img">
+                <img
+                  src="https://images.pexels.com/photos/4210370/pexels-photo-4210370.jpeg?auto=compress&cs=tinysrgb&w=300"
+                  alt="COSRX Snail Essence" />
+              </div>
+              <div class="deal-body">
+                <div class="deal-name">COSRX Advanced Snail</div>
+                <div class="deal-sub">96 Mucin Power Essence</div>
+                <div class="deal-size">100ml</div>
+                <div class="deal-rating">&#9733; 4.6 <span>(1.9k)</span></div>
+                <div class="deal-price-row">
+                  <span class="deal-price">&#2547;1,550</span>
+                  <span class="deal-old">&#2547;1,960</span>
+                  <span class="deal-off">21% OFF</span>
+                </div>
+                <div class="deal-save">You Save &#2547;410</div>
+                <div class="deal-store"><span class="store-dot" style="background:#fff0f5;color:#ec4899">Ki</span>kirei
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 6: Anua Toner -->
+            <div class="deal-card">
+              <div class="deal-img">
+                <img
+                  src="https://images.pexels.com/photos/3785147/pexels-photo-3785147.jpeg?auto=compress&cs=tinysrgb&w=300"
+                  alt="Anua Heartleaf Toner" />
+              </div>
+              <div class="deal-body">
+                <div class="deal-name">Anua Heartleaf 77%</div>
+                <div class="deal-sub">Soothing Toner</div>
+                <div class="deal-size">250ml</div>
+                <div class="deal-rating">&#9733; 4.8 <span>(2.4k)</span></div>
+                <div class="deal-price-row">
+                  <span class="deal-price">&#2547;1,450</span>
+                  <span class="deal-old">&#2547;1,800</span>
+                  <span class="deal-off">19% OFF</span>
+                </div>
+                <div class="deal-save">You Save &#2547;350</div>
+                <div class="deal-store"><span class="store-dot" style="background:#fff0f5;color:#f43f5e">MC</span>Makeup
+                  Chari</div>
+              </div>
+            </div>
+
+            <!-- Card 7: Beauty of Joseon -->
+            <div class="deal-card">
+              <div class="deal-img">
+                <img
+                  src="https://images.pexels.com/photos/3685530/pexels-photo-3685530.jpeg?auto=compress&cs=tinysrgb&w=300"
+                  alt="Beauty of Joseon Sunscreen" />
+              </div>
+              <div class="deal-body">
+                <div class="deal-name">Beauty of Joseon</div>
+                <div class="deal-sub">Relief Sun Rice + Probiotics</div>
+                <div class="deal-size">50ml</div>
+                <div class="deal-rating">&#9733; 4.9 <span>(4.1k)</span></div>
+                <div class="deal-price-row">
+                  <span class="deal-price">&#2547;1,150</span>
+                  <span class="deal-old">&#2547;1,500</span>
+                  <span class="deal-off">23% OFF</span>
+                </div>
+                <div class="deal-save">You Save &#2547;350</div>
+                <div class="deal-store"><span class="store-dot"
+                    style="background:#fafafa;color:#111827;border:1px solid #cbd5e1">CL</span>Choice Legacy</div>
+              </div>
+            </div>
+
+            <!-- Card 8: Paula's Choice -->
+            <div class="deal-card">
+              <div class="deal-img">
+                <img
+                  src="https://images.pexels.com/photos/4041392/pexels-photo-4041392.jpeg?auto=compress&cs=tinysrgb&w=300"
+                  alt="Paula's Choice Exfoliant" />
+              </div>
+              <div class="deal-body">
+                <div class="deal-name">Paula's Choice 2% BHA</div>
+                <div class="deal-sub">Liquid Exfoliant</div>
+                <div class="deal-size">118ml</div>
+                <div class="deal-rating">&#9733; 4.7 <span>(3.8k)</span></div>
+                <div class="deal-price-row">
+                  <span class="deal-price">&#2547;2,450</span>
+                  <span class="deal-old">&#2547;3,100</span>
+                  <span class="deal-off">21% OFF</span>
+                </div>
+                <div class="deal-save">You Save &#2547;650</div>
+                <div class="deal-store"><span class="store-dot" style="background:#fff0f5;color:#ec4899">Ki</span>kirei
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 9: Cetaphil Cleanser -->
+            <div class="deal-card">
+              <div class="deal-img">
+                <img
+                  src="https://images.pexels.com/photos/3735641/pexels-photo-3735641.jpeg?auto=compress&cs=tinysrgb&w=300"
+                  alt="Cetaphil Cleanser" />
+              </div>
+              <div class="deal-body">
+                <div class="deal-name">Cetaphil Gentle</div>
+                <div class="deal-sub">Skin Cleanser</div>
+                <div class="deal-size">500ml</div>
+                <div class="deal-rating">&#9733; 4.6 <span>(2.7k)</span></div>
+                <div class="deal-price-row">
+                  <span class="deal-price">&#2547;1,350</span>
+                  <span class="deal-old">&#2547;1,750</span>
+                  <span class="deal-off">23% OFF</span>
+                </div>
+                <div class="deal-save">You Save &#2547;400</div>
+                <div class="deal-store"><span class="store-dot" style="background:#fff0f5;color:#f43f5e">MC</span>Makeup
+                  Chari</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TRENDING NOW -->
+        <div>
+          <div class="sec-hd">
+            <div>
+              <div class="sec-title">Trending Now</div>
+              <div class="sec-sub">Most searched &amp; popular skincare products</div>
+            </div>
+            <span class="sec-link">View All</span>
+          </div>
+          <div class="trend-scroll">
+            <div class="trend-card">
+              <div class="trend-icon" style="background:#fff7ed">&#127818;</div>
+              <div>
+                <div class="trend-name">Vitamin C Serum</div>
+                <div class="trend-sub">Brightening Boost</div>
+              </div>
+            </div>
+            <div class="trend-card">
+              <div class="trend-icon" style="background:#eff6ff">&#128167;</div>
+              <div>
+                <div class="trend-name">Hyaluronic Acid</div>
+                <div class="trend-sub">Deep Hydration</div>
+              </div>
+            </div>
+            <div class="trend-card">
+              <div class="trend-icon" style="background:#faf5ff">&#128156;</div>
+              <div>
+                <div class="trend-name">Retinol Cream</div>
+                <div class="trend-sub">Anti-Aging</div>
+              </div>
+            </div>
+            <div class="trend-card">
+              <div class="trend-icon" style="background:#fffbeb">&#9728;</div>
+              <div>
+                <div class="trend-name">Sunscreen SPF 50</div>
+                <div class="trend-sub">UV Protection</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FRAUD BANNER -->
+        <div class="fraud-banner">
+          <div class="fraud-txt">
+            <div class="fraud-title">Fraud Pages &amp; Fake Products</div>
+            <div class="fraud-sub">Report scam pages or fake skincare products to help others stay safe.</div>
+          </div>
+          <button class="btn-report">Report Now</button>
+          <div class="fraud-icon">&#128737;</div>
+        </div>
+
+      </div>
+
+      <!-- ── RIGHT COLUMN ── -->
+      <div class="col-right">
+
+        <!-- TABS -->
+        <div class="rtabs">
+          <button class="rtab" onclick="window.location.href='dashboard.html?tab=food'">&#127860; Food</button>
+          <button class="rtab" onclick="window.location.href='dashboard.html?tab=ride'">&#128663; Ride</button>
+          <button class="rtab on">&#10024; Skincare</button>
+        </div>
+
+        <!-- SKINCARE SAVINGS -->
+        <div class="panel">
+          <div class="panel-hd">
+            <div class="panel-title">Skincare Savings</div>
+            <div class="panel-sub">This Month &#9660;</div>
+          </div>
+          <div class="saving-amt">৳2,850</div>
+          <div class="saving-delta">&#9650; 22% vs last month</div>
+          <div class="saving-stats">
+            <div>
+              <div class="stat-label">Products Compared</div>
+              <div class="stat-val">36</div>
+            </div>
+            <div>
+              <div class="stat-label">Total Saved</div>
+              <div class="stat-val">৳8,450</div>
+            </div>
+          </div>
+          <div class="saving-bar-lbl">You're saving more than <b style="color:var(--green)">78%</b> of users!</div>
+          <div class="saving-bar">
+            <div class="saving-bar-fill"></div>
+          </div>
+        </div>
+
+        <!-- TOP BRANDS -->
+        <div class="panel">
+          <div class="panel-hd">
+            <div class="panel-title">Top Brands</div>
+            <span class="panel-link">View All</span>
+          </div>
+          <div class="brand-row">
+            <div class="brand-logo" style="background:#0ea5e9">CeraVe</div>
+            <div>
+              <div class="brand-name">CeraVe</div>
+              <div class="brand-stars">&#9733; 4.6 <span>(2.5k reviews)</span></div>
+            </div>
+          </div>
+          <div class="brand-row">
+            <div class="brand-logo" style="background:#111827;font-size:.6rem;letter-spacing:-.5px">TO</div>
+            <div>
+              <div class="brand-name">The Ordinary</div>
+              <div class="brand-stars">&#9733; 4.5 <span>(2.1k reviews)</span></div>
+            </div>
+          </div>
+          <div class="brand-row">
+            <div class="brand-logo" style="background:#1e293b;font-size:.48rem;letter-spacing:-.3px">COSRX</div>
+            <div>
+              <div class="brand-name">COSRX</div>
+              <div class="brand-stars">&#9733; 4.6 <span>(1.9k reviews)</span></div>
+            </div>
+          </div>
+          <div class="brand-row">
+            <div class="brand-logo" style="background:#0284c7;font-size:.52rem">LRP</div>
+            <div>
+              <div class="brand-name">La Roche-Posay</div>
+              <div class="brand-stars">&#9733; 4.7 <span>(2.8k reviews)</span></div>
+            </div>
+          </div>
+          <div class="brand-row">
+            <div class="brand-logo" style="background:#4ade80;color:#111827;font-size:.48rem">MIN</div>
+            <div>
+              <div class="brand-name">Minimalist</div>
+              <div class="brand-stars">&#9733; 4.4 <span>(1.5k reviews)</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COUPON -->
+        <div class="coupon-panel">
+          <div class="coupon-icon">&#127873;</div>
+          <div class="coupon-title">Get Extra 10% OFF</div>
+          <div class="coupon-sub">Use code: <b>SKIN10</b><br />Valid on all orders above ৳999</div>
+          <button class="btn-copy" onclick="this.textContent='Copied! ✓'">Copy Code</button>
+        </div>
+
       </div>
     </div>
   </div>
-
-  <!-- PAGE BODY -->
-  <div class="page-body">
-
-    <!-- ── LEFT / MAIN COLUMN ── -->
-    <div class="col-main">
-
-      <!-- HERO -->
-      <div class="hero">
-        <div class="hero-txt">
-          <div class="hero-hi">Hey Setu! &#128075;</div>
-          <div class="hero-title">Find the best <span>skincare deals</span><br/>from top brands &amp; stores</div>
-          <div class="hero-sub">Compare prices, read reviews, and save more on your skincare.</div>
-        </div>
-        <div class="hero-img">
-          <img src="https://images.pexels.com/photos/4041392/pexels-photo-4041392.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Skincare products"/>
-        </div>
-      </div>
-
-      <!-- SEARCH -->
-      <div class="search-bar">
-        <div class="search-inner">
-          <span style="color:#9ca3af">&#128269;</span>
-          <input placeholder="Search for products, brands or stores..."/>
-        </div>
-        <span class="search-loc">&#128205; Dhaka</span>
-        <button class="btn-search">Search</button>
-      </div>
-
-      <!-- TOP CATEGORIES -->
-      <div>
-        <div class="sec-hd">
-          <div><div class="sec-title">Top Skincare Categories</div></div>
-        </div>
-        <div class="cat-scroll">
-          <div class="cat-pill active"><span class="cat-icon" style="background:rgba(255,255,255,.3)">&#128138;</span>Face Wash</div>
-          <div class="cat-pill"><span class="cat-icon" style="background:#ecfdf5;color:#16a34a">&#128167;</span>Moisturizer</div>
-          <div class="cat-pill"><span class="cat-icon" style="background:#faf5ff;color:#9333ea">&#10024;</span>Serum</div>
-          <div class="cat-pill"><span class="cat-icon" style="background:#fff7ed;color:#f97316">&#9728;</span>Sunscreen</div>
-          <div class="cat-pill"><span class="cat-icon" style="background:#eff6ff;color:#2563eb">&#128138;</span>Cleanser</div>
-          <div class="cat-pill"><span class="cat-icon" style="background:#ecfeff;color:#0891b2">&#128167;</span>Toner</div>
-          <div class="cat-pill"><span class="cat-icon" style="background:#f0fdf4;color:#15803d;font-weight:900">+</span>More Categories</div>
-        </div>
-      </div>
-
-      <!-- BENEFITS -->
-      <div class="benefit-scroll">
-        <div class="benefit-card">
-          <div class="benefit-icon" style="background:#ecfdf5;color:#16a34a">&#10003;</div>
-          <div><div class="benefit-name">Best Prices</div><div class="benefit-desc">Find lowest price</div></div>
-        </div>
-        <div class="benefit-card">
-          <div class="benefit-icon" style="background:#fff7ed;color:#f97316">&#10003;</div>
-          <div><div class="benefit-name">100% Authentic</div><div class="benefit-desc">Original products</div></div>
-        </div>
-        <div class="benefit-card">
-          <div class="benefit-icon" style="background:#fdf2f8;color:#ec4899">&#9733;</div>
-          <div><div class="benefit-name">Top Brands</div><div class="benefit-desc">Trusted &amp; popular</div></div>
-        </div>
-        <div class="benefit-card">
-          <div class="benefit-icon" style="background:#faf5ff;color:#9333ea">&#9998;</div>
-          <div><div class="benefit-name">Expert Reviews</div><div class="benefit-desc">Read before you buy</div></div>
-        </div>
-        <div class="benefit-card">
-          <div class="benefit-icon" style="background:#fffbeb;color:#d97706">&#127873;</div>
-          <div><div class="benefit-name">Exclusive Offers</div><div class="benefit-desc">Save more today</div></div>
-        </div>
-        <div class="benefit-card">
-          <div class="benefit-icon" style="background:#f0fdf4;color:#15803d">&#8635;</div>
-          <div><div class="benefit-name">Easy Returns</div><div class="benefit-desc">Hassle-free return</div></div>
-        </div>
-      </div>
-
-      <!-- BEST DEALS -->
-      <div>
-        <div class="sec-hd">
-          <div>
-            <div class="sec-title">Best Skincare Deals for You</div>
-            <div class="sec-sub">Handpicked deals from top stores</div>
-          </div>
-          <span class="sec-link">View All Deals</span>
-        </div>
-        <div class="deal-scroll">
-
-          <!-- Card 1: CeraVe -->
-          <div class="deal-card">
-            <div class="deal-img">
-              <img src="https://images.pexels.com/photos/4465124/pexels-photo-4465124.jpeg?auto=compress&cs=tinysrgb&w=300" alt="CeraVe Hydrating Cleanser"/>
-              <span class="deal-badge-best">Best Deal</span>
-            </div>
-            <div class="deal-body">
-              <div class="deal-name">CeraVe Hydrating</div>
-              <div class="deal-sub">Facial Cleanser</div>
-              <div class="deal-size">236ml</div>
-              <div class="deal-rating">&#9733; 4.5 <span>(2.1k)</span></div>
-              <div class="deal-price-row">
-                <span class="deal-price">&#2547;1,250</span>
-                <span class="deal-old">&#2547;1,650</span>
-                <span class="deal-off">24% OFF</span>
-              </div>
-              <div class="deal-save">You Save &#2547;400</div>
-              <div class="deal-store"><span class="store-dot" style="background:#fafafa;color:#111827;border:1px solid #cbd5e1">CL</span>Choice Legacy</div>
-            </div>
-          </div>
-
-          <!-- Card 2: The Ordinary -->
-          <div class="deal-card">
-            <div class="deal-img">
-              <img src="https://images.pexels.com/photos/6621465/pexels-photo-6621465.jpeg?auto=compress&cs=tinysrgb&w=300" alt="The Ordinary Niacinamide"/>
-            </div>
-            <div class="deal-body">
-              <div class="deal-name">The Ordinary</div>
-              <div class="deal-sub">Niacinamide 10% + Zinc 1%</div>
-              <div class="deal-size">30ml</div>
-              <div class="deal-rating">&#9733; 4.5 <span>(1.8k)</span></div>
-              <div class="deal-price-row">
-                <span class="deal-price">&#2547;890</span>
-                <span class="deal-old">&#2547;1,200</span>
-                <span class="deal-off">26% OFF</span>
-              </div>
-              <div class="deal-save">You Save &#2547;310</div>
-              <div class="deal-store"><span class="store-dot" style="background:#fff0f5;color:#ec4899">Ki</span>kirei</div>
-            </div>
-          </div>
-
-          <!-- Card 3: La Roche-Posay -->
-          <div class="deal-card">
-            <div class="deal-img">
-              <img src="https://images.pexels.com/photos/3735641/pexels-photo-3735641.jpeg?auto=compress&cs=tinysrgb&w=300" alt="La Roche-Posay Sunscreen"/>
-            </div>
-            <div class="deal-body">
-              <div class="deal-name">La Roche-Posay</div>
-              <div class="deal-sub">Anthelios Sunscreen</div>
-              <div class="deal-size">50ml</div>
-              <div class="deal-rating">&#9733; 4.7 <span>(3.2k)</span></div>
-              <div class="deal-price-row">
-                <span class="deal-price">&#2547;1,690</span>
-                <span class="deal-old">&#2547;2,200</span>
-                <span class="deal-off">23% OFF</span>
-              </div>
-              <div class="deal-save">You Save &#2547;510</div>
-              <div class="deal-store"><span class="store-dot" style="background:#fff0f5;color:#f43f5e">MC</span>Makeup Chari</div>
-            </div>
-          </div>
-
-          <!-- Card 4: Simple -->
-          <div class="deal-card">
-            <div class="deal-img">
-              <img src="https://images.pexels.com/photos/3762879/pexels-photo-3762879.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Simple Kind To Skin"/>
-            </div>
-            <div class="deal-body">
-              <div class="deal-name">Simple Kind To Skin</div>
-              <div class="deal-sub">Moisturising Facial Wash</div>
-              <div class="deal-size">150ml</div>
-              <div class="deal-rating">&#9733; 4.4 <span>(1.2k)</span></div>
-              <div class="deal-price-row">
-                <span class="deal-price">&#2547;650</span>
-                <span class="deal-old">&#2547;850</span>
-                <span class="deal-off">24% OFF</span>
-              </div>
-              <div class="deal-save">You Save &#2547;200</div>
-              <div class="deal-store"><span class="store-dot" style="background:#fafafa;color:#111827;border:1px solid #cbd5e1">CL</span>Choice Legacy</div>
-            </div>
-          </div>
-
-          <!-- Card 5: COSRX -->
-          <div class="deal-card">
-            <div class="deal-img">
-              <img src="https://images.pexels.com/photos/4210370/pexels-photo-4210370.jpeg?auto=compress&cs=tinysrgb&w=300" alt="COSRX Snail Essence"/>
-            </div>
-            <div class="deal-body">
-              <div class="deal-name">COSRX Advanced Snail</div>
-              <div class="deal-sub">96 Mucin Power Essence</div>
-              <div class="deal-size">100ml</div>
-              <div class="deal-rating">&#9733; 4.6 <span>(1.9k)</span></div>
-              <div class="deal-price-row">
-                <span class="deal-price">&#2547;1,550</span>
-                <span class="deal-old">&#2547;1,960</span>
-                <span class="deal-off">21% OFF</span>
-              </div>
-              <div class="deal-save">You Save &#2547;410</div>
-              <div class="deal-store"><span class="store-dot" style="background:#fff0f5;color:#ec4899">Ki</span>kirei</div>
-            </div>
-          </div>
-
-          <!-- Card 6: Anua Toner -->
-          <div class="deal-card">
-            <div class="deal-img">
-              <img src="https://images.pexels.com/photos/3785147/pexels-photo-3785147.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Anua Heartleaf Toner"/>
-            </div>
-            <div class="deal-body">
-              <div class="deal-name">Anua Heartleaf 77%</div>
-              <div class="deal-sub">Soothing Toner</div>
-              <div class="deal-size">250ml</div>
-              <div class="deal-rating">&#9733; 4.8 <span>(2.4k)</span></div>
-              <div class="deal-price-row">
-                <span class="deal-price">&#2547;1,450</span>
-                <span class="deal-old">&#2547;1,800</span>
-                <span class="deal-off">19% OFF</span>
-              </div>
-              <div class="deal-save">You Save &#2547;350</div>
-              <div class="deal-store"><span class="store-dot" style="background:#fff0f5;color:#f43f5e">MC</span>Makeup Chari</div>
-            </div>
-          </div>
-
-          <!-- Card 7: Beauty of Joseon -->
-          <div class="deal-card">
-            <div class="deal-img">
-              <img src="https://images.pexels.com/photos/3685530/pexels-photo-3685530.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Beauty of Joseon Sunscreen"/>
-            </div>
-            <div class="deal-body">
-              <div class="deal-name">Beauty of Joseon</div>
-              <div class="deal-sub">Relief Sun Rice + Probiotics</div>
-              <div class="deal-size">50ml</div>
-              <div class="deal-rating">&#9733; 4.9 <span>(4.1k)</span></div>
-              <div class="deal-price-row">
-                <span class="deal-price">&#2547;1,150</span>
-                <span class="deal-old">&#2547;1,500</span>
-                <span class="deal-off">23% OFF</span>
-              </div>
-              <div class="deal-save">You Save &#2547;350</div>
-              <div class="deal-store"><span class="store-dot" style="background:#fafafa;color:#111827;border:1px solid #cbd5e1">CL</span>Choice Legacy</div>
-            </div>
-          </div>
-
-          <!-- Card 8: Paula's Choice -->
-          <div class="deal-card">
-            <div class="deal-img">
-              <img src="https://images.pexels.com/photos/4041392/pexels-photo-4041392.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Paula's Choice Exfoliant"/>
-            </div>
-            <div class="deal-body">
-              <div class="deal-name">Paula's Choice 2% BHA</div>
-              <div class="deal-sub">Liquid Exfoliant</div>
-              <div class="deal-size">118ml</div>
-              <div class="deal-rating">&#9733; 4.7 <span>(3.8k)</span></div>
-              <div class="deal-price-row">
-                <span class="deal-price">&#2547;2,450</span>
-                <span class="deal-old">&#2547;3,100</span>
-                <span class="deal-off">21% OFF</span>
-              </div>
-              <div class="deal-save">You Save &#2547;650</div>
-              <div class="deal-store"><span class="store-dot" style="background:#fff0f5;color:#ec4899">Ki</span>kirei</div>
-            </div>
-          </div>
-
-          <!-- Card 9: Cetaphil Cleanser -->
-          <div class="deal-card">
-            <div class="deal-img">
-              <img src="https://images.pexels.com/photos/3735641/pexels-photo-3735641.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Cetaphil Cleanser"/>
-            </div>
-            <div class="deal-body">
-              <div class="deal-name">Cetaphil Gentle</div>
-              <div class="deal-sub">Skin Cleanser</div>
-              <div class="deal-size">500ml</div>
-              <div class="deal-rating">&#9733; 4.6 <span>(2.7k)</span></div>
-              <div class="deal-price-row">
-                <span class="deal-price">&#2547;1,350</span>
-                <span class="deal-old">&#2547;1,750</span>
-                <span class="deal-off">23% OFF</span>
-              </div>
-              <div class="deal-save">You Save &#2547;400</div>
-              <div class="deal-store"><span class="store-dot" style="background:#fff0f5;color:#f43f5e">MC</span>Makeup Chari</div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- TRENDING NOW -->
-      <div>
-        <div class="sec-hd">
-          <div>
-            <div class="sec-title">Trending Now</div>
-            <div class="sec-sub">Most searched &amp; popular skincare products</div>
-          </div>
-          <span class="sec-link">View All</span>
-        </div>
-        <div class="trend-scroll">
-          <div class="trend-card">
-            <div class="trend-icon" style="background:#fff7ed">&#127818;</div>
-            <div><div class="trend-name">Vitamin C Serum</div><div class="trend-sub">Brightening Boost</div></div>
-          </div>
-          <div class="trend-card">
-            <div class="trend-icon" style="background:#eff6ff">&#128167;</div>
-            <div><div class="trend-name">Hyaluronic Acid</div><div class="trend-sub">Deep Hydration</div></div>
-          </div>
-          <div class="trend-card">
-            <div class="trend-icon" style="background:#faf5ff">&#128156;</div>
-            <div><div class="trend-name">Retinol Cream</div><div class="trend-sub">Anti-Aging</div></div>
-          </div>
-          <div class="trend-card">
-            <div class="trend-icon" style="background:#fffbeb">&#9728;</div>
-            <div><div class="trend-name">Sunscreen SPF 50</div><div class="trend-sub">UV Protection</div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- FRAUD BANNER -->
-      <div class="fraud-banner">
-        <div class="fraud-txt">
-          <div class="fraud-title">Fraud Pages &amp; Fake Products</div>
-          <div class="fraud-sub">Report scam pages or fake skincare products to help others stay safe.</div>
-        </div>
-        <button class="btn-report">Report Now</button>
-        <div class="fraud-icon">&#128737;</div>
-      </div>
-
-    </div>
-
-    <!-- ── RIGHT COLUMN ── -->
-    <div class="col-right">
-
-      <!-- TABS -->
-      <div class="rtabs">
-        <button class="rtab" onclick="window.location.href='dashboard.html?tab=food'">&#127860; Food</button>
-        <button class="rtab" onclick="window.location.href='dashboard.html?tab=ride'">&#128663; Ride</button>
-        <button class="rtab on">&#10024; Skincare</button>
-      </div>
-
-      <!-- SKINCARE SAVINGS -->
-      <div class="panel">
-        <div class="panel-hd">
-          <div class="panel-title">Skincare Savings</div>
-          <div class="panel-sub">This Month &#9660;</div>
-        </div>
-        <div class="saving-amt">৳2,850</div>
-        <div class="saving-delta">&#9650; 22% vs last month</div>
-        <div class="saving-stats">
-          <div><div class="stat-label">Products Compared</div><div class="stat-val">36</div></div>
-          <div><div class="stat-label">Total Saved</div><div class="stat-val">৳8,450</div></div>
-        </div>
-        <div class="saving-bar-lbl">You're saving more than <b style="color:var(--green)">78%</b> of users!</div>
-        <div class="saving-bar"><div class="saving-bar-fill"></div></div>
-      </div>
-
-      <!-- TOP BRANDS -->
-      <div class="panel">
-        <div class="panel-hd">
-          <div class="panel-title">Top Brands</div>
-          <span class="panel-link">View All</span>
-        </div>
-        <div class="brand-row">
-          <div class="brand-logo" style="background:#0ea5e9">CeraVe</div>
-          <div><div class="brand-name">CeraVe</div><div class="brand-stars">&#9733; 4.6 <span>(2.5k reviews)</span></div></div>
-        </div>
-        <div class="brand-row">
-          <div class="brand-logo" style="background:#111827;font-size:.6rem;letter-spacing:-.5px">TO</div>
-          <div><div class="brand-name">The Ordinary</div><div class="brand-stars">&#9733; 4.5 <span>(2.1k reviews)</span></div></div>
-        </div>
-        <div class="brand-row">
-          <div class="brand-logo" style="background:#1e293b;font-size:.48rem;letter-spacing:-.3px">COSRX</div>
-          <div><div class="brand-name">COSRX</div><div class="brand-stars">&#9733; 4.6 <span>(1.9k reviews)</span></div></div>
-        </div>
-        <div class="brand-row">
-          <div class="brand-logo" style="background:#0284c7;font-size:.52rem">LRP</div>
-          <div><div class="brand-name">La Roche-Posay</div><div class="brand-stars">&#9733; 4.7 <span>(2.8k reviews)</span></div></div>
-        </div>
-        <div class="brand-row">
-          <div class="brand-logo" style="background:#4ade80;color:#111827;font-size:.48rem">MIN</div>
-          <div><div class="brand-name">Minimalist</div><div class="brand-stars">&#9733; 4.4 <span>(1.5k reviews)</span></div></div>
-        </div>
-      </div>
-
-      <!-- COUPON -->
-      <div class="coupon-panel">
-        <div class="coupon-icon">&#127873;</div>
-        <div class="coupon-title">Get Extra 10% OFF</div>
-        <div class="coupon-sub">Use code: <b>SKIN10</b><br/>Valid on all orders above ৳999</div>
-        <button class="btn-copy" onclick="this.textContent='Copied! ✓'">Copy Code</button>
-      </div>
-
-    </div>
-  </div>
-</div>
 
 </body>
+
 </html>

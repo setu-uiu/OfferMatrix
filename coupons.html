@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coupons & Payment Offers - OfferMatrix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <script src="js/om-store.js"></script>
+  <style>
+    :root {
+      --pink: #ff1a6e;
+      --pink-light: #fff0f5;
+      --pink-mid: #ffe4ec;
+      --dark: #111827;
+      --mid: #4b5563;
+      --light: #9ca3af;
+      --bg: #f8fafc;
+      --border: #f1f5f9;
+      --green: #10b981;
+      --green-bg: #dcfce7;
+      --font: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR STYLES */
+    .sb {
+      width: 240px;
+      background: #fff;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 1.2rem 0;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: 0 1.4rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sb-logo-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--pink);
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .sb-logo-text {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .sb-nav {
+      flex: 1;
+      padding: .8rem 0;
+    }
+
+    .sb-group {
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--light);
+      letter-spacing: 1px;
+      padding: 1rem 1.4rem .4rem;
+      text-transform: uppercase;
+    }
+
+    .sb-item {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      padding: .7rem 1.4rem;
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--mid);
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+      border: none;
+      background: transparent;
+      text-decoration: none;
+    }
+
+    .sb-item:hover {
+      color: var(--pink);
+    }
+
+    .sb-item.on {
+      background: var(--pink);
+      color: #fff;
+      border-radius: 10px;
+      margin: 0 .8rem;
+      padding: .7rem .6rem;
+      width: calc(100% - 1.6rem);
+      font-weight: 800;
+    }
+
+    .sb-item.on .sb-ico {
+      color: #fff;
+    }
+
+    .sb-ico {
+      font-size: 1.1rem;
+      width: 22px;
+      text-align: center;
+      color: #6b7280;
+      transition: all .2s;
+      flex-shrink: 0;
+    }
+
+    .sb-badge {
+      margin-left: auto;
+      font-size: .65rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 50px;
+      background: var(--pink);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sb-badge.red {
+      background: #fff;
+      color: #ef4444;
+      border: 1.5px solid #ef4444;
+    }
+
+    .sb-red {
+      color: #ef4444 !important;
+    }
+
+    /* MAIN AREA */
+    .main {
+      margin-left: 240px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .topbar {
+      height: 65px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .tb-search {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: .45rem 1rem;
+      width: 340px;
+    }
+
+    .tb-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: .82rem;
+      width: 100%;
+    }
+
+    .tb-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .tb-icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      color: var(--mid);
+    }
+
+    .notif-dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--pink);
+      border: 2px solid #fff;
+    }
+
+    .tb-saved {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--mid);
+      padding: .5rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      cursor: pointer;
+    }
+
+    .tb-user {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      cursor: pointer;
+    }
+
+    .tb-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .tb-uname {
+      font-size: .82rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .tb-umeta {
+      font-size: .68rem;
+      color: var(--light);
+    }
+
+    /* CONTENT AREA */
+    .pg {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    /* PAYMENT HIGHLIGHT BANNER */
+    .pay-banner {
+      background: linear-gradient(135deg, #111827, #1f2937);
+      border-radius: 20px;
+      padding: 1.4rem 1.8rem;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .pb-title {
+      font-size: 1.4rem;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .pb-sub {
+      font-size: .8rem;
+      color: #9ca3af;
+      max-width: 480px;
+      line-height: 1.4;
+    }
+
+    .pay-badges-row {
+      display: flex;
+      gap: .8rem;
+      margin-top: .8rem;
+      flex-wrap: wrap;
+    }
+
+    .pay-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-size: .75rem;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .pay-pill-logo {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    /* FILTER TABS */
+    .cpn-tabs-bar {
+      display: flex;
+      gap: .6rem;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .cpn-tab-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: .65rem 1.3rem;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      background: #fff;
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--mid);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all .2s;
+    }
+
+    .cpn-tab-pill:hover {
+      border-color: var(--pink);
+      color: var(--pink);
+    }
+
+    .cpn-tab-pill.active {
+      background: var(--pink);
+      color: #fff;
+      border-color: var(--pink);
+    }
+
+    .cpn-tab-badge {
+      font-size: .65rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 50px;
+      background: rgba(0, 0, 0, .08);
+    }
+
+    .cpn-tab-pill.active .cpn-tab-badge {
+      background: #fff;
+      color: var(--pink);
+    }
+
+    /* COUPONS GRID */
+    .coupons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .coupon-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: relative;
+      transition: all .25s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    .coupon-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      border-color: #fecdd3;
+    }
+
+    .cc-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .cc-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 900;
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    .cc-badge {
+      font-size: .65rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 50px;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .cc-title {
+      font-size: 1rem;
+      font-weight: 900;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+
+    .cc-app {
+      font-size: .75rem;
+      color: var(--mid);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .cc-disc {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--pink);
+      margin-bottom: 4px;
+    }
+
+    .cc-meta {
+      font-size: .7rem;
+      color: var(--light);
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .cc-code-box {
+      background: #fafafa;
+      border: 1.5px dashed var(--pink);
+      border-radius: 12px;
+      padding: .6rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cc-code {
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #111827;
+      font-family: monospace;
+    }
+
+    .btn-copy-code {
+      background: var(--pink);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: .4rem 1.1rem;
+      font-size: .75rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .btn-copy-code:hover {
+      opacity: .9;
+    }
+
+    .cc-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #f3f4f6;
+      padding-top: .8rem;
+      font-size: .7rem;
+      color: var(--mid);
+    }
+
+    .btn-use {
+      background: #fff;
+      border: 1px solid var(--pink);
+      color: var(--pink);
+      border-radius: 50px;
+      padding: .4rem 1rem;
+      font-size: .72rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn-use:hover {
+      background: var(--pink);
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sb">
+    <div class="sb-logo">
+      <div class="sb-logo-icon">%</div>
+      <span class="sb-logo-text">Offer<span style="color:#22c55e">Matrix</span></span>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-group">MAIN</div>
+      <button class="sb-item" onclick="window.location.href='dashboard.html'"><span class="sb-ico">&#127968;</span>
+        Dashboard</button>
+      <button class="sb-item" onclick="window.location.href='dashboard.html?tab=food'"><span
+          class="sb-ico">&#127860;</span> Food</button>
+      <button class="sb-item" onclick="window.location.href='dashboard.html?tab=ride'"><span class="sb-ico"
+          style="color:inherit;">&#128663;</span> Ride</button>
+      <button class="sb-item" onclick="window.location.href='skincare.html'"><span class="sb-ico">&#128167;</span>
+        Skincare</button>
+      <button class="sb-item" onclick="window.location.href='orders.html'"><span class="sb-ico">&#128230;</span> Orders
+        <span class="sb-badge" id="sb-badge-orders">6</span></button>
+      <button class="sb-item" onclick="window.location.href='saved-deals.html'"><span class="sb-ico">&#10084;</span>
+        Saved Deals</button>
+      <button class="sb-item" onclick="window.location.href='price-alerts.html'"><span class="sb-ico">&#128276;</span>
+        Price Alerts <span class="sb-badge" id="sb-badge-alerts">5</span></button>
+      <button class="sb-item on"><span class="sb-ico">&#127915;</span> Coupons</button>
+      <button class="sb-item" onclick="window.location.href='reviews.html'"><span class="sb-ico">&#11088;</span>
+        Reviews</button>
+
+      <div class="sb-group">COMMUNITY</div>
+      <button class="sb-item sb-red" onclick="window.location.href='dashboard.html'"><span class="sb-ico">&#128680;</span> Complain Issues <span class="sb-badge red">Alert</span></button>
+      <button class="sb-item"><span class="sb-ico">&#128179;</span> My Wallet</button>
+      <button class="sb-item"><span class="sb-ico">&#128179;</span> Bank Cards</button>
+      <button class="sb-item"><span class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
+
+      <div class="sb-group">ACCOUNT</div>
+      <button class="sb-item"><span class="sb-ico">&#9881;</span> Settings</button>
+      <button class="sb-item"><span class="sb-ico">&#10067;</span> Help &amp; Support</button>
+      <button class="sb-item sb-red" onclick="window.location.href='index.html'"><span class="sb-ico">&#128682;</span>
+        Log Out</button>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="tb-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input type="text" placeholder="Search promo codes, bKash, Nagad offers..." />
+      </div>
+      <div class="tb-actions">
+        <button class="tb-icon-btn" onclick="alert('Notification: bKash 20% Cashback active!')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <div class="notif-dot"></div>
+        </button>
+        <div class="tb-saved" onclick="window.location.href='saved-deals.html'"><svg width="16" height="16"
+            viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg> Saved</div>
+        <div class="tb-user">
+          <img class="tb-avatar"
+            src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100"
+            alt="User" />
+          <div>
+            <div class="tb-uname">Setu Meherunnesa</div>
+            <div class="tb-umeta">Premium Member</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTAINER -->
+    <div class="pg">
+
+      <!-- PAYMENT COMPARISON BANNER -->
+      <div class="pay-banner">
+        <div>
+          <div class="pb-title">Which Payment Gateway Saves You Most? &#128179;</div>
+          <div class="pb-sub">Compare live cashback and promo offers from bKash, Nagad, Rocket, and Visa/Mastercards
+            across top apps!</div>
+          <div class="pay-badges-row">
+            <div class="pay-pill">
+              <div class="pay-pill-logo" style="background:#d12053">bK</div> bKash: 20% Instant Cashback
+            </div>
+            <div class="pay-pill">
+              <div class="pay-pill-logo" style="background:#f97316">Ng</div> Nagad: ৳150 Off Rides
+            </div>
+            <div class="pay-pill">
+              <div class="pay-pill-logo" style="background:#8b5cf6">Ro</div> Rocket: 10% Extra Savings
+            </div>
+            <div class="pay-pill">
+              <div class="pay-pill-logo" style="background:#1d4ed8">Visa</div> Cards: Up to 15% OFF
+            </div>
+          </div>
+        </div>
+        <div style="font-size:3rem;opacity:.9">&#127873;</div>
+      </div>
+
+      <!-- FILTER TABS -->
+      <div class="cpn-tabs-bar">
+        <button class="cpn-tab-pill active" id="tab-all" onclick="filterCoupons('all')">&#127915; All Coupons <span
+            class="cpn-tab-badge" id="badge-all">7</span></button>
+        <button class="cpn-tab-pill" id="tab-payment" onclick="filterCoupons('payment')">&#128179; Payment Offers
+          (bKash/Nagad/Rocket) <span class="cpn-tab-badge" id="badge-payment">4</span></button>
+        <button class="cpn-tab-pill" id="tab-food" onclick="filterCoupons('food')">&#127860; Food Promos <span
+            class="cpn-tab-badge" id="badge-food">1</span></button>
+        <button class="cpn-tab-pill" id="tab-ride" onclick="filterCoupons('ride')">&#128663; Ride Offers <span
+            class="cpn-tab-badge" id="badge-ride">1</span></button>
+        <button class="cpn-tab-pill" id="tab-skincare" onclick="filterCoupons('skincare')">&#128167; Skincare Codes
+          <span class="cpn-tab-badge" id="badge-skincare">1</span></button>
+      </div>
+
+      <!-- COUPONS GRID -->
+      <div class="coupons-grid" id="coupons-container">
+        <!-- Dynamically rendered -->
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    let currentCouponCat = 'all';
+
+    function renderCoupons(cat) {
+      currentCouponCat = cat || currentCouponCat || 'all';
+      const container = document.getElementById('coupons-container');
+      if (!container || !window.OMStore) return;
+
+      const coupons = window.OMStore.getCoupons(currentCouponCat);
+      const allCoupons = window.OMStore.getCoupons('all');
+
+      // Update active tab buttons
+      document.querySelectorAll('.cpn-tab-pill').forEach(btn => btn.classList.remove('active'));
+      const activeTab = document.getElementById('tab-' + currentCouponCat);
+      if (activeTab) activeTab.classList.add('active');
+
+      // Update counts
+      document.getElementById('badge-all').textContent = allCoupons.length;
+      document.getElementById('badge-payment').textContent = window.OMStore.getCoupons('payment').length;
+      document.getElementById('badge-food').textContent = window.OMStore.getCoupons('food').length;
+      document.getElementById('badge-ride').textContent = window.OMStore.getCoupons('ride').length;
+      document.getElementById('badge-skincare').textContent = window.OMStore.getCoupons('skincare').length;
+
+      if (coupons.length === 0) {
+        container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--light);">No coupons available in this category currently.</div>';
+        return;
+      }
+
+      container.innerHTML = coupons.map(c => `
+      <div class="coupon-card">
+        <div class="cc-top">
+          <div class="cc-logo" style="background:${c.bg || '#ff1a6e'}">${c.app.substring(0, 8)}</div>
+          <span class="cc-badge">&#10003; Verified Deal</span>
+        </div>
+        <div>
+          <div class="cc-title">${c.title}</div>
+          <div class="cc-app">App: <b>${c.app}</b> | Pay via: <span style="color:var(--pink);font-weight:700">${c.paymentMethod}</span></div>
+          <div class="cc-disc">${c.discount}</div>
+          <div class="cc-meta">
+            <span>Min spend: ৳${c.minSpend}</span>
+            <span>Used: ${c.usedCount} times</span>
+          </div>
+        </div>
+
+        <div class="cc-code-box">
+          <span class="cc-code">${c.code}</span>
+          <button class="btn-copy-code" onclick="copyCouponCode(this, '${c.code}')">Copy Code</button>
+        </div>
+
+        <div class="cc-foot">
+          <span>Expires: ${c.expiry}</span>
+          <button class="btn-use" onclick="useCoupon('${c.category}')">Apply on App &rarr;</button>
+        </div>
+      </div>
+    `).join('');
+    }
+
+    function filterCoupons(cat) {
+      renderCoupons(cat);
+    }
+
+    function copyCouponCode(btn, code) {
+      navigator.clipboard.writeText(code).catch(e => { });
+      const orig = btn.textContent;
+      btn.textContent = 'Copied! ✓';
+      btn.style.background = '#22c55e';
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.background = 'var(--pink)';
+      }, 1800);
+    }
+
+    function useCoupon(category) {
+      if (category === 'skincare') {
+        window.location.href = 'skincare.html';
+      } else if (category === 'ride') {
+        window.location.href = 'dashboard.html?tab=ride';
+      } else {
+        window.location.href = 'dashboard.html?tab=food';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+      renderCoupons('all');
+    });
+  </script>
+
+</body>
+
+</html>
