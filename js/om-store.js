@@ -388,6 +388,85 @@
         ]
       }
     ],
+    // ── FOOD ITEMS WITH MULTI-APP PRICING ──
+    foodItems: [
+      {
+        id: 'fi-1',
+        name: 'Chicken Biryani',
+        restaurant: 'Bismillah Biryani House',
+        img: 'https://images.pexels.com/photos/7394819/pexels-photo-7394819.jpeg?auto=compress&cs=tinysrgb&w=600',
+        rating: 4.6,
+        reviews: '2.3k',
+        deliveryTime: '30-40 min',
+        category: 'Biryani',
+        apps: [
+          { app: 'foodpanda', icon: '🐼', color: '#d70f64', originalPrice: 269, discount: 26, finalPrice: 199, deliveryFee: 0, badge: 'Best Price' },
+          { app: 'Pathao Food', icon: '🛵', color: '#ef4444', originalPrice: 269, discount: 18, finalPrice: 220, deliveryFee: 29, badge: '' },
+          { app: 'Foodi', icon: '🍽', color: '#f97316', originalPrice: 269, discount: 15, finalPrice: 229, deliveryFee: 39, badge: '' },
+          { app: 'Hungry Naki', icon: '🍴', color: '#f97316', originalPrice: 269, discount: 12, finalPrice: 237, deliveryFee: 49, badge: '' }
+        ]
+      },
+      {
+        id: 'fi-2',
+        name: 'Farmhouse Pizza',
+        restaurant: 'Pizza Hut',
+        img: 'https://images.pexels.com/photos/2147491/pexels-photo-2147491.jpeg?auto=compress&cs=tinysrgb&w=600',
+        rating: 4.5,
+        reviews: '1.8k',
+        deliveryTime: '25-35 min',
+        category: 'Pizza',
+        apps: [
+          { app: 'Foodi', icon: '🍽', color: '#f97316', originalPrice: 499, discount: 30, finalPrice: 349, deliveryFee: 0, badge: 'Best Price' },
+          { app: 'foodpanda', icon: '🐼', color: '#d70f64', originalPrice: 499, discount: 25, finalPrice: 374, deliveryFee: 39, badge: '' },
+          { app: 'Pathao Food', icon: '🛵', color: '#ef4444', originalPrice: 499, discount: 22, finalPrice: 389, deliveryFee: 29, badge: '' },
+          { app: 'Hungry Naki', icon: '🍴', color: '#f97316', originalPrice: 499, discount: 18, finalPrice: 409, deliveryFee: 49, badge: '' }
+        ]
+      },
+      {
+        id: 'fi-3',
+        name: 'Beef Burger Meal',
+        restaurant: 'Burger King',
+        img: 'https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=600',
+        rating: 4.4,
+        reviews: '987',
+        deliveryTime: '20-30 min',
+        category: 'Burger',
+        apps: [
+          { app: 'Pathao Food', icon: '🛵', color: '#ef4444', originalPrice: 429, discount: 30, finalPrice: 299, deliveryFee: 0, badge: 'Best Price' },
+          { app: 'foodpanda', icon: '🐼', color: '#d70f64', originalPrice: 429, discount: 25, finalPrice: 322, deliveryFee: 29, badge: '' },
+          { app: 'Foodi', icon: '🍽', color: '#f97316', originalPrice: 429, discount: 20, finalPrice: 343, deliveryFee: 39, badge: '' },
+          { app: 'Hungry Naki', icon: '🍴', color: '#f97316', originalPrice: 429, discount: 15, finalPrice: 365, deliveryFee: 49, badge: '' }
+        ]
+      },
+      {
+        id: 'fi-4',
+        name: 'Chicken Chowmein',
+        restaurant: 'Chowking',
+        img: 'https://images.pexels.com/photos/1907228/pexels-photo-1907228.jpeg?auto=compress&cs=tinysrgb&w=600',
+        rating: 4.3,
+        reviews: '756',
+        deliveryTime: '20-30 min',
+        category: 'Chinese',
+        apps: [
+          { app: 'Hungry Naki', icon: '🍴', color: '#f97316', originalPrice: 269, discount: 33, finalPrice: 179, deliveryFee: 0, badge: 'Best Price' },
+          { app: 'foodpanda', icon: '🐼', color: '#d70f64', originalPrice: 269, discount: 28, finalPrice: 194, deliveryFee: 29, badge: '' },
+          { app: 'Foodi', icon: '🍽', color: '#f97316', originalPrice: 269, discount: 22, finalPrice: 210, deliveryFee: 39, badge: '' },
+          { app: 'Pathao Food', icon: '🛵', color: '#ef4444', originalPrice: 269, discount: 18, finalPrice: 221, deliveryFee: 49, badge: '' }
+        ]
+      }
+    ],
+
+    // ── PAYMENT METHODS WITH DISCOUNTS ──
+    paymentMethods: [
+      { id: 'bkash', name: 'bKash', icon: '💳', color: '#e2136e', discountType: 'cashback', discountPct: 10, maxDiscount: 50, minOrder: 0, label: 'Extra 10% Cashback (max ৳50)' },
+      { id: 'nagad', name: 'Nagad', icon: '💳', color: '#f6921e', discountType: 'cashback', discountPct: 5, maxDiscount: 30, minOrder: 0, label: 'Extra 5% Cashback (max ৳30)' },
+      { id: 'rocket', name: 'Rocket', icon: '🚀', color: '#8b2d8b', discountType: 'flat', discountFlat: 25, maxDiscount: 25, minOrder: 300, label: 'Extra ৳25 OFF on orders ৳300+' },
+      { id: 'brac', name: 'BRAC Bank Card', icon: '🏦', color: '#003366', discountType: 'percent', discountPct: 15, maxDiscount: 100, minOrder: 0, label: 'Extra 15% OFF (max ৳100)' },
+      { id: 'city', name: 'City Bank Card', icon: '🏦', color: '#006738', discountType: 'percent', discountPct: 10, maxDiscount: 80, minOrder: 0, label: 'Extra 10% OFF (max ৳80)' },
+      { id: 'ebl', name: 'EBL Card', icon: '🏦', color: '#1a237e', discountType: 'percent', discountPct: 12, maxDiscount: 60, minOrder: 0, label: 'Extra 12% OFF (max ৳60)' },
+      { id: 'visa', name: 'Visa / Mastercard', icon: '💳', color: '#1a1f71', discountType: 'none', discountPct: 0, maxDiscount: 0, minOrder: 0, label: 'No extra discount' },
+      { id: 'cod', name: 'Cash on Delivery', icon: '💵', color: '#4b5563', discountType: 'none', discountPct: 0, maxDiscount: 0, minOrder: 0, label: 'No extra discount' }
+    ],
 
     // ── SKINCARE FRAUD DATA ──
     skincareFraud: [
@@ -770,6 +849,18 @@
         this.saveState();
         return rev.upvotes;
       }
+    }
+    // ── FOOD ITEMS & PAYMENT METHODS ──
+    getFoodItems() {
+      return defaultState.foodItems;
+    }
+
+    getFoodItemById(id) {
+      return defaultState.foodItems.find(f => f.id === id);
+    }
+
+    getPaymentMethods() {
+      return defaultState.paymentMethods;
     }
 
     // ── SKINCARE FRAUD PAGES ──
