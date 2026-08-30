@@ -3239,9 +3239,9 @@
             <span class="card-link">View All Deals</span>
           </div>
           <div class="fc-scroll">
-            <div class="food-card">
+            <div class="food-card" onclick="openFoodCompareModal('fi-1')" style="cursor:pointer">
               <div class="fc-img">
-                <img src="https://www.themealdb.com/images/media/meals/xrysxr1511451225.jpg" alt="" />
+                <img src="https://images.pexels.com/photos/7394819/pexels-photo-7394819.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Chicken Biryani" />
                 <div class="fc-best">BEST DEAL</div>
                 <div class="fc-stars">&#11088; 4.6 (2.3k)</div>
               </div>
@@ -3257,7 +3257,7 @@
               </div>
             </div>
 
-            <div class="food-card">
+            <div class="food-card" onclick="openFoodCompareModal('fi-2')" style="cursor:pointer">
               <div class="fc-img">
                 <img
                   src="https://images.pexels.com/photos/2147491/pexels-photo-2147491.jpeg?auto=compress&cs=tinysrgb&w=300"
@@ -3275,7 +3275,7 @@
               </div>
             </div>
 
-            <div class="food-card">
+            <div class="food-card" onclick="openFoodCompareModal('fi-3')" style="cursor:pointer">
               <div class="fc-img">
                 <img
                   src="https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=300"
@@ -3293,7 +3293,7 @@
               </div>
             </div>
 
-            <div class="food-card">
+            <div class="food-card" onclick="openFoodCompareModal('fi-4')" style="cursor:pointer">
               <div class="fc-img">
                 <img
                   src="https://images.pexels.com/photos/1907228/pexels-photo-1907228.jpeg?auto=compress&cs=tinysrgb&w=300"
@@ -4005,6 +4005,330 @@
         });
       });
     });
+  </script>
+  <!-- ════════════════════════════════════════════════════════════════ -->
+  <!-- MODAL 1: MULTI-APP FOOD PRICE COMPARISON                         -->
+  <!-- ════════════════════════════════════════════════════════════════ -->
+  <div id="modal-food-compare" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;padding:1rem;">
+    <div style="background:#fff;border-radius:24px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);border:1px solid #e2e8f0;display:flex;flex-direction:column;">
+      <!-- Header -->
+      <div style="padding:1.2rem 1.5rem;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:10;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:1.4rem;">&#127860;</span>
+          <div>
+            <h3 style="font-size:1.1rem;font-weight:900;color:#111827;margin:0;">App Price Comparison</h3>
+            <p style="font-size:.75rem;color:#64748b;margin:0;">Compare prices across apps — lowest price shown first</p>
+          </div>
+        </div>
+        <button onclick="closeFoodCompareModal()" style="background:#f1f5f9;border:none;width:32px;height:32px;border-radius:50%;font-size:1.2rem;cursor:pointer;color:#64748b;display:flex;align-items:center;justify-content:center;">&times;</button>
+      </div>
+
+      <!-- Food Banner -->
+      <div id="fcm-food-header" style="padding:1.2rem 1.5rem;background:linear-gradient(135deg, #fff0f5 0%, #f8fafc 100%);display:flex;gap:1rem;align-items:center;border-bottom:1px solid #f1f5f9;">
+        <img id="fcm-img" src="" alt="" style="width:84px;height:84px;border-radius:16px;object-fit:cover;border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,0.06);"/>
+        <div style="flex:1;">
+          <span id="fcm-category" style="font-size:.65rem;font-weight:800;background:#ffe4e6;color:#be185d;padding:2px 8px;border-radius:50px;text-transform:uppercase;">Category</span>
+          <h4 id="fcm-title" style="font-size:1.15rem;font-weight:900;color:#111827;margin:4px 0 2px 0;">Food Item</h4>
+          <div id="fcm-rest" style="font-size:.8rem;color:#475569;font-weight:600;">Restaurant Name</div>
+          <div style="display:flex;gap:12px;font-size:.75rem;color:#64748b;margin-top:4px;">
+            <span id="fcm-rating">&#11088; 4.6</span>
+            <span id="fcm-time">&#128336; 30-40 min</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- App Prices List -->
+      <div style="padding:1.2rem 1.5rem;flex:1;">
+        <div style="font-size:.78rem;font-weight:800;color:#334155;margin-bottom:.8rem;text-transform:uppercase;letter-spacing:0.5px;">Available Food Apps</div>
+        <div id="fcm-apps-list" style="display:flex;flex-direction:column;gap:.8rem;">
+          <!-- Dynamically populated app rows -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════ -->
+  <!-- MODAL 2: FOOD ORDER & PAYMENT METHOD SELECTION                   -->
+  <!-- ════════════════════════════════════════════════════════════════ -->
+  <div id="modal-food-order" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:1010;align-items:center;justify-content:center;padding:1rem;">
+    <div style="background:#fff;border-radius:24px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);border:1px solid #e2e8f0;display:flex;flex-direction:column;">
+      <!-- Header -->
+      <div style="padding:1.2rem 1.5rem;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:10;">
+        <div>
+          <div style="font-size:.7rem;font-weight:800;color:#ff1a6e;text-transform:uppercase;">Step 2: Place Order</div>
+          <h3 style="font-size:1.1rem;font-weight:900;color:#111827;margin:0;">Select Payment &amp; Quantity</h3>
+        </div>
+        <button onclick="closeFoodOrderModal()" style="background:#f1f5f9;border:none;width:32px;height:32px;border-radius:50%;font-size:1.2rem;cursor:pointer;color:#64748b;display:flex;align-items:center;justify-content:center;">&times;</button>
+      </div>
+
+      <div style="padding:1.2rem 1.5rem;display:flex;flex-direction:column;gap:1.2rem;">
+        <!-- Selected App Banner -->
+        <div id="fom-app-banner" style="padding:.75rem 1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span id="fom-app-icon" style="font-size:1.3rem;">🐼</span>
+            <div>
+              <div style="font-size:.7rem;color:#64748b;font-weight:600;">Ordering via</div>
+              <div id="fom-app-name" style="font-size:.95rem;font-weight:900;color:#111827;">foodpanda</div>
+            </div>
+          </div>
+          <div id="fom-app-price" style="font-size:1.1rem;font-weight:900;color:#ff1a6e;">৳199 / item</div>
+        </div>
+
+        <!-- Quantity Selector Card -->
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:1rem;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:.9rem;font-weight:800;color:#111827;">Select Quantity</div>
+            <div style="font-size:.72rem;color:#64748b;">How many portions would you like?</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;background:#f1f5f9;padding:4px 8px;border-radius:50px;">
+            <button onclick="changeOrderQty(-1)" style="width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #cbd5e1;font-size:1.1rem;font-weight:900;cursor:pointer;color:#334155;display:flex;align-items:center;justify-content:center;">&minus;</button>
+            <span id="fom-qty" style="font-size:1rem;font-weight:900;color:#111827;min-width:20px;text-align:center;">1</span>
+            <button onclick="changeOrderQty(1)" style="width:32px;height:32px;border-radius:50%;background:#ff1a6e;border:none;font-size:1.1rem;font-weight:900;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;">&#43;</button>
+          </div>
+        </div>
+
+        <!-- Payment Method Options -->
+        <div>
+          <div style="font-size:.78rem;font-weight:800;color:#334155;margin-bottom:.6rem;text-transform:uppercase;letter-spacing:0.5px;">Choose Payment Method (Get Extra Discounts)</div>
+          <div id="fom-payment-list" style="display:grid;grid-template-columns:repeat(2, 1fr);gap:.6rem;">
+            <!-- Dynamically populated payment cards -->
+          </div>
+        </div>
+
+        <!-- Order Summary & Price Breakdown -->
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:1rem;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:.8rem;font-weight:800;color:#111827;margin-bottom:4px;">Price Breakdown</div>
+          <div style="display:flex;justify-content:space-between;font-size:.8rem;color:#64748b;">
+            <span>Item Total (<span id="fom-summary-qty">1</span>x)</span>
+            <span id="fom-sum-item">৳199</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.8rem;color:#64748b;">
+            <span>Delivery Fee</span>
+            <span id="fom-sum-delivery">৳0</span>
+          </div>
+          <div id="fom-row-pm-discount" style="display:flex;justify-content:space-between;font-size:.8rem;color:#22c55e;font-weight:700;">
+            <span id="fom-lbl-pm-discount">Payment Discount</span>
+            <span id="fom-val-pm-discount">-৳0</span>
+          </div>
+          <div style="border-top:1px dashed #cbd5e1;padding-top:8px;margin-top:4px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:.9rem;font-weight:900;color:#111827;">Total Payable</span>
+            <span id="fom-total-payable" style="font-size:1.3rem;font-weight:900;color:#ff1a6e;">৳199</span>
+          </div>
+        </div>
+
+        <!-- Confirm Purchase Button -->
+        <button onclick="confirmFoodOrder()" style="width:100%;padding:.9rem;background:linear-gradient(135deg, #ff1a6e 0%, #be185d 100%);color:#fff;border:none;border-radius:50px;font-size:1rem;font-weight:900;cursor:pointer;box-shadow:0 8px 20px rgba(255,26,110,0.3);transition:all 0.2s;">
+          Confirm &amp; Place Order &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global state for Food Ordering Modals
+    var currentSelectedFood = null;
+    var currentSelectedApp = null;
+    var currentSelectedPayment = 'bkash';
+    var currentOrderQty = 1;
+
+    function openFoodCompareModal(foodId) {
+      if (!window.OMStore) return;
+      const item = window.OMStore.getFoodItemById(foodId);
+      if (!item) return;
+
+      currentSelectedFood = item;
+
+      document.getElementById('fcm-img').src = item.img;
+      document.getElementById('fcm-title').textContent = item.name;
+      document.getElementById('fcm-rest').textContent = item.restaurant;
+      document.getElementById('fcm-category').textContent = item.category || 'Food';
+      document.getElementById('fcm-rating').innerHTML = '&#11088; ' + item.rating + ' (' + item.reviews + ')';
+      document.getElementById('fcm-time').innerHTML = '&#128336; ' + item.deliveryTime;
+
+      // Sort apps by final price ascending (cheapest first)
+      const sortedApps = [...item.apps].sort((a, b) => (a.finalPrice + a.deliveryFee) - (b.finalPrice + b.deliveryFee));
+
+      const listContainer = document.getElementById('fcm-apps-list');
+      listContainer.innerHTML = sortedApps.map((a, idx) => `
+        <div style="background:#fff;border:1.5px solid ${idx === 0 ? '#22c55e' : '#e2e8f0'};border-radius:16px;padding:1rem;display:flex;align-items:center;justify-content:space-between;transition:all 0.2s;box-shadow:${idx === 0 ? '0 4px 12px rgba(34,197,94,0.15)' : 'none'};">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:42px;height:42px;border-radius:12px;background:${a.color}15;color:${a.color};display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:900;">
+              ${a.icon}
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="font-size:.95rem;font-weight:900;color:#111827;">${a.app}</span>
+                ${idx === 0 ? '<span style="font-size:.65rem;font-weight:800;background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:50px;">BEST PRICE</span>' : ''}
+              </div>
+              <div style="font-size:.75rem;color:#64748b;margin-top:2px;">
+                <span>Delivery: ${a.deliveryFee === 0 ? '<b style="color:#22c55e">FREE</b>' : '৳' + a.deliveryFee}</span> &bull; 
+                <span style="color:#ef4444;font-weight:700;">${a.discount}% OFF</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span style="font-size:1.15rem;font-weight:900;color:#ff1a6e;">৳${a.finalPrice}</span>
+              <span style="font-size:.75rem;color:#94a3b8;text-decoration:line-through;">৳${a.originalPrice}</span>
+            </div>
+            <button onclick="selectAppForOrder('${item.id}', '${a.app}')" style="background:${idx === 0 ? '#22c55e' : '#ff1a6e'};color:#fff;border:none;padding:.45rem 1rem;border-radius:50px;font-size:.78rem;font-weight:800;cursor:pointer;">
+              Order Now &rarr;
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('modal-food-compare').style.display = 'flex';
+    }
+
+    function closeFoodCompareModal() {
+      document.getElementById('modal-food-compare').style.display = 'none';
+    }
+
+    function selectAppForOrder(foodId, appName) {
+      if (!currentSelectedFood || currentSelectedFood.id !== foodId) {
+        currentSelectedFood = window.OMStore.getFoodItemById(foodId);
+      }
+      if (!currentSelectedFood) return;
+
+      currentSelectedApp = currentSelectedFood.apps.find(a => a.app === appName) || currentSelectedFood.apps[0];
+      currentOrderQty = 1;
+      currentSelectedPayment = 'bkash';
+
+      closeFoodCompareModal();
+      renderOrderModal();
+      document.getElementById('modal-food-order').style.display = 'flex';
+    }
+
+    function closeFoodOrderModal() {
+      document.getElementById('modal-food-order').style.display = 'none';
+    }
+
+    function changeOrderQty(delta) {
+      currentOrderQty = Math.max(1, Math.min(10, currentOrderQty + delta));
+      document.getElementById('fom-qty').textContent = currentOrderQty;
+      updateOrderTotals();
+    }
+
+    function selectPaymentMethod(pmId) {
+      currentSelectedPayment = pmId;
+      renderPaymentMethodsList();
+      updateOrderTotals();
+    }
+
+    function renderPaymentMethodsList() {
+      if (!window.OMStore) return;
+      const methods = window.OMStore.getPaymentMethods();
+      const container = document.getElementById('fom-payment-list');
+      container.innerHTML = methods.map(pm => {
+        const isSelected = pm.id === currentSelectedPayment;
+        return `
+          <div onclick="selectPaymentMethod('${pm.id}')" style="background:#fff;border:1.5px solid ${isSelected ? '#ff1a6e' : '#e2e8f0'};border-radius:14px;padding:.75rem;cursor:pointer;display:flex;flex-direction:column;gap:4px;transition:all 0.2s;position:relative;${isSelected ? 'box-shadow:0 4px 12px rgba(255,26,110,0.15);background:#fff0f5;' : ''}">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:1.1rem;">${pm.icon}</span>
+              <span style="font-size:.8rem;font-weight:900;color:#111827;">${pm.name}</span>
+              <div style="width:16px;height:16px;border-radius:50%;border:1.5px solid ${isSelected ? '#ff1a6e' : '#cbd5e1'};background:${isSelected ? '#ff1a6e' : '#fff'};display:flex;align-items:center;justify-content:center;">
+                ${isSelected ? '<span style="color:#fff;font-size:10px;font-weight:900;">✓</span>' : ''}
+              </div>
+            </div>
+            <div style="font-size:.68rem;color:${isSelected ? '#be185d' : '#64748b'};font-weight:700;margin-top:2px;">
+              ${pm.label}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateOrderTotals() {
+      if (!currentSelectedFood || !currentSelectedApp) return;
+
+      document.getElementById('fom-app-icon').textContent = currentSelectedApp.icon;
+      document.getElementById('fom-app-name').textContent = currentSelectedApp.app;
+      document.getElementById('fom-app-price').textContent = '৳' + currentSelectedApp.finalPrice + ' / item';
+
+      const itemTotal = currentSelectedApp.finalPrice * currentOrderQty;
+      const deliveryFee = currentSelectedApp.deliveryFee;
+
+      // Calculate Payment Discount / Cashback
+      const pm = (window.OMStore.getPaymentMethods() || []).find(p => p.id === currentSelectedPayment);
+      let pmDiscount = 0;
+      let pmLabel = 'Payment Discount';
+
+      if (pm && itemTotal >= pm.minOrder) {
+        if (pm.discountType === 'cashback' || pm.discountType === 'percent') {
+          pmDiscount = Math.min(pm.maxDiscount, Math.round((itemTotal * pm.discountPct) / 100));
+          pmLabel = pm.name + ' (' + pm.discountPct + '% OFF)';
+        } else if (pm.discountType === 'flat') {
+          pmDiscount = pm.discountFlat;
+          pmLabel = pm.name + ' Discount';
+        }
+      }
+
+      const totalPayable = Math.max(0, itemTotal + deliveryFee - pmDiscount);
+
+      document.getElementById('fom-summary-qty').textContent = currentOrderQty;
+      document.getElementById('fom-sum-item').textContent = '৳' + itemTotal;
+      document.getElementById('fom-sum-delivery').innerHTML = deliveryFee === 0 ? '<b style="color:#22c55e">FREE</b>' : '৳' + deliveryFee;
+      
+      const rowPm = document.getElementById('fom-row-pm-discount');
+      if (pmDiscount > 0) {
+        rowPm.style.display = 'flex';
+        document.getElementById('fom-lbl-pm-discount').textContent = pmLabel;
+        document.getElementById('fom-val-pm-discount').textContent = '-৳' + pmDiscount;
+      } else {
+        rowPm.style.display = 'none';
+      }
+
+      document.getElementById('fom-total-payable').textContent = '৳' + totalPayable;
+    }
+
+    function renderOrderModal() {
+      renderPaymentMethodsList();
+      updateOrderTotals();
+    }
+
+    function confirmFoodOrder() {
+      if (!currentSelectedFood || !currentSelectedApp || !window.OMStore) return;
+
+      const pm = window.OMStore.getPaymentMethods().find(p => p.id === currentSelectedPayment) || { name: 'bKash' };
+      const itemTotal = currentSelectedApp.finalPrice * currentOrderQty;
+      const deliveryFee = currentSelectedApp.deliveryFee;
+      let pmDiscount = 0;
+
+      if (pm && itemTotal >= pm.minOrder) {
+        if (pm.discountType === 'cashback' || pm.discountType === 'percent') {
+          pmDiscount = Math.min(pm.maxDiscount, Math.round((itemTotal * pm.discountPct) / 100));
+        } else if (pm.discountType === 'flat') {
+          pmDiscount = pm.discountFlat;
+        }
+      }
+
+      const finalAmount = Math.max(0, itemTotal + deliveryFee - pmDiscount);
+
+      const newOrder = {
+        id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+        title: currentSelectedFood.name + ' (' + currentOrderQty + 'x)',
+        store: currentSelectedFood.restaurant + ' via ' + currentSelectedApp.app,
+        category: 'food',
+        price: finalAmount,
+        oldPrice: currentSelectedApp.originalPrice * currentOrderQty,
+        discount: currentSelectedApp.discount + '% OFF',
+        status: 'preparing',
+        statusText: 'Preparing in Kitchen',
+        paymentMethod: pm.name,
+        date: 'Just now',
+        img: currentSelectedFood.img
+      };
+
+      if (window.OMStore.state && window.OMStore.state.orders) {
+        window.OMStore.state.orders.unshift(newOrder);
+        window.OMStore.saveState();
+      }
+
+      closeFoodOrderModal();
+
+      alert('🎉 Order Placed Successfully!\n\nOrder ID: ' + newOrder.id + '\nItem: ' + newOrder.title + '\nPaid via: ' + pm.name + '\nTotal: ৳' + finalAmount + '\n\nYour order is now being prepared in kitchen!');
+    }
   </script>
 </body>
 </html>
