@@ -2536,7 +2536,9 @@
         Reviews</button>
 
       <div class="sb-group">COMMUNITY</div>
-      <button class="sb-item sb-red" id="sb-complaints-btn" onclick="scrollToComplaintSection()"><span class="sb-ico">&#128680;</span> <span id="sb-complaint-label">Complain Issues</span> <span class="sb-badge red">Alert</span></button>
+      <button class="sb-item sb-red" id="sb-complaints-btn" onclick="scrollToComplaintSection()"><span
+          class="sb-ico">&#128680;</span> <span id="sb-complaint-label">Complain Issues</span> <span
+          class="sb-badge red">Alert</span></button>
       <button class="sb-item"><span class="sb-ico">&#128179;</span> My Wallet</button>
       <button class="sb-item"><span class="sb-ico">&#128179;</span> Bank Cards</button>
       <button class="sb-item"><span class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
@@ -3241,7 +3243,9 @@
           <div class="fc-scroll">
             <div class="food-card" onclick="openFoodCompareModal('fi-1')" style="cursor:pointer">
               <div class="fc-img">
-                <img src="https://images.pexels.com/photos/7394819/pexels-photo-7394819.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Chicken Biryani" />
+                <img
+                  src="https://images.pexels.com/photos/7394819/pexels-photo-7394819.jpeg?auto=compress&cs=tinysrgb&w=300"
+                  alt="Chicken Biryani" />
                 <div class="fc-best">BEST DEAL</div>
                 <div class="fc-stars">&#11088; 4.6 (2.3k)</div>
               </div>
@@ -3413,7 +3417,8 @@
         </div>
         <div>
           <div class="card-hd"><span class="card-title" style="font-size:1rem;">Viral Restaurants</span><span
-              class="card-link" style="font-size:.75rem;cursor:pointer" onclick="window.location.href='viral-restaurant-raid.html'">View All</span></div>
+              class="card-link" style="font-size:.75rem;cursor:pointer"
+              onclick="window.location.href='viral-restaurant-raid.html'">View All</span></div>
           <div class="vr-card" style="cursor:pointer" onclick="window.location.href='viral-restaurant-raid.html'">
             <div class="vr-item">
               <div class="vr-img">
@@ -3484,58 +3489,222 @@
             </div>
           </div>
           <div class="hero-img"
-            style="position:relative; right:0; bottom:0; width:380px; height:120px; border-radius:16px; overflow:hidden;">
-            <img src="ride_hero.png"
-              style="width:100%; height:100%; object-fit:contain; object-position: right center; transform:scale(1.15);"
-              alt="Ride Deals" />
+            style="position:relative; right:0; bottom:0; width:380px; height:120px; border-radius:16px; overflow:hidden; border:1px solid rgba(0,0,0,0.05); box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+            <img src="ride_hero.png" style="width:100%; height:100%; object-fit:cover; object-position: center;"
+              alt="Realistic Ride Car" />
           </div>
         </div>
 
         <div class="ride-search">
-          <div class="rs-group">
-            <div class="rs-dot green"></div>
-            <div>
-              <div class="rs-label">Pickup Location</div>
-              <input type="text" class="rs-input" value="Dhanmondi, Dhaka" readonly />
+          <div style="display:flex;align-items:center;gap:12px;width:100%;flex-wrap:wrap;">
+            <div class="rs-group" style="flex:1;min-width:180px;">
+              <div class="rs-dot green"></div>
+              <div style="flex:1;">
+                <div class="rs-label">Pickup Location (From)</div>
+                <select id="rs-pickup" class="rs-input" onchange="performRideSearch()"
+                  style="background:transparent;border:none;outline:none;font-size:.9rem;font-weight:700;color:#111827;cursor:pointer;width:100%;">
+                  <option value="Dhanmondi, Dhaka" selected>📍 Dhanmondi, Dhaka</option>
+                  <option value="Gulshan 1, Dhaka">📍 Gulshan 1, Dhaka</option>
+                  <option value="Gulshan 2, Dhaka">📍 Gulshan 2, Dhaka</option>
+                  <option value="Banani, Dhaka">📍 Banani, Dhaka</option>
+                  <option value="Uttara Sector 3, Dhaka">📍 Uttara Sector 3, Dhaka</option>
+                  <option value="Uttara Sector 11, Dhaka">📍 Uttara Sector 11, Dhaka</option>
+                  <option value="Airport (HSIA), Dhaka">📍 Airport (HSIA), Dhaka</option>
+                  <option value="Mirpur 10, Dhaka">📍 Mirpur 10, Dhaka</option>
+                  <option value="Mirpur 12, Dhaka">📍 Mirpur 12, Dhaka</option>
+                  <option value="Mohakhali, Dhaka">📍 Mohakhali, Dhaka</option>
+                  <option value="Farmgate, Dhaka">📍 Farmgate, Dhaka</option>
+                  <option value="Motijheel, Dhaka">📍 Motijheel, Dhaka</option>
+                  <option value="Bashundhara R/A, Dhaka">📍 Bashundhara R/A, Dhaka</option>
+                  <option value="Shahbagh, Dhaka">📍 Shahbagh, Dhaka</option>
+                  <option value="Badda, Dhaka">📍 Badda, Dhaka</option>
+                  <option value="Old Dhaka (Puran Dhaka), Dhaka">📍 Old Dhaka (Puran Dhaka), Dhaka</option>
+                  <option value="Agargaon, Dhaka">📍 Agargaon, Dhaka</option>
+                  <option value="Tejgaon, Dhaka">📍 Tejgaon, Dhaka</option>
+                </select>
+              </div>
+            </div>
+            <button type="button" class="rs-swap" onclick="swapRideLocations()" title="Swap Pickup & Drop"
+              style="background:#f1f5f9;border:1px solid #cbd5e1;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;color:#334155;">&#8644;</button>
+            <div class="rs-group" style="flex:1;min-width:180px;">
+              <div class="rs-dot red"></div>
+              <div style="flex:1;">
+                <div class="rs-label">Drop Location (To)</div>
+                <select id="rs-drop" class="rs-input" onchange="performRideSearch()"
+                  style="background:transparent;border:none;outline:none;font-size:.9rem;font-weight:700;color:#111827;cursor:pointer;width:100%;">
+                  <option value="Dhanmondi, Dhaka">📍 Dhanmondi, Dhaka</option>
+                  <option value="Gulshan 1, Dhaka">📍 Gulshan 1, Dhaka</option>
+                  <option value="Gulshan 2, Dhaka" selected>📍 Gulshan 2, Dhaka</option>
+                  <option value="Banani, Dhaka">📍 Banani, Dhaka</option>
+                  <option value="Uttara Sector 3, Dhaka">📍 Uttara Sector 3, Dhaka</option>
+                  <option value="Uttara Sector 11, Dhaka">📍 Uttara Sector 11, Dhaka</option>
+                  <option value="Airport (HSIA), Dhaka">📍 Airport (HSIA), Dhaka</option>
+                  <option value="Mirpur 10, Dhaka">📍 Mirpur 10, Dhaka</option>
+                  <option value="Mirpur 12, Dhaka">📍 Mirpur 12, Dhaka</option>
+                  <option value="Mohakhali, Dhaka">📍 Mohakhali, Dhaka</option>
+                  <option value="Farmgate, Dhaka">📍 Farmgate, Dhaka</option>
+                  <option value="Motijheel, Dhaka">📍 Motijheel, Dhaka</option>
+                  <option value="Bashundhara R/A, Dhaka">📍 Bashundhara R/A, Dhaka</option>
+                  <option value="Shahbagh, Dhaka">📍 Shahbagh, Dhaka</option>
+                  <option value="Badda, Dhaka">📍 Badda, Dhaka</option>
+                  <option value="Old Dhaka (Puran Dhaka), Dhaka">📍 Old Dhaka (Puran Dhaka), Dhaka</option>
+                  <option value="Agargaon, Dhaka">📍 Agargaon, Dhaka</option>
+                  <option value="Tejgaon, Dhaka">📍 Tejgaon, Dhaka</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button type="button" class="btn-add-stop" onclick="addRideStop()">+ Add Stop</button>
+              <button type="button" class="btn-search-ride" onclick="performRideSearch(true)">Search Rides</button>
             </div>
           </div>
-          <div class="rs-swap">&#8644;</div>
-          <div class="rs-group">
-            <div class="rs-dot red"></div>
-            <div>
-              <div class="rs-label">Drop Location</div>
-              <input type="text" class="rs-input" value="Gulshan 2, Dhaka" readonly />
+
+          <!-- VEHICLE TYPE & SEATS SELECTOR ROW -->
+          <div
+            style="display:flex;align-items:center;gap:12px;width:100%;flex-wrap:wrap;padding-top:10px;border-top:1px dashed #cbd5e1;margin-top:4px;">
+            <div class="rs-group" style="flex:1;min-width:180px;">
+              <span id="vt-icon" style="font-size:1.3rem;">🚗</span>
+              <div style="flex:1;">
+                <div class="rs-label">Vehicle Type</div>
+                <select id="rs-vehicle-type" class="rs-input" onchange="onVehicleTypeChange()"
+                  style="background:transparent;border:none;outline:none;font-size:.9rem;font-weight:700;color:#111827;cursor:pointer;width:100%;">
+                  <option value="car" selected>🚗 Car / Sedan (AC)</option>
+                  <option value="bike">🏍️ Bike / Motorcycle</option>
+                  <option value="minibus">🚐 Micro / Mini Bus (Group)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="rs-group" style="flex:1;min-width:160px;">
+              <span style="font-size:1.3rem;">💺</span>
+              <div style="flex:1;">
+                <div class="rs-label">Choose Seats</div>
+                <select id="rs-seats" class="rs-input" onchange="performRideSearch()"
+                  style="background:transparent;border:none;outline:none;font-size:.9rem;font-weight:700;color:#111827;cursor:pointer;width:100%;">
+                  <option value="4" selected>4 Passengers (Regular)</option>
+                  <option value="6">6 Passengers (XL)</option>
+                </select>
+              </div>
             </div>
           </div>
-          <div class="rs-divider"></div>
-          <button class="btn-add-stop">+ Add Stop</button>
-          <button class="btn-search-ride">Search Rides</button>
+
+          <!-- Intermediate Stops Container -->
+          <div id="rs-stops-container" style="display:flex;flex-direction:column;gap:8px;width:100%;"></div>
+        </div>
+
+        <!-- LIVE ROUTE & MAP VISUALIZER CARD -->
+        <div id="ride-map-card"
+          style="background:#fff;border:1px solid var(--border);border-radius:20px;padding:1.2rem;margin-bottom:1.5rem;box-shadow:0 4px 16px rgba(0,0,0,0.03);display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.3rem;">🗺️</span>
+              <div>
+                <div style="font-size:1rem;font-weight:900;color:#111827;">Live Route &amp; Travel Time Pathfinder</div>
+                <div id="map-route-text" style="font-size:.78rem;color:#64748b;font-weight:600;">Dhanmondi → Gulshan 2
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span id="map-traffic-badge"
+                style="font-size:.72rem;font-weight:800;background:#dcfce7;color:#15803d;padding:4px 10px;border-radius:50px;display:flex;align-items:center;gap:4px;">
+                <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;"></span> 🟢
+                Fast Route
+              </span>
+              <span id="map-est-time-badge"
+                style="font-size:.78rem;font-weight:900;background:#eff6ff;color:#1d4ed8;padding:4px 12px;border-radius:50px;">⏱️
+                18 mins (12.4 km)</span>
+            </div>
+          </div>
+
+          <!-- Interactive Vector Route Map Canvas -->
+          <div
+            style="position:relative;height:160px;background:linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);border-radius:16px;overflow:hidden;border:1px solid #cbd5e1;">
+            <!-- Grid overlay lines simulating street map roads -->
+            <svg width="100%" height="100%" style="position:absolute;top:0;left:0;">
+              <defs>
+                <pattern id="roadGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="2 2" />
+                </pattern>
+                <linearGradient id="routeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#22c55e" />
+                  <stop offset="50%" stop-color="#3b82f6" />
+                  <stop offset="100%" stop-color="#ff1a6e" />
+                </linearGradient>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#roadGrid)" />
+
+              <!-- Main Highway Lines -->
+              <path d="M 0 40 Q 150 20 400 80 T 800 120" stroke="#ffffff" stroke-width="14" fill="none" />
+              <path d="M 60 0 Q 180 90 320 160" stroke="#ffffff" stroke-width="10" fill="none" />
+              <path d="M 0 40 Q 150 20 400 80 T 800 120" stroke="#cbd5e1" stroke-width="8" fill="none" />
+
+              <!-- Dynamic Route Line -->
+              <path id="svg-route-line" d="M 40 110 Q 200 40 450 110 T 800 50" stroke="url(#routeGrad)" stroke-width="5"
+                fill="none" stroke-dasharray="8 4" />
+
+              <!-- Animated Car Marker -->
+              <g id="svg-car-marker" transform="translate(200, 60)">
+                <circle cx="0" cy="0" r="14" fill="#111827" opacity="0.15" />
+                <text x="-8" y="5" font-size="16">🚗</text>
+              </g>
+            </svg>
+
+            <!-- Location Pin Markers HTML Overlay -->
+            <div id="map-pins-layer"
+              style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;">
+              <div
+                style="display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,0.94);padding:6px 12px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1.5px solid #22c55e;">
+                <span style="font-size:12px;font-weight:900;color:#15803d;display:flex;align-items:center;gap:4px;">🟢
+                  <span id="pin-pickup-name">Dhanmondi</span></span>
+                <span style="font-size:9px;color:#64748b;font-weight:700;">Pickup Spot</span>
+              </div>
+              <div id="pin-stops-wrapper" style="display:flex;gap:12px;"></div>
+              <div
+                style="display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,0.94);padding:6px 12px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1.5px solid #be185d;">
+                <span style="font-size:12px;font-weight:900;color:#be185d;display:flex;align-items:center;gap:4px;">🔴
+                  <span id="pin-drop-name">Gulshan 2</span></span>
+                <span style="font-size:9px;color:#64748b;font-weight:700;">Destination</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Suggested Route Pathfinder Banner -->
+          <div
+            style="display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border:1px solid #e2e8f0;padding:8px 14px;border-radius:12px;font-size:.78rem;flex-wrap:wrap;gap:6px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:.9rem;color:#3b82f6;">🛣️</span>
+              <span style="font-weight:700;color:#334155;">Suggested Route: <span id="map-route-pathfinder"
+                  style="color:#111827;font-weight:800;">Mirpur Road → Mohakhali Flyover → Gulshan Avenue</span></span>
+            </div>
+            <span style="color:#22c55e;font-weight:800;display:flex;align-items:center;gap:4px;">✓ Live Traffic
+              Sync</span>
+          </div>
         </div>
 
         <div class="rf-row">
-          <div class="rf-item">
+          <div class="rf-item" onclick="filterRideCategory('cheapest')">
             <div class="rf-icon" style="color:var(--green);">&#127991;</div>
             <div class="rf-txt"><span class="rf-t1">Cheapest</span><span class="rf-t2">Find lowest fare</span></div>
           </div>
-          <div class="rf-item">
+          <div class="rf-item" onclick="filterRideCategory('shortest')">
             <div class="rf-icon" style="color:#3b82f6;">&#128336;</div>
             <div class="rf-txt"><span class="rf-t1">Shortest Time</span><span class="rf-t2">Save travel time</span>
             </div>
           </div>
-          <div class="rf-item">
+          <div class="rf-item" onclick="filterRideCategory('rated')">
             <div class="rf-icon" style="color:#f59e0b;">&#11088;</div>
             <div class="rf-txt"><span class="rf-t1">Best Rated</span><span class="rf-t2">Top rated drivers</span></div>
           </div>
-          <div class="rf-item">
+          <div class="rf-item" onclick="filterRideCategory('nosurge')">
             <div class="rf-icon" style="color:#8b5cf6;">&#128302;</div>
             <div class="rf-txt"><span class="rf-t1">No Surge</span><span class="rf-t2">Avoid surge pricing</span></div>
           </div>
-          <div class="rf-item">
+          <div class="rf-item" onclick="filterRideCategory('women')">
             <div class="rf-icon" style="color:var(--pink);">&#128105;</div>
             <div class="rf-txt"><span class="rf-t1">Women Drivers</span><span class="rf-t2">Female driver only</span>
             </div>
           </div>
-          <div class="rf-item">
+          <div class="rf-item" onclick="filterRideCategory('later')">
             <div class="rf-icon" style="color:#f97316;">&#128197;</div>
             <div class="rf-txt"><span class="rf-t1">Book Later</span><span class="rf-t2">Schedule your ride</span></div>
           </div>
@@ -3544,7 +3713,7 @@
         <div>
           <div class="rl-hd">
             <div><span class="card-title">Available Ride Options</span><br /><span
-                style="font-size:.75rem;color:var(--mid);">Compare fares, time and save more</span></div>
+                style="font-size:.75rem;color:var(--mid);">Compare Uber, OBHAI, InDrive & Pathao fares</span></div>
             <div style="display:flex;gap:3rem;margin-right:8rem;">
               <span class="rl-col-title">Est. Time</span>
               <span class="rl-col-title">Fare</span>
@@ -3552,95 +3721,9 @@
             </div>
           </div>
 
-          <div class="rl-item">
-            <div class="rl-provider">
-              <div class="rl-logo"><span style="color:#ef4444;font-weight:900;font-size:1.4rem;">P</span></div>
-              <div>
-                <div style="font-size:.9rem;font-weight:800;color:#111827;">Pathao <span
-                    style="background:var(--green-light);color:var(--green);font-size:.6rem;padding:2px 6px;border-radius:4px;margin-left:4px;">Cheapest</span>
-                </div>
-                <div style="font-size:.7rem;color:#f59e0b;font-weight:700;">&#11088; 4.6 <span
-                    style="color:var(--mid);font-weight:400;">(12.5k)</span></div>
-              </div>
-            </div>
-            <div class="rl-car">
-              <div class="rl-icon">&#128663;</div>
-              <div>
-                <div style="font-size:.85rem;font-weight:700;">Regular</div>
-                <div style="font-size:.7rem;color:var(--mid);">4 Seater</div>
-              </div>
-            </div>
-            <div class="rl-time">
-              <div style="font-size:.85rem;font-weight:700;">18 min</div>
-              <div style="font-size:.7rem;color:var(--mid);">12.4 km</div>
-            </div>
-            <div class="rl-fare">
-              <div class="rl-fare-now" style="color:var(--green);">&#2547;175</div>
-              <div class="rl-fare-old">&#2547;210</div>
-            </div>
-            <div class="rl-save-col">&#2547;35<br /><span style="font-size:.7rem;">17% off</span></div>
-            <button class="btn-book">Book Now</button>
-          </div>
-
-          <div class="rl-item">
-            <div class="rl-provider">
-              <div class="rl-logo"><span style="color:#000;font-weight:900;font-size:1.1rem;">Uber</span></div>
-              <div>
-                <div style="font-size:.9rem;font-weight:800;color:#111827;">Uber</div>
-                <div style="font-size:.7rem;color:#f59e0b;font-weight:700;">&#11088; 4.4 <span
-                    style="color:var(--mid);font-weight:400;">(8.7k)</span></div>
-              </div>
-            </div>
-            <div class="rl-car">
-              <div class="rl-icon">&#128663;</div>
-              <div>
-                <div style="font-size:.85rem;font-weight:700;">Go</div>
-                <div style="font-size:.7rem;color:var(--mid);">4 Seater</div>
-              </div>
-            </div>
-            <div class="rl-time">
-              <div style="font-size:.85rem;font-weight:700;">20 min</div>
-              <div style="font-size:.7rem;color:var(--mid);">12.8 km</div>
-            </div>
-            <div class="rl-fare">
-              <div class="rl-fare-now">&#2547;210</div>
-              <div class="rl-fare-old">&#2547;250</div>
-            </div>
-            <div class="rl-save-col">&#2547;40<br /><span style="font-size:.7rem;">16% off</span></div>
-            <button class="btn-book">Book Now</button>
-          </div>
-
-          <div class="rl-item">
-            <div class="rl-provider">
-              <div class="rl-logo"><span style="color:var(--green);font-weight:900;font-size:1.4rem;">S</span></div>
-              <div>
-                <div style="font-size:.9rem;font-weight:800;color:#111827;">Shohoz</div>
-                <div style="font-size:.7rem;color:#f59e0b;font-weight:700;">&#11088; 4.3 <span
-                    style="color:var(--mid);font-weight:400;">(6.2k)</span></div>
-              </div>
-            </div>
-            <div class="rl-car">
-              <div class="rl-icon">&#128663;</div>
-              <div>
-                <div style="font-size:.85rem;font-weight:700;">Standard</div>
-                <div style="font-size:.7rem;color:var(--mid);">4 Seater</div>
-              </div>
-            </div>
-            <div class="rl-time">
-              <div style="font-size:.85rem;font-weight:700;">22 min</div>
-              <div style="font-size:.7rem;color:var(--mid);">13.2 km</div>
-            </div>
-            <div class="rl-fare">
-              <div class="rl-fare-now">&#2547;235</div>
-              <div class="rl-fare-old">&#2547;270</div>
-            </div>
-            <div class="rl-save-col">&#2547;35<br /><span style="font-size:.7rem;">13% off</span></div>
-            <button class="btn-book">Book Now</button>
-          </div>
-
-          <div style="text-align:center; padding-top:1rem; border-top:1px solid #f1f5f9;">
-            <button class="btn-outline" style="border:none;background:var(--pink-light);width:100%;">View More Providers
-              &#9660;</button>
+          <!-- Dynamic Ride Options Container -->
+          <div id="ride-options-list" style="display:flex;flex-direction:column;gap:8px;">
+            <!-- Dynamically rendered rides -->
           </div>
         </div>
 
@@ -4009,25 +4092,33 @@
   <!-- ════════════════════════════════════════════════════════════════ -->
   <!-- MODAL 1: MULTI-APP FOOD PRICE COMPARISON                         -->
   <!-- ════════════════════════════════════════════════════════════════ -->
-  <div id="modal-food-compare" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;padding:1rem;">
-    <div style="background:#fff;border-radius:24px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);border:1px solid #e2e8f0;display:flex;flex-direction:column;">
+  <div id="modal-food-compare"
+    style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;padding:1rem;">
+    <div
+      style="background:#fff;border-radius:24px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);border:1px solid #e2e8f0;display:flex;flex-direction:column;">
       <!-- Header -->
-      <div style="padding:1.2rem 1.5rem;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:10;">
+      <div
+        style="padding:1.2rem 1.5rem;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:10;">
         <div style="display:flex;align-items:center;gap:10px;">
           <span style="font-size:1.4rem;">&#127860;</span>
           <div>
             <h3 style="font-size:1.1rem;font-weight:900;color:#111827;margin:0;">App Price Comparison</h3>
-            <p style="font-size:.75rem;color:#64748b;margin:0;">Compare prices across apps — lowest price shown first</p>
+            <p style="font-size:.75rem;color:#64748b;margin:0;">Compare prices across apps — lowest price shown first
+            </p>
           </div>
         </div>
-        <button onclick="closeFoodCompareModal()" style="background:#f1f5f9;border:none;width:32px;height:32px;border-radius:50%;font-size:1.2rem;cursor:pointer;color:#64748b;display:flex;align-items:center;justify-content:center;">&times;</button>
+        <button onclick="closeFoodCompareModal()"
+          style="background:#f1f5f9;border:none;width:32px;height:32px;border-radius:50%;font-size:1.2rem;cursor:pointer;color:#64748b;display:flex;align-items:center;justify-content:center;">&times;</button>
       </div>
 
       <!-- Food Banner -->
-      <div id="fcm-food-header" style="padding:1.2rem 1.5rem;background:linear-gradient(135deg, #fff0f5 0%, #f8fafc 100%);display:flex;gap:1rem;align-items:center;border-bottom:1px solid #f1f5f9;">
-        <img id="fcm-img" src="" alt="" style="width:84px;height:84px;border-radius:16px;object-fit:cover;border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,0.06);"/>
+      <div id="fcm-food-header"
+        style="padding:1.2rem 1.5rem;background:linear-gradient(135deg, #fff0f5 0%, #f8fafc 100%);display:flex;gap:1rem;align-items:center;border-bottom:1px solid #f1f5f9;">
+        <img id="fcm-img" src="" alt=""
+          style="width:84px;height:84px;border-radius:16px;object-fit:cover;border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,0.06);" />
         <div style="flex:1;">
-          <span id="fcm-category" style="font-size:.65rem;font-weight:800;background:#ffe4e6;color:#be185d;padding:2px 8px;border-radius:50px;text-transform:uppercase;">Category</span>
+          <span id="fcm-category"
+            style="font-size:.65rem;font-weight:800;background:#ffe4e6;color:#be185d;padding:2px 8px;border-radius:50px;text-transform:uppercase;">Category</span>
           <h4 id="fcm-title" style="font-size:1.15rem;font-weight:900;color:#111827;margin:4px 0 2px 0;">Food Item</h4>
           <div id="fcm-rest" style="font-size:.8rem;color:#475569;font-weight:600;">Restaurant Name</div>
           <div style="display:flex;gap:12px;font-size:.75rem;color:#64748b;margin-top:4px;">
@@ -4039,7 +4130,9 @@
 
       <!-- App Prices List -->
       <div style="padding:1.2rem 1.5rem;flex:1;">
-        <div style="font-size:.78rem;font-weight:800;color:#334155;margin-bottom:.8rem;text-transform:uppercase;letter-spacing:0.5px;">Available Food Apps</div>
+        <div
+          style="font-size:.78rem;font-weight:800;color:#334155;margin-bottom:.8rem;text-transform:uppercase;letter-spacing:0.5px;">
+          Available Food Apps</div>
         <div id="fcm-apps-list" style="display:flex;flex-direction:column;gap:.8rem;">
           <!-- Dynamically populated app rows -->
         </div>
@@ -4050,20 +4143,25 @@
   <!-- ════════════════════════════════════════════════════════════════ -->
   <!-- MODAL 2: FOOD ORDER & PAYMENT METHOD SELECTION                   -->
   <!-- ════════════════════════════════════════════════════════════════ -->
-  <div id="modal-food-order" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:1010;align-items:center;justify-content:center;padding:1rem;">
-    <div style="background:#fff;border-radius:24px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);border:1px solid #e2e8f0;display:flex;flex-direction:column;">
+  <div id="modal-food-order"
+    style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:1010;align-items:center;justify-content:center;padding:1rem;">
+    <div
+      style="background:#fff;border-radius:24px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);border:1px solid #e2e8f0;display:flex;flex-direction:column;">
       <!-- Header -->
-      <div style="padding:1.2rem 1.5rem;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:10;">
+      <div
+        style="padding:1.2rem 1.5rem;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:10;">
         <div>
           <div style="font-size:.7rem;font-weight:800;color:#ff1a6e;text-transform:uppercase;">Step 2: Place Order</div>
           <h3 style="font-size:1.1rem;font-weight:900;color:#111827;margin:0;">Select Payment &amp; Quantity</h3>
         </div>
-        <button onclick="closeFoodOrderModal()" style="background:#f1f5f9;border:none;width:32px;height:32px;border-radius:50%;font-size:1.2rem;cursor:pointer;color:#64748b;display:flex;align-items:center;justify-content:center;">&times;</button>
+        <button onclick="closeFoodOrderModal()"
+          style="background:#f1f5f9;border:none;width:32px;height:32px;border-radius:50%;font-size:1.2rem;cursor:pointer;color:#64748b;display:flex;align-items:center;justify-content:center;">&times;</button>
       </div>
 
       <div style="padding:1.2rem 1.5rem;display:flex;flex-direction:column;gap:1.2rem;">
         <!-- Selected App Banner -->
-        <div id="fom-app-banner" style="padding:.75rem 1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;display:flex;align-items:center;justify-content:space-between;">
+        <div id="fom-app-banner"
+          style="padding:.75rem 1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;display:flex;align-items:center;justify-content:space-between;">
           <div style="display:flex;align-items:center;gap:10px;">
             <span id="fom-app-icon" style="font-size:1.3rem;">🐼</span>
             <div>
@@ -4075,28 +4173,35 @@
         </div>
 
         <!-- Quantity Selector Card -->
-        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:1rem;display:flex;align-items:center;justify-content:space-between;">
+        <div
+          style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:1rem;display:flex;align-items:center;justify-content:space-between;">
           <div>
             <div style="font-size:.9rem;font-weight:800;color:#111827;">Select Quantity</div>
             <div style="font-size:.72rem;color:#64748b;">How many portions would you like?</div>
           </div>
           <div style="display:flex;align-items:center;gap:12px;background:#f1f5f9;padding:4px 8px;border-radius:50px;">
-            <button onclick="changeOrderQty(-1)" style="width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #cbd5e1;font-size:1.1rem;font-weight:900;cursor:pointer;color:#334155;display:flex;align-items:center;justify-content:center;">&minus;</button>
-            <span id="fom-qty" style="font-size:1rem;font-weight:900;color:#111827;min-width:20px;text-align:center;">1</span>
-            <button onclick="changeOrderQty(1)" style="width:32px;height:32px;border-radius:50%;background:#ff1a6e;border:none;font-size:1.1rem;font-weight:900;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;">&#43;</button>
+            <button onclick="changeOrderQty(-1)"
+              style="width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #cbd5e1;font-size:1.1rem;font-weight:900;cursor:pointer;color:#334155;display:flex;align-items:center;justify-content:center;">&minus;</button>
+            <span id="fom-qty"
+              style="font-size:1rem;font-weight:900;color:#111827;min-width:20px;text-align:center;">1</span>
+            <button onclick="changeOrderQty(1)"
+              style="width:32px;height:32px;border-radius:50%;background:#ff1a6e;border:none;font-size:1.1rem;font-weight:900;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;">&#43;</button>
           </div>
         </div>
 
         <!-- Payment Method Options -->
         <div>
-          <div style="font-size:.78rem;font-weight:800;color:#334155;margin-bottom:.6rem;text-transform:uppercase;letter-spacing:0.5px;">Choose Payment Method (Get Extra Discounts)</div>
+          <div
+            style="font-size:.78rem;font-weight:800;color:#334155;margin-bottom:.6rem;text-transform:uppercase;letter-spacing:0.5px;">
+            Choose Payment Method (Get Extra Discounts)</div>
           <div id="fom-payment-list" style="display:grid;grid-template-columns:repeat(2, 1fr);gap:.6rem;">
             <!-- Dynamically populated payment cards -->
           </div>
         </div>
 
         <!-- Order Summary & Price Breakdown -->
-        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:1rem;display:flex;flex-direction:column;gap:8px;">
+        <div
+          style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:1rem;display:flex;flex-direction:column;gap:8px;">
           <div style="font-size:.8rem;font-weight:800;color:#111827;margin-bottom:4px;">Price Breakdown</div>
           <div style="display:flex;justify-content:space-between;font-size:.8rem;color:#64748b;">
             <span>Item Total (<span id="fom-summary-qty">1</span>x)</span>
@@ -4106,18 +4211,21 @@
             <span>Delivery Fee</span>
             <span id="fom-sum-delivery">৳0</span>
           </div>
-          <div id="fom-row-pm-discount" style="display:flex;justify-content:space-between;font-size:.8rem;color:#22c55e;font-weight:700;">
+          <div id="fom-row-pm-discount"
+            style="display:flex;justify-content:space-between;font-size:.8rem;color:#22c55e;font-weight:700;">
             <span id="fom-lbl-pm-discount">Payment Discount</span>
             <span id="fom-val-pm-discount">-৳0</span>
           </div>
-          <div style="border-top:1px dashed #cbd5e1;padding-top:8px;margin-top:4px;display:flex;justify-content:space-between;align-items:center;">
+          <div
+            style="border-top:1px dashed #cbd5e1;padding-top:8px;margin-top:4px;display:flex;justify-content:space-between;align-items:center;">
             <span style="font-size:.9rem;font-weight:900;color:#111827;">Total Payable</span>
             <span id="fom-total-payable" style="font-size:1.3rem;font-weight:900;color:#ff1a6e;">৳199</span>
           </div>
         </div>
 
         <!-- Confirm Purchase Button -->
-        <button onclick="confirmFoodOrder()" style="width:100%;padding:.9rem;background:linear-gradient(135deg, #ff1a6e 0%, #be185d 100%);color:#fff;border:none;border-radius:50px;font-size:1rem;font-weight:900;cursor:pointer;box-shadow:0 8px 20px rgba(255,26,110,0.3);transition:all 0.2s;">
+        <button onclick="confirmFoodOrder()"
+          style="width:100%;padding:.9rem;background:linear-gradient(135deg, #ff1a6e 0%, #be185d 100%);color:#fff;border:none;border-radius:50px;font-size:1rem;font-weight:900;cursor:pointer;box-shadow:0 8px 20px rgba(255,26,110,0.3);transition:all 0.2s;">
           Confirm &amp; Place Order &rarr;
         </button>
       </div>
@@ -4269,7 +4377,7 @@
       document.getElementById('fom-summary-qty').textContent = currentOrderQty;
       document.getElementById('fom-sum-item').textContent = '৳' + itemTotal;
       document.getElementById('fom-sum-delivery').innerHTML = deliveryFee === 0 ? '<b style="color:#22c55e">FREE</b>' : '৳' + deliveryFee;
-      
+
       const rowPm = document.getElementById('fom-row-pm-discount');
       if (pmDiscount > 0) {
         rowPm.style.display = 'flex';
@@ -4320,15 +4428,617 @@
         img: currentSelectedFood.img
       };
 
-      if (window.OMStore.state && window.OMStore.state.orders) {
-        window.OMStore.state.orders.unshift(newOrder);
-        window.OMStore.saveState();
-      }
-
       closeFoodOrderModal();
 
       alert('🎉 Order Placed Successfully!\n\nOrder ID: ' + newOrder.id + '\nItem: ' + newOrder.title + '\nPaid via: ' + pm.name + '\nTotal: ৳' + finalAmount + '\n\nYour order is now being prepared in kitchen!');
     }
   </script>
+
+  <!-- ════════════════════════════════════════════════════════════════ -->
+  <!-- MODAL 3: RIDE BOOKING & PAYMENT DISCOUNTS                        -->
+  <!-- ════════════════════════════════════════════════════════════════ -->
+  <div id="modal-ride-book"
+    style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:1020;align-items:center;justify-content:center;padding:1rem;">
+    <div
+      style="background:#fff;border-radius:24px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);border:1px solid #e2e8f0;display:flex;flex-direction:column;">
+      <!-- Header -->
+      <div
+        style="padding:1.2rem 1.5rem;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:10;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div id="rbm-provider-logo"
+            style="width:42px;height:42px;border-radius:12px;background:#111827;color:#fff;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center;">
+            Uber
+          </div>
+          <div>
+            <div style="font-size:.7rem;font-weight:800;color:#ff1a6e;text-transform:uppercase;">Book Ride Option</div>
+            <h3 id="rbm-provider-name" style="font-size:1.1rem;font-weight:900;color:#111827;margin:0;">Uber (UberGo)
+            </h3>
+          </div>
+        </div>
+        <button onclick="closeRideBookingModal()"
+          style="background:#f1f5f9;border:none;width:32px;height:32px;border-radius:50%;font-size:1.2rem;cursor:pointer;color:#64748b;display:flex;align-items:center;justify-content:center;">&times;</button>
+      </div>
+
+      <div style="padding:1.2rem 1.5rem;display:flex;flex-direction:column;gap:1.2rem;">
+        <!-- Route Banner -->
+        <div
+          style="padding:.9rem 1.1rem;background:linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);border:1px solid #e2e8f0;border-radius:16px;">
+          <div style="font-size:.7rem;font-weight:800;color:#64748b;text-transform:uppercase;margin-bottom:4px;">
+            Selected Route</div>
+          <div id="rbm-route-summary" style="font-size:.9rem;font-weight:900;color:#111827;margin-bottom:4px;">Dhanmondi
+            → Gulshan 2</div>
+          <div id="rbm-dist-time" style="font-size:.78rem;color:#3b82f6;font-weight:700;">12.4 km • 18 min</div>
+        </div>
+
+        <!-- Payment Method Options -->
+        <div>
+          <div
+            style="font-size:.78rem;font-weight:800;color:#334155;margin-bottom:.6rem;text-transform:uppercase;letter-spacing:0.5px;">
+            Select Payment Method (Extra Cashback / Discount)</div>
+          <div id="rbm-payment-list" style="display:grid;grid-template-columns:repeat(2, 1fr);gap:.6rem;">
+            <!-- Dynamically populated payment cards -->
+          </div>
+        </div>
+
+        <!-- Price Breakdown -->
+        <div
+          style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:1rem;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:.8rem;font-weight:800;color:#111827;margin-bottom:4px;">Fare Breakdown</div>
+          <div style="display:flex;justify-content:space-between;font-size:.8rem;color:#64748b;">
+            <span>Ride Base Fare (App Discount Applied)</span>
+            <span id="rbm-base-fare">৳210</span>
+          </div>
+          <div id="rbm-row-pm-discount"
+            style="display:flex;justify-content:space-between;font-size:.8rem;color:#22c55e;font-weight:700;">
+            <span id="rbm-lbl-pm-discount">bKash Cashback</span>
+            <span id="rbm-val-pm-discount">-৳21</span>
+          </div>
+          <div
+            style="border-top:1px dashed #cbd5e1;padding-top:8px;margin-top:4px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:.9rem;font-weight:900;color:#111827;">Total Payable Fare</span>
+            <span id="rbm-total-payable" style="font-size:1.3rem;font-weight:900;color:#ff1a6e;">৳189</span>
+          </div>
+        </div>
+
+        <!-- Confirm Booking Button -->
+        <button onclick="confirmRideOrder()"
+          style="width:100%;padding:.9rem;background:linear-gradient(135deg, #ff1a6e 0%, #be185d 100%);color:#fff;border:none;border-radius:50px;font-size:1rem;font-weight:900;cursor:pointer;box-shadow:0 8px 20px rgba(255,26,110,0.3);transition:all 0.2s;">
+          Confirm &amp; Book Ride &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ════════════════════════════════════════════════════════════════
+    // RIDE SEARCH, STOPS & RIDE BOOKING SYSTEM
+    // ════════════════════════════════════════════════════════════════
+    var rideStops = [];
+    var currentSelectedRide = null;
+    var currentSelectedRidePayment = 'bkash';
+
+    var DHAKA_AREAS_LIST = [
+      'Dhanmondi, Dhaka',
+      'Gulshan 1, Dhaka',
+      'Gulshan 2, Dhaka',
+      'Banani, Dhaka',
+      'Uttara Sector 3, Dhaka',
+      'Uttara Sector 11, Dhaka',
+      'Airport (HSIA), Dhaka',
+      'Mirpur 10, Dhaka',
+      'Mirpur 12, Dhaka',
+      'Mohakhali, Dhaka',
+      'Farmgate, Dhaka',
+      'Motijheel, Dhaka',
+      'Bashundhara R/A, Dhaka',
+      'Shahbagh, Dhaka',
+      'Badda, Dhaka',
+      'Old Dhaka (Puran Dhaka), Dhaka',
+      'Agargaon, Dhaka',
+      'Tejgaon, Dhaka'
+    ];
+
+    var RIDE_PROVIDERS_DATA = [
+      { id: 'pathao', name: 'Pathao', logoBg: '#ef4444', logoText: 'P', carType: 'Regular', seats: '4 Seater', baseFarePerKm: 14.5, discountPct: 17, rating: 4.7, reviews: '22.3k', tag: 'Cheapest' },
+      { id: 'uber', name: 'Uber', logoBg: '#111827', logoText: 'Uber', carType: 'UberGo', seats: '4 Seater', baseFarePerKm: 17.0, discountPct: 16, rating: 4.8, reviews: '18.5k', tag: 'Popular' },
+      { id: 'obhai', name: 'OBHAI', logoBg: '#eab308', logoText: 'OBHAI', carType: 'OBHAI Car', seats: '4 Seater', baseFarePerKm: 18.0, discountPct: 15, rating: 4.6, reviews: '9.2k', tag: 'Fast Driver' },
+      { id: 'indrive', name: 'InDrive', logoBg: '#22c55e', logoText: 'iD', carType: 'Mini Bidding', seats: '4 Seater', baseFarePerKm: 15.0, discountPct: 20, rating: 4.5, reviews: '14.1k', tag: 'Best Value' },
+      { id: 'shohoz', name: 'Shohoz', logoBg: '#059669', logoText: 'S', carType: 'Standard', seats: '4 Seater', baseFarePerKm: 19.0, discountPct: 13, rating: 4.4, reviews: '5.8k', tag: '' }
+    ];
+
+    function swapRideLocations() {
+      const p = document.getElementById('rs-pickup');
+      const d = document.getElementById('rs-drop');
+      if (p && d) {
+        const tmp = p.value;
+        p.value = d.value;
+        d.value = tmp;
+        performRideSearch();
+      }
+    }
+
+    function addRideStop() {
+      if (rideStops.length >= 3) {
+        alert('Maximum 3 intermediate stops allowed per ride.');
+        return;
+      }
+      const stopId = 'stop-' + Date.now();
+      const defaultNames = ['Mohakhali, Dhaka', 'Farmgate, Dhaka', 'Banani, Dhaka'];
+      const stopName = defaultNames[rideStops.length] || 'Mohakhali, Dhaka';
+      rideStops.push({ id: stopId, location: stopName });
+      renderRideStops();
+      performRideSearch();
+    }
+
+    function removeRideStop(stopId) {
+      rideStops = rideStops.filter(s => s.id !== stopId);
+      renderRideStops();
+      performRideSearch();
+    }
+
+    function updateStopLocation(stopId, val) {
+      const s = rideStops.find(x => x.id === stopId);
+      if (s) {
+        s.location = val;
+        performRideSearch();
+      }
+    }
+
+    function renderRideStops() {
+      const container = document.getElementById('rs-stops-container');
+      if (!container) return;
+      container.innerHTML = rideStops.map((s, idx) => `
+        <div style="display:flex;align-items:center;gap:10px;background:#f8fafc;border:1px dashed #3b82f6;border-radius:12px;padding:6px 12px;">
+          <span style="font-size:.7rem;font-weight:800;color:#3b82f6;background:#dbeafe;padding:2px 8px;border-radius:50px;">Stop ${idx + 1}</span>
+          <select onchange="updateStopLocation('${s.id}', this.value)" style="border:none;background:transparent;outline:none;font-size:.85rem;font-weight:700;color:#111827;flex:1;cursor:pointer;">
+            ${DHAKA_AREAS_LIST.map(area => `<option value="${area}" ${area === s.location ? 'selected' : ''}>📍 ${area}</option>`).join('')}
+          </select>
+          <button type="button" onclick="removeRideStop('${s.id}')" style="background:#ffe4e6;color:#be185d;border:none;border-radius:50%;width:22px;height:22px;font-size:.75rem;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Remove stop">&times;</button>
+        </div>
+      `).join('');
+    }
+
+    function calculateDistance(pickup, drop) {
+      if (pickup === drop) return 3.5;
+      let hash = 0;
+      const combined = pickup + '-' + drop;
+      for (let i = 0; i < combined.length; i++) hash += combined.charCodeAt(i);
+      const calculated = 6.5 + (hash % 14) + ((hash % 5) * 0.4);
+      return Math.round(calculated * 10) / 10;
+    }
+
+    function updateRouteMap(pickup, drop, km, mins) {
+      const pName = pickup.split(',')[0].trim();
+      const dName = drop.split(',')[0].trim();
+
+      const routeTxtElem = document.getElementById('map-route-text');
+      if (routeTxtElem) {
+        routeTxtElem.textContent = pName + (rideStops.length ? ' → ' + rideStops.map(s => s.location.split(',')[0].trim()).join(' → ') : '') + ' → ' + dName;
+      }
+      const pPin = document.getElementById('pin-pickup-name');
+      if (pPin) pPin.textContent = pName;
+      const dPin = document.getElementById('pin-drop-name');
+      if (dPin) dPin.textContent = dName;
+
+      const estBadge = document.getElementById('map-est-time-badge');
+      if (estBadge) estBadge.textContent = '⏱️ ' + mins + ' mins (' + km.toFixed(1) + ' km)';
+
+      // Intermediate stops pins on map
+      const stopsWrapper = document.getElementById('pin-stops-wrapper');
+      if (stopsWrapper) {
+        stopsWrapper.innerHTML = rideStops.map((s, idx) => `
+          <div style="display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,0.94);padding:5px 10px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1.5px solid #3b82f6;">
+            <span style="font-size:11px;font-weight:900;color:#1d4ed8;display:flex;align-items:center;gap:4px;">🔵 ${s.location.split(',')[0].trim()}</span>
+            <span style="font-size:8px;color:#64748b;font-weight:700;">Stop ${idx + 1}</span>
+          </div>
+        `).join('');
+      }
+
+      // Traffic status badge
+      const trafficBadge = document.getElementById('map-traffic-badge');
+      if (trafficBadge) {
+        if (mins < 22) {
+          trafficBadge.innerHTML = '<span style="width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;"></span> 🟢 Fast Route';
+          trafficBadge.style.background = '#dcfce7';
+          trafficBadge.style.color = '#15803d';
+        } else if (mins < 35) {
+          trafficBadge.innerHTML = '<span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block;"></span> 🟡 Moderate Traffic';
+          trafficBadge.style.background = '#fef3c7';
+          trafficBadge.style.color = '#b45309';
+        } else {
+          trafficBadge.innerHTML = '<span style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block;"></span> 🔴 Heavy Traffic';
+          trafficBadge.style.background = '#ffe4e6';
+          trafficBadge.style.color = '#be185d';
+        }
+      }
+
+      // Pathfinder text
+      const pathfinder = document.getElementById('map-route-pathfinder');
+      if (pathfinder) {
+        const routes = [
+          `${pName} Main Road → Mohakhali Flyover → ${dName}`,
+          `${pName} Link Road → Pragati Sarani → ${dName}`,
+          `${pName} Bypass → Bijoy Sarani → Expressway → ${dName}`
+        ];
+        let idx = Math.abs(pName.length + dName.length) % routes.length;
+        pathfinder.textContent = routes[idx];
+      }
+    }
+
+    var currentRideFilter = 'cheapest';
+
+    function performRideSearch(shouldScroll) {
+      const pickup = (document.getElementById('rs-pickup') ? document.getElementById('rs-pickup').value : 'Dhanmondi, Dhaka') || 'Dhanmondi, Dhaka';
+      const drop = (document.getElementById('rs-drop') ? document.getElementById('rs-drop').value : 'Gulshan 2, Dhaka') || 'Gulshan 2, Dhaka';
+
+      // Route distance calculation
+      let baseKm = calculateDistance(pickup, drop) + (rideStops.length * 2.8);
+      let estMin = Math.round(baseKm * 1.45 + (rideStops.length * 6));
+
+      updateRouteMap(pickup, drop, baseKm, estMin);
+      renderRideOptions(baseKm, estMin, pickup, drop);
+      updateRideSummaryWidget(pickup, drop, baseKm, estMin);
+
+      if (shouldScroll) {
+        const targetElem = document.getElementById('ride-options-list') || document.querySelector('.rl-hd');
+        if (targetElem) {
+          targetElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          targetElem.style.transition = 'all 0.3s ease';
+          targetElem.style.boxShadow = '0 0 20px rgba(255,26,110,0.3)';
+          setTimeout(() => {
+            targetElem.style.boxShadow = 'none';
+          }, 800);
+        }
+      }
+    }
+
+    function filterRideCategory(cat) {
+      currentRideFilter = cat;
+      const pickup = (document.getElementById('rs-pickup') ? document.getElementById('rs-pickup').value : 'Dhanmondi, Dhaka') || 'Dhanmondi, Dhaka';
+      const drop = (document.getElementById('rs-drop') ? document.getElementById('rs-drop').value : 'Gulshan 2, Dhaka') || 'Gulshan 2, Dhaka';
+
+      let baseKm = calculateDistance(pickup, drop) + (rideStops.length * 2.8);
+      let estMin = Math.round(baseKm * 1.45 + (rideStops.length * 6));
+
+      renderRideOptions(baseKm, estMin, pickup, drop);
+
+      const targetElem = document.getElementById('ride-options-list') || document.querySelector('.rl-hd');
+      if (targetElem) {
+        targetElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function onVehicleTypeChange() {
+      const vtElem = document.getElementById('rs-vehicle-type');
+      if (!vtElem) return;
+      const vt = vtElem.value;
+      const sSelect = document.getElementById('rs-seats');
+      const vtIcon = document.getElementById('vt-icon');
+
+      if (vt === 'bike') {
+        if (vtIcon) vtIcon.textContent = '🏍️';
+        if (sSelect) sSelect.innerHTML = '<option value="1" selected>1 Passenger (Solo Bike)</option>';
+      } else if (vt === 'minibus') {
+        if (vtIcon) vtIcon.textContent = '🚐';
+        if (sSelect) sSelect.innerHTML = `
+          <option value="7" selected>7 Passengers (Microbus)</option>
+          <option value="10">10 Passengers (Mini Bus)</option>
+          <option value="12">12 Passengers (HiAce XL)</option>
+        `;
+      } else {
+        if (vtIcon) vtIcon.textContent = '🚗';
+        if (sSelect) sSelect.innerHTML = `
+          <option value="4" selected>4 Passengers (Regular Sedan)</option>
+          <option value="6">6 Passengers (Car XL)</option>
+        `;
+      }
+      performRideSearch();
+    }
+
+    function renderRideOptions(km, mins, pickup, drop) {
+      const container = document.getElementById('ride-options-list');
+      if (!container) return;
+
+      const vt = (document.getElementById('rs-vehicle-type') ? document.getElementById('rs-vehicle-type').value : 'car') || 'car';
+      const seats = (document.getElementById('rs-seats') ? document.getElementById('rs-seats').value : '4') || '4';
+
+      let typeMult = 1.0;
+      let vehicleIcon = '🚗';
+
+      if (vt === 'bike') {
+        typeMult = 0.45;
+        vehicleIcon = '🏍️';
+      } else if (vt === 'minibus') {
+        typeMult = 2.1 + (Number(seats) > 7 ? 0.35 : 0);
+        vehicleIcon = '🚐';
+      } else {
+        typeMult = Number(seats) === 6 ? 1.35 : 1.0;
+        vehicleIcon = '🚗';
+      }
+
+      // Calculate fares for all providers
+      const calculatedApps = RIDE_PROVIDERS_DATA.map(p => {
+        let appTypeLabel = p.carType;
+        if (vt === 'bike') appTypeLabel = p.name + ' Moto';
+        if (vt === 'minibus') appTypeLabel = p.name + ' Micro';
+
+        const rawFare = Math.round((km * p.baseFarePerKm * typeMult) + (vt === 'bike' ? 15 : 40));
+        const finalFare = Math.round(rawFare * (1 - p.discountPct / 100));
+        const savings = rawFare - finalFare;
+
+        return { ...p, appTypeLabel, rawFare, finalFare, savings };
+      });
+
+      // Sort by lowest net final fare so the app offering the BEST DISCOUNT & LOWEST FARE comes at top!
+      calculatedApps.sort((a, b) => a.finalFare - b.finalFare);
+
+      const items = calculatedApps.map((p, idx) => {
+        const isBestDiscount = idx === 0;
+
+        return `
+          <div class="rl-item" style="background:#fff;border:1.5px solid ${isBestDiscount ? '#22c55e' : '#e2e8f0'};border-radius:16px;padding:1rem;margin-bottom:.5rem;display:flex;align-items:center;justify-content:space-between;transition:all 0.2s;box-shadow:${isBestDiscount ? '0 4px 14px rgba(34,197,94,0.15)' : 'none'};">
+            <div class="rl-provider" style="width:28%;display:flex;align-items:center;gap:12px;">
+              <div class="rl-logo" style="background:${p.logoBg};color:#fff;font-weight:900;font-size:1.1rem;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                ${p.logoText}
+              </div>
+              <div>
+                <div style="font-size:.92rem;font-weight:900;color:#111827;display:flex;align-items:center;gap:6px;">
+                  ${p.name}
+                  ${isBestDiscount ? `<span style="background:#dcfce7;color:#15803d;font-size:.6rem;font-weight:900;padding:2px 8px;border-radius:50px;">BEST DISCOUNT 🏆</span>` : (p.tag ? `<span style="background:#eff6ff;color:#1d4ed8;font-size:.6rem;font-weight:800;padding:2px 6px;border-radius:50px;">${p.tag}</span>` : '')}
+                </div>
+                <div style="font-size:.72rem;color:#f59e0b;font-weight:700;">
+                  &#11088; ${p.rating} <span style="color:#64748b;font-weight:400;">(${p.reviews})</span>
+                </div>
+                <div style="font-size:.65rem;font-weight:800;color:#be185d;background:#fff0f5;padding:1px 6px;border-radius:4px;display:inline-block;margin-top:2px;">
+                  ${p.promoText}
+                </div>
+              </div>
+            </div>
+
+            <div class="rl-car" style="width:22%;display:flex;align-items:center;gap:10px;">
+              <div style="font-size:1.4rem;">${vehicleIcon}</div>
+              <div>
+                <div style="font-size:.85rem;font-weight:800;color:#111827;">${p.appTypeLabel}</div>
+                <div style="font-size:.7rem;color:#64748b;">${seats} Seats &bull; ${vt === 'bike' ? 'Non-AC' : 'AC Comfort'}</div>
+              </div>
+            </div>
+
+            <div class="rl-time" style="width:16%;">
+              <div style="font-size:.88rem;font-weight:900;color:#111827;">${mins} min</div>
+              <div style="font-size:.72rem;color:#64748b;">${km.toFixed(1)} km ${rideStops.length ? '(' + rideStops.length + ' stops)' : ''}</div>
+            </div>
+
+            <div class="rl-fare" style="width:18%;">
+              <div style="font-size:1.15rem;font-weight:900;color:#22c55e;">৳${p.finalFare}</div>
+              <div style="font-size:.75rem;color:#94a3b8;text-decoration:line-through;">৳${p.rawFare}</div>
+              <div style="font-size:.65rem;color:#e2136e;font-weight:800;margin-top:2px;">💳 bKash / Card Cashback</div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+              <div style="font-size:.8rem;font-weight:800;color:#15803d;">Save ৳${p.savings} (${p.discountPct}% OFF)</div>
+              <button type="button" onclick="openRideBookingModal('${p.id}', ${p.finalFare}, ${p.rawFare}, ${mins}, '${km.toFixed(1)}')" style="background:${isBestDiscount ? '#22c55e' : 'linear-gradient(135deg, #ff1a6e 0%, #be185d 100%)'};color:#fff;border:none;padding:.5rem 1.1rem;border-radius:50px;font-size:.8rem;font-weight:900;cursor:pointer;box-shadow:0 4px 12px rgba(255,26,110,0.2);">
+                Book Now &rarr;
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = items;
+    }
+
+    function updateRideSummaryWidget(pickup, drop, km, mins) {
+      const container = document.querySelector('.rs-summary');
+      if (!container) return;
+
+      const cheapestFare = Math.round((km * 14.5 + 30) * 0.83);
+      const normalFare = Math.round(km * 14.5 + 30);
+      const savings = normalFare - cheapestFare;
+
+      const stopsText = rideStops.length > 0 ? rideStops.map(s => `
+        <div class="rss-point" style="margin-bottom:.6rem;">
+          <div class="rss-dot" style="background:#3b82f6;"></div>
+          <div>
+            <div class="rss-lbl" style="color:#3b82f6;">Stop</div>
+            <div class="rss-val">${s.location}</div>
+          </div>
+        </div>
+      `).join('') : '';
+
+      container.innerHTML = `
+        <div class="card-hd"><span class="card-title" style="font-size:1rem;">Your Ride Summary</span></div>
+        <div class="rss-point">
+          <div class="rss-dot green"></div>
+          <div class="rss-line"></div>
+          <div>
+            <div class="rss-lbl">Pickup</div>
+            <div class="rss-val">${pickup}</div>
+          </div>
+        </div>
+        ${stopsText}
+        <div class="rss-point">
+          <div class="rss-dot red"></div>
+          <div>
+            <div class="rss-lbl">Drop</div>
+            <div class="rss-val">${drop}</div>
+          </div>
+        </div>
+
+        <div class="rss-meta">
+          <div>
+            <div style="font-size:.7rem;color:var(--light);">Total Distance</div>
+            <div style="font-size:.85rem;font-weight:700;">${km.toFixed(1)} km</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:.7rem;color:var(--light);">Est. Travel Time</div>
+            <div style="font-size:.85rem;font-weight:700;">${mins} min</div>
+          </div>
+        </div>
+
+        <div class="rss-box">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-size:.8rem;font-weight:700;color:#166534;">Cheapest Ride</span>
+            <span style="font-size:1rem;font-weight:800;color:var(--green);">৳${cheapestFare}</span>
+          </div>
+          <div style="font-size:.8rem;font-weight:700;color:var(--green);">You Save ৳${savings} (17% OFF)</div>
+        </div>
+        <div style="font-size:.65rem;color:var(--mid);margin-top:8px;text-align:center;">💡 Compare &amp; book to get extra bKash/Card cashback</div>
+      `;
+    }
+
+    function filterRideCategory(type) {
+      if (!RIDE_PROVIDERS_DATA) return;
+      if (type === 'cheapest') {
+        RIDE_PROVIDERS_DATA.sort((a, b) => a.baseFarePerKm - b.baseFarePerKm);
+      } else if (type === 'shortest') {
+        RIDE_PROVIDERS_DATA.sort((a, b) => b.discountPct - a.discountPct);
+      } else if (type === 'rated') {
+        RIDE_PROVIDERS_DATA.sort((a, b) => b.rating - a.rating);
+      }
+      performRideSearch();
+    }
+
+    function openRideBookingModal(providerId, finalFare, rawFare, mins, kmStr) {
+      const provider = RIDE_PROVIDERS_DATA.find(p => p.id === providerId) || RIDE_PROVIDERS_DATA[0];
+      currentSelectedRide = { provider, finalFare, rawFare, mins, kmStr };
+      currentSelectedRidePayment = 'bkash';
+
+      document.getElementById('rbm-provider-name').textContent = provider.name + ' (' + provider.carType + ')';
+      document.getElementById('rbm-provider-logo').textContent = provider.logoText;
+      document.getElementById('rbm-provider-logo').style.background = provider.logoBg;
+
+      const pInput = document.getElementById('rs-pickup');
+      const dInput = document.getElementById('rs-drop');
+      const routeTxt = (pInput ? pInput.value : 'Dhanmondi') + (rideStops.length ? ' → ' + rideStops.map(s => s.location).join(' → ') : '') + ' → ' + (dInput ? dInput.value : 'Gulshan 2');
+      document.getElementById('rbm-route-summary').textContent = routeTxt;
+      document.getElementById('rbm-dist-time').textContent = kmStr + ' km • ' + mins + ' min';
+
+      renderRidePaymentMethods();
+      updateRideOrderTotals();
+
+      document.getElementById('modal-ride-book').style.display = 'flex';
+    }
+
+    function closeRideBookingModal() {
+      document.getElementById('modal-ride-book').style.display = 'none';
+    }
+
+    function selectRidePaymentMethod(pmId) {
+      currentSelectedRidePayment = pmId;
+      renderRidePaymentMethods();
+      updateRideOrderTotals();
+    }
+
+    function renderRidePaymentMethods() {
+      if (!window.OMStore) return;
+      const methods = window.OMStore.getPaymentMethods();
+      const container = document.getElementById('rbm-payment-list');
+      if (!container) return;
+      container.innerHTML = methods.map(pm => {
+        const isSelected = pm.id === currentSelectedRidePayment;
+        return `
+          <div onclick="selectRidePaymentMethod('${pm.id}')" style="background:#fff;border:1.5px solid ${isSelected ? '#ff1a6e' : '#e2e8f0'};border-radius:14px;padding:.75rem;cursor:pointer;display:flex;flex-direction:column;gap:4px;transition:all 0.2s;${isSelected ? 'box-shadow:0 4px 12px rgba(255,26,110,0.15);background:#fff0f5;' : ''}">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:1.1rem;">${pm.icon}</span>
+              <span style="font-size:.8rem;font-weight:900;color:#111827;">${pm.name}</span>
+              <div style="width:16px;height:16px;border-radius:50%;border:1.5px solid ${isSelected ? '#ff1a6e' : '#cbd5e1'};background:${isSelected ? '#ff1a6e' : '#fff'};display:flex;align-items:center;justify-content:center;">
+                ${isSelected ? '<span style="color:#fff;font-size:10px;font-weight:900;">✓</span>' : ''}
+              </div>
+            </div>
+            <div style="font-size:.68rem;color:${isSelected ? '#be185d' : '#64748b'};font-weight:700;margin-top:2px;">
+              ${pm.label}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateRideOrderTotals() {
+      if (!currentSelectedRide || !window.OMStore) return;
+
+      const baseFare = currentSelectedRide.finalFare;
+      const pm = window.OMStore.getPaymentMethods().find(p => p.id === currentSelectedRidePayment);
+
+      let pmDiscount = 0;
+      let pmLabel = 'Payment Cashback/Discount';
+
+      if (pm && baseFare >= pm.minOrder) {
+        if (pm.discountType === 'cashback' || pm.discountType === 'percent') {
+          pmDiscount = Math.min(pm.maxDiscount, Math.round((baseFare * pm.discountPct) / 100));
+          pmLabel = pm.name + ' (' + pm.discountPct + '% Cashback)';
+        } else if (pm.discountType === 'flat') {
+          pmDiscount = pm.discountFlat;
+          pmLabel = pm.name + ' Discount';
+        }
+      }
+
+      const totalPayable = Math.max(0, baseFare - pmDiscount);
+
+      document.getElementById('rbm-base-fare').textContent = '৳' + baseFare;
+      const rowPm = document.getElementById('rbm-row-pm-discount');
+      if (pmDiscount > 0) {
+        rowPm.style.display = 'flex';
+        document.getElementById('rbm-lbl-pm-discount').textContent = pmLabel;
+        document.getElementById('rbm-val-pm-discount').textContent = '-৳' + pmDiscount;
+      } else {
+        rowPm.style.display = 'none';
+      }
+
+      document.getElementById('rbm-total-payable').textContent = '৳' + totalPayable;
+    }
+
+    function confirmRideOrder() {
+      if (!currentSelectedRide || !window.OMStore) return;
+
+      const pm = window.OMStore.getPaymentMethods().find(p => p.id === currentSelectedRidePayment) || { name: 'bKash' };
+      const baseFare = currentSelectedRide.finalFare;
+      let pmDiscount = 0;
+
+      if (pm && baseFare >= pm.minOrder) {
+        if (pm.discountType === 'cashback' || pm.discountType === 'percent') {
+          pmDiscount = Math.min(pm.maxDiscount, Math.round((baseFare * pm.discountPct) / 100));
+        } else if (pm.discountType === 'flat') {
+          pmDiscount = pm.discountFlat;
+        }
+      }
+
+      const finalAmount = Math.max(0, baseFare - pmDiscount);
+      const pInput = document.getElementById('rs-pickup');
+      const dInput = document.getElementById('rs-drop');
+      const routeTitle = (currentSelectedRide.provider.name) + ' Ride (' + (pInput ? pInput.value : 'Dhanmondi') + ' to ' + (dInput ? dInput.value : 'Gulshan 2') + ')';
+
+      const newOrder = {
+        id: 'RIDE-' + Math.floor(100000 + Math.random() * 900000),
+        title: routeTitle,
+        store: currentSelectedRide.provider.name + ' (' + currentSelectedRide.provider.carType + ')',
+        category: 'ride',
+        price: finalAmount,
+        oldPrice: currentSelectedRide.rawFare,
+        discount: currentSelectedRide.provider.discountPct + '% OFF',
+        status: 'in_transit',
+        statusText: 'Driver Assigning / En Route',
+        paymentMethod: pm.name,
+        date: 'Just now',
+        img: 'https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=200'
+      };
+
+      if (window.OMStore.state && window.OMStore.state.orders) {
+        window.OMStore.state.orders.unshift(newOrder);
+        window.OMStore.saveState();
+      }
+
+      closeRideBookingModal();
+
+      alert('🚕 Ride Booked Successfully!\n\nBooking ID: ' + newOrder.id + '\nProvider: ' + currentSelectedRide.provider.name + '\nPaid via: ' + pm.name + '\nTotal Fare: ৳' + finalAmount + '\n\nYour driver is being assigned!');
+    }
+
+    // Auto perform initial ride search on load
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(function () {
+        performRideSearch();
+      }, 300);
+    });
+  </script>
 </body>
+
 </html>
