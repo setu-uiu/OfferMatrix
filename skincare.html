@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet" />
   <script src="js/om-store.js"></script>
+  <script src="js/om-profile.js"></script>
   <style>
     *,
     *::before,
@@ -80,6 +81,13 @@
       bottom: 0;
       z-index: 300;
       overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .sb::-webkit-scrollbar {
+      display: none;
     }
 
     .sb-logo {
@@ -246,17 +254,54 @@
       padding: .8rem 1.5rem;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 1rem;
       position: sticky;
       top: 0;
       z-index: 100;
+      height: 65px;
+    }
+
+    .tb-search {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: .5rem 1.2rem;
+      width: 340px;
+      transition: border-color .2s;
+    }
+
+    .tb-search:focus-within {
+      border-color: #d1d5db;
+    }
+
+    .tb-search-icon {
+      color: var(--light);
+      font-size: .9rem;
+      flex-shrink: 0;
+    }
+
+    .tb-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: .82rem;
+      color: var(--text);
+      width: 100%;
+      font-family: var(--font);
+    }
+
+    .tb-search input::placeholder {
+      color: var(--light);
     }
 
     .tb-actions {
       display: flex;
       align-items: center;
       gap: 1rem;
-      margin-left: auto;
     }
 
     .tb-icon-btn {
@@ -1053,9 +1098,18 @@
 
     <!-- TOPBAR -->
     <div class="topbar">
+      <div class="tb-search">
+        <span class="tb-search-icon">🔍</span>
+        <input type="text" placeholder="Search food, deals, restaurants..." />
+      </div>
       <div class="tb-actions">
-        <button class="tb-icon-btn">&#128276;</button>
-        <button class="tb-saved" onclick="window.location.href='saved-deals.html?cat=skincare'">&#9825; Saved</button>
+        <button class="tb-icon-btn" title="Notifications">
+          🔔
+        </button>
+        <button class="tb-saved" onclick="window.location.href='saved-deals.html?cat=skincare'">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Saved (<span class="tb-saved-count">6</span>)
+        </button>
         <div class="tb-user">
           <div class="tb-avatar">
             <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=80"
@@ -1063,8 +1117,9 @@
           </div>
           <div>
             <div class="tb-uname">Setu Meherunnesa</div>
-            <div class="tb-umeta">Premium Member</div>
+            <div class="tb-umeta" style="color:var(--green)">Premium Member</div>
           </div>
+          <span style="font-size:.7rem;color:var(--light);margin-left:2px">▾</span>
         </div>
       </div>
     </div>

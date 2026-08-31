@@ -8,8 +8,11 @@
   const defaultState = {
     user: {
       name: localStorage.getItem('om_user_name') || 'Setu Meherunnesa',
-      tier: 'Premium Member',
-      avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100'
+      email: localStorage.getItem('om_user_email') || 'setu.meherunnesa@example.com',
+      phone: localStorage.getItem('om_user_phone') || '+880 1712-345678',
+      address: localStorage.getItem('om_user_address') || 'House 42, Road 7, Dhanmondi, Dhaka',
+      tier: localStorage.getItem('om_user_tier') || 'Platinum Member',
+      avatar: localStorage.getItem('om_user_avatar') || 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100'
     },
     savedDeals: [
       {
@@ -667,6 +670,11 @@
     setUser(userObj) {
       this.state.user = { ...this.state.user, ...userObj };
       if (userObj.name) localStorage.setItem('om_user_name', userObj.name);
+      if (userObj.email) localStorage.setItem('om_user_email', userObj.email);
+      if (userObj.phone) localStorage.setItem('om_user_phone', userObj.phone);
+      if (userObj.address) localStorage.setItem('om_user_address', userObj.address);
+      if (userObj.tier) localStorage.setItem('om_user_tier', userObj.tier);
+      if (userObj.avatar) localStorage.setItem('om_user_avatar', userObj.avatar);
       this.saveState();
     }
 
@@ -982,9 +990,18 @@
         tbSaved.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Saved (${savedCount})`;
       }
 
-      const name = this.state.user.name;
+      const name = this.state.user.name || 'Setu Meherunnesa';
       const firstName = name.split(' ')[0];
+      const tier = this.state.user.tier || 'Platinum Member';
+      const avatar = this.state.user.avatar || 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100';
+
       document.querySelectorAll('#tb-name, .tb-uname').forEach(el => el.textContent = name);
+      document.querySelectorAll('.tb-umeta').forEach(el => el.textContent = tier);
+      
+      document.querySelectorAll('.tb-avatar img, img.tb-avatar, .tb-user img').forEach(img => {
+        img.src = avatar;
+      });
+
       document.querySelectorAll('#hero-fname, .hero-fname-ride, .dash-hi-fname, .dash-hi').forEach(el => {
         if (el.classList.contains('dash-hi')) {
           el.innerHTML = `Hey ${firstName}! &#128075;`;

@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet" />
   <script src="js/om-store.js"></script>
+  <script src="js/om-profile.js"></script>
   <style>
     *,
     *::before,
@@ -74,6 +75,13 @@
       bottom: 0;
       z-index: 300;
       overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .sb::-webkit-scrollbar {
+      display: none;
     }
 
     .sb-logo {
@@ -2536,7 +2544,7 @@
         Reviews</button>
 
       <div class="sb-group">COMMUNITY</div>
-      <button class="sb-item sb-red" id="sb-complaints-btn" onclick="scrollToComplaintSection()"><span
+      <button class="sb-item sb-red" id="sb-complaints-btn" onclick="window.location.href='complaints.html'"><span
           class="sb-ico">&#128680;</span> <span id="sb-complaint-label">Complain Issues</span> <span
           class="sb-badge red">Alert</span></button>
       <button class="sb-item"><span class="sb-ico">&#128179;</span> My Wallet</button>

@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet" />
   <script src="js/om-store.js"></script>
+  <script src="js/om-profile.js"></script>
   <style>
     :root {
       --pink: #ff1a6e;
@@ -51,6 +52,13 @@
       left: 0;
       z-index: 100;
       overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .sb::-webkit-scrollbar {
+      display: none;
     }
 
     .sb-logo {
@@ -653,7 +661,7 @@
         Reviews</button>
 
       <div class="sb-group">COMMUNITY</div>
-      <button class="sb-item sb-red" onclick="window.location.href='dashboard.html'"><span class="sb-ico">&#128680;</span> Complain Issues <span class="sb-badge red">Alert</span></button>
+      <button class="sb-item sb-red" onclick="window.location.href='complaints.html'"><span class="sb-ico">&#128680;</span> Complain Issues <span class="sb-badge red">Alert</span></button>
       <button class="sb-item"><span class="sb-ico">&#128179;</span> My Wallet</button>
       <button class="sb-item"><span class="sb-ico">&#128179;</span> Bank Cards</button>
       <button class="sb-item"><span class="sb-ico">&#127873;</span> Refer &amp; Earn</button>

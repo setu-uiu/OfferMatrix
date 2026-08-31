@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <script src="js/om-store.js"></script>
+  <script src="js/om-profile.js"></script>
   <style>
     *,
     *::before,
@@ -78,6 +79,13 @@
       bottom: 0;
       z-index: 300;
       overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .sb::-webkit-scrollbar {
+      display: none;
     }
 
     .sb-logo {
