@@ -645,10 +645,14 @@
       <button class="sb-item on"><span class="sb-ico">&#11088;</span> Reviews</button>
 
       <div class="sb-group">COMMUNITY</div>
-      <button class="sb-item sb-red" onclick="window.location.href='complaints.html'"><span class="sb-ico">&#128680;</span> Complain Issues <span class="sb-badge red">Alert</span></button>
-      <button class="sb-item"><span class="sb-ico">&#128179;</span> My Wallet</button>
-      <button class="sb-item"><span class="sb-ico">&#128179;</span> Bank Cards</button>
-      <button class="sb-item"><span class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
+      <button class="sb-item sb-red" onclick="window.location.href='complaints.html'"><span
+          class="sb-ico">&#128680;</span> Complain Issues <span class="sb-badge red">Alert</span></button>
+      <button class="sb-item" onclick="window.OMWallet && window.OMWallet.open()"><span class="sb-ico">&#128179;</span>
+        My Wallet</button>
+      <button class="sb-item" onclick="window.OMBankCards && window.OMBankCards.open()"><span
+          class="sb-ico">&#128179;</span> Bank Cards</button>
+      <button class="sb-item" onclick="window.OMReferral && window.OMReferral.open()"><span
+          class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
 
       <div class="sb-group">ACCOUNT</div>
       <button class="sb-item"><span class="sb-ico">&#9881;</span> Settings</button>
@@ -963,7 +967,14 @@
     }
 
     window.addEventListener('DOMContentLoaded', function () {
-      renderReviews('all');
+      var params = new URLSearchParams(window.location.search);
+      var catParam = params.get('cat');
+      if (catParam === 'food') {
+        document.body.classList.add('food-sky-theme');
+        renderReviews('food');
+      } else {
+        renderReviews(catParam && ['food', 'ride', 'skincare', 'best', 'worst'].includes(catParam) ? catParam : 'all');
+      }
     });
   </script>
 

@@ -2532,24 +2532,27 @@
           style="color:inherit;">&#128663;</span> Ride</button>
       <button class="sb-item" onclick="window.location.href='skincare.html'"><span class="sb-ico">&#128167;</span>
         Skincare</button>
-      <button class="sb-item" onclick="window.location.href='orders.html'"><span class="sb-ico">&#128230;</span> Orders
+      <button class="sb-item" id="sb-orders" onclick="goOrders()"><span class="sb-ico">&#128230;</span> Orders
         <span class="sb-badge" style="background:var(--pink);color:#fff;">6</span></button>
       <button class="sb-item" id="sb-saved" onclick="goSavedDeals()"><span class="sb-ico">&#10084;</span> Saved
         Deals</button>
       <button class="sb-item" id="sb-alerts" onclick="goPriceAlerts()"><span class="sb-ico">&#128276;</span> Price
         Alerts <span class="sb-badge" style="background:#ef4444;">5</span></button>
-      <button class="sb-item" onclick="window.location.href='coupons.html'"><span class="sb-ico">&#127915;</span>
+      <button class="sb-item" id="sb-coupons" onclick="goCoupons()"><span class="sb-ico">&#127915;</span>
         Coupons</button>
-      <button class="sb-item" onclick="window.location.href='reviews.html'"><span class="sb-ico">&#11088;</span>
+      <button class="sb-item" id="sb-reviews" onclick="goReviews()"><span class="sb-ico">&#11088;</span>
         Reviews</button>
 
       <div class="sb-group">COMMUNITY</div>
-      <button class="sb-item sb-red" id="sb-complaints-btn" onclick="window.location.href='complaints.html'"><span
+      <button class="sb-item sb-red" id="sb-complaints-btn" onclick="goComplaints()"><span
           class="sb-ico">&#128680;</span> <span id="sb-complaint-label">Complain Issues</span> <span
           class="sb-badge red">Alert</span></button>
-      <button class="sb-item"><span class="sb-ico">&#128179;</span> My Wallet</button>
-      <button class="sb-item"><span class="sb-ico">&#128179;</span> Bank Cards</button>
-      <button class="sb-item"><span class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
+      <button class="sb-item" onclick="window.OMWallet && window.OMWallet.open()"><span class="sb-ico">&#128179;</span>
+        My Wallet</button>
+      <button class="sb-item" onclick="window.OMBankCards && window.OMBankCards.open()"><span
+          class="sb-ico">&#128179;</span> Bank Cards</button>
+      <button class="sb-item" onclick="window.OMReferral && window.OMReferral.open()"><span
+          class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
 
       <div class="sb-group">ACCOUNT</div>
       <button class="sb-item"><span class="sb-ico">&#9881;</span> Settings</button>
@@ -2562,7 +2565,7 @@
       <div class="sb-invite-emoji">&#127873;</div>
       <div class="sb-invite-title">Invite & Earn</div>
       <div class="sb-invite-sub">Invite your friends and earn exciting rewards</div>
-      <button class="btn-invite">Invite Now</button>
+      <button class="btn-invite" onclick="window.OMReferral && window.OMReferral.open()">Invite Now</button>
     </div>
   </aside>
 
@@ -2655,11 +2658,12 @@
             <div class="d-stat-icon" style="background:#f0fdf4;color:var(--green);">&#128276;</div>
           </div>
 
-          <div class="d-stat-card" style="cursor:pointer" onclick="window.location.href='saved-deals.html'">
+          <div class="d-stat-card" style="cursor:pointer" onclick="window.OMWallet && window.OMWallet.open()">
             <div>
-              <div class="d-stat-label">Total Savings</div>
-              <div class="d-stat-val">&#2547;8,450</div>
-              <a class="d-stat-link" href="saved-deals.html">View saved deals &gt;</a>
+              <div class="d-stat-label" id="dash-stat-savings-label">Total Savings</div>
+              <div class="d-stat-val" id="dash-stat-savings-val">&#2547;2,401</div>
+              <a class="d-stat-link" href="#" onclick="window.OMWallet && window.OMWallet.open(); return false;">View
+                savings calculation &gt;</a>
             </div>
             <div class="d-stat-icon" style="background:#fff7ed;color:#f97316;">&#127873;</div>
           </div>
@@ -3492,7 +3496,7 @@
           <div class="hero-txt">
             <div class="hero-hi">Hey <strong class="hero-fname-ride">Setu</strong>! &#128075;</div>
             <div class="hero-title" style="font-size:1.8rem; margin-top:.5rem;">Find the best <span
-                style="color:var(--pink);">ride deals</span><br />from top providers</div>
+                style="color:#921E1A;font-weight:900;">ride deals</span><br />from top providers</div>
             <div class="hero-sub" style="margin-top:.8rem;">Compare prices, travel time, and save more on every ride.
             </div>
           </div>
@@ -3835,6 +3839,8 @@
       const sbExposed = document.getElementById('sb-exposed');
 
       if (tabName === 'food') {
+        document.body.classList.add('food-sky-theme');
+        document.body.classList.remove('ride-theme');
         document.getElementById('pg-food').style.display = 'flex';
         document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('on'));
         const fSb = document.getElementById('sb-food');
@@ -3842,6 +3848,8 @@
         if (sbViral) sbViral.style.display = 'flex';
         if (sbExposed) sbExposed.style.display = 'none';
       } else if (tabName === 'ride') {
+        document.body.classList.add('ride-theme');
+        document.body.classList.remove('food-sky-theme');
         document.getElementById('pg-ride').style.display = 'flex';
         document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('on'));
         const rSb = document.getElementById('sb-ride');
@@ -3851,6 +3859,27 @@
         // set name again if needed
         const fn = (localStorage.getItem('om_user_name') || 'Setu').split(' ')[0];
         document.querySelectorAll('.hero-fname-ride').forEach(el => el.textContent = fn);
+      } else {
+        document.body.classList.remove('food-sky-theme', 'ride-theme');
+      }
+
+      if (window.OMStore) {
+        window.OMStore.syncSkySidebarLinks();
+      }
+
+      if (window.OMStore) {
+        const lbl = document.getElementById('dash-stat-savings-label');
+        const val = document.getElementById('dash-stat-savings-val');
+        if (tabName === 'food') {
+          if (lbl) lbl.textContent = 'Food Purchase Savings';
+          if (val) val.textContent = '৳' + window.OMStore.getPurchaseSavings('food').toLocaleString();
+        } else if (tabName === 'ride') {
+          if (lbl) lbl.textContent = 'Ride Purchase Savings';
+          if (val) val.textContent = '৳' + window.OMStore.getPurchaseSavings('ride').toLocaleString();
+        } else {
+          if (lbl) lbl.textContent = 'Total Savings';
+          if (val) val.textContent = '৳' + window.OMStore.getPurchaseSavings('all').toLocaleString();
+        }
       }
     }
     (function () {
@@ -3961,27 +3990,42 @@
 
       document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('on'));
 
-      if (tabName === 'dashboard') {
-        if (pgDash) pgDash.style.display = 'flex';
-        const dSb = document.getElementById('sb-dashboard');
-        if (dSb) dSb.classList.add('on');
-        if (sbViral) sbViral.style.display = 'flex';
-        if (sbExposed) sbExposed.style.display = 'none';
-      } else if (tabName === 'food') {
+      if (tabName === 'food') {
+        document.body.classList.add('food-sky-theme');
         if (pgFood) pgFood.style.display = 'flex';
         const fSb = document.getElementById('sb-food');
         if (fSb) fSb.classList.add('on');
         if (sbViral) sbViral.style.display = 'flex';
         if (sbExposed) sbExposed.style.display = 'none';
         if (foodTabs[0]) foodTabs[0].classList.add('on');
-      } else if (tabName === 'ride') {
-        if (pgRide) pgRide.style.display = 'flex';
-        const rSb = document.getElementById('sb-ride');
-        if (rSb) rSb.classList.add('on');
-        if (sbViral) sbViral.style.display = 'none';
-        if (sbExposed) sbExposed.style.display = 'flex';
-        const fn = (localStorage.getItem('om_user_name') || 'Setu').split(' ')[0];
-        document.querySelectorAll('.hero-fname-ride').forEach(el => el.textContent = fn);
+      } else {
+        document.body.classList.remove('food-sky-theme');
+        if (tabName === 'dashboard') {
+          if (pgDash) pgDash.style.display = 'flex';
+          const dSb = document.getElementById('sb-dashboard');
+          if (dSb) dSb.classList.add('on');
+          if (sbViral) sbViral.style.display = 'flex';
+          if (sbExposed) sbExposed.style.display = 'none';
+        } else if (tabName === 'ride') {
+          if (pgRide) pgRide.style.display = 'flex';
+          const rSb = document.getElementById('sb-ride');
+          if (rSb) rSb.classList.add('on');
+          if (sbViral) sbViral.style.display = 'none';
+          if (sbExposed) sbExposed.style.display = 'flex';
+          const fn = (localStorage.getItem('om_user_name') || 'Setu').split(' ')[0];
+          document.querySelectorAll('.hero-fname-ride').forEach(el => el.textContent = fn);
+        }
+      }
+      if (window.OMStore) window.OMStore.syncSkySidebarLinks();
+    }
+
+    function goOrders() {
+      if (activeTabState === 'food') {
+        window.location.href = 'orders.html?cat=food';
+      } else if (activeTabState === 'ride') {
+        window.location.href = 'orders.html?cat=ride';
+      } else {
+        window.location.href = 'orders.html';
       }
     }
 
@@ -4002,6 +4046,36 @@
         window.location.href = 'price-alerts.html?cat=ride';
       } else {
         window.location.href = 'price-alerts.html';
+      }
+    }
+
+    function goCoupons() {
+      if (activeTabState === 'food') {
+        window.location.href = 'coupons.html?cat=food';
+      } else if (activeTabState === 'ride') {
+        window.location.href = 'coupons.html?cat=ride';
+      } else {
+        window.location.href = 'coupons.html';
+      }
+    }
+
+    function goReviews() {
+      if (activeTabState === 'food') {
+        window.location.href = 'reviews.html?cat=food';
+      } else if (activeTabState === 'ride') {
+        window.location.href = 'reviews.html?cat=ride';
+      } else {
+        window.location.href = 'reviews.html';
+      }
+    }
+
+    function goComplaints() {
+      if (activeTabState === 'food') {
+        window.location.href = 'viral-restaurant-raid.html?cat=food';
+      } else if (activeTabState === 'ride') {
+        window.location.href = 'complaints.html?cat=ride';
+      } else {
+        window.location.href = 'complaints.html';
       }
     }
     document.addEventListener("DOMContentLoaded", function () {
@@ -4504,13 +4578,13 @@
           <div
             style="border-top:1px dashed #cbd5e1;padding-top:8px;margin-top:4px;display:flex;justify-content:space-between;align-items:center;">
             <span style="font-size:.9rem;font-weight:900;color:#111827;">Total Payable Fare</span>
-            <span id="rbm-total-payable" style="font-size:1.3rem;font-weight:900;color:#ff1a6e;">৳189</span>
+            <span id="rbm-total-payable" style="font-size:1.3rem;font-weight:900;color:#921E1A;">৳189</span>
           </div>
         </div>
 
         <!-- Confirm Booking Button -->
         <button onclick="confirmRideOrder()"
-          style="width:100%;padding:.9rem;background:linear-gradient(135deg, #ff1a6e 0%, #be185d 100%);color:#fff;border:none;border-radius:50px;font-size:1rem;font-weight:900;cursor:pointer;box-shadow:0 8px 20px rgba(255,26,110,0.3);transition:all 0.2s;">
+          style="width:100%;padding:.9rem;background:#921E1A;color:#fff;border:none;border-radius:50px;font-size:1rem;font-weight:900;cursor:pointer;box-shadow:0 8px 20px rgba(146,30,26,0.3);transition:all 0.2s;">
           Confirm &amp; Book Ride &rarr;
         </button>
       </div>
@@ -4797,9 +4871,7 @@
                 <div style="font-size:.72rem;color:#f59e0b;font-weight:700;">
                   &#11088; ${p.rating} <span style="color:#64748b;font-weight:400;">(${p.reviews})</span>
                 </div>
-                <div style="font-size:.65rem;font-weight:800;color:#be185d;background:#fff0f5;padding:1px 6px;border-radius:4px;display:inline-block;margin-top:2px;">
-                  ${p.promoText}
-                </div>
+                ${p.promoText && p.promoText !== 'undefined' ? `<div style="font-size:.65rem;font-weight:800;color:#921E1A;background:#fef2f2;padding:1px 6px;border-radius:4px;display:inline-block;margin-top:2px;">${p.promoText}</div>` : ''}
               </div>
             </div>
 
@@ -4819,12 +4891,12 @@
             <div class="rl-fare" style="width:18%;">
               <div style="font-size:1.15rem;font-weight:900;color:#22c55e;">৳${p.finalFare}</div>
               <div style="font-size:.75rem;color:#94a3b8;text-decoration:line-through;">৳${p.rawFare}</div>
-              <div style="font-size:.65rem;color:#e2136e;font-weight:800;margin-top:2px;">💳 bKash / Card Cashback</div>
+              <div style="font-size:.65rem;color:#921E1A;font-weight:800;margin-top:2px;">💳 bKash / Card Cashback</div>
             </div>
 
             <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
               <div style="font-size:.8rem;font-weight:800;color:#15803d;">Save ৳${p.savings} (${p.discountPct}% OFF)</div>
-              <button type="button" onclick="openRideBookingModal('${p.id}', ${p.finalFare}, ${p.rawFare}, ${mins}, '${km.toFixed(1)}')" style="background:${isBestDiscount ? '#22c55e' : 'linear-gradient(135deg, #ff1a6e 0%, #be185d 100%)'};color:#fff;border:none;padding:.5rem 1.1rem;border-radius:50px;font-size:.8rem;font-weight:900;cursor:pointer;box-shadow:0 4px 12px rgba(255,26,110,0.2);">
+              <button type="button" onclick="openRideBookingModal('${p.id}', ${p.finalFare}, ${p.rawFare}, ${mins}, '${km.toFixed(1)}')" style="background:${isBestDiscount ? '#22c55e' : '#921E1A'};color:#fff;border:none;padding:.5rem 1.1rem;border-radius:50px;font-size:.8rem;font-weight:900;cursor:pointer;box-shadow:0 4px 12px rgba(146,30,26,0.3);">
                 Book Now &rarr;
               </button>
             </div>

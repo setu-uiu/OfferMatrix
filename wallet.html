@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Wallet & Purchase Savings - OfferMatrix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <script src="js/om-store.js"></script>
+  <script src="js/om-profile.js"></script>
+  <style>
+    :root {
+      --pink: #ff1a6e;
+      --pink-light: #fff0f5;
+      --pink-mid: #ffe4ec;
+      --dark: #111827;
+      --mid: #4b5563;
+      --light: #9ca3af;
+      --bg: #f8fafc;
+      --border: #f1f5f9;
+      --green: #10b981;
+      --green-bg: #dcfce7;
+      --font: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR STYLES */
+    .sb {
+      width: 240px;
+      background: #fff;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 1.2rem 0;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .sb::-webkit-scrollbar {
+      display: none;
+    }
+
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: 0 1.4rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sb-logo-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--pink);
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .sb-logo-text {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .sb-nav {
+      flex: 1;
+      padding: .8rem 0;
+    }
+
+    .sb-group {
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--light);
+      letter-spacing: 1px;
+      padding: 1rem 1.4rem .4rem;
+      text-transform: uppercase;
+    }
+
+    .sb-item {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      width: 100%;
+      padding: .65rem 1.4rem;
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--mid);
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: all .2s ease;
+      text-decoration: none;
+    }
+
+    .sb-item:hover {
+      background: #f1f5f9;
+      color: var(--dark);
+    }
+
+    .sb-item.on {
+      background: var(--pink-light);
+      color: var(--pink);
+      font-weight: 800;
+      border-radius: 12px;
+      margin: 0 8px;
+      width: calc(100% - 16px);
+      border-right: none;
+    }
+
+    .sb-item.on .sb-ico {
+      color: var(--pink);
+    }
+
+    .sb-badge {
+      margin-left: auto;
+      background: #e2e8f0;
+      color: #475569;
+      font-size: .7rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 50px;
+    }
+
+    .sb-badge.red {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+
+    .sb-invite {
+      margin: 1rem 1.2rem;
+      background: linear-gradient(135deg, #fff0f5 0%, #ffe4ec 100%);
+      border: 1px solid #fbcfe8;
+      border-radius: 16px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .sb-invite-emoji {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+
+    .sb-invite-title {
+      font-size: .85rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .sb-invite-sub {
+      font-size: .7rem;
+      color: #64748b;
+      margin: 2px 0 8px;
+    }
+
+    .btn-invite {
+      background: var(--pink);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: .75rem;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(255, 26, 110, 0.25);
+    }
+
+    /* MAIN CONTAINER */
+    .main {
+      margin-left: 240px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      height: 70px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .tb-search {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      background: var(--bg);
+      border: 1px solid #e2e8f0;
+      padding: .5rem 1rem;
+      border-radius: 50px;
+      width: 340px;
+    }
+
+    .tb-search input {
+      border: none;
+      background: none;
+      outline: none;
+      font-size: .85rem;
+      width: 100%;
+      color: var(--dark);
+    }
+
+    .tb-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .tb-icon-btn {
+      position: relative;
+      background: var(--bg);
+      border: 1px solid #e2e8f0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--mid);
+    }
+
+    .tb-saved {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--pink-light);
+      color: var(--pink);
+      border: 1px solid var(--pink-mid);
+      padding: .45rem 1rem;
+      border-radius: 50px;
+      font-size: .82rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .tb-user {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 50px;
+      transition: background .2s;
+    }
+
+    .tb-user:hover {
+      background: #f1f5f9;
+    }
+
+    .tb-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--pink);
+    }
+
+    .tb-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .tb-uname {
+      font-size: .85rem;
+      font-weight: 800;
+      color: var(--dark);
+    }
+
+    .tb-umeta {
+      font-size: .7rem;
+      color: var(--light);
+      font-weight: 600;
+    }
+
+    /* FULL PAGE CONTENT */
+    .content {
+      padding: 2rem;
+      max-width: 1300px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* HEADER */
+    .w-hdr-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .w-title {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .w-sub {
+      font-size: .88rem;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    /* CATEGORY TABS */
+    .w-tabs {
+      display: flex;
+      gap: 8px;
+      background: #ffffff;
+      padding: 6px;
+      border-radius: 50px;
+      border: 1.5px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .w-tab-btn {
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: .85rem;
+      font-weight: 800;
+      color: #64748b;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .w-tab-btn.active {
+      background: var(--pink);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(255, 26, 110, 0.3);
+    }
+
+    /* SAVINGS HERO CARD */
+    .w-hero-card {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 24px;
+      padding: 2rem;
+      color: #ffffff;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.25);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .w-hero-card::after {
+      content: '';
+      position: absolute;
+      right: -30px;
+      bottom: -30px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(255, 26, 110, 0.3) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .w-hc-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.2rem;
+    }
+
+    .w-hc-lbl {
+      font-size: .85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #94a3b8;
+      font-weight: 800;
+    }
+
+    .w-hc-val {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #22c55e;
+      margin: 4px 0 0;
+      letter-spacing: -1px;
+    }
+
+    .w-hc-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(10px);
+      padding: 1.1rem;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .w-hc-item {
+      text-align: center;
+    }
+
+    .w-hci-lbl {
+      font-size: .72rem;
+      color: #cbd5e1;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .w-hci-val {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #ffffff;
+      margin-top: 4px;
+    }
+
+    /* CALCULATION FORMULA BANNER */
+    .w-calc-banner {
+      background: #f0fdf4;
+      border: 1.5px solid #bbf7d0;
+      border-radius: 18px;
+      padding: 1rem 1.4rem;
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: .88rem;
+      color: #166534;
+      font-weight: 600;
+    }
+
+    .w-calc-banner strong {
+      color: #15803d;
+      font-weight: 800;
+    }
+
+    /* ACTION BAR */
+    .w-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.2rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .w-search-box {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      padding: .6rem 1.2rem;
+      border-radius: 50px;
+      width: 320px;
+    }
+
+    .w-search-box input {
+      border: none;
+      outline: none;
+      font-size: .85rem;
+      font-weight: 600;
+      width: 100%;
+    }
+
+    .w-btn-primary {
+      background: linear-gradient(135deg, var(--pink), #ff4d8d);
+      color: #ffffff;
+      border: none;
+      padding: .7rem 1.4rem;
+      border-radius: 50px;
+      font-size: .88rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(255, 26, 110, 0.3);
+      transition: all .2s;
+    }
+
+    .w-btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(255, 26, 110, 0.4);
+    }
+
+    .w-btn-secondary {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      color: #4b5563;
+      padding: .7rem 1.4rem;
+      border-radius: 50px;
+      font-size: .88rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .w-btn-secondary:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    /* TRANSACTION PURCHASE CARDS WITH COMPLETE DATA & DISCOUNT BREAKDOWN */
+    .w-trans-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .w-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+      transition: all .2s ease;
+    }
+
+    .w-card:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .w-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      margin-bottom: 1rem;
+    }
+
+    .w-ct-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .w-ct-img {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      object-fit: cover;
+    }
+
+    .w-ct-title {
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #111827;
+    }
+
+    .w-ct-sub {
+      font-size: .78rem;
+      color: #64748b;
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .w-badge-cat {
+      color: #fff;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: .68rem;
+      text-transform: uppercase;
+    }
+
+    .w-ct-right {
+      text-align: right;
+    }
+
+    .w-ct-saving-tag {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #16a34a;
+    }
+
+    .w-ct-status {
+      font-size: .75rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 50px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    .w-ct-status.completed {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .w-ct-status.in_transit {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    /* FULL PURCHASE DISCOUNT BREAKDOWN TABLE */
+    .w-table-wrap {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+    }
+
+    .w-table-title {
+      font-size: .8rem;
+      font-weight: 800;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: .8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .w-table-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      text-align: center;
+    }
+
+    .w-tg-cell {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      padding: 8px;
+      border-radius: 10px;
+    }
+
+    .w-tg-lbl {
+      font-size: .68rem;
+      color: #64748b;
+      font-weight: 700;
+    }
+
+    .w-tg-val {
+      font-size: .92rem;
+      font-weight: 900;
+      color: #111827;
+      margin-top: 2px;
+    }
+
+    /* LIGHT SKY FOOD THEME FOR WALLET PAGE */
+    body.food-sky-theme {
+      background-color: #f0f9ff !important;
+    }
+
+    body.food-sky-theme .w-tab-btn.active {
+      background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%) !important;
+      color: #ffffff !important;
+    }
+
+    .w-hero-card.food-sky-wallet {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%) !important;
+      border: 1.5px solid #7dd3fc !important;
+      box-shadow: 0 16px 36px rgba(2, 132, 199, 0.18) !important;
+      color: #0f172a !important;
+    }
+
+    .w-hero-card.food-sky-wallet .w-hc-lbl {
+      color: #0369a1 !important;
+    }
+
+    .w-hero-card.food-sky-wallet .w-hc-val {
+      color: #0284c7 !important;
+    }
+
+    .w-hero-card.food-sky-wallet .w-hc-grid {
+      background: rgba(255, 255, 255, 0.75) !important;
+      border: 1px solid #7dd3fc !important;
+    }
+
+    .w-hero-card.food-sky-wallet .w-hci-lbl {
+      color: #475569 !important;
+    }
+
+    .w-hero-card.food-sky-wallet .w-hci-val {
+      color: #0f172a !important;
+    }
+
+    .w-calc-banner.food-sky-wallet {
+      background: #e0f2fe !important;
+      border-color: #bae6fd !important;
+      color: #0369a1 !important;
+    }
+
+    .w-calc-banner.food-sky-wallet strong {
+      color: #0284c7 !important;
+    }
+
+    body.food-sky-theme .w-btn-primary,
+    .w-btn-primary.food-sky-btn {
+      background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%) !important;
+      box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35) !important;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- STANDARDIZED SIDEBAR -->
+  <aside class="sb">
+    <div class="sb-logo">
+      <div class="sb-logo-icon">%</div>
+      <span class="sb-logo-text">Offer<span style="color:#22c55e">Matrix</span></span>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-group">MAIN</div>
+      <button class="sb-item" onclick="window.location.href='dashboard.html'"><span class="sb-ico">&#127968;</span>
+        Dashboard</button>
+      <button class="sb-item" onclick="window.location.href='dashboard.html?tab=food'"><span
+          class="sb-ico">&#127860;</span> Food</button>
+      <button class="sb-item" onclick="window.location.href='dashboard.html?tab=ride'"><span
+          class="sb-ico">&#128663;</span> Ride</button>
+      <button class="sb-item" onclick="window.location.href='skincare.html'"><span class="sb-ico">&#128167;</span>
+        Skincare</button>
+      <button class="sb-item" onclick="window.location.href='orders.html'"><span class="sb-ico">&#128230;</span> Orders
+        <span class="sb-badge sb-badge-orders">6</span></button>
+      <button class="sb-item" onclick="window.location.href='saved-deals.html'"><span class="sb-ico">&#10084;</span>
+        Saved Deals <span class="sb-badge sb-badge-saved">6</span></button>
+      <button class="sb-item" onclick="window.location.href='price-alerts.html'"><span class="sb-ico">&#128276;</span>
+        Price Alerts <span class="sb-badge sb-badge-alerts">5</span></button>
+      <button class="sb-item" onclick="window.location.href='coupons.html'"><span class="sb-ico">&#127915;</span>
+        Coupons</button>
+      <button class="sb-item" onclick="window.location.href='reviews.html'"><span class="sb-ico">&#11088;</span>
+        Reviews</button>
+
+      <div class="sb-group">COMMUNITY</div>
+      <button class="sb-item sb-red" onclick="window.location.href='complaints.html'"><span
+          class="sb-ico">&#128680;</span> <span id="sb-complaint-label">Complain Issues</span> <span
+          class="sb-badge red">Alert</span></button>
+      <button class="sb-item on"><span class="sb-ico">&#128179;</span> My Wallet</button>
+      <button class="sb-item" onclick="window.OMBankCards && window.OMBankCards.open()"><span
+          class="sb-ico">&#128179;</span> Bank Cards</button>
+      <button class="sb-item" onclick="window.OMReferral && window.OMReferral.open()"><span
+          class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
+
+      <div class="sb-group">ACCOUNT</div>
+      <button class="sb-item"><span class="sb-ico">&#9881;</span> Settings</button>
+      <button class="sb-item"><span class="sb-ico">&#10067;</span> Help &amp; Support</button>
+      <button class="sb-item sb-red" onclick="window.location.href='index.html'"><span class="sb-ico">&#128682;</span>
+        Log Out</button>
+    </nav>
+
+    <div class="sb-invite">
+      <div class="sb-invite-emoji">&#127873;</div>
+      <div class="sb-invite-title">Invite & Earn</div>
+      <div class="sb-invite-sub">Invite your friends and earn exciting rewards</div>
+      <button class="btn-invite" onclick="window.OMReferral && window.OMReferral.open()">Invite Now</button>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEW -->
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input type="text" id="w-filter-search" placeholder="Search orders, deals, or stores..."
+          onkeyup="renderWalletPage()" />
+      </div>
+      <div class="tb-actions">
+        <button class="tb-icon-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+        </button>
+        <button class="tb-saved" onclick="window.location.href='saved-deals.html'"><svg width="16" height="16"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg> Saved</button>
+        <div class="tb-user">
+          <div class="tb-avatar"><img
+              src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100"
+              alt="Avatar" /></div>
+          <div>
+            <div class="tb-uname" id="tb-name">Setu Meherunnesa</div>
+            <div class="tb-umeta">Platinum Member</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FULL PAGE CONTENT -->
+    <div class="content">
+      <div class="w-hdr-row">
+        <div>
+          <div class="w-title">💳 My Wallet & Purchase Savings Dashboard</div>
+          <div class="w-sub">Comprehensive breakdown of your original purchase prices, discounts saved, cashback, and
+            total net savings.</div>
+        </div>
+
+        <!-- CATEGORY TABS -->
+        <div class="w-tabs">
+          <button class="w-tab-btn active" data-cat="all" onclick="switchCategory('all')">All Savings</button>
+          <button class="w-tab-btn" data-cat="food" onclick="switchCategory('food')">🍕 Food Savings</button>
+          <button class="w-tab-btn" data-cat="ride" onclick="switchCategory('ride')">🚗 Ride Savings</button>
+          <button class="w-tab-btn" data-cat="skincare" onclick="switchCategory('skincare')">✨ Skincare Savings</button>
+        </div>
+      </div>
+
+      <!-- HERO SAVINGS CARD -->
+      <div class="w-hero-card" id="w-hero-card">
+        <div class="w-hc-top">
+          <div>
+            <div class="w-hc-lbl" id="w-hc-title">Total Purchase Savings</div>
+            <div class="w-hc-val" id="w-hc-net-val">৳0</div>
+          </div>
+          <div style="text-align:right">
+            <span
+              style="background:rgba(255,255,255,0.15);padding:6px 14px;border-radius:50px;font-size:0.78rem;font-weight:800;"
+              id="w-hc-count-badge">6 Purchase Orders</span>
+          </div>
+        </div>
+
+        <div class="w-hc-grid">
+          <div class="w-hc-item">
+            <div class="w-hci-lbl">Total Original Price</div>
+            <div class="w-hci-val" id="w-hc-orig-val">৳0</div>
+          </div>
+          <div class="w-hc-item">
+            <div class="w-hci-lbl">Store Discounts Saved</div>
+            <div class="w-hci-val" id="w-hc-disc-val">৳0</div>
+          </div>
+          <div class="w-hc-item">
+            <div class="w-hci-lbl">Net Amount Paid</div>
+            <div class="w-hci-val" id="w-hc-paid-val">৳0</div>
+          </div>
+          <div class="w-hc-item">
+            <div class="w-hci-lbl">Payment Cashback Received</div>
+            <div class="w-hci-val" id="w-hc-cash-val">৳0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALCULATION BANNER -->
+      <div class="w-calc-banner" id="w-calc-banner">
+        <span>🧮 <strong>Calculation Formula:</strong> Total Net Savings = (Original Price - Net Price Paid) + Payment
+          Method Cashback Received</span>
+      </div>
+
+      <!-- ACTION BAR -->
+      <div class="w-action-bar">
+        <div class="w-search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" id="w-card-search" placeholder="Search item, merchant or order ID..."
+            onkeyup="renderWalletPage()" />
+        </div>
+
+        <div style="display:flex;gap:10px;">
+          <button class="w-btn-secondary" onclick="addCustomPurchasePrompt()">➕ Add Custom Purchase</button>
+          <button class="w-btn-primary" id="w-export-btn"
+            onclick="window.OMWallet ? window.OMWallet.exportStatement() : alert('Statement Exported')">📥 Export
+            Savings Statement</button>
+        </div>
+      </div>
+
+      <!-- TRANSACTIONS LIST WITH COMPLETE PURCHASE DISCOUNT DATA -->
+      <div class="w-trans-grid" id="w-trans-grid">
+        <!-- Dynamic Orders List -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var currentCat = 'all';
+
+    function switchCategory(cat) {
+      currentCat = cat;
+
+      document.querySelectorAll('.w-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-cat') === cat);
+      });
+
+      renderWalletPage();
+    }
+
+    function renderWalletPage() {
+      if (!window.OMStore) return;
+
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('cat') && currentCat === 'all' && !window.catInitialized) {
+        currentCat = urlParams.get('cat');
+        window.catInitialized = true;
+        document.querySelectorAll('.w-tab-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-cat') === currentCat);
+        });
+      }
+
+      const cat = currentCat;
+      const searchQuery = (document.getElementById('w-card-search').value || document.getElementById('w-filter-search').value || '').toLowerCase();
+
+      // Apply themes for Food and Ride
+      const isFood = (cat === 'food');
+      const isRide = (cat === 'ride') || document.body.classList.contains('ride-theme');
+      document.body.classList.toggle('food-sky-theme', isFood);
+      document.body.classList.toggle('ride-theme', isRide);
+      const heroCard = document.getElementById('w-hero-card');
+      const calcBanner = document.getElementById('w-calc-banner');
+      const exportBtn = document.getElementById('w-export-btn');
+
+      if (heroCard) {
+        heroCard.classList.toggle('food-sky-wallet', isFood);
+        heroCard.classList.toggle('ride-theme-wallet', isRide);
+      }
+      if (calcBanner) {
+        calcBanner.classList.toggle('food-sky-wallet', isFood);
+        calcBanner.classList.toggle('ride-theme-wallet', isRide);
+      }
+      if (exportBtn) {
+        exportBtn.classList.toggle('food-sky-btn', isFood);
+        exportBtn.classList.toggle('ride-theme-btn', isRide);
+      }
+
+      let items = window.OMStore.getOrdersSavingsBreakdown(cat);
+
+      if (searchQuery) {
+        items = items.filter(item =>
+          (item.items || '').toLowerCase().includes(searchQuery) ||
+          (item.store || '').toLowerCase().includes(searchQuery) ||
+          (item.id || '').toLowerCase().includes(searchQuery)
+        );
+      }
+
+      let totalOrig = 0;
+      let totalPaid = 0;
+      let totalDisc = 0;
+      let totalCash = 0;
+      let totalNet = 0;
+
+      items.forEach(item => {
+        totalOrig += item.originalPrice;
+        totalPaid += item.paidAmount;
+        totalDisc += item.discountSaving;
+        totalCash += item.cashback;
+        totalNet += item.netSavings;
+      });
+
+      // Update Summary Elements
+      const hcTitle = document.getElementById('w-hc-title');
+      const hcNetVal = document.getElementById('w-hc-net-val');
+      const hcOrigVal = document.getElementById('w-hc-orig-val');
+      const hcPaidVal = document.getElementById('w-hc-paid-val');
+      const hcDiscVal = document.getElementById('w-hc-disc-val');
+      const hcCashVal = document.getElementById('w-hc-cash-val');
+      const hcCount = document.getElementById('w-hc-count-badge');
+
+      if (hcTitle) hcTitle.textContent = cat === 'food' ? '🍕 Food Purchases Savings' : (cat === 'ride' ? '🚗 Ride Purchases Savings' : (cat === 'skincare' ? '✨ Skincare Purchases Savings' : '💳 Total Purchase Savings'));
+      if (hcNetVal) hcNetVal.textContent = '৳' + totalNet.toLocaleString();
+      if (hcOrigVal) hcOrigVal.textContent = '৳' + totalOrig.toLocaleString();
+      if (hcPaidVal) hcPaidVal.textContent = '৳' + totalPaid.toLocaleString();
+      if (hcDiscVal) hcDiscVal.textContent = '৳' + totalDisc.toLocaleString();
+      if (hcCashVal) hcCashVal.textContent = '৳' + totalCash.toLocaleString();
+      if (hcCount) hcCount.textContent = `${items.length} ${cat.toUpperCase()} Orders`;
+
+      if (calcBanner) {
+        if (cat === 'food') {
+          calcBanner.innerHTML = `<span>🧮 <strong>Food Calculation:</strong> Showing ONLY Food savings calculated from food orders. (৳${totalOrig} Orig - ৳${totalPaid} Paid = ৳${totalDisc} Off + ৳${totalCash} MFS = <strong>৳${totalNet} Saved</strong>)</span>`;
+        } else if (cat === 'ride') {
+          calcBanner.innerHTML = `<span>🧮 <strong>Ride Calculation:</strong> Showing ONLY Ride savings calculated from ride orders. (৳${totalOrig} Orig - ৳${totalPaid} Paid = ৳${totalDisc} Off + ৳${totalCash} MFS = <strong>৳${totalNet} Saved</strong>)</span>`;
+        } else if (cat === 'skincare') {
+          calcBanner.innerHTML = `<span>🧮 <strong>Skincare Calculation:</strong> Showing ONLY Skincare savings calculated from beauty purchases. (৳${totalOrig} Orig - ৳${totalPaid} Paid = ৳${totalDisc} Off + ৳${totalCash} MFS = <strong>৳${totalNet} Saved</strong>)</span>`;
+        } else {
+          calcBanner.innerHTML = `<span>🧮 <strong>Calculation Formula:</strong> Total Net Savings = (Original Price - Net Price Paid) + Payment Cashback Received across all orders.</span>`;
+        }
+      }
+
+      // Render Transaction List Cards
+      const container = document.getElementById('w-trans-grid');
+      if (!container) return;
+
+      if (items.length === 0) {
+        container.innerHTML = `<div style="background:#fff;border:1px dashed #cbd5e1;padding:3rem;text-align:center;border-radius:20px;color:#94a3b8;font-size:0.95rem;font-weight:700;">No purchase orders found for ${cat.toUpperCase()} category matching "${searchQuery}".</div>`;
+        return;
+      }
+
+      container.innerHTML = items.map(item => {
+        const catBadgeBg = item.category === 'food' ? '#d70f64' : (item.category === 'ride' ? '#111827' : '#ec4899');
+        const catName = (item.category || 'food').toUpperCase();
+        const statusText = item.statusText || (item.status === 'in_transit' ? 'In Transit' : 'Completed');
+        const statusClass = item.status === 'in_transit' ? 'in_transit' : 'completed';
+        const pmName = item.paymentMethod || (item.category === 'food' ? 'bKash (20% Cashback)' : 'Nagad MFS');
+
+        return `
+          <div class="w-card">
+            <div class="w-card-top">
+              <div class="w-ct-left">
+                <img class="w-ct-img" src="${item.img || 'https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=200'}" alt="Item" />
+                <div>
+                  <div class="w-ct-title">${item.items || item.title || 'Purchase Item'}</div>
+                  <div class="w-ct-sub">
+                    <span class="w-badge-cat" style="background:${catBadgeBg}">${catName}</span>
+                    <span><strong>${item.store}</strong> &bull; ${item.date} (Order ID: ${item.id})</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="w-ct-right">
+                <div class="w-ct-saving-tag">+৳${item.netSavings} Saved</div>
+                <div class="w-ct-status ${statusClass}">✓ ${statusText}</div>
+              </div>
+            </div>
+
+            <!-- COMPLETE PURCHASE INFORMATION & DISCOUNT BREAKDOWN TABLE -->
+            <div class="w-table-wrap">
+              <div class="w-table-title">
+                <span>📋 Comprehensive Purchase & Discount Information</span>
+                <span>Payment Method: <strong>${pmName}</strong></span>
+              </div>
+
+              <div class="w-table-grid">
+                <div class="w-tg-cell">
+                  <div class="w-tg-lbl">Original Price</div>
+                  <div class="w-tg-val" style="text-decoration:line-through;color:#64748b;">৳${item.originalPrice}</div>
+                </div>
+
+                <div class="w-tg-cell">
+                  <div class="w-tg-lbl">Store Discount</div>
+                  <div class="w-tg-val" style="color:#ef4444;">-৳${item.discountSaving}</div>
+                </div>
+
+                <div class="w-tg-cell">
+                  <div class="w-tg-lbl">Final Paid Price</div>
+                  <div class="w-tg-val" style="color:#111827;">৳${item.paidAmount}</div>
+                </div>
+
+                <div class="w-tg-cell">
+                  <div class="w-tg-lbl">MFS / Card Cashback</div>
+                  <div class="w-tg-val" style="color:#3b82f6;">+৳${item.cashback}</div>
+                </div>
+
+                <div class="w-tg-cell" style="background:#dcfce7;border-color:#bbf7d0;">
+                  <div class="w-tg-lbl" style="color:#15803d;">Total Net Savings</div>
+                  <div class="w-tg-val" style="color:#16a34a;">৳${item.netSavings}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addCustomPurchasePrompt() {
+      if (window.OMWallet) {
+        window.OMWallet.addCustomPurchase();
+        renderWalletPage();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      renderWalletPage();
+    });
+  </script>
+</body>
+
+</html>
+
+</html>

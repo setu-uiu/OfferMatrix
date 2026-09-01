@@ -2,7 +2,7 @@
  * OfferMatrix Central Data Store (OMStore)
  * Manages state across Dashboard, Price Alerts, Orders, Saved Deals, Coupons, Community Reviews, and Category Complain Modules.
  */
-(function() {
+(function () {
   const STORE_KEY = 'offer_matrix_store_v4';
 
   const defaultState = {
@@ -168,6 +168,8 @@
         store: 'Kacchi Bhai - Dhanmondi',
         category: 'food',
         total: 299,
+        oldPrice: 420,
+        cashback: 50,
         status: 'in_transit',
         statusText: 'Preparing / In Transit',
         date: 'Today, 1:45 PM',
@@ -181,6 +183,8 @@
         store: 'Pathao Rides',
         category: 'ride',
         total: 450,
+        oldPrice: 600,
+        cashback: 50,
         status: 'completed',
         statusText: 'Completed',
         date: 'Yesterday, 6:30 PM',
@@ -194,6 +198,8 @@
         store: 'Beautybooth BD',
         category: 'skincare',
         total: 2100,
+        oldPrice: 2750,
+        cashback: 100,
         status: 'delivered',
         statusText: 'Delivered',
         date: '24 Aug 2026',
@@ -207,6 +213,8 @@
         store: 'Pizza Hut',
         category: 'food',
         total: 650,
+        oldPrice: 880,
+        cashback: 50,
         status: 'completed',
         statusText: 'Completed',
         date: '20 Aug 2026',
@@ -220,6 +228,8 @@
         store: 'Uber BD',
         category: 'ride',
         total: 1850,
+        oldPrice: 2400,
+        cashback: 100,
         status: 'completed',
         statusText: 'Completed',
         date: '15 Aug 2026',
@@ -233,6 +243,8 @@
         store: 'Cosmetica BD',
         category: 'skincare',
         total: 950,
+        oldPrice: 1250,
+        cashback: 50,
         status: 'completed',
         statusText: 'Completed',
         date: '10 Aug 2026',
@@ -961,6 +973,51 @@
       return newTicket;
     }
 
+    // ── PURCHASE SAVINGS CALCULATIONS ──
+    getPurchaseSavings(categoryFilter) {
+      if (!this.state || !this.state.orders) return 0;
+      const targetCategory = (categoryFilter || 'all').toLowerCase();
+
+      let totalSavings = 0;
+      this.state.orders.forEach(order => {
+        const cat = (order.category || 'food').toLowerCase();
+        if (targetCategory === 'all' || cat === targetCategory) {
+          const total = Number(order.total || order.price || 0);
+          const oldPrice = Number(order.oldPrice || Math.round(total * 1.35));
+          const cashback = Number(order.cashback || 50);
+          const discountSaving = Math.max(0, oldPrice - total);
+          totalSavings += (discountSaving + cashback);
+        }
+      });
+      return Math.round(totalSavings);
+    }
+
+    getOrdersSavingsBreakdown(categoryFilter) {
+      if (!this.state || !this.state.orders) return [];
+      const targetCategory = (categoryFilter || 'all').toLowerCase();
+
+      return this.state.orders
+        .filter(order => {
+          const cat = (order.category || 'food').toLowerCase();
+          return targetCategory === 'all' || cat === targetCategory;
+        })
+        .map(order => {
+          const total = Number(order.total || order.price || 0);
+          const oldPrice = Number(order.oldPrice || Math.round(total * 1.35));
+          const cashback = Number(order.cashback || 50);
+          const discountSaving = Math.max(0, oldPrice - total);
+          const netSavings = discountSaving + cashback;
+          return {
+            ...order,
+            originalPrice: oldPrice,
+            paidAmount: total,
+            discountSaving: discountSaving,
+            cashback: cashback,
+            netSavings: netSavings
+          };
+        });
+    }
+
     // ── BADGE SYNCHRONIZATION ──
     updateBadges() {
       if (!this.state || !this.state.savedDeals) return;
@@ -997,7 +1054,7 @@
 
       document.querySelectorAll('#tb-name, .tb-uname').forEach(el => el.textContent = name);
       document.querySelectorAll('.tb-umeta').forEach(el => el.textContent = tier);
-      
+
       document.querySelectorAll('.tb-avatar img, img.tb-avatar, .tb-user img').forEach(img => {
         img.src = avatar;
       });
@@ -1010,6 +1067,275 @@
         }
       });
     }
+
+    applySkyThemeIfFood() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const cat = urlParams.get('cat');
+      const tab = urlParams.get('tab');
+      const isFood = (cat === 'food' || tab === 'food');
+
+      if (isFood) {
+        document.body.classList.add('food-sky-theme');
+      }
+      this.syncSkySidebarLinks();
+    }
+
+    syncSkySidebarLinks() {
+      const p = new URLSearchParams(window.location.search);
+      const isRide = document.body.classList.contains('ride-theme') || p.get('cat') === 'ride' || p.get('tab') === 'ride' || window.location.pathname.toLowerCase().includes('ride');
+      const isSky = document.body.classList.contains('food-sky-theme') || p.get('cat') === 'food' || p.get('tab') === 'food';
+
+      if (isRide) {
+        document.body.classList.add('ride-theme');
+      }
+
+      const sbItems = document.querySelectorAll('.sb-item');
+      const complaintBtn = document.getElementById('sb-complaints-btn') || document.querySelector('.sb-item.sb-red');
+      const complaintLabel = document.getElementById('sb-complaint-label');
+
+      if (isRide) {
+        if (complaintLabel) {
+          complaintLabel.textContent = 'Ride complain';
+        } else if (complaintBtn) {
+          const ico = complaintBtn.querySelector('.sb-ico');
+          const badge = complaintBtn.querySelector('.sb-badge');
+          const icoHtml = ico ? ico.outerHTML : '<span class="sb-ico">&#128680;</span>';
+          const badgeHtml = badge ? badge.outerHTML : '<span class="sb-badge red">Alert</span>';
+          complaintBtn.innerHTML = `${icoHtml} <span id="sb-complaint-label">Ride complain</span> ${badgeHtml}`;
+        }
+      } else if (isSky) {
+        if (complaintLabel) {
+          complaintLabel.textContent = 'Viral Restaurant Raid';
+        } else if (complaintBtn) {
+          const ico = complaintBtn.querySelector('.sb-ico');
+          const badge = complaintBtn.querySelector('.sb-badge');
+          const icoHtml = ico ? ico.outerHTML : '<span class="sb-ico">&#128680;</span>';
+          const badgeHtml = badge ? badge.outerHTML : '<span class="sb-badge red">Alert</span>';
+          complaintBtn.innerHTML = `${icoHtml} <span id="sb-complaint-label">Viral Restaurant Raid</span> ${badgeHtml}`;
+        }
+      }
+
+      sbItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes('wallet')) {
+          item.onclick = (e) => {
+            e.preventDefault();
+            const cat = isRide ? 'ride' : (isSky ? 'food' : '');
+            window.location.href = cat ? 'wallet.html?cat=' + cat : 'wallet.html';
+          };
+        } else if (text.includes('bank cards')) {
+          item.onclick = (e) => {
+            e.preventDefault();
+            const cat = isRide ? 'ride' : '';
+            window.location.href = cat ? 'bank-cards.html?cat=' + cat : 'bank-cards.html';
+          };
+        } else if (text.includes('refer')) {
+          item.onclick = (e) => {
+            e.preventDefault();
+            if (window.OMReferral) window.OMReferral.open();
+          };
+        } else if (text.includes('orders')) {
+          item.onclick = (e) => { e.preventDefault(); window.location.href = isRide ? 'orders.html?cat=ride' : (isSky ? 'orders.html?cat=food' : 'orders.html'); };
+        } else if (text.includes('saved deals')) {
+          item.onclick = (e) => { e.preventDefault(); window.location.href = isRide ? 'saved-deals.html?cat=ride' : (isSky ? 'saved-deals.html?cat=food' : 'saved-deals.html'); };
+        } else if (text.includes('price alerts')) {
+          item.onclick = (e) => { e.preventDefault(); window.location.href = isRide ? 'price-alerts.html?cat=ride' : (isSky ? 'price-alerts.html?cat=food' : 'price-alerts.html'); };
+        } else if (text.includes('coupons')) {
+          item.onclick = (e) => { e.preventDefault(); window.location.href = isRide ? 'coupons.html?cat=ride' : (isSky ? 'coupons.html?cat=food' : 'coupons.html'); };
+        } else if (text.includes('reviews')) {
+          item.onclick = (e) => { e.preventDefault(); window.location.href = isRide ? 'reviews.html?cat=ride' : (isSky ? 'reviews.html?cat=food' : 'reviews.html'); };
+        } else if (text.includes('viral restaurant raid') || text.includes('complain issues') || text.includes('ride complain')) {
+          item.onclick = (e) => {
+            e.preventDefault();
+            if (isRide) {
+              window.location.href = 'ride-complaints.html';
+            } else if (isSky) {
+              window.location.href = 'viral-restaurant-raid.html?cat=food';
+            } else {
+              window.location.href = 'complaints.html';
+            }
+          };
+        } else if (text.includes('dashboard')) {
+          item.onclick = (e) => { e.preventDefault(); window.location.href = 'dashboard.html'; };
+        } else if (text.includes('food')) {
+          item.onclick = (e) => { e.preventDefault(); window.location.href = 'dashboard.html?tab=food'; };
+        } else if (text.includes('ride')) {
+          item.onclick = (e) => { e.preventDefault(); window.location.href = 'dashboard.html?tab=ride'; };
+        } else if (text.includes('skincare')) {
+          item.onclick = (e) => { e.preventDefault(); window.location.href = 'skincare.html'; };
+        }
+      });
+
+      // Bind invite button in sidebar
+      document.querySelectorAll('.btn-invite, .sb-invite').forEach(btn => {
+        if (btn.tagName === 'BUTTON' || btn.classList.contains('btn-invite')) {
+          btn.onclick = (e) => {
+            e.preventDefault();
+            if (window.OMReferral) window.OMReferral.open();
+          };
+        }
+      });
+    }
+  }
+
+  // Inject Light Sky Theme CSS Rules
+  if (typeof document !== 'undefined') {
+    const skyCss = `
+      body.food-sky-theme {
+        background-color: #f0f9ff !important;
+      }
+      body.food-sky-theme .sb-item.on,
+      body.food-sky-theme #sb-food.on {
+        background: linear-gradient(135deg, #0284c7, #38bdf8) !important;
+        color: #ffffff !important;
+        border-radius: 10px;
+      }
+      body.food-sky-theme .sb-item.on .sb-ico,
+      body.food-sky-theme #sb-food.on .sb-ico {
+        color: #ffffff !important;
+      }
+      body.food-sky-theme .sb-badge:not(.red) {
+        background: #0284c7 !important;
+        color: #ffffff !important;
+      }
+
+      /* Active Filter Tabs & Category Pills */
+      body.food-sky-theme .sd-tab-pill.active,
+      body.food-sky-theme .pa-tab-pill.active,
+      body.food-sky-theme .ord-tab-pill.active,
+      body.food-sky-theme .cpn-tab-pill.active,
+      body.food-sky-theme .rev-tab-pill.active,
+      body.food-sky-theme .pa-tab.active,
+      body.food-sky-theme .cpn-tab.active,
+      body.food-sky-theme .rev-tab.active,
+      body.food-sky-theme #tab-food,
+      body.food-sky-theme #tab-food.active,
+      body.food-sky-theme .pill.on,
+      body.food-sky-theme .cat-item.cat-on,
+      body.food-sky-theme .rtab.on {
+        background: #0284c7 !important;
+        color: #ffffff !important;
+        border-color: #0284c7 !important;
+      }
+      body.food-sky-theme .sd-tab-pill.active .sd-tab-badge,
+      body.food-sky-theme .pa-tab-pill.active .pa-tab-badge,
+      body.food-sky-theme .ord-tab-pill.active .ord-tab-badge,
+      body.food-sky-theme .cpn-tab-pill.active .cpn-tab-badge,
+      body.food-sky-theme .rev-tab-pill.active .rev-tab-badge,
+      body.food-sky-theme .pa-tab.active .pa-tab-badge,
+      body.food-sky-theme .cpn-tab.active .cpn-tab-badge,
+      body.food-sky-theme .rev-tab.active .rev-tab-badge,
+      body.food-sky-theme #tab-food span,
+      body.food-sky-theme #tab-food.active span,
+      body.food-sky-theme #tab-food .sd-tab-badge,
+      body.food-sky-theme #tab-food .pa-tab-badge {
+        background: #ffffff !important;
+        color: #0284c7 !important;
+      }
+
+      /* Deal & Alert Category Badges (FOOD Badges) */
+      body.food-sky-theme .cat-badge,
+      body.food-sky-theme .cat-badge.cat-food,
+      body.food-sky-theme .cat-food,
+      body.food-sky-theme .deal-off-badge,
+      body.food-sky-theme .ac-drop-tag {
+        background: #0284c7 !important;
+        color: #ffffff !important;
+        border-color: #0284c7 !important;
+      }
+
+      /* Buttons in Food Mode */
+      body.food-sky-theme .btn-search,
+      body.food-sky-theme .btn-invite,
+      body.food-sky-theme .btn-action,
+      body.food-sky-theme .btn-grab,
+      body.food-sky-theme .btn-track-order,
+      body.food-sky-theme .btn-upgrade,
+      body.food-sky-theme .btn-write-rev,
+      body.food-sky-theme .btn-copy-code,
+      body.food-sky-theme .btn-complain {
+        background: #0284c7 !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25) !important;
+      }
+      body.food-sky-theme .btn-view-det,
+      body.food-sky-theme .dp-btn {
+        color: #0284c7 !important;
+        border-color: #0284c7 !important;
+      }
+      body.food-sky-theme .btn-use {
+        border-color: #0284c7 !important;
+        color: #0284c7 !important;
+      }
+      body.food-sky-theme .btn-use:hover {
+        background: #0284c7 !important;
+        color: #ffffff !important;
+      }
+
+      /* Order Tracking & Order Summary (orders.html) */
+      body.food-sky-theme .tl-line.done,
+      body.food-sky-theme .tl-node.done {
+        background: #0284c7 !important;
+        color: #ffffff !important;
+      }
+      body.food-sky-theme .tl-node.active {
+        background: #ffffff !important;
+        border-color: #0284c7 !important;
+        color: #0284c7 !important;
+      }
+      body.food-sky-theme .bill-total-row,
+      body.food-sky-theme .pm-val,
+      body.food-sky-theme .pm-hd a,
+      body.food-sky-theme .sec-link,
+      body.food-sky-theme #cnt-active-label,
+      body.food-sky-theme #cnt-total-label,
+      body.food-sky-theme .bill-row[style*="pink"] {
+        color: #0284c7 !important;
+      }
+      body.food-sky-theme .pm-card {
+        background: #e0f2fe !important;
+        border-color: #bae6fd !important;
+      }
+      body.food-sky-theme .qa-card[style*="fff0f5"],
+      body.food-sky-theme .qa-card {
+        background: #e0f2fe !important;
+        border-color: #bae6fd !important;
+      }
+      body.food-sky-theme .qa-ico[style*="pink"],
+      body.food-sky-theme .qa-ico {
+        color: #0284c7 !important;
+      }
+
+      /* Links & Card Accent Titles */
+      body.food-sky-theme .card-link,
+      body.food-sky-theme .eta-link,
+      body.food-sky-theme .deal-title,
+      body.food-sky-theme .deal-price,
+      body.food-sky-theme .ac-price {
+        color: #0284c7 !important;
+      }
+
+      /* Food Page Hero Banner */
+      body.food-sky-theme #pg-food .hero,
+      body.food-sky-theme .hero {
+        background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #f0f9ff 100%) !important;
+        border: 1px solid #7dd3fc !important;
+      }
+      body.food-sky-theme .hero-title span {
+        color: #0284c7 !important;
+      }
+      body.food-sky-theme .sc-pill:hover {
+        border-color: #0284c7 !important;
+        color: #0284c7 !important;
+      }
+      body.food-sky-theme .sb-item:not(.on):hover {
+        color: #0284c7 !important;
+      }
+    `;
+    const styleEl = document.createElement('style');
+    styleEl.id = 'om-sky-theme-style';
+    styleEl.textContent = skyCss;
+    document.head.appendChild(styleEl);
   }
 
   // Initialize Global Store
@@ -1017,5 +1343,6 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     window.OMStore.updateBadges();
+    window.OMStore.applySkyThemeIfFood();
   });
 })();

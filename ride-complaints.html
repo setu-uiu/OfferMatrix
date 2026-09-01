@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ride Complaints & Rider Warnings - OfferMatrix</title>
+  <meta name="description"
+    content="Report rider misconduct, overpricing, bad vehicle conditions, and track public rider warnings on OfferMatrix." />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <script src="js/om-store.js"></script>
+  <script src="js/om-profile.js"></script>
+  <style>
+    :root {
+      --pink: #ff1a6e;
+      --pink-light: #fff0f5;
+      --pink-mid: #ffe4ec;
+      --dark: #111827;
+      --mid: #4b5563;
+      --light: #9ca3af;
+      --bg: #f8fafc;
+      --border: #f1f5f9;
+      --red: #921E1A;
+      --red-bg: #fef2f2;
+      --orange: #f97316;
+      --orange-bg: #fff7ed;
+      --font: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR STYLES */
+    .sb {
+      width: 240px;
+      background: #fff;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 1.2rem 0;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .sb::-webkit-scrollbar {
+      display: none;
+    }
+
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: 0 1.4rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sb-logo-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--pink);
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .sb-logo-text {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .sb-nav {
+      flex: 1;
+      padding: .8rem 0;
+    }
+
+    .sb-group {
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--light);
+      letter-spacing: 1px;
+      padding: 1rem 1.4rem .4rem;
+      text-transform: uppercase;
+    }
+
+    .sb-item {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      width: 100%;
+      padding: .65rem 1.4rem;
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--mid);
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: all .2s ease;
+      text-decoration: none;
+    }
+
+    .sb-item:hover {
+      background: #f1f5f9;
+      color: var(--dark);
+    }
+
+    .sb-item.on {
+      background: var(--red-bg);
+      color: var(--red);
+      font-weight: 800;
+      border-radius: 12px;
+      margin: 0 8px;
+      width: calc(100% - 16px);
+      border-right: none;
+    }
+
+    .sb-item.on .sb-ico {
+      color: var(--red);
+    }
+
+    .sb-badge {
+      margin-left: auto;
+      background: #e2e8f0;
+      color: #475569;
+      font-size: .7rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 50px;
+    }
+
+    .sb-badge.red {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+
+    .sb-invite {
+      margin: 1rem 1.2rem;
+      background: linear-gradient(135deg, #fff0f5 0%, #ffe4ec 100%);
+      border: 1px solid #fbcfe8;
+      border-radius: 16px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .sb-invite-emoji {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+
+    .sb-invite-title {
+      font-size: .85rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .sb-invite-sub {
+      font-size: .7rem;
+      color: #64748b;
+      margin: 2px 0 8px;
+    }
+
+    .btn-invite {
+      background: var(--pink);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: .75rem;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(255, 26, 110, 0.25);
+    }
+
+    /* MAIN CONTAINER */
+    .main {
+      margin-left: 240px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      height: 70px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .tb-search {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      background: var(--bg);
+      border: 1px solid #e2e8f0;
+      padding: .5rem 1rem;
+      border-radius: 50px;
+      width: 360px;
+    }
+
+    .tb-search input {
+      border: none;
+      background: none;
+      outline: none;
+      font-size: .85rem;
+      width: 100%;
+      color: var(--dark);
+    }
+
+    .tb-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .tb-icon-btn {
+      position: relative;
+      background: var(--bg);
+      border: 1px solid #e2e8f0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--mid);
+    }
+
+    .tb-saved {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--pink-light);
+      color: var(--pink);
+      border: 1px solid var(--pink-mid);
+      padding: .45rem 1rem;
+      border-radius: 50px;
+      font-size: .82rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .tb-user {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 50px;
+      transition: background .2s;
+    }
+
+    .tb-user:hover {
+      background: #f1f5f9;
+    }
+
+    .tb-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--pink);
+    }
+
+    .tb-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .tb-uname {
+      font-size: .85rem;
+      font-weight: 800;
+      color: var(--dark);
+    }
+
+    .tb-umeta {
+      font-size: .7rem;
+      color: var(--light);
+      font-weight: 600;
+    }
+
+    /* PAGE CONTENT */
+    .content {
+      padding: 2rem;
+      max-width: 1250px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* HEADER BANNER */
+    .rc-hdr {
+      background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+      color: #fff;
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 16px 36px rgba(153, 27, 27, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .rc-hdr-title {
+      font-size: 1.8rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rc-hdr-sub {
+      font-size: .9rem;
+      color: #fecaca;
+      margin-top: 6px;
+      max-width: 750px;
+      line-height: 1.5;
+    }
+
+    .btn-report-now {
+      background: #ffffff;
+      color: #991b1b;
+      border: none;
+      padding: .85rem 1.6rem;
+      border-radius: 50px;
+      font-size: .92rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-report-now:hover {
+      transform: translateY(-2px);
+      background: #fef2f2;
+    }
+
+    /* SUMMARY STATS GRID */
+    .rc-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 2rem;
+    }
+
+    .rc-stat-card {
+      background: #fff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+    }
+
+    .rc-sc-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 900;
+    }
+
+    .rc-sc-val {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #111827;
+    }
+
+    .rc-sc-lbl {
+      font-size: .75rem;
+      color: #64748b;
+      font-weight: 700;
+    }
+
+    /* FILTER TABS & SEARCH BAR */
+    .rc-filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .rc-tabs {
+      display: flex;
+      gap: 8px;
+      background: #fff;
+      padding: 6px;
+      border-radius: 50px;
+      border: 1.5px solid #e2e8f0;
+    }
+
+    .rc-tab-btn {
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: .82rem;
+      font-weight: 800;
+      color: #64748b;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .rc-tab-btn.active {
+      background: #ef4444;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    /* PUBLIC RIDER COMPLAINT CARDS GRID */
+    .rc-complaints-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+
+    .rc-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 22px;
+      padding: 1.6rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+      transition: all .2s;
+    }
+
+    .rc-card:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .rc-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      margin-bottom: 1.1rem;
+    }
+
+    .rc-rider-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .rc-rider-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2.5px solid #ef4444;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+    }
+
+    .rc-rider-name {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rc-rider-meta {
+      font-size: .8rem;
+      color: #64748b;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .rc-rider-tag {
+      background: #fee2e2;
+      color: #991b1b;
+      font-size: .7rem;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 50px;
+    }
+
+    .rc-complaint-badge {
+      background: #ef4444;
+      color: #fff;
+      font-size: .75rem;
+      font-weight: 800;
+      padding: 5px 14px;
+      border-radius: 50px;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+    }
+
+    /* OFFENDING RIDER CREDENTIALS BOX */
+    .rc-cred-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: .9rem 1.2rem;
+      margin-bottom: 1.1rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .rc-cb-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rc-cb-lbl {
+      font-size: .68rem;
+      color: #64748b;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .rc-cb-val {
+      font-size: .88rem;
+      font-weight: 900;
+      color: #111827;
+      margin-top: 2px;
+    }
+
+    .rc-desc {
+      font-size: .92rem;
+      color: #334155;
+      line-height: 1.6;
+      margin-bottom: 1.1rem;
+    }
+
+    /* UPLOADED PROOF IMAGES GALLERY */
+    .rc-evidence-grid {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 1.2rem;
+    }
+
+    .rc-evidence-img {
+      width: 120px;
+      height: 90px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1.5px solid #cbd5e1;
+      cursor: pointer;
+      transition: transform .2s;
+    }
+
+    .rc-evidence-img:hover {
+      transform: scale(1.04);
+    }
+
+    .rc-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1rem;
+      border-top: 1px dashed #cbd5e1;
+    }
+
+    .rc-reporter {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .78rem;
+      color: #64748b;
+    }
+
+    .rc-reporter-img {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+    }
+
+    .rc-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-warn {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: .78rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all .2s;
+    }
+
+    .btn-warn:hover {
+      background: #fca5a5;
+      color: #7f1d1d;
+    }
+
+    /* MODAL FORM STYLES */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 620px;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 1px solid #e2e8f0;
+    }
+
+    .modal-hdr {
+      padding: 1.2rem 1.6rem;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: #ffffff;
+      z-index: 10;
+    }
+
+    .modal-body {
+      padding: 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: .82rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: .7rem 1rem;
+      font-size: .88rem;
+      outline: none;
+      color: #111827;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: #ef4444;
+      background: #ffffff;
+    }
+
+    .img-upload-box {
+      border: 2px dashed #cbd5e1;
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 1.4rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .img-upload-box:hover {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- STANDARDIZED SIDEBAR -->
+  <aside class="sb">
+    <div class="sb-logo">
+      <div class="sb-logo-icon">%</div>
+      <span class="sb-logo-text">Offer<span style="color:#22c55e">Matrix</span></span>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-group">MAIN</div>
+      <button class="sb-item" onclick="window.location.href='dashboard.html'"><span class="sb-ico">&#127968;</span>
+        Dashboard</button>
+      <button class="sb-item" onclick="window.location.href='dashboard.html?tab=food'"><span
+          class="sb-ico">&#127860;</span> Food</button>
+      <button class="sb-item" onclick="window.location.href='dashboard.html?tab=ride'"><span
+          class="sb-ico">&#128663;</span> Ride</button>
+      <button class="sb-item" onclick="window.location.href='skincare.html'"><span class="sb-ico">&#128167;</span>
+        Skincare</button>
+      <button class="sb-item" onclick="window.location.href='orders.html'"><span class="sb-ico">&#128230;</span> Orders
+        <span class="sb-badge sb-badge-orders">6</span></button>
+      <button class="sb-item" onclick="window.location.href='saved-deals.html'"><span class="sb-ico">&#10084;</span>
+        Saved Deals <span class="sb-badge sb-badge-saved">6</span></button>
+      <button class="sb-item" onclick="window.location.href='price-alerts.html'"><span class="sb-ico">&#128276;</span>
+        Price Alerts <span class="sb-badge sb-badge-alerts">5</span></button>
+      <button class="sb-item" onclick="window.location.href='coupons.html'"><span class="sb-ico">&#127915;</span>
+        Coupons</button>
+      <button class="sb-item" onclick="window.location.href='reviews.html'"><span class="sb-ico">&#11088;</span>
+        Reviews</button>
+
+      <div class="sb-group">COMMUNITY</div>
+      <button class="sb-item on sb-red"><span class="sb-ico">&#128680;</span> <span>Ride complain</span> <span
+          class="sb-badge red">Alert</span></button>
+      <button class="sb-item" onclick="window.location.href='wallet.html'"><span class="sb-ico">&#128179;</span> My
+        Wallet</button>
+      <button class="sb-item" onclick="window.location.href='bank-cards.html'"><span class="sb-ico">&#128179;</span>
+        Bank Cards</button>
+      <button class="sb-item" onclick="window.OMReferral && window.OMReferral.open()"><span
+          class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
+
+      <div class="sb-group">ACCOUNT</div>
+      <button class="sb-item"><span class="sb-ico">&#9881;</span> Settings</button>
+      <button class="sb-item"><span class="sb-ico">&#10067;</span> Help &amp; Support</button>
+      <button class="sb-item sb-red" onclick="window.location.href='index.html'"><span class="sb-ico">&#128682;</span>
+        Log Out</button>
+    </nav>
+
+    <div class="sb-invite">
+      <div class="sb-invite-emoji">&#127873;</div>
+      <div class="sb-invite-title">Invite & Earn</div>
+      <div class="sb-invite-sub">Invite your friends and earn exciting rewards</div>
+      <button class="btn-invite" onclick="window.OMReferral && window.OMReferral.open()">Invite Now</button>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEW -->
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input type="text" id="rc-search-input" placeholder="Search rider name, ID, license plate or phone..."
+          onkeyup="filterRiderComplaints()" />
+      </div>
+      <div class="tb-actions">
+        <button class="tb-icon-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+        </button>
+        <button class="tb-saved" onclick="window.location.href='saved-deals.html'"><svg width="16" height="16"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg> Saved</button>
+        <div class="tb-user">
+          <div class="tb-avatar"><img
+              src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100"
+              alt="Avatar" /></div>
+          <div>
+            <div class="tb-uname" id="tb-name">Setu Meherunnesa</div>
+            <div class="tb-umeta">Platinum Member</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT AREA -->
+    <div class="content">
+      <!-- HEADER BANNER -->
+      <div class="rc-hdr">
+        <div>
+          <div class="rc-hdr-title">🚨 Public Ride Complaints & Rider Warning Database</div>
+          <div class="rc-hdr-sub">Reported incidents of rider misconduct, overprice demands, bad car conditions, and
+            offline trip coercion. View verified rider picture, license plate, and rider ID to protect yourself.</div>
+        </div>
+        <button class="btn-report-now" onclick="openReportModal()">
+          <span>➕ Report Misbehaving Rider</span>
+        </button>
+      </div>
+
+      <!-- STATS OVERVIEW -->
+      <div class="rc-stats-grid">
+        <div class="rc-stat-card">
+          <div class="rc-sc-icon" style="background:#fee2e2;color:#ef4444;">🛑</div>
+          <div>
+            <div class="rc-sc-val" id="st-total-reports">184</div>
+            <div class="rc-sc-lbl">Total Flagged Riders</div>
+          </div>
+        </div>
+
+        <div class="rc-stat-card">
+          <div class="rc-sc-icon" style="background:#fff7ed;color:#ea580c;">💸</div>
+          <div>
+            <div class="rc-sc-val">89</div>
+            <div class="rc-sc-lbl">Overprice / Extra Cash</div>
+          </div>
+        </div>
+
+        <div class="rc-stat-card">
+          <div class="rc-sc-icon" style="background:#fef2f2;color:#dc2626;">🗣️</div>
+          <div>
+            <div class="rc-sc-val">54</div>
+            <div class="rc-sc-lbl">Rider Misbehavior</div>
+          </div>
+        </div>
+
+        <div class="rc-stat-card">
+          <div class="rc-sc-icon" style="background:#eff6ff;color:#2563eb;">🚗</div>
+          <div>
+            <div class="rc-sc-val">41</div>
+            <div class="rc-sc-lbl">Bad Car Condition</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTER TABS & BAR -->
+      <div class="rc-filter-bar">
+        <div class="rc-tabs">
+          <button class="rc-tab-btn active" data-cat="all" onclick="filterTab('all')">All Ride Complaints</button>
+          <button class="rc-tab-btn" data-cat="misbehave" onclick="filterTab('misbehave')">🛑 Rider Misbehave</button>
+          <button class="rc-tab-btn" data-cat="overprice" onclick="filterTab('overprice')">💸 Overprice Demand</button>
+          <button class="rc-tab-btn" data-cat="car" onclick="filterTab('car')">🚗 Car Was Not Good</button>
+          <button class="rc-tab-btn" data-cat="reckless" onclick="filterTab('reckless')">⚠️ Reckless Driving</button>
+        </div>
+        <div style="font-size:0.85rem;color:#64748b;font-weight:700;">Public Safety Feed (Updated Live)</div>
+      </div>
+
+      <!-- PUBLIC COMPLAINTS LIST -->
+      <div class="rc-complaints-list" id="rc-complaints-container">
+        <!-- Dynamic Cards -->
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT RIDER MODAL FORM -->
+  <div class="modal-overlay" id="modal-report-rider">
+    <div class="modal-card">
+      <div class="modal-hdr">
+        <div style="font-size:1.15rem;font-weight:900;color:#111827;display:flex;align-items:center;gap:8px;">
+          <span>🚨 Report Misbehaving or Overcharging Rider</span>
+        </div>
+        <button onclick="closeReportModal()"
+          style="border:none;background:none;font-size:1.2rem;cursor:pointer;color:#64748b;">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Rider Full Name *</label>
+            <input type="text" id="frm-rider-name" class="form-input" placeholder="e.g. Rafiqul Islam" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Rider ID / App Account #</label>
+            <input type="text" id="frm-rider-id" class="form-input" placeholder="e.g. Pathao #88491" />
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Vehicle License Plate Number *</label>
+            <input type="text" id="frm-rider-plate" class="form-input" placeholder="e.g. Dhaka Metro-GA 14-8829"
+              required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Rider Phone / Contact Number</label>
+            <input type="text" id="frm-rider-phone" class="form-input" placeholder="e.g. 01711-234567" />
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Ride Platform App *</label>
+            <select id="frm-rider-platform" class="form-select">
+              <option value="Pathao Ride">Pathao Ride</option>
+              <option value="Uber BD">Uber BD</option>
+              <option value="Shohoz Ride">Shohoz Ride</option>
+              <option value="CNG Auto">CNG Auto Meter</option>
+              <option value="InDrive BD">InDrive BD</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Complaint Issue Category *</label>
+            <select id="frm-rider-category" class="form-select">
+              <option value="misbehave">🛑 Rider Misbehave / Abusive Behavior</option>
+              <option value="overprice">💸 Overprice Take / Demanded Extra Cash</option>
+              <option value="car">🚗 Car Was Not Good / Damaged Vehicle / No AC</option>
+              <option value="reckless">⚠️ Reckless / Dangerous Speeding</option>
+              <option value="offline">📱 Offline Trip Demanded / App Canceled</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Incident Location & Date *</label>
+          <input type="text" id="frm-rider-loc" class="form-input"
+            placeholder="e.g. Dhanmondi 27 to Gulshan 1 • Today 2:30 PM" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Detailed Description of What Happened *</label>
+          <textarea id="frm-rider-desc" class="form-textarea" rows="3"
+            placeholder="Describe the incident in detail (e.g. Rider demanded ৳150 extra cash over app fare, misbehaved when refused, and car AC was broken)..."
+            required></textarea>
+        </div>
+
+        <!-- IMAGE UPLOAD PROOF FIELD -->
+        <div class="form-group">
+          <label class="form-label">Upload Photo Evidence / Screenshot (Rider Picture, Vehicle Plate, Receipt)</label>
+          <div class="img-upload-box" onclick="document.getElementById('frm-img-file').click()">
+            <div style="font-size:1.8rem;margin-bottom:4px;">📸</div>
+            <div style="font-size:0.85rem;font-weight:800;color:#111827;">Click to Upload Evidence Photo or Screenshot
+            </div>
+            <div style="font-size:0.72rem;color:#64748b;margin-top:2px;">Supports JPG, PNG photos up to 10MB</div>
+            <input type="file" id="frm-img-file" accept="image/*" style="display:none;"
+              onchange="handleImageUpload(event)" />
+          </div>
+          <div id="img-preview-container" style="display:none;margin-top:8px;align-items:center;gap:10px;">
+            <img id="img-preview" src=""
+              style="width:70px;height:70px;border-radius:10px;object-fit:cover;border:1px solid #ef4444;" />
+            <span style="font-size:0.78rem;color:#16a34a;font-weight:800;">✓ Evidence Image Ready</span>
+          </div>
+        </div>
+
+        <button class="btn-invite" style="background:#ef4444;padding:12px;font-size:0.92rem;margin-top:8px;"
+          onclick="submitRiderReport()">🚨 Submit Public Rider Warning Report</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let uploadedImageBase64 = null;
+    let currentFilterCat = 'all';
+
+    const INITIAL_RIDER_COMPLAINTS = [
+      {
+        id: 'RC-9981',
+        riderName: 'Rafiqul Islam',
+        riderAvatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=200',
+        riderId: 'Pathao #88491',
+        licensePlate: 'Dhaka Metro-GA 14-8829',
+        phone: '01712-984210',
+        platform: 'Pathao Ride',
+        category: 'overprice',
+        categoryBadge: '💸 Overprice Take (Demanded ৳150 Extra)',
+        location: 'Dhanmondi 3A to Airport • Today 1:45 PM',
+        description: 'Rider agreed to app fare of ৳450, but after reaching Airport he locked the doors and aggressively demanded ৳150 extra cash claiming traffic jams. When I refused, he started shouting and misbehaving in public.',
+        evidenceImgs: [
+          'https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=300'
+        ],
+        reporterName: 'Mehedi Hasan',
+        reporterAvatar: 'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=100',
+        warnsCount: 142
+      },
+      {
+        id: 'RC-9975',
+        riderName: 'Sumon Hossain',
+        riderAvatar: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=200',
+        riderId: 'Uber #44192',
+        licensePlate: 'Dhaka Metro-HA 33-9182',
+        phone: '01819-334102',
+        platform: 'Uber BD',
+        category: 'misbehave',
+        categoryBadge: '🛑 Rider Misbehave / Abusive Language',
+        location: 'Gulshan 2 to Banani • Yesterday 8:20 PM',
+        description: 'Extreme abusive behavior and bad language! The driver refused to follow GPS route, started arguing violently when asked to turn AC on, and forced me to drop off in the middle of a dark road.',
+        evidenceImgs: [
+          'https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg?auto=compress&cs=tinysrgb&w=300'
+        ],
+        reporterName: 'Setu Meherunnesa',
+        reporterAvatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100',
+        warnsCount: 189
+      },
+      {
+        id: 'RC-9964',
+        riderName: 'Mizanur Rahman',
+        riderAvatar: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=200',
+        riderId: 'Shohoz #11048',
+        licensePlate: 'Dhaka Metro-GA 22-4105',
+        phone: '01911-884219',
+        platform: 'Shohoz Ride',
+        category: 'car',
+        categoryBadge: '🚗 Car Was Not Good / Broken Seat & AC',
+        location: 'Uttara Sector 7 to Motijheel • 2 Days Ago',
+        description: 'Car condition was terrible and unsafe! The rear door latch was broken, AC was leaking dirty water into the back seat, and engine was making loud rattling noises during the entire 15km trip.',
+        evidenceImgs: [
+          'https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&cs=tinysrgb&w=300'
+        ],
+        reporterName: 'Tanvir Ahmed',
+        reporterAvatar: 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=100',
+        warnsCount: 96
+      },
+      {
+        id: 'RC-9950',
+        riderName: 'Jahangir Alam',
+        riderAvatar: 'https://images.pexels.com/photos/837358/pexels-photo-837358.jpeg?auto=compress&cs=tinysrgb&w=200',
+        riderId: 'CNG Auto #5519',
+        licensePlate: 'Dhaka Metro-TH 11-0941',
+        phone: '01670-112233',
+        platform: 'CNG Auto',
+        category: 'reckless',
+        categoryBadge: '⚠️ Reckless Driving & Red Light Run',
+        location: 'Farmgate to Shahbagh • 3 Days Ago',
+        description: 'Dangerous driving endangered my safety. The driver ran two red traffic lights near Karwan Bazar and was constantly talking on his phone while speeding through crowded intersections.',
+        evidenceImgs: [],
+        reporterName: 'Anika Rahman',
+        reporterAvatar: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=100',
+        warnsCount: 210
+      }
+    ];
+
+    function loadRiderComplaints() {
+      const stored = localStorage.getItem('om_ride_complaints');
+      let data;
+      if (!stored) {
+        data = INITIAL_RIDER_COMPLAINTS;
+      } else {
+        try {
+          data = JSON.parse(stored);
+        } catch (e) {
+          data = INITIAL_RIDER_COMPLAINTS;
+        }
+      }
+      if (Array.isArray(data)) {
+        data.forEach(item => {
+          if (Array.isArray(item.evidenceImgs)) {
+            item.evidenceImgs = item.evidenceImgs.filter(img => !img.includes('3762879'));
+          }
+        });
+        localStorage.setItem('om_ride_complaints', JSON.stringify(data));
+      }
+      return data;
+    }
+
+    function renderRiderComplaints() {
+      const complaints = loadRiderComplaints();
+      const q = (document.getElementById('rc-search-input').value || '').toLowerCase();
+      const container = document.getElementById('rc-complaints-container');
+      if (!container) return;
+
+      let filtered = complaints;
+
+      if (currentFilterCat !== 'all') {
+        filtered = filtered.filter(c => c.category === currentFilterCat);
+      }
+
+      if (q) {
+        filtered = filtered.filter(c =>
+          c.riderName.toLowerCase().includes(q) ||
+          c.riderId.toLowerCase().includes(q) ||
+          c.licensePlate.toLowerCase().includes(q) ||
+          c.phone.toLowerCase().includes(q) ||
+          c.description.toLowerCase().includes(q)
+        );
+      }
+
+      document.getElementById('st-total-reports').textContent = complaints.length;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="background:#fff;border:1px dashed #cbd5e1;padding:3rem;text-align:center;border-radius:20px;color:#94a3b8;font-size:0.92rem;font-weight:700;">No ride complaints found matching category "${currentFilterCat}" or search "${q}".</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(c => `
+        <div class="rc-card">
+          <div class="rc-card-header">
+            <div class="rc-rider-info">
+              <img class="rc-rider-avatar" src="${c.riderAvatar || 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=200'}" alt="${c.riderName}" />
+              <div>
+                <div class="rc-rider-name">
+                  <span>${c.riderName}</span>
+                  <span class="rc-rider-tag">${c.platform}</span>
+                </div>
+                <div class="rc-rider-meta">
+                  <span>📍 ${c.location}</span>
+                  <span>&bull; ID: <strong>${c.id}</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="rc-complaint-badge">${c.categoryBadge}</div>
+          </div>
+
+          <!-- OFFENDING RIDER CREDENTIALS & VEHICLE INFO BOX -->
+          <div class="rc-cred-box">
+            <div class="rc-cb-item">
+              <div class="rc-cb-lbl">Rider Name</div>
+              <div class="rc-cb-val">${c.riderName}</div>
+            </div>
+
+            <div class="rc-cb-item">
+              <div class="rc-cb-lbl">Vehicle Plate #</div>
+              <div class="rc-cb-val" style="color:#ef4444;">${c.licensePlate}</div>
+            </div>
+
+            <div class="rc-cb-item">
+              <div class="rc-cb-lbl">Rider ID / App #</div>
+              <div class="rc-cb-val">${c.riderId}</div>
+            </div>
+
+            <div class="rc-cb-item">
+              <div class="rc-cb-lbl">Phone Number</div>
+              <div class="rc-cb-val">${c.phone}</div>
+            </div>
+          </div>
+
+          <!-- INCIDENT DESCRIPTION -->
+          <div class="rc-desc">
+            "${c.description}"
+          </div>
+
+          <!-- USER PROOF EVIDENCE IMAGES -->
+          ${c.evidenceImgs && c.evidenceImgs.length > 0 ? `
+            <div class="rc-evidence-grid">
+              ${c.evidenceImgs.map(imgUrl => `
+                <img class="rc-evidence-img" src="${imgUrl}" alt="Proof" onclick="window.open('${imgUrl}', '_blank')" />
+              `).join('')}
+            </div>
+          ` : ''}
+
+          <div class="rc-card-footer">
+            <div class="rc-reporter">
+              <img class="rc-reporter-img" src="${c.reporterAvatar || 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100'}" alt="Reporter" />
+              <span>Reported by <strong>${c.reporterName}</strong></span>
+            </div>
+
+            <div class="rc-actions">
+              <button class="btn-warn" onclick="incrementWarning('${c.id}')">
+                <span>⚠️ Warned (${c.warnsCount})</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterTab(cat) {
+      currentFilterCat = cat;
+      document.querySelectorAll('.rc-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-cat') === cat);
+      });
+      renderRiderComplaints();
+    }
+
+    function filterRiderComplaints() {
+      renderRiderComplaints();
+    }
+
+    function openReportModal() {
+      document.getElementById('modal-report-rider').style.display = 'flex';
+    }
+
+    function closeReportModal() {
+      document.getElementById('modal-report-rider').style.display = 'none';
+    }
+
+    function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          uploadedImageBase64 = event.target.result;
+          document.getElementById('img-preview').src = uploadedImageBase64;
+          document.getElementById('img-preview-container').style.display = 'flex';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function submitRiderReport() {
+      const name = document.getElementById('frm-rider-name').value.trim();
+      const plate = document.getElementById('frm-rider-plate').value.trim();
+      const loc = document.getElementById('frm-rider-loc').value.trim();
+      const desc = document.getElementById('frm-rider-desc').value.trim();
+
+      if (!name || !plate || !loc || !desc) {
+        alert('⚠️ Please fill in all required fields (Rider Name, Plate #, Location & Incident Description).');
+        return;
+      }
+
+      const idNum = document.getElementById('frm-rider-id').value.trim() || 'RIDER-ID #' + Math.floor(10000 + Math.random() * 90000);
+      const phoneNum = document.getElementById('frm-rider-phone').value.trim() || '01711-XXXXXX';
+      const platform = document.getElementById('frm-rider-platform').value;
+      const cat = document.getElementById('frm-rider-category').value;
+
+      let catBadge = '🛑 Rider Misbehave';
+      if (cat === 'overprice') catBadge = '💸 Overprice Take / Extra Cash';
+      if (cat === 'car') catBadge = '🚗 Car Was Not Good / Damaged Vehicle';
+      if (cat === 'reckless') catBadge = '⚠️ Reckless / Dangerous Speeding';
+      if (cat === 'offline') catBadge = '📱 Offline Trip Coercion';
+
+      const sampleAvatars = [
+        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=200',
+        'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=200',
+        'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=200'
+      ];
+
+      const newComplaint = {
+        id: 'RC-' + Math.floor(1000 + Math.random() * 9000),
+        riderName: name,
+        riderAvatar: sampleAvatars[Math.floor(Math.random() * sampleAvatars.length)],
+        riderId: idNum,
+        licensePlate: plate,
+        phone: phoneNum,
+        platform: platform,
+        category: cat,
+        categoryBadge: catBadge,
+        location: loc,
+        description: desc,
+        evidenceImgs: uploadedImageBase64 ? [uploadedImageBase64] : ['https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=300'],
+        reporterName: (localStorage.getItem('om_user_name') || 'Setu Meherunnesa'),
+        reporterAvatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100',
+        warnsCount: 1
+      };
+
+      const complaints = loadRiderComplaints();
+      complaints.unshift(newComplaint);
+      localStorage.setItem('om_ride_complaints', JSON.stringify(complaints));
+
+      closeReportModal();
+      renderRiderComplaints();
+
+      alert('🎉 Ride Complaint & Public Rider Warning Posted Successfully!\n\nOther commuters are now alerted about Rider ' + name + ' (' + plate + ').');
+    }
+
+    function incrementWarning(id) {
+      const complaints = loadRiderComplaints();
+      const item = complaints.find(c => c.id === id);
+      if (item) {
+        item.warnsCount += 1;
+        localStorage.setItem('om_ride_complaints', JSON.stringify(complaints));
+        renderRiderComplaints();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderRiderComplaints();
+    });
+  </script>
+</body>
+
+</html>

@@ -1140,10 +1140,14 @@
         Reviews</button>
 
       <div class="sb-group">COMMUNITY</div>
-      <button class="sb-item sb-red" onclick="window.location.href='complaints.html'"><span class="sb-ico">&#128680;</span> Complain Issues <span class="sb-badge red">Alert</span></button>
-      <button class="sb-item"><span class="sb-ico">&#128179;</span> My Wallet</button>
-      <button class="sb-item"><span class="sb-ico">&#128179;</span> Bank Cards</button>
-      <button class="sb-item"><span class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
+      <button class="sb-item sb-red" onclick="window.location.href='complaints.html'"><span
+          class="sb-ico">&#128680;</span> Complain Issues <span class="sb-badge red">Alert</span></button>
+      <button class="sb-item" onclick="window.OMWallet && window.OMWallet.open()"><span class="sb-ico">&#128179;</span>
+        My Wallet</button>
+      <button class="sb-item" onclick="window.OMBankCards && window.OMBankCards.open()"><span
+          class="sb-ico">&#128179;</span> Bank Cards</button>
+      <button class="sb-item" onclick="window.OMReferral && window.OMReferral.open()"><span
+          class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
 
       <div class="sb-group">ACCOUNT</div>
       <button class="sb-item"><span class="sb-ico">&#9881;</span> Settings</button>
@@ -1544,20 +1548,20 @@
           activeContainer.innerHTML = activeOrders.map(o => `
         <div class="act-ord-card" style="margin-bottom:.8rem">
           <div class="ao-left">
-            <div class="ao-logo" style="background:${o.logoBg || '#d70f64'}">${o.logoText || 'OM'}</div>
+            <div class="ao-logo" style="background:${o.logoBg || '#111827'}">${o.logoText || 'OM'}</div>
             <div>
-              <div class="ao-item-name">${o.items}</div>
-              <div class="ao-rest">${o.store}</div>
+              <div class="ao-item-name">${o.items || o.title || 'Ride Booking'}</div>
+              <div class="ao-rest">${o.store || 'Ride App'}</div>
               <div class="ao-meta">Order #${o.id} &bull; ${o.date}</div>
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:1.2rem">
-            <img class="ao-thumb" src="${o.img}" alt="Thumb"/>
+            <img class="ao-thumb" src="${o.img || 'https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=200'}" alt="Thumb"/>
             <div class="ao-status-box">
-              <span class="badge-preparing">In Transit</span>
-              <span class="ao-est">Est. Total: ৳${o.total}</span>
+              <span class="badge-preparing" style="background:#fee2e2;color:#921E1A;border:1px solid #fca5a5;">In Transit</span>
+              <span class="ao-est">Est. Total: ৳${o.total || o.paidAmount || 0}</span>
             </div>
-            <button class="btn-view-det" onclick="alert('Order #${o.id} is currently being tracked live!')">Track &rarr;</button>
+            <button class="btn-view-det btn-track" onclick="alert('Order #${o.id} is currently being tracked live!')">Track &rarr;</button>
           </div>
         </div>
       `).join('');
@@ -1574,16 +1578,16 @@
           recentContainer.innerHTML = displayOrders.map(o => `
         <div class="ro-row">
           <div class="ro-left">
-            <div class="ro-logo" style="background:${o.logoBg || '#d70f64'}">${o.logoText || 'OM'}</div>
+            <div class="ro-logo" style="background:${o.logoBg || '#111827'}">${o.logoText || 'OM'}</div>
             <div>
-              <div class="ro-name">${o.items}</div>
-              <div class="ro-sub">${o.store}</div>
+              <div class="ro-name">${o.items || o.title || 'Ride Booking'}</div>
+              <div class="ro-sub">${o.store || 'Ride App'}</div>
             </div>
           </div>
           <div class="ro-date">&#128197; ${o.date}</div>
           <span class="${o.status === 'delivered' ? 'badge-delivered' : 'badge-completed'}">${o.statusText || 'Completed'}</span>
-          <div class="ro-price">&#2547;${o.total}</div>
-          <button class="btn-view-det" onclick="handleReorder('${o.id}')">Reorder &circlearrowright;</button>
+          <div class="ro-price">&#2547;${o.total || o.paidAmount || 0}</div>
+          <button class="btn-view-det btn-reorder" onclick="handleReorder('${o.id}')">Reorder &circlearrowright;</button>
         </div>
       `).join('');
         }
@@ -1604,7 +1608,14 @@
       }
 
       window.addEventListener('DOMContentLoaded', function () {
-        renderOrdersPage('all');
+        var params = new URLSearchParams(window.location.search);
+        var catParam = params.get('cat');
+        if (catParam === 'food') {
+          document.body.classList.add('food-sky-theme');
+          renderOrdersPage('food');
+        } else {
+          renderOrdersPage(catParam && ['food', 'ride', 'skincare'].includes(catParam) ? catParam : 'all');
+        }
       });
     </script>
 

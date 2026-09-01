@@ -290,7 +290,7 @@
 
     /* PAYMENT HIGHLIGHT BANNER */
     .pay-banner {
-      background: linear-gradient(135deg, #111827, #1f2937);
+      background: linear-gradient(135deg, #9d174d 0%, #701a75 100%);
       border-radius: 20px;
       padding: 1.4rem 1.8rem;
       color: #fff;
@@ -298,18 +298,19 @@
       justify-content: space-between;
       align-items: center;
       gap: 1.5rem;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 24px rgba(157, 23, 77, 0.25);
     }
 
     .pb-title {
       font-size: 1.4rem;
       font-weight: 900;
       margin-bottom: 4px;
+      color: #ffffff;
     }
 
     .pb-sub {
       font-size: .8rem;
-      color: #9ca3af;
+      color: #fbcfe8;
       max-width: 480px;
       line-height: 1.4;
     }
@@ -570,10 +571,14 @@
         Reviews</button>
 
       <div class="sb-group">COMMUNITY</div>
-      <button class="sb-item sb-red" onclick="window.location.href='complaints.html'"><span class="sb-ico">&#128680;</span> Complain Issues <span class="sb-badge red">Alert</span></button>
-      <button class="sb-item"><span class="sb-ico">&#128179;</span> My Wallet</button>
-      <button class="sb-item"><span class="sb-ico">&#128179;</span> Bank Cards</button>
-      <button class="sb-item"><span class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
+      <button class="sb-item sb-red" onclick="window.location.href='complaints.html'"><span
+          class="sb-ico">&#128680;</span> Complain Issues <span class="sb-badge red">Alert</span></button>
+      <button class="sb-item" onclick="window.OMWallet && window.OMWallet.open()"><span class="sb-ico">&#128179;</span>
+        My Wallet</button>
+      <button class="sb-item" onclick="window.OMBankCards && window.OMBankCards.open()"><span
+          class="sb-ico">&#128179;</span> Bank Cards</button>
+      <button class="sb-item" onclick="window.OMReferral && window.OMReferral.open()"><span
+          class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
 
       <div class="sb-group">ACCOUNT</div>
       <button class="sb-item"><span class="sb-ico">&#9881;</span> Settings</button>
@@ -753,7 +758,14 @@
     }
 
     window.addEventListener('DOMContentLoaded', function () {
-      renderCoupons('all');
+      var params = new URLSearchParams(window.location.search);
+      var catParam = params.get('cat');
+      if (catParam === 'food') {
+        document.body.classList.add('food-sky-theme');
+        renderCoupons('food');
+      } else {
+        renderCoupons(catParam && ['food', 'ride', 'skincare', 'payment'].includes(catParam) ? catParam : 'all');
+      }
     });
   </script>
 

@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bank Cards & Discount Offers - OfferMatrix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <script src="js/om-store.js"></script>
+  <script src="js/om-profile.js"></script>
+  <style>
+    :root {
+      --pink: #ff1a6e;
+      --pink-light: #fff0f5;
+      --pink-mid: #ffe4ec;
+      --dark: #111827;
+      --mid: #4b5563;
+      --light: #9ca3af;
+      --bg: #f8fafc;
+      --border: #f1f5f9;
+      --green: #10b981;
+      --green-bg: #dcfce7;
+      --font: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR STYLES */
+    .sb {
+      width: 240px;
+      background: #fff;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 1.2rem 0;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .sb::-webkit-scrollbar {
+      display: none;
+    }
+
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: 0 1.4rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sb-logo-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--pink);
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .sb-logo-text {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .sb-nav {
+      flex: 1;
+      padding: .8rem 0;
+    }
+
+    .sb-group {
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--light);
+      letter-spacing: 1px;
+      padding: 1rem 1.4rem .4rem;
+      text-transform: uppercase;
+    }
+
+    .sb-item {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      width: 100%;
+      padding: .65rem 1.4rem;
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--mid);
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: all .2s ease;
+      text-decoration: none;
+    }
+
+    .sb-item:hover {
+      background: #f1f5f9;
+      color: var(--dark);
+    }
+
+    .sb-item.on {
+      background: var(--pink-light);
+      color: var(--pink);
+      font-weight: 800;
+      border-radius: 12px;
+      margin: 0 8px;
+      width: calc(100% - 16px);
+      border-right: none;
+    }
+
+    .sb-item.on .sb-ico {
+      color: var(--pink);
+    }
+
+    .sb-badge {
+      margin-left: auto;
+      background: #e2e8f0;
+      color: #475569;
+      font-size: .7rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 50px;
+    }
+
+    .sb-badge.red {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+
+    .sb-invite {
+      margin: 1rem 1.2rem;
+      background: linear-gradient(135deg, #fff0f5 0%, #ffe4ec 100%);
+      border: 1px solid #fbcfe8;
+      border-radius: 16px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .sb-invite-emoji {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+
+    .sb-invite-title {
+      font-size: .85rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .sb-invite-sub {
+      font-size: .7rem;
+      color: #64748b;
+      margin: 2px 0 8px;
+    }
+
+    .btn-invite {
+      background: var(--pink);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: .75rem;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(255, 26, 110, 0.25);
+    }
+
+    /* MAIN CONTAINER */
+    .main {
+      margin-left: 240px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      height: 70px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .tb-search {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      background: var(--bg);
+      border: 1px solid #e2e8f0;
+      padding: .5rem 1rem;
+      border-radius: 50px;
+      width: 340px;
+    }
+
+    .tb-search input {
+      border: none;
+      background: none;
+      outline: none;
+      font-size: .85rem;
+      width: 100%;
+      color: var(--dark);
+    }
+
+    .tb-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .tb-icon-btn {
+      position: relative;
+      background: var(--bg);
+      border: 1px solid #e2e8f0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--mid);
+    }
+
+    .tb-saved {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--pink-light);
+      color: var(--pink);
+      border: 1px solid var(--pink-mid);
+      padding: .45rem 1rem;
+      border-radius: 50px;
+      font-size: .82rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .tb-user {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 50px;
+      transition: background .2s;
+    }
+
+    .tb-user:hover {
+      background: #f1f5f9;
+    }
+
+    .tb-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--pink);
+    }
+
+    .tb-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .tb-uname {
+      font-size: .85rem;
+      font-weight: 800;
+      color: var(--dark);
+    }
+
+    .tb-umeta {
+      font-size: .7rem;
+      color: var(--light);
+      font-weight: 600;
+    }
+
+    /* FULL PAGE CONTENT */
+    .content {
+      padding: 2rem;
+      max-width: 1300px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* PAGE HEADER */
+    .bc-hdr-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .bc-title {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bc-sub {
+      font-size: .88rem;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    /* LINKED CARDS CAROUSEL */
+    .bc-portfolio-sec {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 24px;
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    }
+
+    .bc-sec-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .bc-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .om-card-item {
+      background: linear-gradient(135deg, #1e293b, #334155);
+      color: #fff;
+      border-radius: 18px;
+      padding: 1.2rem;
+      position: relative;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 140px;
+    }
+
+    .om-card-item.mfs {
+      background: linear-gradient(135deg, #d70f64, #e2136e);
+    }
+
+    .om-card-item.nagad {
+      background: linear-gradient(135deg, #ea580c, #f97316);
+    }
+
+    .om-card-brand {
+      font-size: .82rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .om-card-num {
+      font-size: 1.05rem;
+      letter-spacing: 2px;
+      font-weight: 700;
+      margin: 12px 0;
+      font-family: monospace;
+    }
+
+    .om-card-holder {
+      font-size: .72rem;
+      text-transform: uppercase;
+      color: #cbd5e1;
+    }
+
+    .om-card-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 2px 8px;
+      border-radius: 50px;
+      font-size: .65rem;
+      font-weight: 800;
+    }
+
+    /* 10 BANK CARDS & OFFERS GRID */
+    .bc-offers-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.4rem;
+    }
+
+    .bc-offer-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+      transition: all .2s;
+    }
+
+    .bc-offer-card:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .bc-oc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: .9rem;
+      border-bottom: 1px solid #f1f5f9;
+      margin-bottom: 1rem;
+    }
+
+    .bc-oc-bank {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bc-oc-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      color: #fff;
+      font-weight: 900;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bc-oc-name {
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #111827;
+    }
+
+    .bc-oc-type {
+      font-size: .75rem;
+      color: #64748b;
+      font-weight: 700;
+    }
+
+    /* 3 CATEGORY DISCOUNTS BREAKDOWN IN CARD */
+    .bc-discounts-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .bc-disc-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 8px 10px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .bc-disc-cat {
+      font-size: .68rem;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+
+    .bc-disc-val {
+      font-size: .95rem;
+      font-weight: 900;
+      color: #ff1a6e;
+      margin-top: 2px;
+    }
+
+    .bc-oc-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: .78rem;
+      color: #64748b;
+      border-top: 1px dashed #cbd5e1;
+      padding-top: .8rem;
+    }
+
+    .btn-use-deal {
+      background: linear-gradient(135deg, var(--pink), #ff4d8d);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: .78rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 26, 110, 0.25);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- STANDARDIZED SIDEBAR -->
+  <aside class="sb">
+    <div class="sb-logo">
+      <div class="sb-logo-icon">%</div>
+      <span class="sb-logo-text">Offer<span style="color:#22c55e">Matrix</span></span>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-group">MAIN</div>
+      <button class="sb-item" onclick="window.location.href='dashboard.html'"><span class="sb-ico">&#127968;</span>
+        Dashboard</button>
+      <button class="sb-item" onclick="window.location.href='dashboard.html?tab=food'"><span
+          class="sb-ico">&#127860;</span> Food</button>
+      <button class="sb-item" onclick="window.location.href='dashboard.html?tab=ride'"><span
+          class="sb-ico">&#128663;</span> Ride</button>
+      <button class="sb-item" onclick="window.location.href='skincare.html'"><span class="sb-ico">&#128167;</span>
+        Skincare</button>
+      <button class="sb-item" onclick="window.location.href='orders.html'"><span class="sb-ico">&#128230;</span> Orders
+        <span class="sb-badge sb-badge-orders">6</span></button>
+      <button class="sb-item" onclick="window.location.href='saved-deals.html'"><span class="sb-ico">&#10084;</span>
+        Saved Deals <span class="sb-badge sb-badge-saved">6</span></button>
+      <button class="sb-item" onclick="window.location.href='price-alerts.html'"><span class="sb-ico">&#128276;</span>
+        Price Alerts <span class="sb-badge sb-badge-alerts">5</span></button>
+      <button class="sb-item" onclick="window.location.href='coupons.html'"><span class="sb-ico">&#127915;</span>
+        Coupons</button>
+      <button class="sb-item" onclick="window.location.href='reviews.html'"><span class="sb-ico">&#11088;</span>
+        Reviews</button>
+
+      <div class="sb-group">COMMUNITY</div>
+      <button class="sb-item sb-red" onclick="window.location.href='complaints.html'"><span
+          class="sb-ico">&#128680;</span> <span id="sb-complaint-label">Complain Issues</span> <span
+          class="sb-badge red">Alert</span></button>
+      <button class="sb-item" onclick="window.location.href='wallet.html'"><span class="sb-ico">&#128179;</span> My
+        Wallet</button>
+      <button class="sb-item on"><span class="sb-ico">&#128179;</span> Bank Cards</button>
+      <button class="sb-item" onclick="window.OMReferral && window.OMReferral.open()"><span
+          class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
+
+      <div class="sb-group">ACCOUNT</div>
+      <button class="sb-item"><span class="sb-ico">&#9881;</span> Settings</button>
+      <button class="sb-item"><span class="sb-ico">&#10067;</span> Help &amp; Support</button>
+      <button class="sb-item sb-red" onclick="window.location.href='index.html'"><span class="sb-ico">&#128682;</span>
+        Log Out</button>
+    </nav>
+
+    <div class="sb-invite">
+      <div class="sb-invite-emoji">&#127873;</div>
+      <div class="sb-invite-title">Invite & Earn</div>
+      <div class="sb-invite-sub">Invite your friends and earn exciting rewards</div>
+      <button class="btn-invite" onclick="window.OMReferral && window.OMReferral.open()">Invite Now</button>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEW -->
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input type="text" id="bc-search-input" placeholder="Search 10 bank card offers (BRAC, bKash, EBL...)..."
+          onkeyup="filterCardOffers()" />
+      </div>
+      <div class="tb-actions">
+        <button class="tb-icon-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+        </button>
+        <button class="tb-saved" onclick="window.location.href='saved-deals.html'"><svg width="16" height="16"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg> Saved</button>
+        <div class="tb-user">
+          <div class="tb-avatar"><img
+              src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100"
+              alt="Avatar" /></div>
+          <div>
+            <div class="tb-uname" id="tb-name">Setu Meherunnesa</div>
+            <div class="tb-umeta">Platinum Member</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FULL PAGE CONTENT -->
+    <div class="content">
+      <div class="bc-hdr-row">
+        <div>
+          <div class="bc-title">💳 Bank Cards & Payment Discount Offers</div>
+          <div class="bc-sub">Explore 10 Bank & MFS payment card offers with exact discount percentages across Food,
+            Ride & Skincare.</div>
+        </div>
+      </div>
+
+      <!-- PORTFOLIO SECTION: LINKED CARDS -->
+      <div class="bc-portfolio-sec">
+        <div class="bc-sec-title">
+          <span>💳 Your Linked Payment Cards & Accounts</span>
+          <button class="btn-invite" style="width:auto;"
+            onclick="window.OMBankCards ? window.OMBankCards.open() : alert('Add Card')">➕ Link New Card</button>
+        </div>
+
+        <div class="bc-cards-grid">
+          <div class="om-card-item">
+            <div class="om-card-brand">
+              <span>BRAC BANK</span>
+              <span class="om-card-badge">VISA PLATINUM</span>
+            </div>
+            <div class="om-card-num">•••• •••• •••• 4829</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+              <div>
+                <div class="om-card-holder">Setu Meherunnesa</div>
+                <div style="font-size:0.65rem;color:#cbd5e1;margin-top:2px;">Exp: 12/28</div>
+              </div>
+              <div style="font-size:0.7rem;font-weight:800;color:#4ade80;">15% Food Discount</div>
+            </div>
+          </div>
+
+          <div class="om-card-item">
+            <div class="om-card-brand">
+              <span>CITY BANK</span>
+              <span class="om-card-badge">MASTERCARD</span>
+            </div>
+            <div class="om-card-num">•••• •••• •••• 9102</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+              <div>
+                <div class="om-card-holder">Setu Meherunnesa</div>
+                <div style="font-size:0.65rem;color:#cbd5e1;margin-top:2px;">Exp: 08/27</div>
+              </div>
+              <div style="font-size:0.7rem;font-weight:800;color:#60a5fa;">15% Ride Offer</div>
+            </div>
+          </div>
+
+          <div class="om-card-item mfs">
+            <div class="om-card-brand">
+              <span>bKash WALLET</span>
+              <span class="om-card-badge">MFS</span>
+            </div>
+            <div class="om-card-num">+880 1712-345678</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+              <div>
+                <div class="om-card-holder">Setu Meherunnesa</div>
+                <div style="font-size:0.65rem;color:#fbcfe8;margin-top:2px;">Verified bKash</div>
+              </div>
+              <div style="font-size:0.7rem;font-weight:800;color:#fff;">20% Food Cashback</div>
+            </div>
+          </div>
+
+          <div class="om-card-item nagad">
+            <div class="om-card-brand">
+              <span>NAGAD WALLET</span>
+              <span class="om-card-badge">MFS</span>
+            </div>
+            <div class="om-card-num">+880 1712-345678</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+              <div>
+                <div class="om-card-holder">Setu Meherunnesa</div>
+                <div style="font-size:0.65rem;color:#ffedd5;margin-top:2px;">Verified Nagad</div>
+              </div>
+              <div style="font-size:0.7rem;font-weight:800;color:#fff;">৳150 Flat Off Ride</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 CARDS DISCOUNT OFFERS MATRIX -->
+      <div style="font-size:1.1rem;font-weight:900;color:#111827;margin-bottom:1rem;">🎁 10 Bank & MFS Discount Offers
+        Breakdown (Food, Ride & Skincare)</div>
+
+      <div class="bc-offers-grid" id="bc-offers-matrix">
+        <!-- Dynamic 10 Cards populated via JS -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const BANK_CARDS_OFFERS = [
+      {
+        id: 'card-1',
+        bankName: 'BRAC Bank',
+        cardType: 'Visa Platinum Credit Card',
+        bg: '#003366',
+        icon: '🏦',
+        foodDiscount: '15% OFF (Max ৳150)',
+        rideDiscount: '10% Cashback',
+        skincareDiscount: '12% OFF',
+        minSpend: '৳300',
+        perks: 'Auto-applied at checkout'
+      },
+      {
+        id: 'card-2',
+        bankName: 'City Bank',
+        cardType: 'Mastercard Gold',
+        bg: '#006738',
+        icon: '🏦',
+        foodDiscount: '10% Cashback',
+        rideDiscount: '15% OFF (Max ৳150)',
+        skincareDiscount: '10% OFF',
+        minSpend: '৳250',
+        perks: 'Free Lounge & Delivery Perks'
+      },
+      {
+        id: 'card-3',
+        bankName: 'Eastern Bank (EBL)',
+        cardType: 'Visa Credit Card',
+        bg: '#1a237e',
+        icon: '🏦',
+        foodDiscount: '12% Instant OFF',
+        rideDiscount: '10% Cashback',
+        skincareDiscount: '15% OFF (Max ৳200)',
+        minSpend: '৳400',
+        perks: 'EBL SkyCoins Rewards'
+      },
+      {
+        id: 'card-4',
+        bankName: 'bKash MFS',
+        cardType: 'bKash Mobile Wallet',
+        bg: '#d70f64',
+        icon: '💳',
+        foodDiscount: '20% Instant Cashback',
+        rideDiscount: '15% Cashback',
+        skincareDiscount: '10% Cashback',
+        minSpend: '৳200',
+        perks: 'Instant bKash App Refund'
+      },
+      {
+        id: 'card-5',
+        bankName: 'Nagad MFS',
+        cardType: 'Nagad Digital Wallet',
+        bg: '#ea580c',
+        icon: '💳',
+        foodDiscount: '৳50 Flat OFF',
+        rideDiscount: '৳150 Flat OFF Intercity',
+        skincareDiscount: '৳100 Cashback',
+        minSpend: '৳300',
+        perks: 'Nagad Mela Promo Code'
+      },
+      {
+        id: 'card-6',
+        bankName: 'Rocket MFS',
+        cardType: 'DBBL Rocket Wallet',
+        bg: '#8b5cf6',
+        icon: '🚀',
+        foodDiscount: '৳25 Extra OFF',
+        rideDiscount: '10% OFF',
+        skincareDiscount: '12% Cashback',
+        minSpend: '৳300',
+        perks: 'DBBL Account Auto Cashback'
+      },
+      {
+        id: 'card-7',
+        bankName: 'Dutch-Bangla Bank',
+        cardType: 'NexusPay Debit Card',
+        bg: '#047857',
+        icon: '🏦',
+        foodDiscount: '10% Extra Cashback',
+        rideDiscount: '12% OFF',
+        skincareDiscount: '15% OFF',
+        minSpend: '৳350',
+        perks: 'NexusPay App Discount'
+      },
+      {
+        id: 'card-8',
+        bankName: 'Standard Chartered',
+        cardType: 'SCB Credit Card',
+        bg: '#0284c7',
+        icon: '🏦',
+        foodDiscount: '15% OFF Dining',
+        rideDiscount: '20% Airport Ride Off',
+        skincareDiscount: '10% Extra Discount',
+        minSpend: '৳500',
+        perks: '360 Rewards Points'
+      },
+      {
+        id: 'card-9',
+        bankName: 'Prime Bank',
+        cardType: 'Prime Visa Platinum',
+        bg: '#b91c1c',
+        icon: '🏦',
+        foodDiscount: '10% Instant Discount',
+        rideDiscount: '12% Cashback',
+        skincareDiscount: '15% OFF Beautybooth',
+        minSpend: '৳400',
+        perks: 'Monarch VIP Perks'
+      },
+      {
+        id: 'card-10',
+        bankName: 'HSBC Bank',
+        cardType: 'HSBC Visa Signature',
+        bg: '#dc2626',
+        icon: '🏦',
+        foodDiscount: '20% OFF Gourmet',
+        rideDiscount: '15% Cashback Premier',
+        skincareDiscount: '15% Cashback',
+        minSpend: '৳600',
+        perks: 'Global HSBC Points'
+      }
+    ];
+
+    function renderCardsOffers(offers) {
+      const container = document.getElementById('bc-offers-matrix');
+      if (!container) return;
+
+      container.innerHTML = offers.map(card => `
+        <div class="bc-offer-card">
+          <div class="bc-oc-header">
+            <div class="bc-oc-bank">
+              <div class="bc-oc-icon" style="background:${card.bg}">${card.bankName.slice(0, 2).toUpperCase()}</div>
+              <div>
+                <div class="bc-oc-name">${card.bankName}</div>
+                <div class="bc-oc-type">${card.cardType}</div>
+              </div>
+            </div>
+            <span style="font-size:0.7rem;font-weight:800;background:#f1f5f9;color:#475569;padding:4px 10px;border-radius:50px;">Min: ${card.minSpend}</span>
+          </div>
+
+          <div class="bc-discounts-row">
+            <div class="bc-disc-box" style="background:#fff0f5;border-color:#fbcfe8;">
+              <div class="bc-disc-cat" style="color:#d70f64">🍕 Food</div>
+              <div class="bc-disc-val" style="color:#d70f64">${card.foodDiscount}</div>
+            </div>
+
+            <div class="bc-disc-box" style="background:#eff6ff;border-color:#bfdbfe;">
+              <div class="bc-disc-cat" style="color:#1d4ed8">🚗 Ride</div>
+              <div class="bc-disc-val" style="color:#1d4ed8">${card.rideDiscount}</div>
+            </div>
+
+            <div class="bc-disc-box" style="background:#fdf2f8;border-color:#fbcfe8;">
+              <div class="bc-disc-cat" style="color:#be185d">✨ Skincare</div>
+              <div class="bc-disc-val" style="color:#be185d">${card.skincareDiscount}</div>
+            </div>
+          </div>
+
+          <div class="bc-oc-footer">
+            <span>💡 ${card.perks}</span>
+            <button class="btn-use-deal" onclick="alert('✅ ${card.bankName} discount active! Select ${card.bankName} at checkout.')">Use Card Offer &rarr;</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterCardOffers() {
+      const q = (document.getElementById('bc-search-input').value || '').toLowerCase();
+      const filtered = BANK_CARDS_OFFERS.filter(c =>
+        c.bankName.toLowerCase().includes(q) ||
+        c.cardType.toLowerCase().includes(q) ||
+        c.foodDiscount.toLowerCase().includes(q) ||
+        c.rideDiscount.toLowerCase().includes(q) ||
+        c.skincareDiscount.toLowerCase().includes(q)
+      );
+      renderCardsOffers(filtered);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCardsOffers(BANK_CARDS_OFFERS);
+    });
+  </script>
+</body>
+
+</html>
