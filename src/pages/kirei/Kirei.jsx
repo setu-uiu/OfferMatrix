@@ -12,6 +12,8 @@ import FeaturedProducts from './components/FeaturedProducts'
 import SpecialOffers    from './components/SpecialOffers'
 import NewArrivals      from './components/NewArrivals'
 
+import CompanyControlPanel from "../../components/offermatrix/CompanyControlPanel";
+
 // OfferMatrix intelligence layer
 import SmartDeal        from './components/SmartDeal'
 import PriceComparison  from './components/PriceComparison'
