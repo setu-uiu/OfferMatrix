@@ -90,7 +90,26 @@ export default function ChoiceLegacyPage() {
             </span>
           </div>
         </div>
+        {/* ── Company Control Panel ──────────────────────────── */}
+        <div className="bg-gradient-to-br from-[#FAF7F2] to-[#F0EBE0] py-10 md:py-12">
+          <div className="max-w-7xl mx-auto px-4">
+            <CompanyControlPanel
+              onDataSubmit={handleDataSubmit}
+              brandColor={CL_ACCENT}
+              companyName="Choice Legacy"
+            />
 
+            {/* Show instruction if no data submitted */}
+            {!companyData && (
+              <div className="text-center mt-8 p-6 bg-white/50 rounded-xl border-2 border-dashed border-gray-300">
+                <p className="text-gray-600 font-medium">
+                  👆 Fill in the control panel above to generate OfferMatrix analysis for your product
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+        
         {/* ── 9. Deal Score ─────────────────────────────────── */}
         <DealScore
           data={smartDealData}
