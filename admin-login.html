@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Admin Login – OfferMatrix Control Panel</title>
+  <meta name="description" content="Secure administrator login for the OfferMatrix Control Panel with 2FA verification." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --pink:#ff1a6e;--pink-light:#fff0f5;--green:#22c55e;
+      --text:#111827;--mid:#4b5563;--light:#9ca3af;--border:#e5e7eb;
+      --bg:#0f172a;--panel:#1e293b;--card:#fff;--font:'Inter',sans-serif;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font);background:var(--bg);min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none;}
+
+    /* BACKGROUND DECORATION */
+    .bg-blob{position:fixed;border-radius:50%;filter:blur(80px);opacity:.15;pointer-events:none;}
+    .blob-1{width:600px;height:600px;background:#ff1a6e;top:-200px;right:-150px;}
+    .blob-2{width:400px;height:400px;background:#a855f7;bottom:-150px;left:-100px;}
+    .blob-3{width:300px;height:300px;background:#3b82f6;top:50%;left:50%;transform:translate(-50%,-50%);}
+
+    /* GRID PATTERN */
+    .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+
+    /* CARD */
+    .login-wrap{position:relative;z-index:10;width:100%;max-width:440px;padding:1.5rem;}
+    .login-card{background:rgba(30,41,59,.95);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:2.5rem;backdrop-filter:blur(20px);box-shadow:0 25px 60px rgba(0,0,0,.5);}
+
+    /* LOGO */
+    .login-logo{display:flex;align-items:center;gap:.8rem;margin-bottom:2rem;justify-content:center;}
+    .logo-icon{width:48px;height:48px;background:var(--pink);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:900;color:#fff;box-shadow:0 8px 20px rgba(255,26,110,.4);}
+    .logo-text{font-size:1.5rem;font-weight:900;color:#fff;letter-spacing:-.3px;}
+    .logo-sub{font-size:.72rem;font-weight:600;color:#64748b;margin-top:1px;letter-spacing:.5px;text-transform:uppercase;}
+
+    /* HEADER */
+    .login-header{text-align:center;margin-bottom:2rem;}
+    .login-title{font-size:1.5rem;font-weight:900;color:#f1f5f9;letter-spacing:-.3px;}
+    .login-sub{font-size:.85rem;color:#64748b;margin-top:.4rem;}
+
+    /* STEP INDICATOR */
+    .steps{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:1.8rem;}
+    .step{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;transition:all .3s;}
+    .step-done{background:var(--green);color:#fff;}
+    .step-active{background:var(--pink);color:#fff;box-shadow:0 4px 12px rgba(255,26,110,.4);}
+    .step-pending{background:#334155;color:#64748b;}
+    .step-line{flex:1;height:2px;background:#334155;border-radius:2px;max-width:60px;}
+    .step-line.done{background:var(--green);}
+
+    /* FORM */
+    .form-group{margin-bottom:1.2rem;}
+    .form-label{font-size:.78rem;font-weight:700;color:#94a3b8;margin-bottom:.4rem;display:block;letter-spacing:.5px;text-transform:uppercase;}
+    .form-input{width:100%;background:#0f172a;border:1.5px solid #334155;border-radius:12px;padding:.85rem 1rem;font-size:.9rem;font-family:var(--font);color:#f1f5f9;outline:none;transition:all .2s;}
+    .form-input:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(255,26,110,.15);}
+    .form-input::placeholder{color:#475569;}
+    .input-icon-wrap{position:relative;}
+    .input-icon{position:absolute;right:1rem;top:50%;transform:translateY(-50%);color:#475569;cursor:pointer;font-size:1rem;}
+
+    /* 2FA OTP */
+    .otp-row{display:flex;gap:.6rem;justify-content:center;}
+    .otp-box{width:52px;height:58px;background:#0f172a;border:1.5px solid #334155;border-radius:12px;text-align:center;font-size:1.4rem;font-weight:900;color:#f1f5f9;outline:none;transition:all .2s;font-family:var(--font);}
+    .otp-box:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(255,26,110,.15);}
+
+    /* BUTTONS */
+    .btn-login{width:100%;background:linear-gradient(135deg,#ff1a6e,#be185d);color:#fff;border-radius:12px;padding:.9rem;font-size:.95rem;font-weight:800;transition:all .2s;box-shadow:0 6px 20px rgba(255,26,110,.35);}
+    .btn-login:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(255,26,110,.45);}
+    .btn-login:active{transform:none;}
+    .btn-login:disabled{background:#334155;color:#64748b;box-shadow:none;cursor:not-allowed;}
+
+    .btn-ghost{width:100%;background:transparent;border:1.5px solid #334155;color:#94a3b8;border-radius:12px;padding:.75rem;font-size:.88rem;font-weight:700;margin-top:.6rem;transition:all .2s;}
+    .btn-ghost:hover{border-color:#475569;color:#f1f5f9;}
+
+    /* DIVIDER */
+    .divider{display:flex;align-items:center;gap:.8rem;margin:1.2rem 0;}
+    .divider-line{flex:1;height:1px;background:#1e293b;}
+    .divider-text{font-size:.75rem;color:#475569;font-weight:600;}
+
+    /* ALERTS */
+    .alert-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:.8rem;font-size:.82rem;color:#fca5a5;margin-bottom:1rem;display:none;}
+    .alert-success{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:.8rem;font-size:.82rem;color:#86efac;margin-bottom:1rem;display:none;}
+
+    /* FOOTER */
+    .login-footer{text-align:center;margin-top:1.5rem;}
+    .login-footer a{font-size:.78rem;color:#64748b;text-decoration:none;}
+    .login-footer a:hover{color:#94a3b8;}
+
+    /* SECURITY BADGE */
+    .security-badge{display:flex;align-items:center;justify-content:center;gap:.4rem;margin-top:1.5rem;font-size:.72rem;color:#475569;font-weight:600;}
+
+    /* ADMIN INFO BAR */
+    .info-bar{background:rgba(255,26,110,.08);border:1px solid rgba(255,26,110,.15);border-radius:10px;padding:.8rem;font-size:.78rem;color:#fb7185;margin-bottom:1.2rem;text-align:center;}
+    .info-bar b{color:#ff1a6e;}
+
+    /* RESEND TIMER */
+    .resend-wrap{text-align:center;margin-top:.8rem;font-size:.78rem;color:#64748b;}
+    .resend-link{color:var(--pink);font-weight:700;cursor:pointer;}
+
+    /* OTP AUTOFILL HINT */
+    .otp-hint{text-align:center;font-size:.75rem;color:#64748b;margin-bottom:.8rem;}
+
+    @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+    .login-card{animation:fadeIn .4s ease;}
+  </style>
+</head>
+<body>
+
+<div class="bg-blob blob-1"></div>
+<div class="bg-blob blob-2"></div>
+<div class="bg-blob blob-3"></div>
+<div class="bg-grid"></div>
+
+<div class="login-wrap">
+  <div class="login-card">
+
+    <!-- LOGO -->
+    <div class="login-logo">
+      <div class="logo-icon">%</div>
+      <div>
+        <div class="logo-text">OfferMatrix</div>
+        <div class="logo-sub">Admin Control Panel</div>
+      </div>
+    </div>
+
+    <!-- STEP 1: CREDENTIALS -->
+    <div id="step1-content">
+      <div class="login-header">
+        <div class="login-title">Administrator Login</div>
+        <div class="login-sub">Access restricted to authorized personnel only</div>
+      </div>
+
+      <!-- STEPS -->
+      <div class="steps">
+        <div class="step step-active" id="s1">1</div>
+        <div class="step-line" id="sl1"></div>
+        <div class="step step-pending" id="s2">2</div>
+        <div class="step-line" id="sl2"></div>
+        <div class="step step-pending" id="s3">✓</div>
+      </div>
+
+      <div class="info-bar">🔒 Demo credentials: <b>admin@offermatrix.bd</b> / <b>Admin@2026</b></div>
+      <div class="alert-error" id="error-msg">Incorrect email or password. Please try again.</div>
+
+      <div class="form-group">
+        <label class="form-label">Admin Email</label>
+        <input class="form-input" id="admin-email" type="email" placeholder="admin@offermatrix.bd" value="" autocomplete="email" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-icon-wrap">
+          <input class="form-input" id="admin-pass" type="password" placeholder="••••••••••" autocomplete="current-password" />
+          <span class="input-icon" onclick="togglePass('admin-pass',this)">👁️</span>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;">
+        <label style="display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:#94a3b8;cursor:pointer;">
+          <input type="checkbox" style="accent-color:var(--pink);" /> Remember for 7 days
+        </label>
+        <a href="#" style="font-size:.8rem;color:var(--pink);text-decoration:none;font-weight:700;">Forgot password?</a>
+      </div>
+
+      <button class="btn-login" id="btn-step1" onclick="doStep1()">Continue to 2FA →</button>
+      <a href="index.html"><button class="btn-ghost">← Back to Public Site</button></a>
+    </div>
+
+    <!-- STEP 2: 2FA OTP -->
+    <div id="step2-content" style="display:none;">
+      <div class="login-header">
+        <div class="login-title">Two-Factor Verification</div>
+        <div class="login-sub">Enter the 6-digit code sent to admin@offermatrix.bd</div>
+      </div>
+
+      <div class="steps">
+        <div class="step step-done" id="s1b">✓</div>
+        <div class="step-line done" id="sl1b"></div>
+        <div class="step step-active" id="s2b">2</div>
+        <div class="step-line" id="sl2b"></div>
+        <div class="step step-pending" id="s3b">✓</div>
+      </div>
+
+      <div class="alert-error" id="otp-error">Invalid OTP code. Please try again.</div>
+      <div class="alert-success" id="otp-success">✅ OTP verified! Redirecting to control panel…</div>
+      <div class="otp-hint">Demo OTP: <b style="color:var(--pink);">2 0 2 6 0 9</b></div>
+
+      <div class="otp-row" id="otp-row">
+        <input class="otp-box" id="otp-1" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-box" id="otp-2" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-box" id="otp-3" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-box" id="otp-4" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-box" id="otp-5" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-box" id="otp-6" type="text" maxlength="1" inputmode="numeric" />
+      </div>
+
+      <div class="resend-wrap">
+        Code expires in <span id="otp-timer" style="font-weight:700;color:#f1f5f9;">04:59</span> ·
+        <span class="resend-link" onclick="resendOTP()">Resend Code</span>
+      </div>
+
+      <button class="btn-login" style="margin-top:1.2rem;" id="btn-verify" onclick="doVerify()">Verify & Enter Admin Panel</button>
+      <button class="btn-ghost" onclick="backToStep1()">← Back</button>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="login-footer">
+      <a href="signin.html">User Login</a> &nbsp;·&nbsp; <a href="#">Security Policy</a>
+    </div>
+    <div class="security-badge">
+      🔐 256-bit SSL Encrypted &nbsp;·&nbsp; JWT Authenticated
+    </div>
+  </div>
+</div>
+
+<script>
+const DEMO_EMAIL = 'admin@offermatrix.bd';
+const DEMO_PASS  = 'Admin@2026';
+const DEMO_OTP   = '202609';
+let timerInterval;
+
+function togglePass(id, btn) {
+  const inp = document.getElementById(id);
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁️'; }
+}
+
+function doStep1() {
+  const email = document.getElementById('admin-email').value.trim();
+  const pass  = document.getElementById('admin-pass').value;
+  const err   = document.getElementById('error-msg');
+  err.style.display = 'none';
+
+  if (!email || !pass) { err.textContent = 'Please fill in all fields.'; err.style.display='block'; return; }
+
+  // Demo validation
+  if (email !== DEMO_EMAIL || pass !== DEMO_PASS) {
+    err.textContent = 'Incorrect credentials. Use the demo values above.';
+    err.style.display = 'block';
+    document.getElementById('admin-pass').value = '';
+    return;
+  }
+
+  // Go to step 2
+  document.getElementById('step1-content').style.display = 'none';
+  document.getElementById('step2-content').style.display = 'block';
+  startOTPTimer();
+  document.getElementById('otp-1').focus();
+}
+
+// OTP auto-advance
+document.addEventListener('DOMContentLoaded', () => {
+  for (let i = 1; i <= 6; i++) {
+    const box = document.getElementById('otp-'+i);
+    box.addEventListener('input', () => {
+      box.value = box.value.replace(/\D/g,'').slice(-1);
+      if (box.value && i < 6) document.getElementById('otp-'+(i+1)).focus();
+    });
+    box.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !box.value && i > 1) document.getElementById('otp-'+(i-1)).focus();
+    });
+  }
+});
+
+function getOTP() {
+  return [1,2,3,4,5,6].map(i => document.getElementById('otp-'+i).value).join('');
+}
+
+function doVerify() {
+  const otp = getOTP();
+  const err = document.getElementById('otp-error');
+  const suc = document.getElementById('otp-success');
+  err.style.display = 'none';
+  suc.style.display = 'none';
+
+  if (otp.length < 6) { err.textContent = 'Please enter all 6 digits.'; err.style.display='block'; return; }
+
+  if (otp !== DEMO_OTP) {
+    err.textContent = 'Invalid OTP. Use the demo code: 2 0 2 6 0 9';
+    err.style.display = 'block';
+    [1,2,3,4,5,6].forEach(i => document.getElementById('otp-'+i).value = '');
+    document.getElementById('otp-1').focus();
+    return;
+  }
+
+  suc.style.display = 'block';
+  clearInterval(timerInterval);
+  setTimeout(() => { window.location.href = 'admin-dashboard.html'; }, 1500);
+}
+
+function backToStep1() {
+  clearInterval(timerInterval);
+  document.getElementById('step2-content').style.display = 'none';
+  document.getElementById('step1-content').style.display = 'block';
+  [1,2,3,4,5,6].forEach(i => document.getElementById('otp-'+i).value = '');
+  document.getElementById('otp-error').style.display = 'none';
+}
+
+function resendOTP() {
+  [1,2,3,4,5,6].forEach(i => document.getElementById('otp-'+i).value = '');
+  clearInterval(timerInterval);
+  startOTPTimer();
+  document.getElementById('otp-1').focus();
+  alert('✉️ OTP resent to admin@offermatrix.bd');
+}
+
+function startOTPTimer() {
+  let seconds = 299;
+  const timerEl = document.getElementById('otp-timer');
+  timerInterval = setInterval(() => {
+    seconds--;
+    if (seconds <= 0) { clearInterval(timerInterval); timerEl.textContent = '00:00'; return; }
+    const m = Math.floor(seconds/60).toString().padStart(2,'0');
+    const s = (seconds%60).toString().padStart(2,'0');
+    timerEl.textContent = m+':'+s;
+  }, 1000);
+}
+</script>
+</body>
+</html>

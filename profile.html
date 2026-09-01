@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>My Profile – OfferMatrix | Payment Arsenal & Preferences</title>
+  <meta name="description" content="Manage your OfferMatrix profile, payment methods (bKash, Nagad, bank cards), saved locations, and notification preferences." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="js/om-store.js"></script>
+  <script src="js/om-profile.js"></script>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --pink:#ff1a6e;--pink-light:#fff0f5;--green:#22c55e;--green-light:#dcfce7;
+      --red:#ef4444;--orange:#f97316;--blue:#3b82f6;--purple:#a855f7;
+      --text:#111827;--mid:#4b5563;--light:#9ca3af;--border:#e5e7eb;
+      --bg:#f8fafc;--white:#fff;--font:'Inter',sans-serif;--sb:240px;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden;}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none;}
+    a{color:inherit;text-decoration:none;}
+    ::-webkit-scrollbar{width:5px;}
+    ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:5px;}
+
+    /* SIDEBAR */
+    .sb{width:var(--sb);min-height:100vh;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:300;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+    .sb::-webkit-scrollbar{display:none;}
+    .sb-logo{display:flex;align-items:center;gap:10px;padding:1.2rem 1.4rem;border-bottom:1px solid var(--border);}
+    .sb-logo-icon{width:36px;height:36px;background:var(--pink);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;}
+    .sb-logo-text{font-size:1.3rem;font-weight:800;color:#111827;}
+    .sb-nav{flex:1;padding:1rem 0;}
+    .sb-group{font-size:.7rem;font-weight:700;color:var(--light);letter-spacing:1px;padding:1rem 1.4rem .4rem;text-transform:uppercase;}
+    .sb-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 1.4rem;font-size:.9rem;font-weight:600;color:var(--mid);width:100%;text-align:left;cursor:pointer;transition:all .2s;}
+    .sb-item:hover{color:var(--pink);}
+    .sb-item.on{background:var(--pink);color:#fff;border-radius:10px;margin:0 .8rem;padding:.7rem .6rem;width:calc(100% - 1.6rem);}
+    .sb-item.on .sb-ico{color:#fff;}
+    .sb-ico{font-size:1.1rem;width:22px;text-align:center;color:#6b7280;}
+    .sb-badge{margin-left:auto;font-size:.65rem;font-weight:800;padding:2px 8px;border-radius:50px;background:var(--pink);color:#fff;}
+
+    /* MAIN */
+    .main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;width:calc(100% - var(--sb));}
+    .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:.8rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+    .tb-search{display:flex;align-items:center;gap:.5rem;background:#f3f4f6;border-radius:50px;padding:.5rem 1rem;max-width:350px;flex:1;}
+    .tb-search input{border:none;background:transparent;outline:none;font-size:.85rem;color:#111827;font-family:var(--font);}
+    .tb-actions{display:flex;align-items:center;gap:1rem;margin-left:auto;}
+    .tb-icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:#4b5563;position:relative;cursor:pointer;}
+    .notif-dot{position:absolute;top:9px;right:9px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid #fff;}
+    .tb-user{display:flex;align-items:center;gap:.6rem;cursor:pointer;}
+    .tb-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#ff1a6e,#f97316);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.9rem;}
+    .tb-uname{font-size:.85rem;font-weight:700;color:#111827;}
+
+    /* LAYOUT */
+    .page-wrap{flex:1;padding:1.5rem;display:flex;gap:1.5rem;max-width:1100px;width:100%;}
+    .col-main{flex:1;display:flex;flex-direction:column;gap:1.2rem;}
+    .col-side{width:300px;flex-shrink:0;display:flex;flex-direction:column;gap:1.2rem;}
+
+    /* PROFILE HEADER */
+    .profile-hero{background:linear-gradient(135deg,#fff1f2,#fffbeb);border-radius:20px;padding:2rem;display:flex;align-items:center;gap:1.5rem;position:relative;overflow:hidden;}
+    .ph-avatar{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#ff1a6e,#f97316);display:flex;align-items:center;justify-content:center;color:#fff;font-size:2.2rem;font-weight:900;flex-shrink:0;position:relative;box-shadow:0 8px 24px rgba(255,26,110,.3);}
+    .ph-edit-btn{position:absolute;bottom:0;right:0;width:28px;height:28px;background:#fff;border-radius:50%;border:2px solid #fce7f3;display:flex;align-items:center;justify-content:center;font-size:.75rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);}
+    .ph-info{flex:1;}
+    .ph-name{font-size:1.5rem;font-weight:900;color:#111827;letter-spacing:-.3px;}
+    .ph-handle{font-size:.82rem;color:var(--mid);margin-top:2px;}
+    .ph-badges{display:flex;gap:.5rem;margin-top:.8rem;flex-wrap:wrap;}
+    .ph-badge{font-size:.65rem;font-weight:800;padding:4px 10px;border-radius:50px;}
+    .ph-badge-trust{background:var(--green-light);color:#15803d;}
+    .ph-badge-deals{background:#eff6ff;color:#1d4ed8;}
+    .ph-badge-streak{background:#fff7ed;color:#c2410c;}
+    .ph-stats{display:flex;gap:2rem;margin-top:1rem;}
+    .ph-stat{text-align:center;}
+    .ph-stat-v{font-size:1.2rem;font-weight:900;color:#111827;}
+    .ph-stat-l{font-size:.68rem;color:var(--mid);}
+
+    /* SECTION CARD */
+    .section-card{background:#fff;border-radius:18px;border:1px solid var(--border);padding:1.5rem;}
+    .sc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;}
+    .sc-title{font-size:1rem;font-weight:800;display:flex;align-items:center;gap:.5rem;}
+    .btn-edit-sm{font-size:.78rem;font-weight:700;color:var(--pink);cursor:pointer;}
+
+    /* FORM FIELDS */
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .field-wrap{display:flex;flex-direction:column;gap:.3rem;}
+    .field-label{font-size:.72rem;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;}
+    .field-input{border:1.5px solid var(--border);border-radius:10px;padding:.6rem .9rem;font-size:.88rem;font-family:var(--font);outline:none;transition:border-color .2s;color:#111827;}
+    .field-input:focus{border-color:var(--pink);}
+    .field-input:disabled{background:#f9fafb;color:var(--mid);}
+    .btn-save-field{background:var(--pink);color:#fff;border-radius:50px;padding:.6rem 1.5rem;font-size:.85rem;font-weight:700;transition:all .2s;margin-top:.5rem;align-self:flex-start;}
+    .btn-save-field:hover{background:#e0155e;}
+
+    /* PAYMENT ARSENAL */
+    .pay-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:.8rem;}
+    .pay-card{border:1.5px solid var(--border);border-radius:14px;padding:1rem;cursor:pointer;transition:all .2s;position:relative;background:#fff;}
+    .pay-card.active{border-color:var(--pink);background:var(--pink-light);}
+    .pay-card:hover{border-color:#d1d5db;transform:translateY(-1px);}
+    .pay-icon{font-size:1.6rem;margin-bottom:.4rem;}
+    .pay-name{font-size:.88rem;font-weight:800;color:#111827;}
+    .pay-cashback{font-size:.7rem;font-weight:700;color:var(--green);margin-top:2px;}
+    .pay-check{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.7rem;}
+    .pay-card.active .pay-check{background:var(--pink);border-color:var(--pink);color:#fff;}
+    .btn-add-pay{border:1.5px dashed var(--border);border-radius:14px;padding:1rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;cursor:pointer;font-size:.82rem;font-weight:700;color:var(--mid);transition:all .2s;background:none;}
+    .btn-add-pay:hover{border-color:var(--pink);color:var(--pink);}
+
+    /* LOCATIONS */
+    .loc-list{display:flex;flex-direction:column;gap:.6rem;}
+    .loc-item{display:flex;align-items:center;gap:.8rem;padding:.8rem;background:#f8fafc;border-radius:12px;border:1px solid var(--border);}
+    .loc-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+    .loc-icon-home{background:#eff6ff;color:var(--blue);}
+    .loc-icon-work{background:#f0fdf4;color:var(--green);}
+    .loc-icon-campus{background:#fff7ed;color:var(--orange);}
+    .loc-name{font-size:.82rem;font-weight:700;color:#111827;}
+    .loc-addr{font-size:.72rem;color:var(--mid);}
+    .loc-edit{margin-left:auto;font-size:.75rem;font-weight:700;color:var(--pink);cursor:pointer;}
+
+    /* NOTIFICATIONS TOGGLE */
+    .notif-list{display:flex;flex-direction:column;gap:.8rem;}
+    .notif-row{display:flex;align-items:center;justify-content:space-between;}
+    .notif-txt{font-size:.88rem;font-weight:600;color:#111827;}
+    .notif-sub{font-size:.72rem;color:var(--mid);}
+    .toggle{position:relative;width:46px;height:26px;flex-shrink:0;}
+    .toggle input{opacity:0;width:0;height:0;}
+    .toggle-slider{position:absolute;inset:0;background:#e2e8f0;border-radius:50px;cursor:pointer;transition:.3s;}
+    .toggle-slider:before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+    .toggle input:checked+.toggle-slider{background:var(--pink);}
+    .toggle input:checked+.toggle-slider:before{transform:translateX(20px);}
+
+    /* ACTIVITY */
+    .activity-item{display:flex;align-items:flex-start;gap:.8rem;padding:.7rem 0;border-bottom:1px solid #f1f5f9;}
+    .activity-item:last-child{border-bottom:none;}
+    .act-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+    .act-txt{font-size:.82rem;font-weight:600;color:#111827;}
+    .act-meta{font-size:.7rem;color:var(--mid);}
+    .act-badge{font-size:.65rem;font-weight:800;padding:2px 7px;border-radius:4px;}
+
+    /* STATS CARD */
+    .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+    .stat-box{background:#f8fafc;border-radius:12px;padding:.9rem;text-align:center;}
+    .stat-box-v{font-size:1.3rem;font-weight:900;color:#111827;}
+    .stat-box-l{font-size:.68rem;color:var(--mid);margin-top:2px;}
+
+    /* DANGER ZONE */
+    .danger-card{background:#fff5f5;border:1px solid #fecaca;border-radius:14px;padding:1.2rem;}
+    .btn-danger{background:none;color:var(--red);border:1.5px solid #fca5a5;border-radius:8px;padding:.5rem 1rem;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s;}
+    .btn-danger:hover{background:var(--red);color:#fff;border-color:var(--red);}
+
+    @media(max-width:900px){
+      .sb{transform:translateX(-100%);}
+      .main{margin-left:0;width:100%;}
+      .page-wrap{flex-direction:column;}
+      .col-side{width:100%;}
+      .form-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">%</div>
+    <span class="sb-logo-text">OfferMatrix</span>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-group">Discover</div>
+    <a href="dashboard.html" class="sb-item"><span class="sb-ico">🏠</span> Dashboard</a>
+    <a href="search-results.html" class="sb-item"><span class="sb-ico">🔍</span> Search Results</a>
+    <a href="skincare.html" class="sb-item"><span class="sb-ico">💄</span> Skincare</a>
+    <a href="coupons.html" class="sb-item"><span class="sb-ico">🎟️</span> Coupons <span class="sb-badge">12</span></a>
+    <div class="sb-group">Transport</div>
+    <a href="rides.html" class="sb-item"><span class="sb-ico">🚗</span> Rides & Travel</a>
+    <a href="food.html" class="sb-item"><span class="sb-ico">🍔</span> Food Delivery</a>
+    <div class="sb-group">My Account</div>
+    <a href="saved-deals.html" class="sb-item"><span class="sb-ico">❤️</span> Saved Deals</a>
+    <a href="price-alerts.html" class="sb-item"><span class="sb-ico">🔔</span> Price Alerts <span class="sb-badge">3</span></a>
+    <a href="orders.html" class="sb-item"><span class="sb-ico">📦</span> Orders</a>
+    <a href="profile.html" class="sb-item on"><span class="sb-ico">👤</span> Profile</a>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-search"><span>🔍</span><input type="text" placeholder="Search anything…" /></div>
+    <div class="tb-actions">
+      <div class="tb-icon-btn"><span>🔔</span><div class="notif-dot"></div></div>
+      <div class="tb-icon-btn"><span>❤️</span></div>
+      <div class="tb-user">
+        <div class="tb-avatar">R</div>
+        <div><div class="tb-uname">Raad Ahmed</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <div class="col-main">
+
+      <!-- PROFILE HERO -->
+      <div class="profile-hero">
+        <div class="ph-avatar">
+          R
+          <div class="ph-edit-btn" title="Change photo">✏️</div>
+        </div>
+        <div class="ph-info">
+          <div class="ph-name">Raad Ahmed</div>
+          <div class="ph-handle">@raad.ahmed · 01712-345678 · raad@example.com</div>
+          <div class="ph-badges">
+            <span class="ph-badge ph-badge-trust">✅ Verified Contributor</span>
+            <span class="ph-badge ph-badge-deals">🏆 Top Saver</span>
+            <span class="ph-badge ph-badge-streak">🔥 12-Day Streak</span>
+          </div>
+          <div class="ph-stats">
+            <div class="ph-stat"><div class="ph-stat-v">৳14,250</div><div class="ph-stat-l">Total Saved</div></div>
+            <div class="ph-stat"><div class="ph-stat-v">87</div><div class="ph-stat-l">Deals Found</div></div>
+            <div class="ph-stat"><div class="ph-stat-v">1,840</div><div class="ph-stat-l">Trust Points</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PERSONAL INFO -->
+      <div class="section-card">
+        <div class="sc-head">
+          <div class="sc-title">👤 Personal Information</div>
+          <span class="btn-edit-sm" onclick="toggleEdit()">Edit</span>
+        </div>
+        <div class="form-grid">
+          <div class="field-wrap">
+            <div class="field-label">Full Name</div>
+            <input class="field-input" id="f-name" type="text" value="Raad Ahmed" disabled />
+          </div>
+          <div class="field-wrap">
+            <div class="field-label">Email Address</div>
+            <input class="field-input" id="f-email" type="email" value="raad.ahmed@gmail.com" disabled />
+          </div>
+          <div class="field-wrap">
+            <div class="field-label">Phone Number</div>
+            <input class="field-input" id="f-phone" type="tel" value="01712-345678" disabled />
+          </div>
+          <div class="field-wrap">
+            <div class="field-label">Account Role</div>
+            <input class="field-input" type="text" value="Standard User" disabled />
+          </div>
+          <div class="field-wrap">
+            <div class="field-label">Member Since</div>
+            <input class="field-input" type="text" value="January 2026" disabled />
+          </div>
+          <div class="field-wrap">
+            <div class="field-label">Preferred Language</div>
+            <select class="field-input" id="f-lang" disabled>
+              <option selected>English</option>
+              <option>বাংলা</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-save-field" id="save-btn" style="display:none;" onclick="saveProfile()">💾 Save Changes</button>
+      </div>
+
+      <!-- PAYMENT ARSENAL -->
+      <div class="section-card">
+        <div class="sc-head">
+          <div class="sc-title">💳 Payment Arsenal</div>
+          <span class="btn-edit-sm">Manage</span>
+        </div>
+        <div style="font-size:.78rem;color:var(--mid);margin-bottom:1rem;">Select your active payment methods. We'll always recommend the best cashback combo.</div>
+        <div class="pay-grid" id="pay-grid"></div>
+      </div>
+
+      <!-- SAVED LOCATIONS -->
+      <div class="section-card">
+        <div class="sc-head">
+          <div class="sc-title">📍 Saved Locations</div>
+          <span class="btn-edit-sm" onclick="addLocation()">+ Add</span>
+        </div>
+        <div class="loc-list">
+          <div class="loc-item">
+            <div class="loc-icon loc-icon-home">🏠</div>
+            <div><div class="loc-name">Home</div><div class="loc-addr">Mirpur 10, Dhaka-1216</div></div>
+            <span class="loc-edit">Edit</span>
+          </div>
+          <div class="loc-item">
+            <div class="loc-icon loc-icon-work">💼</div>
+            <div><div class="loc-name">Office</div><div class="loc-addr">Gulshan 2, Dhaka-1212</div></div>
+            <span class="loc-edit">Edit</span>
+          </div>
+          <div class="loc-item">
+            <div class="loc-icon loc-icon-campus">🎓</div>
+            <div><div class="loc-name">University</div><div class="loc-addr">UIU, United City, Madani Ave</div></div>
+            <span class="loc-edit">Edit</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTIFICATION PREFS -->
+      <div class="section-card">
+        <div class="sc-head">
+          <div class="sc-title">🔔 Notification Preferences</div>
+        </div>
+        <div class="notif-list">
+          <div class="notif-row">
+            <div><div class="notif-txt">Price Drop Alerts</div><div class="notif-sub">Get notified when a tracked item hits your target price</div></div>
+            <label class="toggle"><input type="checkbox" checked /><div class="toggle-slider"></div></label>
+          </div>
+          <div class="notif-row">
+            <div><div class="notif-txt">Flash Sale Notifications</div><div class="notif-sub">Real-time alerts for limited-time deals</div></div>
+            <label class="toggle"><input type="checkbox" checked /><div class="toggle-slider"></div></label>
+          </div>
+          <div class="notif-row">
+            <div><div class="notif-txt">Coupon Expiry Warnings</div><div class="notif-sub">24h warning before your saved coupons expire</div></div>
+            <label class="toggle"><input type="checkbox" checked /><div class="toggle-slider"></div></label>
+          </div>
+          <div class="notif-row">
+            <div><div class="notif-txt">Community Deal Approval</div><div class="notif-sub">Status updates on deals you've submitted</div></div>
+            <label class="toggle"><input type="checkbox" /><div class="toggle-slider"></div></label>
+          </div>
+          <div class="notif-row">
+            <div><div class="notif-txt">Weekly Savings Report</div><div class="notif-sub">Your weekly savings summary every Monday</div></div>
+            <label class="toggle"><input type="checkbox" checked /><div class="toggle-slider"></div></label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SIDE COLUMN -->
+    <div class="col-side">
+
+      <!-- SAVINGS STATS -->
+      <div class="section-card">
+        <div class="sc-title" style="margin-bottom:1rem;">📊 Your Savings Stats</div>
+        <div class="stats-grid">
+          <div class="stat-box"><div class="stat-box-v" style="color:var(--pink);">৳14,250</div><div class="stat-box-l">Total Saved</div></div>
+          <div class="stat-box"><div class="stat-box-v" style="color:var(--green);">87</div><div class="stat-box-l">Deals Used</div></div>
+          <div class="stat-box"><div class="stat-box-v" style="color:var(--orange);">23</div><div class="stat-box-l">Coupons</div></div>
+          <div class="stat-box"><div class="stat-box-v" style="color:var(--blue);">12</div><div class="stat-box-l">Active Alerts</div></div>
+        </div>
+        <div style="margin-top:1rem;background:var(--green-light);border-radius:10px;padding:.8rem;text-align:center;">
+          <div style="font-size:1.5rem;font-weight:900;color:var(--green);">1,840</div>
+          <div style="font-size:.72rem;color:#15803d;font-weight:700;">Trust Points · Level 4 Saver</div>
+        </div>
+      </div>
+
+      <!-- RECENT ACTIVITY -->
+      <div class="section-card">
+        <div class="sc-title" style="margin-bottom:1rem;">⚡ Recent Activity</div>
+        <div>
+          <div class="activity-item">
+            <div class="act-icon" style="background:#dcfce7;">💰</div>
+            <div><div class="act-txt">Saved ৳850 on Samsung Galaxy A55</div><div class="act-meta">via Daraz · 2h ago</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="act-icon" style="background:#eff6ff;">🎟️</div>
+            <div><div class="act-txt">Coupon BKASH50 applied</div><div class="act-meta">Pickaboo · Yesterday</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="act-icon" style="background:#fff7ed;">🚗</div>
+            <div><div class="act-txt">Ride booked — Mirpur to Gulshan</div><div class="act-meta">Pathao · ৳158 · Yesterday</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="act-icon" style="background:#fff0f5;">📤</div>
+            <div><div class="act-txt">Deal submitted: Daraz Flash Sale</div><div class="act-meta">Status: Pending · 2 days ago</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="act-icon" style="background:#f5f3ff;">🔔</div>
+            <div><div class="act-txt">Price alert triggered: Sony XM5</div><div class="act-meta">Dropped to ৳24,500 · 3 days ago</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DANGER ZONE -->
+      <div class="danger-card">
+        <div style="font-size:.9rem;font-weight:800;color:var(--red);margin-bottom:.6rem;">⚠️ Account Actions</div>
+        <div style="display:flex;flex-direction:column;gap:.6rem;">
+          <button class="btn-danger" onclick="confirmLogout()">🚪 Sign Out</button>
+          <button class="btn-danger" onclick="alert('Account deletion requests are reviewed by the admin team.')">🗑️ Delete Account</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── PAYMENT METHODS ─────────────────────────────────────────────────────────
+const PAYMENT_METHODS = [
+  { id:'bkash',     name:'bKash',        icon:'📱', cashback:'Up to 15% Cashback', active:true  },
+  { id:'nagad',     name:'Nagad',        icon:'💚', cashback:'Up to 10% Cashback', active:true  },
+  { id:'brac',      name:'BRAC Bank Visa',icon:'💳', cashback:'5% on Electronics', active:true  },
+  { id:'city_amex', name:'City AMEX',    icon:'🔷', cashback:'৳150 on ৳5k+ orders',active:false },
+  { id:'dutch',     name:'Dutch-Bangla', icon:'🏦', cashback:'2% on Online Shops', active:false },
+  { id:'rocket',    name:'Rocket',       icon:'🚀', cashback:'8% on Food Orders',  active:false },
+];
+
+let activePayments = new Set(PAYMENT_METHODS.filter(p=>p.active).map(p=>p.id));
+
+function renderPayments() {
+  const grid = document.getElementById('pay-grid');
+  grid.innerHTML = PAYMENT_METHODS.map(pm => `
+    <div class="pay-card ${activePayments.has(pm.id)?'active':''}" id="pay-${pm.id}" onclick="togglePayment('${pm.id}')">
+      <div class="pay-icon">${pm.icon}</div>
+      <div class="pay-name">${pm.name}</div>
+      <div class="pay-cashback">${pm.cashback}</div>
+      <div class="pay-check">${activePayments.has(pm.id)?'✓':''}</div>
+    </div>
+  `).join('') + `
+    <button class="btn-add-pay" onclick="alert('Adding new payment methods will be available in Phase 3.')">
+      <span style="font-size:1.5rem;">+</span>
+      <span>Add Method</span>
+    </button>`;
+}
+
+function togglePayment(id) {
+  if (activePayments.has(id)) activePayments.delete(id);
+  else activePayments.add(id);
+  renderPayments();
+}
+
+let editMode = false;
+function toggleEdit() {
+  editMode = !editMode;
+  ['f-name','f-email','f-phone','f-lang'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.disabled = !editMode;
+  });
+  document.getElementById('save-btn').style.display = editMode ? 'block' : 'none';
+  document.querySelector('.btn-edit-sm').textContent = editMode ? 'Cancel' : 'Edit';
+}
+
+function saveProfile() {
+  toggleEdit();
+  alert('✅ Profile updated successfully!');
+}
+
+function addLocation() {
+  alert('📍 Location picker will open here.\nGoogle Maps integration will be added in Phase 3.');
+}
+
+function confirmLogout() {
+  if (confirm('Are you sure you want to sign out?')) {
+    window.location.href = 'signin.html';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', renderPayments);
+</script>
+</body>
+</html>

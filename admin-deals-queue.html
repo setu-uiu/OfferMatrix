@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Deal Approval Queue – OfferMatrix Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --bg:#0b0f19;--bg2:#0f1624;
+      --card:rgba(255,255,255,.03);--card-border:rgba(255,255,255,.08);--card-hover:rgba(255,255,255,.055);
+      --pink:#ff2a6d;--pink-glow:rgba(255,42,109,.25);
+      --green:#10b981;--green-dim:rgba(16,185,129,.15);
+      --blue:#38bdf8;--blue-dim:rgba(56,189,248,.15);
+      --amber:#f59e0b;--amber-dim:rgba(245,158,11,.15);
+      --red:#ef4444;--red-dim:rgba(239,68,68,.15);
+      --text:#e2e8f0;--text2:#94a3b8;--text3:#475569;
+      --border:rgba(255,255,255,.08);--font:'Inter',sans-serif;--sb:240px;--radius:14px;--radius-sm:10px;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden;}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none;}
+    a{color:inherit;text-decoration:none;}
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:4px;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+                       linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+      background-size:40px 40px;}
+
+    /* SIDEBAR */
+    .sb{width:var(--sb);min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:300;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+    .sb::-webkit-scrollbar{display:none;}
+    .sb-brand{display:flex;align-items:center;gap:10px;padding:1.3rem 1.4rem;border-bottom:1px solid var(--border);}
+    .sb-logo-icon{width:36px;height:36px;background:var(--pink);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;box-shadow:0 4px 12px var(--pink-glow);flex-shrink:0;}
+    .sb-logo-name{font-size:1.15rem;font-weight:800;color:var(--text);letter-spacing:-.3px;}
+    .sb-admin-badge{font-size:.5rem;font-weight:800;background:rgba(255,42,109,.2);color:var(--pink);padding:2px 7px;border-radius:4px;letter-spacing:.5px;display:inline-block;}
+    .sb-nav{flex:1;padding:1rem 0;}
+    .sb-section{font-size:.6rem;font-weight:700;color:var(--text3);letter-spacing:1.2px;padding:1rem 1.4rem .35rem;text-transform:uppercase;}
+    .sb-link{display:flex;align-items:center;gap:.75rem;padding:.65rem 1.4rem;font-size:.84rem;font-weight:600;color:var(--text2);width:100%;text-align:left;cursor:pointer;transition:all .2s;}
+    .sb-link:hover{color:var(--text);background:rgba(255,255,255,.04);}
+    .sb-link.active{color:var(--pink);background:rgba(255,42,109,.1);border-right:2px solid var(--pink);}
+    .sb-icon{font-size:.95rem;width:20px;text-align:center;flex-shrink:0;}
+    .sb-count{margin-left:auto;font-size:.6rem;font-weight:800;padding:2px 7px;border-radius:50px;background:var(--red);color:#fff;}
+    .sb-count-warn{background:var(--amber);color:#111;}
+    .sb-footer{padding:.9rem 1.2rem;border-top:1px solid var(--border);}
+    .sb-user{display:flex;align-items:center;gap:.7rem;}
+    .sb-user-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--pink),#be185d);display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:.85rem;flex-shrink:0;}
+    .sb-user-name{font-size:.82rem;font-weight:700;color:var(--text);}
+    .sb-user-role{font-size:.62rem;color:var(--text3);}
+
+    /* MAIN */
+    .main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;width:calc(100% - var(--sb));position:relative;z-index:1;}
+    .topbar{background:rgba(11,15,25,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.8rem 1.6rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+    .tb-title{font-size:1rem;font-weight:800;color:var(--text);}
+    .tb-pending-chip{font-size:.72rem;font-weight:800;background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.3);padding:.28rem .75rem;border-radius:50px;}
+    .tb-actions{margin-left:auto;display:flex;align-items:center;gap:.7rem;}
+    .input-sm{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:.42rem .9rem;font-size:.78rem;font-family:var(--font);color:var(--text);outline:none;transition:all .2s;}
+    .input-sm:focus{border-color:rgba(255,255,255,.2);}
+    .input-sm::placeholder{color:var(--text3);}
+    .btn-approve-bulk{background:var(--green);color:#fff;border-radius:var(--radius-sm);padding:.45rem 1rem;font-size:.78rem;font-weight:700;transition:all .2s;}
+    .btn-approve-bulk:hover{opacity:.85;}
+    .btn-reject-bulk{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.3);border-radius:var(--radius-sm);padding:.45rem 1rem;font-size:.78rem;font-weight:700;transition:all .2s;}
+    .btn-reject-bulk:hover{background:rgba(239,68,68,.25);}
+
+    /* PAGE */
+    .page{flex:1;padding:1.5rem;display:flex;gap:1.2rem;}
+    .col-main{flex:1;display:flex;flex-direction:column;gap:1rem;}
+    .col-side{width:270px;flex-shrink:0;display:flex;flex-direction:column;gap:1rem;}
+
+    /* STATS */
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;}
+    .stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:1rem;text-align:center;}
+    .stat-val{font-size:1.4rem;font-weight:900;}
+    .stat-lbl{font-size:.65rem;color:var(--text2);font-weight:600;text-transform:uppercase;margin-top:2px;}
+
+    /* FILTERS */
+    .filter-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+    .ftab{padding:.38rem .9rem;border:1px solid var(--card-border);border-radius:50px;font-size:.78rem;font-weight:700;color:var(--text2);cursor:pointer;background:none;transition:all .2s;}
+    .ftab.on{background:var(--pink);color:#fff;border-color:var(--pink);}
+    .ftab:hover:not(.on){border-color:rgba(255,255,255,.15);color:var(--text);}
+    .sort-sel{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:.38rem .8rem;font-size:.75rem;font-family:var(--font);color:var(--text2);outline:none;margin-left:auto;}
+
+    /* DEAL CARDS */
+    .deal-card{background:var(--card);border:1.5px solid var(--card-border);border-radius:var(--radius);overflow:hidden;transition:all .2s;cursor:pointer;}
+    .deal-card:hover{border-color:rgba(255,255,255,.14);}
+    .deal-card.selected{border-color:var(--pink);}
+    .dc-top{display:flex;align-items:flex-start;gap:.9rem;padding:1.2rem;}
+    .dc-check{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--card-border);flex-shrink:0;margin-top:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+    .dc-check.checked{background:var(--pink);border-color:var(--pink);color:#fff;font-size:.7rem;}
+    .dc-img{width:76px;height:76px;border-radius:var(--radius-sm);overflow:hidden;flex-shrink:0;background:rgba(255,255,255,.05);}
+    .dc-img img{width:100%;height:100%;object-fit:cover;}
+    .dc-no-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;}
+    .dc-info{flex:1;min-width:0;}
+    .dc-store{font-size:.95rem;font-weight:800;color:var(--text);margin-bottom:2px;}
+    .dc-desc{font-size:.78rem;color:var(--text2);margin-bottom:.6rem;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .dc-meta{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+    .meta-chip{display:flex;align-items:center;gap:.3rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:50px;padding:2px 7px;font-size:.65rem;color:var(--text2);font-weight:600;}
+    .meta-chip-user{background:var(--pink-glow);border-color:rgba(255,42,109,.25);color:#fda4ba;}
+    .status-pill{font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:50px;margin-left:auto;flex-shrink:0;}
+    .pill-pending{background:var(--amber-dim);color:var(--amber);}
+    .pill-approved{background:var(--green-dim);color:var(--green);}
+    .pill-rejected{background:var(--red-dim);color:var(--red);}
+    .dc-actions{border-top:1px solid rgba(255,255,255,.05);padding:.75rem 1.2rem;display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.015);}
+    .note-input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:.38rem .7rem;font-size:.75rem;font-family:var(--font);color:var(--text);outline:none;}
+    .note-input:focus{border-color:rgba(239,68,68,.4);}
+    .note-input::placeholder{color:var(--text3);}
+    .btn-approve{background:var(--green);color:#fff;border-radius:8px;padding:.4rem 1rem;font-size:.75rem;font-weight:800;transition:all .2s;display:flex;align-items:center;gap:.3rem;}
+    .btn-approve:hover{opacity:.85;}
+    .btn-reject{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:.4rem .9rem;font-size:.75rem;font-weight:800;transition:all .2s;}
+    .btn-reject:hover{background:rgba(239,68,68,.25);}
+    .btn-preview{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(56,189,248,.25);border-radius:8px;padding:.4rem .8rem;font-size:.75rem;font-weight:700;}
+
+    /* SIDE CARDS */
+    .card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.2rem;}
+    .card-title{font-size:.85rem;font-weight:800;color:var(--text);margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem;}
+    .lb-item{display:flex;align-items:center;gap:.7rem;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04);}
+    .lb-item:last-child{border-bottom:none;}
+    .lb-rank{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;flex-shrink:0;}
+    .rank-gold{background:rgba(245,158,11,.2);color:var(--amber);}
+    .rank-silver{background:rgba(148,163,184,.15);color:var(--text2);}
+    .rank-bronze{background:rgba(251,146,60,.15);color:#fb923c;}
+    .rank-other{background:rgba(255,255,255,.05);color:var(--text3);}
+    .lb-name{font-size:.8rem;font-weight:700;color:var(--text);flex:1;}
+    .lb-pts{font-size:.68rem;font-weight:800;color:var(--green);}
+    .reason-btn{width:100%;text-align:left;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:.45rem .7rem;font-size:.75rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .2s;margin-bottom:.4rem;display:block;}
+    .reason-btn:hover{border-color:var(--red);color:var(--red);background:var(--red-dim);}
+
+    /* EMPTY STATE */
+    .empty-state{text-align:center;padding:3rem;color:var(--text2);}
+    .empty-icon{font-size:3rem;margin-bottom:1rem;display:block;}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#1e293b;border:1px solid var(--card-border);border-radius:12px;padding:.8rem 1.2rem;font-size:.82rem;font-weight:600;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:9999;animation:slideUp .25s ease;}
+    @keyframes slideUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+    @media(max-width:900px){.sb{transform:translateX(-100);}.main{margin-left:0;width:100%;}.page{flex-direction:column;}.col-side{width:100%;}.stats-row{grid-template-columns:repeat(2,1fr);}}
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-brand">
+    <div class="sb-logo-icon">%</div>
+    <div>
+      <div class="sb-logo-name">OfferMatrix</div>
+      <div class="sb-admin-badge">ADMIN PANEL</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Control Center</div>
+    <a href="admin-dashboard.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+      Dashboard
+    </a>
+    <a href="admin-scraper-health.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/></svg></span>
+      Scraper Health
+    </a>
+    <a href="admin-deals-queue.html" class="sb-link active">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+      Deal Queue
+      <span class="sb-count" id="sb-count">8</span>
+    </a>
+    <a href="admin-affiliates.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      Affiliate Manager
+    </a>
+    <a href="admin-fraud-reports.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+      Spam & Fraud Center
+      <span class="sb-count">4</span>
+    </a>
+
+    <div class="sb-section">Analytics</div>
+    <a href="admin-platform-analytics.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M3 3v18h18"/><path d="M18 17l-5-5-4 4-4-4"/></svg></span>
+      Platform Analytics
+    </a>
+    <a href="admin-search-trends.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></span>
+      Search Trends
+    </a>
+    <a href="admin-alert-manager.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
+      Alert Manager
+      <span class="sb-count sb-count-warn">3</span>
+    </a>
+
+    <div class="sb-section">System</div>
+    <a href="admin-settings.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+      Settings
+    </a>
+    <a href="admin-users.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      User Management
+    </a>
+    <a href="admin-login.html" class="sb-link" style="color:#f87171;margin-top:.5rem;">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      Sign Out
+    </a>
+  </nav>
+  <div class="sb-footer">
+    <div class="sb-user">
+      <div class="sb-user-av">A</div>
+      <div><div class="sb-user-name">Super Admin</div><div class="sb-user-role">Full Access</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-title">📋 Community Deal Queue</div>
+    <div class="tb-pending-chip" id="topbar-chip">8 Pending</div>
+    <div class="tb-actions">
+      <input class="input-sm" type="text" placeholder="🔍 Search deals…" oninput="searchDeals(this.value)"/>
+      <button class="btn-approve-bulk" onclick="bulkApprove()">✅ Approve Selected</button>
+      <button class="btn-reject-bulk" onclick="bulkReject()">❌ Reject Selected</button>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <div class="col-main">
+
+      <!-- STATS -->
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val" style="color:var(--amber)" id="s-pend">8</div><div class="stat-lbl">⏳ Pending</div></div>
+        <div class="stat-card"><div class="stat-val" style="color:var(--green)" id="s-appr">142</div><div class="stat-lbl">✅ Approved</div></div>
+        <div class="stat-card"><div class="stat-val" style="color:var(--red)" id="s-reje">37</div><div class="stat-lbl">❌ Rejected</div></div>
+        <div class="stat-card"><div class="stat-val" id="s-today">24</div><div class="stat-lbl">📅 Today</div></div>
+      </div>
+
+      <!-- FILTER TABS -->
+      <div class="filter-row">
+        <button class="ftab on" onclick="setFilter('all',this)">All</button>
+        <button class="ftab" onclick="setFilter('pending',this)">⏳ Pending <span style="background:var(--amber-dim);color:var(--amber);border-radius:50px;padding:0 6px;font-size:.62rem;" id="pending-bubble">8</span></button>
+        <button class="ftab" onclick="setFilter('approved',this)">✅ Approved</button>
+        <button class="ftab" onclick="setFilter('rejected',this)">❌ Rejected</button>
+        <select class="sort-sel" onchange="sortDeals(this.value)">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="trust">Trust Points</option>
+        </select>
+      </div>
+
+      <!-- DEAL LIST -->
+      <div id="deal-list"></div>
+
+    </div>
+
+    <!-- SIDE -->
+    <div class="col-side">
+
+      <!-- OVERVIEW -->
+      <div class="card">
+        <div class="card-title">📊 Queue Overview</div>
+        <div style="display:flex;flex-direction:column;gap:.45rem;">
+          <div style="display:flex;justify-content:space-between;font-size:.8rem;"><span style="color:var(--text2);">Avg Review Time</span><span style="font-weight:700;">14 min</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:.8rem;"><span style="color:var(--text2);">Approval Rate</span><span style="font-weight:700;color:var(--green);">79.3%</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:.8rem;"><span style="color:var(--text2);">Oldest Pending</span><span style="font-weight:700;color:var(--amber);">2h 14m ago</span></div>
+        </div>
+        <div style="margin-top:.9rem;background:var(--green-dim);border:1px solid rgba(16,185,129,.2);border-radius:var(--radius-sm);padding:.8rem;text-align:center;">
+          <div style="font-size:1.3rem;font-weight:900;color:var(--green);" id="live-count">142</div>
+          <div style="font-size:.65rem;color:var(--text2);font-weight:600;">Deals Live on Platform</div>
+        </div>
+      </div>
+
+      <!-- QUICK REASONS -->
+      <div class="card">
+        <div class="card-title">⚡ Quick Rejection Reasons</div>
+        <button class="reason-btn" onclick="setReason('Duplicate deal already exists')">📋 Duplicate Deal</button>
+        <button class="reason-btn" onclick="setReason('Deal expired or no longer valid')">⏰ Deal Expired</button>
+        <button class="reason-btn" onclick="setReason('No evidence / photo missing')">📷 No Evidence</button>
+        <button class="reason-btn" onclick="setReason('Spam or promotional content')">🚫 Spam</button>
+        <button class="reason-btn" onclick="setReason('Inaccurate pricing information')">💰 Wrong Price</button>
+        <button class="reason-btn" onclick="setReason('Platform policy violation')">⚠️ Policy Violation</button>
+      </div>
+
+      <!-- LEADERBOARD -->
+      <div class="card">
+        <div class="card-title">🏆 Top Contributors</div>
+        <div>
+          <div class="lb-item"><div class="lb-rank rank-gold">1</div><div style="flex:1;"><div class="lb-name">Farhan Hossain</div><div style="font-size:.65rem;color:var(--text3);">48 deals approved</div></div><div class="lb-pts">+2,400</div></div>
+          <div class="lb-item"><div class="lb-rank rank-silver">2</div><div style="flex:1;"><div class="lb-name">Tasnim Akter</div><div style="font-size:.65rem;color:var(--text3);">36 deals approved</div></div><div class="lb-pts">+1,800</div></div>
+          <div class="lb-item"><div class="lb-rank rank-bronze">3</div><div style="flex:1;"><div class="lb-name">Rifat Islam</div><div style="font-size:.65rem;color:var(--text3);">31 deals approved</div></div><div class="lb-pts">+1,550</div></div>
+          <div class="lb-item"><div class="lb-rank rank-other">4</div><div style="flex:1;"><div class="lb-name">Raad Ahmed</div><div style="font-size:.65rem;color:var(--text3);">24 deals approved</div></div><div class="lb-pts">+1,200</div></div>
+          <div class="lb-item"><div class="lb-rank rank-other">5</div><div style="flex:1;"><div class="lb-name">Nadia Sultana</div><div style="font-size:.65rem;color:var(--text3);">19 deals approved</div></div><div class="lb-pts">+950</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+let DEALS = [
+  { id:1,  store:'Daraz Flash Sale',        desc:'Samsung Galaxy A55 listed for ৳38,000 — ৳8,000 below normal RRP. Verified at checkout today.',          cat:'⚡', catBg:'rgba(255,42,109,.15)',  user:'Farhan H.',  pts:2400, time:'12 min', status:'pending',  img:'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=100&q=80' },
+  { id:2,  store:'Pizza Place Dhanmondi',   desc:'Buy 1 Get 1 Free on large pizzas every Thursday 6–9 PM. Tested and confirmed today.',                     cat:'🍕', catBg:'rgba(245,158,11,.15)', user:'Tasnim A.',  pts:1800, time:'38 min', status:'pending',  img:'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=100&q=80' },
+  { id:3,  store:'Shajgoj Korean Skincare', desc:'30% off all Korean skincare using SHAJGOJ30 at checkout. Tested and works!',                               cat:'💄', catBg:'rgba(236,72,153,.15)', user:'Nadia S.',   pts:950,  time:'1h 20m', status:'pending',  img:null },
+  { id:4,  store:'StarTech Elephant Road',  desc:'Anker 737 Power Bank ৳5,200 in-store vs ৳6,100 online. Verified with receipt.',                            cat:'💻', catBg:'rgba(56,189,248,.15)', user:'Rifat I.',   pts:1550, time:'2h 14m', status:'pending',  img:'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=100&q=80' },
+  { id:5,  store:'Bhai Bhai Restaurant',    desc:'Mutton Kacchi for ৳220 on Thursdays (normal ৳320). Mention "OfferMatrix" at counter.',                     cat:'🍛', catBg:'rgba(16,185,129,.15)', user:'Raad A.',    pts:1200, time:'3h',    status:'pending',  img:null },
+  { id:6,  store:'Chaldal Free Delivery',   desc:'Free delivery above ৳499 until end of September — no coupon needed.',                                      cat:'🛒', catBg:'rgba(16,185,129,.15)', user:'Farhan H.',  pts:2400, time:'4h',    status:'pending',  img:'https://images.unsplash.com/photo-1542838132-92c53300491e?w=100&q=80' },
+  { id:7,  store:'Ryans Computers Uttara',  desc:'Gaming laptops 15% below website price in-store. ASUS ROG, Lenovo Legion deals.',                          cat:'🎮', catBg:'rgba(167,139,250,.15)',user:'Tasnim A.',  pts:1800, time:'5h',    status:'pending',  img:null },
+  { id:8,  store:'Pathao Food Promo',       desc:'৳100 off orders above ৳400 using PATHAONEW. First 500 users only. Just used it — works!',                  cat:'🛵', catBg:'rgba(227,24,55,.15)',  user:'Nadia S.',   pts:950,  time:'6h',    status:'pending',  img:'https://images.unsplash.com/photo-1567337710282-00832b415979?w=100&q=80' },
+  { id:9,  store:'Daraz 11.11 Teaser',      desc:'Early bird discount visible in cart before official announcement.',                                          cat:'⚡', catBg:'rgba(255,42,109,.15)',  user:'Rifat I.',   pts:1550, time:'2 days', status:'approved', img:null },
+  { id:10, store:'BFC Burger BOGO',         desc:'BFC Gulshan BOGO on Zinger Burgers every weekend — confirmed with receipt.',                                cat:'🍔', catBg:'rgba(245,158,11,.15)', user:'Farhan H.',  pts:2400, time:'3 days', status:'approved', img:null },
+  { id:11, store:'99% off iPhones',         desc:'Get 99% off on iPhones using this link! Limited time!!!',                                                   cat:'📱', catBg:'rgba(239,68,68,.15)',  user:'Unknown',    pts:0,    time:'1 day',  status:'rejected', img:null, reason:'Spam or promotional content' },
+];
+
+let filter='all', selected=new Set(), activeReason='';
+
+function getFiltered() {
+  return filter==='all' ? DEALS : DEALS.filter(d=>d.status===filter);
+}
+
+function renderDeals(list) {
+  const el = document.getElementById('deal-list');
+  if (!list.length) {
+    el.innerHTML=`<div class="empty-state"><span class="empty-icon">📭</span><div>No deals in this view.</div></div>`;
+    return;
+  }
+  el.innerHTML = list.map(d=>{
+    const pillMap = {pending:`<span class="status-pill pill-pending">⏳ Pending</span>`,
+                     approved:`<span class="status-pill pill-approved">✅ Approved</span>`,
+                     rejected:`<span class="status-pill pill-rejected">❌ Rejected</span>`};
+    const isSel = selected.has(d.id);
+    return `<div class="deal-card ${isSel?'selected':''}" id="dc-${d.id}">
+      <div class="dc-top">
+        <div class="dc-check ${isSel?'checked':''}" onclick="toggleSel(${d.id})">${isSel?'✓':''}</div>
+        <div class="dc-img">
+          ${d.img?`<img src="${d.img}" alt="${d.store}" onerror="this.parentElement.innerHTML='<div class=dc-no-img>📷</div>'">`:`<div class="dc-no-img">📷</div>`}
+        </div>
+        <div class="dc-info">
+          <div style="display:flex;align-items:flex-start;gap:.5rem;margin-bottom:3px;">
+            <div class="dc-store">${d.store}</div>
+            ${pillMap[d.status]}
+          </div>
+          <div class="dc-desc">${d.desc}</div>
+          <div class="dc-meta">
+            <span class="meta-chip meta-chip-user">👤 ${d.user} · ${d.pts} pts</span>
+            <span class="meta-chip" style="background:${d.catBg};">${d.cat} ${getCatName(d.cat)}</span>
+            <span class="meta-chip">⏰ ${d.time} ago</span>
+            ${d.reason?`<span class="meta-chip" style="background:var(--red-dim);color:var(--red);">❌ ${d.reason}</span>`:''}
+          </div>
+        </div>
+      </div>
+      ${d.status==='pending'?`
+      <div class="dc-actions">
+        <input class="note-input" id="note-${d.id}" type="text" placeholder="Rejection note (optional)…" value="${activeReason}"/>
+        <button class="btn-preview" onclick="event.stopPropagation();previewDeal(${d.id})">👁 Preview</button>
+        <button class="btn-reject" onclick="event.stopPropagation();rejectDeal(${d.id})">❌ Reject</button>
+        <button class="btn-approve" onclick="event.stopPropagation();approveDeal(${d.id})">✅ Approve</button>
+      </div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function getCatName(c){const m={'⚡':'Flash','🍕':'Food','💄':'Skincare','💻':'Tech','🍛':'Food','🛒':'Grocery','🎮':'Gaming','🛵':'Food','📱':'Tech'};return m[c]||'Deal';}
+
+function approveDeal(id) {
+  const d=DEALS.find(x=>x.id===id); d.status='approved'; selected.delete(id);
+  updateStats(); renderDeals(getFiltered());
+  showToast(`✅ "${d.store}" approved! ${d.user} earned +50 trust points.`,'green');
+}
+function rejectDeal(id) {
+  const d=DEALS.find(x=>x.id===id);
+  const n=document.getElementById('note-'+id);
+  d.status='rejected'; d.reason=(n?n.value.trim():'')||'Does not meet guidelines'; selected.delete(id);
+  updateStats(); renderDeals(getFiltered());
+  showToast(`❌ "${d.store}" rejected.`,'red');
+}
+function previewDeal(id){const d=DEALS.find(x=>x.id===id);alert(`👁 Deal Preview\n\n🏪 ${d.store}\n👤 Submitted by: ${d.user} (${d.pts} pts)\n⏰ ${d.time} ago\n\n📝 ${d.desc}`);}
+function toggleSel(id){selected.has(id)?selected.delete(id):selected.add(id);renderDeals(getFiltered());}
+function bulkApprove(){if(!selected.size){showToast('No deals selected.','amber');return;}selected.forEach(id=>{const d=DEALS.find(x=>x.id===id);if(d&&d.status==='pending')d.status='approved';});selected.clear();updateStats();renderDeals(getFiltered());showToast('✅ Selected deals approved!','green');}
+function bulkReject(){if(!selected.size){showToast('No deals selected.','amber');return;}selected.forEach(id=>{const d=DEALS.find(x=>x.id===id);if(d&&d.status==='pending'){d.status='rejected';d.reason='Bulk rejection by admin';}});selected.clear();updateStats();renderDeals(getFiltered());showToast('❌ Selected deals rejected.','red');}
+function setFilter(f,btn){filter=f;selected.clear();document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');renderDeals(getFiltered());}
+function searchDeals(q){const res=getFiltered().filter(d=>d.store.toLowerCase().includes(q.toLowerCase())||d.desc.toLowerCase().includes(q.toLowerCase()));renderDeals(res);}
+function sortDeals(v){if(v==='newest')DEALS.sort((a,b)=>b.id-a.id);else if(v==='oldest')DEALS.sort((a,b)=>a.id-b.id);else if(v==='trust')DEALS.sort((a,b)=>b.pts-a.pts);renderDeals(getFiltered());}
+function setReason(r){activeReason=r;document.querySelectorAll('.note-input').forEach(el=>el.value=r);}
+function updateStats(){
+  const p=DEALS.filter(d=>d.status==='pending').length;
+  const a=DEALS.filter(d=>d.status==='approved').length;
+  const r=DEALS.filter(d=>d.status==='rejected').length;
+  document.getElementById('s-pend').textContent=p;
+  document.getElementById('s-appr').textContent=a;
+  document.getElementById('s-reje').textContent=r;
+  document.getElementById('live-count').textContent=a;
+  document.getElementById('pending-bubble').textContent=p;
+  document.getElementById('topbar-chip').textContent=p+' Pending';
+  document.getElementById('sb-count').textContent=p;
+}
+function showToast(msg,type='green'){
+  const ex=document.querySelector('.toast');if(ex)ex.remove();
+  const t=document.createElement('div');t.className='toast';
+  const bg={green:'#064e3b',red:'#450a0a',amber:'#451a03'}[type]||'#1e293b';
+  t.style.background=bg;t.innerHTML=msg;document.body.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300);},2800);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{renderDeals(getFiltered());updateStats();});
+</script>
+</body>
+</html>

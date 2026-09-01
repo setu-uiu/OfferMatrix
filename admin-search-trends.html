@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Search Trends & Demand Intelligence – OfferMatrix Admin</title>
+  <meta name="description" content="OfferMatrix Search Trends — Keyword volume telemetry, zero-result query gaps, and custom deal generation."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       DARK GRID DESIGN SYSTEM — Zero Emojis, Pure Vector UI
+    ═══════════════════════════════════════════════════════ */
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --bg:         #0b0f19;
+      --bg2:        #0f1624;
+      --bg3:        #151f32;
+      --card:       rgba(22, 27, 34, 0.75);
+      --card-border:rgba(255,255,255,0.08);
+      --card-hover: rgba(255,255,255,0.05);
+      --pink:       #ff2a6d;
+      --pink-glow:  rgba(255,42,109,0.25);
+      --green:      #10b981;
+      --green-dim:  rgba(16,185,129,0.12);
+      --blue:       #38bdf8;
+      --blue-dim:   rgba(56,189,248,0.12);
+      --cyan:       #06b6d4;
+      --cyan-dim:   rgba(6,182,212,0.12);
+      --amber:      #f59e0b;
+      --amber-dim:  rgba(245,158,11,0.12);
+      --red:        #ef4444;
+      --red-dim:    rgba(239,68,68,0.12);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --text:       #f1f5f9;
+      --text2:      #94a3b8;
+      --text3:      #475569;
+      --border:     rgba(255,255,255,0.08);
+      --font:       'Inter',sans-serif;
+      --sb:         240px;
+      --radius:     12px;
+      --radius-sm:  8px;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden;}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none;}
+    a{color:inherit;text-decoration:none;}
+    ::-webkit-scrollbar{width:5px;height:5px;}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:4px;}
+
+    body::before{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+                       linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+      background-size:36px 36px;
+    }
+
+    .svg-icon{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;vertical-align:middle;}
+    .svg-icon svg{width:100%;height:100%;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+
+    /* ── SIDEBAR ── */
+    .sb{width:var(--sb);min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);
+        display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:300;
+        overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+    .sb::-webkit-scrollbar{display:none;}
+    .sb-brand{display:flex;align-items:center;gap:10px;padding:1.3rem 1.4rem;border-bottom:1px solid var(--border);}
+    .sb-logo-icon{width:36px;height:36px;background:var(--pink);border-radius:10px;
+                  display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;
+                  color:#fff;box-shadow:0 4px 12px var(--pink-glow);flex-shrink:0;}
+    .sb-brand-text{display:flex;flex-direction:column;}
+    .sb-logo-name{font-size:1.15rem;font-weight:800;color:var(--text);letter-spacing:-.3px;}
+    .sb-admin-badge{font-size:.52rem;font-weight:800;background:rgba(255,42,109,.18);color:var(--pink);
+                    padding:2px 7px;border-radius:4px;letter-spacing:.6px;display:inline-block;width:fit-content;margin-top:2px;}
+
+    .sb-nav{flex:1;padding:1rem 0;}
+    .sb-section{font-size:.6rem;font-weight:700;color:var(--text3);letter-spacing:1.2px;
+                padding:1rem 1.4rem .35rem;text-transform:uppercase;}
+    .sb-link{display:flex;align-items:center;gap:.75rem;padding:.65rem 1.4rem;font-size:.84rem;font-weight:600;
+             color:var(--text2);width:100%;text-align:left;cursor:pointer;transition:all .2s;position:relative;}
+    .sb-link:hover{color:var(--text);background:rgba(255,255,255,.04);}
+    .sb-link.active{color:var(--pink);background:rgba(255,42,109,.1);border-right:2px solid var(--pink);}
+    .sb-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .sb-count{margin-left:auto;font-size:.62rem;font-weight:800;padding:2px 7px;border-radius:50px;
+              background:var(--red);color:#fff;}
+    .sb-count-warn{background:var(--amber);color:#111;}
+
+    .sb-footer{padding:.9rem 1.2rem;border-top:1px solid var(--border);}
+    .sb-user{display:flex;align-items:center;gap:.7rem;}
+    .sb-user-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--pink),#be185d);
+                display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:.85rem;flex-shrink:0;}
+    .sb-user-name{font-size:.82rem;font-weight:700;color:var(--text);}
+    .sb-user-role{font-size:.64rem;color:var(--text3);}
+
+    /* ── MAIN ── */
+    .main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;width:calc(100% - var(--sb));position:relative;z-index:1;}
+
+    .topbar{background:rgba(11,15,25,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+            padding:.8rem 1.6rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+    .tb-title-box{display:flex;flex-direction:column;}
+    .tb-title{font-size:1rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:.5rem;}
+    .tb-sub{font-size:.72rem;color:var(--text2);margin-top:1px;}
+    .tb-actions{margin-left:auto;display:flex;align-items:center;gap:.7rem;}
+
+    .btn-cta{background:var(--pink);color:#fff;border-radius:var(--radius-sm);padding:.45rem 1rem;font-size:.78rem;font-weight:700;
+             display:flex;align-items:center;gap:.4rem;transition:all .2s;box-shadow:0 4px 12px var(--pink-glow);}
+    .btn-cta:hover{opacity:.9;transform:translateY(-1px);}
+
+    /* ── PAGE CONTENT ── */
+    .page{flex:1;padding:1.5rem;display:flex;flex-direction:column;gap:1.4rem;}
+
+    /* KPI GRID */
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+    .kpi-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.2rem;
+              position:relative;overflow:hidden;transition:all .25s;}
+    .kpi-card:hover{border-color:rgba(255,255,255,.16);background:var(--card-hover);transform:translateY(-2px);}
+    .kpi-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;}
+    .kpi-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .kpi-badge{font-size:.65rem;font-weight:800;padding:2px 7px;border-radius:50px;display:flex;align-items:center;gap:3px;}
+    .kpi-badge.up{background:var(--green-dim);color:var(--green);}
+    .kpi-badge.warn{background:var(--amber-dim);color:var(--amber);}
+    .kpi-badge.err{background:var(--red-dim);color:var(--red);}
+    .kpi-val{font-size:1.55rem;font-weight:900;color:var(--text);letter-spacing:-.5px;margin-bottom:.25rem;}
+    .kpi-lbl{font-size:.7rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;}
+    .kpi-sub{font-size:.65rem;color:var(--text3);margin-top:.4rem;}
+
+    /* CHARTS ROW */
+    .card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.3rem;}
+    .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.6rem;}
+    .card-title{font-size:.9rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:.5rem;}
+
+    .chart-container{position:relative;width:100%;height:220px;}
+
+    /* TABLES SECTION */
+    .section-grid{display:grid;grid-template-columns:1.45fr 1fr;gap:1.2rem;}
+
+    .table-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden;}
+    .table-toolbar{padding:1.1rem 1.3rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;border-bottom:1px solid var(--border);}
+    .table-search{display:flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.05);border:1px solid var(--border);
+                  border-radius:var(--radius-sm);padding:.4rem .75rem;width:200px;}
+    .table-search input{background:none;border:none;outline:none;font-size:.78rem;font-family:var(--font);color:var(--text);width:100%;}
+    .table-search input::placeholder{color:var(--text3);}
+
+    .data-table{width:100%;border-collapse:collapse;}
+    .data-table th{font-size:.65rem;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;
+                   padding:.7rem 1.1rem;text-align:left;border-bottom:1px solid var(--border);background:rgba(255,255,255,.015);}
+    .data-table td{padding:.75rem 1.1rem;border-bottom:1px solid rgba(255,255,255,.04);font-size:.82rem;vertical-align:middle;}
+    .data-table tr:last-child td{border-bottom:none;}
+    .data-table tr:hover td{background:rgba(255,255,255,.025);}
+
+    .trend-pill{display:inline-flex;align-items:center;gap:3px;font-size:.68rem;font-weight:800;color:var(--green);}
+    .trend-pill.down{color:var(--red);}
+
+    .btn-action-sm{background:var(--pink-glow);border:1px solid rgba(255,42,109,.3);color:var(--pink);
+                   border-radius:6px;padding:.32rem .65rem;font-size:.72rem;font-weight:700;transition:all .2s;
+                   display:inline-flex;align-items:center;gap:.3rem;}
+    .btn-action-sm:hover{background:var(--pink);color:#fff;}
+
+    .btn-scraper-sm{background:var(--blue-dim);border:1px solid rgba(56,189,248,.3);color:var(--blue);
+                    border-radius:6px;padding:.32rem .65rem;font-size:.72rem;font-weight:700;transition:all .2s;
+                    display:inline-flex;align-items:center;gap:.3rem;}
+    .btn-scraper-sm:hover{background:var(--blue);color:#0f1624;}
+
+    .score-badge{font-size:.62rem;font-weight:800;padding:2px 7px;border-radius:50px;}
+    .score-high{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+    .score-med{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
+    .score-low{background:rgba(255,255,255,.05);color:var(--text3);border:1px solid var(--border);}
+
+    /* ── MODALS ── */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--bg2);border:1px solid var(--card-border);border-radius:18px;padding:1.8rem;width:480px;max-width:94vw;box-shadow:0 25px 60px rgba(0,0,0,.7);animation:modalIn .25s ease;}
+    @keyframes modalIn{from{opacity:0;transform:translateY(18px)scale(.96);}to{opacity:1;transform:none;}}
+    .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;}
+    .modal-title{font-size:1.05rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:.5rem;}
+    .btn-close-modal{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+    .btn-close-modal:hover{color:var(--text);border-color:rgba(255,255,255,.2);}
+
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+    .field{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.8rem;}
+    .field-label{font-size:.65rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;}
+    .field-input{background:rgba(255,255,255,.05);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:.6rem .85rem;font-size:.85rem;font-family:var(--font);color:var(--text);outline:none;transition:all .2s;}
+    .field-input:focus{border-color:rgba(255,42,109,.5);background:rgba(255,255,255,.08);}
+    .field-input::placeholder{color:var(--text3);}
+
+    .modal-actions{display:flex;gap:.8rem;margin-top:1.2rem;}
+    .btn-modal-save{flex:1;background:var(--pink);color:#fff;border-radius:var(--radius-sm);padding:.65rem;font-size:.85rem;font-weight:800;transition:all .2s;box-shadow:0 4px 12px var(--pink-glow);display:flex;align-items:center;justify-content:center;gap:.4rem;}
+    .btn-modal-save:hover{opacity:.9;}
+    .btn-modal-cancel{flex:1;background:rgba(255,255,255,.05);border:1px solid var(--card-border);color:var(--text2);border-radius:var(--radius-sm);padding:.65rem;font-size:.85rem;font-weight:700;transition:all .2s;}
+    .btn-modal-cancel:hover{background:rgba(255,255,255,.08);color:var(--text);}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#151f32;border:1px solid rgba(255,255,255,.15);
+           border-radius:12px;padding:.85rem 1.2rem;font-size:.82rem;font-weight:600;color:var(--text);
+           box-shadow:0 12px 36px rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;gap:.6rem;
+           animation:slideUp .25s ease;}
+    @keyframes slideUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+    @media(max-width:1150px){.section-grid{grid-template-columns:1fr;}.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:900px){
+      .sb{transform:translateX(-100%);}
+      .main{margin-left:0;width:100%;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sb">
+  <div class="sb-brand">
+    <div class="sb-logo-icon">
+      <span class="svg-icon" style="width:20px;height:20px;">
+        <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </span>
+    </div>
+    <div class="sb-brand-text">
+      <div class="sb-logo-name">OfferMatrix</div>
+      <div class="sb-admin-badge">ADMIN PANEL</div>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sb-section">Control Center</div>
+    <a href="admin-dashboard.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+      Dashboard
+    </a>
+    <a href="admin-scraper-health.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/></svg></span>
+      Scraper Health
+    </a>
+    <a href="admin-deals-queue.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+      Deal Queue
+      <span class="sb-count">8</span>
+    </a>
+    <a href="admin-affiliates.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      Affiliate Manager
+    </a>
+    <a href="admin-fraud-reports.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+      Spam & Fraud Center
+      <span class="sb-count">4</span>
+    </a>
+
+    <div class="sb-section">Analytics</div>
+    <a href="admin-platform-analytics.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17l-5-5-4 4-4-4"/></svg></span>
+      Platform Analytics
+    </a>
+    <a href="admin-search-trends.html" class="sb-link active">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></span>
+      Search Trends
+    </a>
+    <a href="admin-alert-manager.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
+      Alert Manager
+      <span class="sb-count sb-count-warn">3</span>
+    </a>
+
+    <div class="sb-section">System</div>
+    <a href="admin-settings.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+      Settings
+    </a>
+    <a href="admin-users.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      User Management
+    </a>
+    <a href="admin-login.html" class="sb-link" style="color:#f87171;margin-top:.5rem;">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      Sign Out
+    </a>
+  </nav>
+
+  <div class="sb-footer">
+    <div class="sb-user">
+      <div class="sb-user-av">SA</div>
+      <div>
+        <div class="sb-user-name">Super Admin</div>
+        <div class="sb-user-role">Superuser · Full Access</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══ MAIN CONTENT ══ -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="tb-title-box">
+      <div class="tb-title">
+        <span class="svg-icon" style="width:20px;height:20px;color:var(--pink);">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+        </span>
+        Search Trends & Demand Intelligence
+      </div>
+      <div class="tb-sub">Identify high-volume queries, discover supply gaps & spawn targeted crawlers</div>
+    </div>
+
+    <div class="tb-actions">
+      <button class="btn-cta" onclick="openCustomDealModal()">
+        <span class="svg-icon" style="width:15px;height:15px;">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </span>
+        Create Custom Deal
+      </button>
+    </div>
+  </header>
+
+  <!-- PAGE BODY -->
+  <main class="page">
+
+    <!-- KPI CARDS -->
+    <div class="kpi-grid">
+      <!-- 1 -->
+      <div class="kpi-card">
+        <div class="kpi-head">
+          <div class="kpi-icon" style="background:var(--blue-dim);color:var(--blue);">
+            <span class="svg-icon" style="width:20px;height:20px;">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </span>
+          </div>
+          <div class="kpi-badge up">
+            <span class="svg-icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg></span>
+            +14.2% today
+          </div>
+        </div>
+        <div class="kpi-val">34,892</div>
+        <div class="kpi-lbl">Total Queries Today</div>
+        <div class="kpi-sub">Peak velocity at 8:45 PM BST</div>
+      </div>
+
+      <!-- 2 -->
+      <div class="kpi-card">
+        <div class="kpi-head">
+          <div class="kpi-icon" style="background:var(--red-dim);color:var(--red);">
+            <span class="svg-icon" style="width:20px;height:20px;">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            </span>
+          </div>
+          <div class="kpi-badge err">
+            4.07% rate
+          </div>
+        </div>
+        <div class="kpi-val" style="color:var(--red);">1,420</div>
+        <div class="kpi-lbl">Zero-Result Queries</div>
+        <div class="kpi-sub">Users requested unmatched items</div>
+      </div>
+
+      <!-- 3 -->
+      <div class="kpi-card">
+        <div class="kpi-head">
+          <div class="kpi-icon" style="background:var(--pink-glow);color:var(--pink);">
+            <span class="svg-icon" style="width:20px;height:20px;">
+              <svg viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+            </span>
+          </div>
+          <div class="kpi-badge up">
+            <span class="svg-icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg></span>
+            +185% surge
+          </div>
+        </div>
+        <div class="kpi-val" style="font-size:1.3rem;">iPhone 16 Pro</div>
+        <div class="kpi-lbl">Top Trending Keyword</div>
+        <div class="kpi-sub">4,810 requests in last 24h</div>
+      </div>
+
+      <!-- 4 -->
+      <div class="kpi-card">
+        <div class="kpi-head">
+          <div class="kpi-icon" style="background:var(--green-dim);color:var(--green);">
+            <span class="svg-icon" style="width:20px;height:20px;">
+              <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </span>
+          </div>
+          <div class="kpi-badge up">99.8% cache</div>
+        </div>
+        <div class="kpi-val">38 ms</div>
+        <div class="kpi-lbl">Avg Response Latency</div>
+        <div class="kpi-sub">Elasticsearch cluster healthy</div>
+      </div>
+    </div>
+
+    <!-- ══ HOURLY SEARCH DEMAND CHART ══ -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">
+            <span class="svg-icon" style="width:18px;height:18px;color:var(--blue);">
+              <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </span>
+            24-Hour Search Volume & Unmatched Rate
+          </div>
+          <div style="font-size:.72rem;color:var(--text3);margin-top:2px;">Comparing aggregate user queries against missing catalogue inventory</div>
+        </div>
+        <span style="font-size:.72rem;color:var(--green);font-weight:700;">Live Feed Active</span>
+      </div>
+
+      <div class="chart-container">
+        <canvas id="searchTrendsChart"></canvas>
+      </div>
+    </div>
+
+    <!-- ══ TWO COLUMNS: TRENDING KEYWORDS + ZERO RESULTS QUEUE ══ -->
+    <div class="section-grid">
+
+      <!-- COL 1: TOP SEARCHED KEYWORDS -->
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div>
+            <div style="font-weight:800;font-size:.9rem;color:var(--text);">Top Searched Keywords</div>
+            <div style="font-size:.68rem;color:var(--text3);">Ranked by aggregate search interest</div>
+          </div>
+          <div class="table-search">
+            <span class="svg-icon" style="width:13px;height:13px;color:var(--text3);"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            <input type="text" placeholder="Search keywords..." id="kw-search-input" oninput="filterKeywords()"/>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Keyword Term</th>
+                <th>Category</th>
+                <th>Daily Queries</th>
+                <th>7D Velocity</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="keywords-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- COL 2: ZERO RESULTS QUEUE (SUPPLY GAP) -->
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div>
+            <div style="font-weight:800;font-size:.9rem;color:var(--red);">Zero-Result Supply Gaps</div>
+            <div style="font-size:.68rem;color:var(--text3);">Searches with no live matching deals</div>
+          </div>
+          <span class="score-badge score-high" id="missing-count">5 Items Pending</span>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Unmatched Query</th>
+                <th>Searches</th>
+                <th>Demand Gap</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="missing-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<!-- ══ MODAL 1: CREATE CUSTOM DEAL ══ -->
+<div class="modal-overlay" id="modal-custom-deal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">
+        <span class="svg-icon" style="width:20px;height:20px;color:var(--pink);"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        Create Custom Platform Deal
+      </div>
+      <button class="btn-close-modal" onclick="closeModal('modal-custom-deal')">
+        <span class="svg-icon" style="width:16px;height:16px;"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+      </button>
+    </div>
+
+    <div class="field">
+      <div class="field-label">Target Search Keyword / Product Title</div>
+      <input class="field-input" type="text" id="deal-keyword" placeholder="e.g. iPhone 16 Pro Max"/>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <div class="field-label">Vertical Category</div>
+        <select class="field-input" id="deal-category">
+          <option>Electronics & Gadgets</option>
+          <option>Skincare & Beauty</option>
+          <option>Food & Restaurants</option>
+          <option>Grocery & Superstore</option>
+          <option>Ride-Sharing</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Merchant Partner</div>
+        <select class="field-input" id="deal-partner">
+          <option>Daraz Bangladesh</option>
+          <option>Pickaboo</option>
+          <option>StarTech</option>
+          <option>Shajgoj</option>
+          <option>Chaldal</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <div class="field-label">Discount Text / Value</div>
+        <input class="field-input" type="text" id="deal-discount" placeholder="e.g. ৳8,000 Off or 25% Off"/>
+      </div>
+      <div class="field">
+        <div class="field-label">Promo Voucher Code (Optional)</div>
+        <input class="field-input" type="text" id="deal-voucher" placeholder="e.g. OMFALL26"/>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">Affiliate Redirect Target URL</div>
+      <input class="field-input" type="url" id="deal-url" placeholder="https://daraz.com.bd/products/iphone-16?aff=om"/>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-modal-save" onclick="saveCustomDeal()">
+        <span class="svg-icon" style="width:16px;height:16px;"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span>
+        Publish Custom Deal
+      </button>
+      <button class="btn-modal-cancel" onclick="closeModal('modal-custom-deal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL 2: ASSIGN TO SCRAPER ══ -->
+<div class="modal-overlay" id="modal-scraper">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">
+        <span class="svg-icon" style="width:20px;height:20px;color:var(--blue);"><svg viewBox="0 0 24 24"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/></svg></span>
+        Assign Targeted Crawler Job
+      </div>
+      <button class="btn-close-modal" onclick="closeModal('modal-scraper')">
+        <span class="svg-icon" style="width:16px;height:16px;"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+      </button>
+    </div>
+
+    <div class="field">
+      <div class="field-label">Target Search Query</div>
+      <input class="field-input" type="text" id="scraper-target-kw" readonly style="opacity:.8;"/>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <div class="field-label">Target Scraper Engine</div>
+        <select class="field-input" id="scraper-platform">
+          <option>Daraz E-Commerce Crawler</option>
+          <option>Shajgoj Skincare Engine</option>
+          <option>StarTech Electronics Module</option>
+          <option>Pickaboo Flash Scraper</option>
+          <option>Chaldal Grocery API</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Execution Priority</div>
+        <select class="field-input" id="scraper-priority">
+          <option>Urgent (Immediate Queue)</option>
+          <option>High Priority</option>
+          <option>Next Scheduled Cron (Hourly)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">Crawl Depth & Page Limit</div>
+      <select class="field-input">
+        <option>Top 20 Search Results (Fast)</option>
+        <option>Top 50 Results with Price History</option>
+        <option>Deep Catalog Crawl (All Variants)</option>
+      </select>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-modal-save" style="background:var(--blue);box-shadow:0 4px 12px rgba(56,189,248,.3);color:#0f1624;" onclick="triggerScraperJob()">
+        <span class="svg-icon" style="width:16px;height:16px;"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
+        Launch Crawler Job
+      </button>
+      <button class="btn-modal-cancel" onclick="closeModal('modal-scraper')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCRIPT ══ -->
+<script>
+let KEYWORDS_DATA = [
+  { id:1, kw:'iPhone 16 Pro Max', cat:'Electronics', queries:4810, growth:'+185%', up:true },
+  { id:2, kw:'Samsung Galaxy S24 Ultra', cat:'Electronics', queries:3420, growth:'+42%', up:true },
+  { id:3, kw:'COSRX Snail Mucin', cat:'Skincare', queries:2980, growth:'+64%', up:true },
+  { id:4, kw:'Anker 737 Power Bank', cat:'Electronics', queries:2150, growth:'+18%', up:true },
+  { id:5, kw:'Kacchi Bhai Buy 1 Get 1', cat:'Food', queries:1840, growth:'+92%', up:true },
+  { id:6, kw:'Cerave Hydrating Cleanser', cat:'Skincare', queries:1520, growth:'-8%', up:false },
+  { id:7, kw:'Sony WH-1000XM5', cat:'Electronics', queries:1290, growth:'+31%', up:true },
+  { id:8, kw:'Pathao 50% Off Promo', cat:'Rides', queries:1180, growth:'+55%', up:true }
+];
+
+let MISSING_OFFERS = [
+  { id:1, query:'iPhone 15 Pro Daraz Flash', searches:840, score:'High' },
+  { id:2, query:'The Ordinary Niacinamide 10%', searches:520, score:'High' },
+  { id:3, query:'MacBook Air M3 StarTech', searches:310, score:'Med' },
+  { id:4, query:'Pizza Guy Dhanmondi BOGO', searches:240, score:'Med' },
+  { id:5, query:'AirPods Pro 2 USB-C', searches:180, score:'Low' }
+];
+
+let searchTrendsChart = null;
+
+// ── INITIALIZE CHART ──
+function initSearchChart() {
+  const ctx = document.getElementById('searchTrendsChart').getContext('2d');
+  const gradientBlue = ctx.createLinearGradient(0, 0, 0, 220);
+  gradientBlue.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
+  gradientBlue.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
+
+  searchTrendsChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00', 'Now'],
+      datasets: [
+        {
+          label: 'User Search Volume',
+          data: [1200, 450, 890, 2840, 4210, 4950, 6120, 8420, 5810],
+          borderColor: '#38bdf8',
+          backgroundColor: gradientBlue,
+          borderWidth: 2.5,
+          tension: 0.38,
+          fill: true,
+          pointRadius: 4,
+          pointBackgroundColor: '#38bdf8'
+        },
+        {
+          label: 'Zero-Result Queries',
+          data: [80, 25, 40, 110, 190, 220, 290, 340, 125],
+          borderColor: '#ef4444',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          borderDash: [4, 4],
+          tension: 0.38,
+          pointRadius: 3,
+          pointBackgroundColor: '#ef4444'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          align: 'end',
+          labels: { color: '#94a3b8', font: { family: 'Inter', size: 11, weight: '600' }, boxWidth: 12, usePointStyle: true }
+        },
+        tooltip: {
+          backgroundColor: '#151f32',
+          titleColor: '#f1f5f9',
+          bodyColor: '#94a3b8',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          padding: 8,
+          cornerRadius: 8
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+          ticks: { color: '#64748b', font: { family: 'Inter', size: 10 } }
+        },
+        y: {
+          grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+          ticks: { color: '#64748b', font: { family: 'Inter', size: 10 } }
+        }
+      }
+    }
+  });
+}
+
+// ── RENDER TABLES ──
+function renderKeywords(data) {
+  const tbody = document.getElementById('keywords-tbody');
+  tbody.innerHTML = data.map((k, idx) => `
+    <tr>
+      <td style="font-weight:800;color:var(--text3);">${idx + 1}</td>
+      <td style="font-weight:800;color:var(--text);">${k.kw}</td>
+      <td style="color:var(--text2);font-size:.75rem;">${k.cat}</td>
+      <td style="font-weight:800;color:var(--text);">${k.queries.toLocaleString()}</td>
+      <td>
+        <span class="trend-pill ${k.up ? '' : 'down'}">
+          <span class="svg-icon" style="width:11px;height:11px;">
+            ${k.up ? '<svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>' : '<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>'}
+          </span>
+          ${k.growth}
+        </span>
+      </td>
+      <td>
+        <button class="btn-action-sm" onclick="openCustomDealModal('${k.kw}', '${k.cat}')">
+          <span class="svg-icon" style="width:11px;height:11px;"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          Create Deal
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderMissingOffers() {
+  const tbody = document.getElementById('missing-tbody');
+  document.getElementById('missing-count').innerText = `${MISSING_OFFERS.length} Gaps Pending`;
+
+  if (!MISSING_OFFERS.length) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:1.5rem;color:var(--text3);">No zero-result search gaps recorded!</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = MISSING_OFFERS.map(m => {
+    const scoreCls = m.score === 'High' ? 'score-high' : m.score === 'Med' ? 'score-med' : 'score-low';
+    return `
+      <tr>
+        <td style="font-weight:700;color:var(--text);">${m.query}</td>
+        <td style="font-weight:800;color:var(--red);">${m.searches}</td>
+        <td><span class="score-badge ${scoreCls}">${m.score} Demand</span></td>
+        <td>
+          <button class="btn-scraper-sm" onclick="openScraperModal('${m.query}', ${m.id})">
+            <span class="svg-icon" style="width:11px;height:11px;"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
+            Crawl
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function filterKeywords() {
+  const q = document.getElementById('kw-search-input').value.toLowerCase();
+  const filtered = KEYWORDS_DATA.filter(k => k.kw.toLowerCase().includes(q) || k.cat.toLowerCase().includes(q));
+  renderKeywords(filtered);
+}
+
+// ── MODAL HANDLING ──
+let activeMissingId = null;
+
+function openCustomDealModal(kw = '', cat = '') {
+  document.getElementById('deal-keyword').value = kw;
+  if (cat) {
+    const select = document.getElementById('deal-category');
+    for (let opt of select.options) {
+      if (opt.text.includes(cat)) { opt.selected = true; break; }
+    }
+  }
+  openModal('modal-custom-deal');
+}
+
+function saveCustomDeal() {
+  const kw = document.getElementById('deal-keyword').value.trim();
+  const partner = document.getElementById('deal-partner').value;
+  if (!kw) { showToast('Please enter a target product keyword.'); return; }
+
+  closeModal('modal-custom-deal');
+  showToast(`Custom Deal for "${kw}" on ${partner} published successfully!`);
+}
+
+function openScraperModal(query, missingId) {
+  activeMissingId = missingId;
+  document.getElementById('scraper-target-kw').value = query;
+  openModal('modal-scraper');
+}
+
+function triggerScraperJob() {
+  const kw = document.getElementById('scraper-target-kw').value;
+  const platform = document.getElementById('scraper-platform').value;
+
+  if (activeMissingId) {
+    MISSING_OFFERS = MISSING_OFFERS.filter(m => m.id !== activeMissingId);
+    renderMissingOffers();
+  }
+
+  closeModal('modal-scraper');
+  showToast(`Targeted crawler job dispatched to ${platform} for "${kw}"`);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── TOAST NOTIFICATION ──
+function showToast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `
+    <span class="svg-icon" style="width:16px;height:16px;color:var(--green);">
+      <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </span>
+    <span>${msg}</span>
+  `;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(10px)';
+    toast.style.transition = 'all 0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 2800);
+}
+
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  initSearchChart();
+  renderKeywords(KEYWORDS_DATA);
+  renderMissingOffers();
+});
+</script>
+</body>
+</html>

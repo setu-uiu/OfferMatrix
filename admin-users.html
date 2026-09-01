@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>User Management – OfferMatrix Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --bg:#0b0f19;--bg2:#0f1624;
+      --card:rgba(255,255,255,.03);--card-border:rgba(255,255,255,.08);--card-hover:rgba(255,255,255,.055);
+      --pink:#ff2a6d;--pink-glow:rgba(255,42,109,.25);
+      --green:#10b981;--green-dim:rgba(16,185,129,.15);
+      --blue:#38bdf8;--blue-dim:rgba(56,189,248,.15);
+      --amber:#f59e0b;--amber-dim:rgba(245,158,11,.15);
+      --red:#ef4444;--red-dim:rgba(239,68,68,.15);
+      --purple:#a78bfa;--purple-dim:rgba(167,139,250,.15);
+      --text:#e2e8f0;--text2:#94a3b8;--text3:#475569;
+      --border:rgba(255,255,255,.08);--font:'Inter',sans-serif;--sb:240px;--radius:14px;--radius-sm:10px;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden;}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none;}
+    a{color:inherit;text-decoration:none;}
+    ::-webkit-scrollbar{width:4px;height:4px;} ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:4px;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:40px 40px;}
+    .sb{width:var(--sb);min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:300;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+    .sb::-webkit-scrollbar{display:none;}
+    .sb-brand{display:flex;align-items:center;gap:10px;padding:1.3rem 1.4rem;border-bottom:1px solid var(--border);}
+    .sb-logo-icon{width:36px;height:36px;background:var(--pink);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;box-shadow:0 4px 12px var(--pink-glow);flex-shrink:0;}
+    .sb-logo-name{font-size:1.15rem;font-weight:800;color:var(--text);letter-spacing:-.3px;}
+    .sb-admin-badge{font-size:.5rem;font-weight:800;background:rgba(255,42,109,.2);color:var(--pink);padding:2px 7px;border-radius:4px;display:inline-block;}
+    .sb-nav{flex:1;padding:1rem 0;}
+    .sb-section{font-size:.6rem;font-weight:700;color:var(--text3);letter-spacing:1.2px;padding:1rem 1.4rem .35rem;text-transform:uppercase;}
+    .sb-link{display:flex;align-items:center;gap:.75rem;padding:.65rem 1.4rem;font-size:.84rem;font-weight:600;color:var(--text2);width:100%;text-align:left;cursor:pointer;transition:all .2s;}
+    .sb-link:hover{color:var(--text);background:rgba(255,255,255,.04);}
+    .sb-link.active{color:var(--pink);background:rgba(255,42,109,.1);border-right:2px solid var(--pink);}
+    .sb-icon{font-size:.95rem;width:20px;text-align:center;flex-shrink:0;}
+    .sb-count{margin-left:auto;font-size:.6rem;font-weight:800;padding:2px 7px;border-radius:50px;background:var(--red);color:#fff;}
+    .sb-count-warn{background:var(--amber);color:#111;}
+    .sb-footer{padding:.9rem 1.2rem;border-top:1px solid var(--border);}
+    .sb-user{display:flex;align-items:center;gap:.7rem;}
+    .sb-user-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--pink),#be185d);display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:.85rem;flex-shrink:0;}
+    .sb-user-name{font-size:.82rem;font-weight:700;color:var(--text);}
+    .sb-user-role{font-size:.62rem;color:var(--text3);}
+    .main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;width:calc(100% - var(--sb));position:relative;z-index:1;}
+    .topbar{background:rgba(11,15,25,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.8rem 1.6rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+    .tb-title{font-size:1rem;font-weight:800;color:var(--text);}
+    .tb-actions{margin-left:auto;display:flex;align-items:center;gap:.7rem;}
+    .input-sm{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:.42rem .9rem;font-size:.78rem;font-family:var(--font);color:var(--text);outline:none;}
+    .input-sm:focus{border-color:rgba(255,255,255,.2);}
+    .input-sm::placeholder{color:var(--text3);}
+    .btn-primary{background:var(--pink);color:#fff;border-radius:var(--radius-sm);padding:.48rem 1.1rem;font-size:.82rem;font-weight:700;transition:all .2s;box-shadow:0 4px 12px var(--pink-glow);}
+    .btn-primary:hover{opacity:.88;}
+
+    /* PAGE */
+    .page{flex:1;padding:1.5rem;display:flex;flex-direction:column;gap:1.2rem;}
+
+    /* STATS */
+    .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;}
+    .stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.1rem;text-align:center;}
+    .stat-val{font-size:1.3rem;font-weight:900;}
+    .stat-lbl{font-size:.63rem;color:var(--text2);font-weight:600;text-transform:uppercase;margin-top:2px;}
+
+    /* CARD */
+    .card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.4rem;}
+    .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.6rem;}
+    .card-title{font-size:.9rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:.5rem;}
+    .filter-row{display:flex;gap:.4rem;flex-wrap:wrap;}
+    .ftab{padding:.35rem .8rem;border:1px solid var(--card-border);border-radius:50px;font-size:.75rem;font-weight:700;color:var(--text2);cursor:pointer;background:none;transition:all .2s;}
+    .ftab.on{background:var(--pink);color:#fff;border-color:var(--pink);}
+    .ftab:hover:not(.on){border-color:rgba(255,255,255,.15);color:var(--text);}
+
+    /* TABLE */
+    .user-table{width:100%;border-collapse:collapse;}
+    .user-table th{font-size:.62rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:.6rem 1rem;text-align:left;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02);}
+    .user-table td{padding:.8rem 1rem;border-bottom:1px solid rgba(255,255,255,.04);font-size:.81rem;vertical-align:middle;}
+    .user-table tr:last-child td{border-bottom:none;}
+    .user-table tr:hover td{background:rgba(255,255,255,.025);}
+
+    .user-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:.82rem;flex-shrink:0;}
+    .user-name{font-size:.85rem;font-weight:800;color:var(--text);}
+    .user-email{font-size:.68rem;color:var(--text3);}
+    .user-handle{font-size:.7rem;color:var(--text2);}
+
+    .role-badge{font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:50px;}
+    .role-admin{background:var(--pink-glow);color:var(--pink);}
+    .role-mod{background:var(--purple-dim);color:var(--purple);}
+    .role-merchant{background:var(--green-dim);color:var(--green);}
+    .role-user{background:rgba(255,255,255,.06);color:var(--text2);}
+
+    .status-pill{font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:50px;}
+    .pill-active{background:var(--green-dim);color:var(--green);}
+    .pill-banned{background:var(--red-dim);color:var(--red);}
+    .pill-pending{background:var(--amber-dim);color:var(--amber);}
+
+    .trust-bar-wrap{height:4px;background:rgba(255,255,255,.06);border-radius:50px;overflow:hidden;min-width:60px;margin-top:3px;}
+    .trust-bar-fill{height:100%;background:var(--pink);border-radius:50px;}
+
+    .act-btn{font-size:.66rem;font-weight:700;padding:.28rem .58rem;border-radius:6px;cursor:pointer;transition:all .2s;border:1px solid;}
+    .act-view{background:var(--blue-dim);color:var(--blue);border-color:rgba(56,189,248,.25);}
+    .act-view:hover{background:rgba(56,189,248,.25);}
+    .act-role{background:var(--purple-dim);color:var(--purple);border-color:rgba(167,139,250,.25);}
+    .act-role:hover{background:rgba(167,139,250,.3);}
+    .act-ban{background:var(--red-dim);color:var(--red);border-color:rgba(239,68,68,.25);}
+    .act-ban:hover{background:rgba(239,68,68,.3);}
+
+    /* ROLE MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--bg2);border:1px solid var(--card-border);border-radius:20px;padding:2rem;width:420px;max-width:95vw;box-shadow:0 25px 60px rgba(0,0,0,.6);animation:modalIn .25s ease;}
+    @keyframes modalIn{from{opacity:0;transform:translateY(20px)scale(.96);}to{opacity:1;transform:none;}}
+    .modal-title{font-size:1rem;font-weight:800;color:var(--text);margin-bottom:1.2rem;}
+    .role-options{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.2rem;}
+    .role-opt{padding:.9rem;border:1.5px solid var(--card-border);border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-align:center;}
+    .role-opt:hover,.role-opt.selected{border-color:var(--pink);background:rgba(255,42,109,.08);}
+    .role-opt-icon{font-size:1.4rem;margin-bottom:.3rem;}
+    .role-opt-name{font-size:.82rem;font-weight:800;color:var(--text);}
+    .modal-btns{display:flex;gap:.8rem;}
+    .btn-modal-save{flex:1;background:var(--pink);color:#fff;border-radius:var(--radius-sm);padding:.65rem;font-size:.85rem;font-weight:800;box-shadow:0 4px 12px var(--pink-glow);}
+    .btn-modal-save:hover{opacity:.88;}
+    .btn-modal-cancel{flex:1;background:rgba(255,255,255,.05);border:1px solid var(--card-border);color:var(--text2);border-radius:var(--radius-sm);padding:.65rem;font-size:.85rem;font-weight:700;}
+    .btn-modal-cancel:hover{background:rgba(255,255,255,.08);}
+
+    /* USER DETAIL MODAL */
+    .ud-row{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.82rem;}
+    .ud-row:last-child{border-bottom:none;}
+    .ud-label{color:var(--text2);}
+    .ud-val{font-weight:700;color:var(--text);}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#0f1624;border:1px solid var(--card-border);border-radius:12px;padding:.8rem 1.2rem;font-size:.82rem;font-weight:600;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:9999;animation:slideUp .25s ease;}
+    @keyframes slideUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+    @media(max-width:900px){.sb{transform:translateX(-100);}.main{margin-left:0;width:100%;}.stats-row{grid-template-columns:repeat(3,1fr);}}
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-brand">
+    <div class="sb-logo-icon">%</div>
+    <div><div class="sb-logo-name">OfferMatrix</div><div class="sb-admin-badge">ADMIN PANEL</div></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Control Center</div>
+    <a href="admin-dashboard.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+      Dashboard
+    </a>
+    <a href="admin-scraper-health.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/></svg></span>
+      Scraper Health
+    </a>
+    <a href="admin-deals-queue.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+      Deal Queue
+      <span class="sb-count">8</span>
+    </a>
+    <a href="admin-affiliates.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      Affiliate Manager
+    </a>
+    <a href="admin-fraud-reports.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+      Spam & Fraud Center
+      <span class="sb-count">4</span>
+    </a>
+
+    <div class="sb-section">Analytics</div>
+    <a href="admin-platform-analytics.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M3 3v18h18"/><path d="M18 17l-5-5-4 4-4-4"/></svg></span>
+      Platform Analytics
+    </a>
+    <a href="admin-search-trends.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></span>
+      Search Trends
+    </a>
+    <a href="admin-alert-manager.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
+      Alert Manager
+      <span class="sb-count sb-count-warn">3</span>
+    </a>
+
+    <div class="sb-section">System</div>
+    <a href="admin-settings.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+      Settings
+    </a>
+    <a href="admin-users.html" class="sb-link active">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      User Management
+    </a>
+    <a href="admin-login.html" class="sb-link" style="color:#f87171;margin-top:.5rem;">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      Sign Out
+    </a>
+  </nav>
+  <div class="sb-footer"><div class="sb-user"><div class="sb-user-av">A</div><div><div class="sb-user-name">Super Admin</div><div class="sb-user-role">Full Access</div></div></div></div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-title">👥 User Management</div>
+    <div class="tb-actions">
+      <input class="input-sm" type="text" placeholder="🔍 Search users, emails…" oninput="searchUsers(this.value)"/>
+      <select class="input-sm" onchange="filterByRole(this.value)">
+        <option value="">All Roles</option>
+        <option value="Admin">Admin</option>
+        <option value="Moderator">Moderator</option>
+        <option value="Merchant">Merchant</option>
+        <option value="User">User</option>
+      </select>
+      <select class="input-sm" onchange="filterByStatus(this.value)">
+        <option value="">All Status</option>
+        <option value="Active">Active</option>
+        <option value="Banned">Banned</option>
+        <option value="Pending">Pending</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-val" style="color:var(--blue);">18,420</div><div class="stat-lbl">Total Users</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--green);">16,240</div><div class="stat-lbl">Active</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--amber);">142</div><div class="stat-lbl">Merchants</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--red);">38</div><div class="stat-lbl">Banned</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--purple);">5</div><div class="stat-lbl">Admins/Mods</div></div>
+    </div>
+
+    <!-- FILTER TABS -->
+    <div class="filter-row">
+      <button class="ftab on" onclick="setTab('all',this)">👥 All Users</button>
+      <button class="ftab" onclick="setTab('Admin',this)">🔑 Admins</button>
+      <button class="ftab" onclick="setTab('Moderator',this)">🛡️ Moderators</button>
+      <button class="ftab" onclick="setTab('Merchant',this)">🏪 Merchants</button>
+      <button class="ftab" onclick="setTab('Banned',this)">🚫 Banned</button>
+    </div>
+
+    <!-- USER TABLE -->
+    <div class="card" style="padding:0;">
+      <div style="overflow-x:auto;padding:1.4rem;">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th colspan="2">User</th>
+              <th>Handle</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Trust Points</th>
+              <th>Deals</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="user-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CHANGE ROLE MODAL -->
+<div class="modal-overlay" id="modal-role">
+  <div class="modal">
+    <div class="modal-title">🔑 Change User Role — <span id="role-modal-name">User</span></div>
+    <div class="role-options" id="role-options">
+      <div class="role-opt" onclick="selectRole('User',this)"><div class="role-opt-icon">👤</div><div class="role-opt-name">Standard User</div></div>
+      <div class="role-opt" onclick="selectRole('Merchant',this)"><div class="role-opt-icon">🏪</div><div class="role-opt-name">Merchant</div></div>
+      <div class="role-opt" onclick="selectRole('Moderator',this)"><div class="role-opt-icon">🛡️</div><div class="role-opt-name">Moderator</div></div>
+      <div class="role-opt" onclick="selectRole('Admin',this)"><div class="role-opt-icon">🔑</div><div class="role-opt-name">Admin</div></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-modal-save" onclick="saveRole()">Save Role</button>
+      <button class="btn-modal-cancel" onclick="closeModal('modal-role')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- USER DETAIL MODAL -->
+<div class="modal-overlay" id="modal-view">
+  <div class="modal">
+    <div class="modal-title" id="view-modal-title">👤 User Details</div>
+    <div id="view-modal-body"></div>
+    <div style="margin-top:1.2rem;">
+      <button class="btn-modal-cancel" style="width:100%;" onclick="closeModal('modal-view')">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let USERS = [
+  { id:1,  name:'Super Admin',    email:'admin@offermatrix.bd',   handle:'@superadmin',    role:'Admin',     status:'Active',  pts:9999, deals:0,  joined:'Jan 2025', color:'#ff2a6d' },
+  { id:2,  name:'Farhan Hossain', email:'farhan@gmail.com',       handle:'@farhan.h',      role:'Moderator', status:'Active',  pts:2400, deals:48, joined:'Mar 2025', color:'#a78bfa' },
+  { id:3,  name:'Raad Ahmed',     email:'raad@gmail.com',         handle:'@raad.ahmed',    role:'User',      status:'Active',  pts:1200, deals:24, joined:'Jan 2026', color:'#38bdf8' },
+  { id:4,  name:'Tasnim Akter',   email:'tasnim@gmail.com',       handle:'@tasnim.a',      role:'User',      status:'Active',  pts:1800, deals:36, joined:'Feb 2026', color:'#f59e0b' },
+  { id:5,  name:'Rifat Islam',    email:'rifat@gmail.com',        handle:'@rifat.i',       role:'User',      status:'Active',  pts:1550, deals:31, joined:'Mar 2026', color:'#10b981' },
+  { id:6,  name:'Nadia Sultana',  email:'nadia@gmail.com',        handle:'@nadia.s',       role:'User',      status:'Active',  pts:950,  deals:19, joined:'Apr 2026', color:'#ec4899' },
+  { id:7,  name:'Tech World BD',  email:'techworld@merchant.bd',  handle:'@techworldbd',   role:'Merchant',  status:'Active',  pts:500,  deals:0,  joined:'May 2026', color:'#0d9488' },
+  { id:8,  name:'Daraz Official', email:'daraz@partner.bd',       handle:'@darazofficial', role:'Merchant',  status:'Active',  pts:1000, deals:0,  joined:'Jan 2025', color:'#ff6900' },
+  { id:9,  name:'Spam Bot 001',   email:'spam@bot.xyz',           handle:'@spambot',       role:'User',      status:'Banned',  pts:0,    deals:0,  joined:'Aug 2026', color:'#64748b' },
+  { id:10, name:'Karim Sheikh',   email:'karim@gmail.com',        handle:'@karim.s',       role:'User',      status:'Active',  pts:340,  deals:8,  joined:'Jul 2026', color:'#3b82f6' },
+  { id:11, name:'Asha Roy',       email:'asha@gmail.com',         handle:'@asha.r',        role:'User',      status:'Pending', pts:0,    deals:0,  joined:'Sep 2026', color:'#a855f7' },
+  { id:12, name:'Rahman Stores',  email:'rahman@merchant.bd',     handle:'@rahmanstores',  role:'Merchant',  status:'Active',  pts:200,  deals:0,  joined:'Jun 2026', color:'#16a34a' },
+];
+
+let editingUserId = null, selectedRole = null, currentFilter = 'all', currentStatusFilter = '';
+
+function renderUsers(list) {
+  const roleCls = {Admin:'role-admin',Moderator:'role-mod',Merchant:'role-merchant',User:'role-user'};
+  const sCls = {Active:'pill-active',Banned:'pill-banned',Pending:'pill-pending'};
+  document.getElementById('user-tbody').innerHTML = list.map(u=>{
+    const trustPct = Math.min(100, (u.pts/2500)*100);
+    return `<tr id="urow-${u.id}">
+      <td><div class="user-av" style="background:${u.color}">${u.name.charAt(0)}</div></td>
+      <td><div class="user-name">${u.name}</div><div class="user-email">${u.email}</div></td>
+      <td><span class="user-handle">${u.handle}</span></td>
+      <td><span class="role-badge ${roleCls[u.role]||'role-user'}">${u.role}</span></td>
+      <td><span class="status-pill ${sCls[u.status]||'pill-pending'}">${u.status}</span></td>
+      <td>
+        <div style="font-size:.8rem;font-weight:700;color:var(--text);">${u.pts.toLocaleString()}</div>
+        <div class="trust-bar-wrap"><div class="trust-bar-fill" style="width:${trustPct}%"></div></div>
+      </td>
+      <td style="font-weight:700;color:var(--text);">${u.deals}</td>
+      <td style="font-size:.72rem;color:var(--text3);">${u.joined}</td>
+      <td>
+        <div style="display:flex;gap:.3rem;">
+          <button class="act-btn act-view" onclick="viewUser(${u.id})">View</button>
+          <button class="act-btn act-role" onclick="openRoleModal(${u.id})">Role</button>
+          <button class="act-btn act-ban" onclick="toggleBan(${u.id})">${u.status==='Banned'?'Unban':'Ban'}</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function getFiltered() {
+  return USERS.filter(u=>{
+    if (currentFilter==='all') return currentStatusFilter?u.status===currentStatusFilter:true;
+    if (currentFilter==='Banned') return u.status==='Banned';
+    return u.role===currentFilter && (currentStatusFilter?u.status===currentStatusFilter:true);
+  });
+}
+
+function setTab(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  renderUsers(getFiltered());
+}
+
+function searchUsers(q) {
+  const res = getFiltered().filter(u=>
+    u.name.toLowerCase().includes(q.toLowerCase())||
+    u.email.toLowerCase().includes(q.toLowerCase())||
+    u.handle.toLowerCase().includes(q.toLowerCase()));
+  renderUsers(res);
+}
+
+function filterByRole(r) {
+  currentFilter = r||'all';
+  renderUsers(getFiltered());
+}
+
+function filterByStatus(s) {
+  currentStatusFilter = s;
+  renderUsers(getFiltered());
+}
+
+function viewUser(id) {
+  const u = USERS.find(x=>x.id===id);
+  document.getElementById('view-modal-title').innerHTML = `<span style="display:inline-block;width:30px;height:30px;border-radius:50%;background:${u.color};line-height:30px;text-align:center;font-weight:900;color:#fff;margin-right:.5rem;">${u.name.charAt(0)}</span>${u.name}`;
+  document.getElementById('view-modal-body').innerHTML = [
+    ['Email', u.email], ['Handle', u.handle], ['Role', u.role], ['Status', u.status],
+    ['Trust Points', u.pts.toLocaleString()], ['Deals Submitted', u.deals],
+    ['Member Since', u.joined], ['User ID', '#OM-'+String(u.id).padStart(5,'0')]
+  ].map(([l,v])=>`<div class="ud-row"><span class="ud-label">${l}</span><span class="ud-val">${v}</span></div>`).join('');
+  openModal('modal-view');
+}
+
+function openRoleModal(id) {
+  const u = USERS.find(x=>x.id===id);
+  editingUserId = id; selectedRole = u.role;
+  document.getElementById('role-modal-name').textContent = u.name;
+  document.querySelectorAll('.role-opt').forEach(o=>o.classList.remove('selected'));
+  const roles = ['User','Merchant','Moderator','Admin'];
+  document.querySelectorAll('.role-opt').forEach((o,i)=>{ if(roles[i]===u.role) o.classList.add('selected'); });
+  openModal('modal-role');
+}
+
+function selectRole(role, el) {
+  selectedRole = role;
+  document.querySelectorAll('.role-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function saveRole() {
+  const u = USERS.find(x=>x.id===editingUserId);
+  if (!selectedRole) { showToast('⚠️ Please select a role.'); return; }
+  u.role = selectedRole;
+  closeModal('modal-role');
+  renderUsers(getFiltered());
+  showToast(`✅ ${u.name}'s role updated to ${selectedRole}.`);
+}
+
+function toggleBan(id) {
+  const u = USERS.find(x=>x.id===id);
+  if (u.role==='Admin') { showToast('⛔ Cannot ban an Admin account.'); return; }
+  if (!confirm(`${u.status==='Banned'?'Unban':'Ban'} user "${u.name}"?`)) return;
+  u.status = u.status==='Banned' ? 'Active' : 'Banned';
+  renderUsers(getFiltered());
+  showToast(u.status==='Banned' ? `🚫 ${u.name} has been banned.` : `✅ ${u.name} has been unbanned.`);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function showToast(msg) {
+  const ex=document.querySelector('.toast'); if(ex)ex.remove();
+  const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300);},2800);
+}
+
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); });
+});
+
+document.addEventListener('DOMContentLoaded',()=>renderUsers(getFiltered()));
+</script>
+</body>
+</html>

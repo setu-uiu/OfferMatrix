@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Platform Analytics – OfferMatrix Admin</title>
+  <meta name="description" content="OfferMatrix Platform Analytics — Traffic, conversion rates, category performance, and merchant click tracking."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       DARK GRID DESIGN SYSTEM — Zero Emojis, Pure Vector UI
+    ═══════════════════════════════════════════════════════ */
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --bg:         #0b0f19;
+      --bg2:        #0f1624;
+      --bg3:        #151f32;
+      --card:       rgba(22, 27, 34, 0.75);
+      --card-border:rgba(255,255,255,0.08);
+      --card-hover: rgba(255,255,255,0.05);
+      --pink:       #ff2a6d;
+      --pink-glow:  rgba(255,42,109,0.25);
+      --green:      #10b981;
+      --green-dim:  rgba(16,185,129,0.12);
+      --blue:       #38bdf8;
+      --blue-dim:   rgba(56,189,248,0.12);
+      --cyan:       #06b6d4;
+      --cyan-dim:   rgba(6,182,212,0.12);
+      --amber:      #f59e0b;
+      --amber-dim:  rgba(245,158,11,0.12);
+      --red:        #ef4444;
+      --red-dim:    rgba(239,68,68,0.12);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --text:       #f1f5f9;
+      --text2:      #94a3b8;
+      --text3:      #475569;
+      --border:     rgba(255,255,255,0.08);
+      --font:       'Inter',sans-serif;
+      --sb:         240px;
+      --radius:     12px;
+      --radius-sm:  8px;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden;}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none;}
+    a{color:inherit;text-decoration:none;}
+    ::-webkit-scrollbar{width:5px;height:5px;}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:4px;}
+
+    /* GRID BACKGROUND OVERLAY */
+    body::before{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+                       linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+      background-size:36px 36px;
+    }
+
+    /* ── SVG ICONS HELPER ── */
+    .svg-icon{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;vertical-align:middle;}
+    .svg-icon svg{width:100%;height:100%;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+
+    /* ── SIDEBAR ── */
+    .sb{width:var(--sb);min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);
+        display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:300;
+        overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+    .sb::-webkit-scrollbar{display:none;}
+    .sb-brand{display:flex;align-items:center;gap:10px;padding:1.3rem 1.4rem;border-bottom:1px solid var(--border);}
+    .sb-logo-icon{width:36px;height:36px;background:var(--pink);border-radius:10px;
+                  display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;
+                  color:#fff;box-shadow:0 4px 12px var(--pink-glow);flex-shrink:0;}
+    .sb-brand-text{display:flex;flex-direction:column;}
+    .sb-logo-name{font-size:1.15rem;font-weight:800;color:var(--text);letter-spacing:-.3px;}
+    .sb-admin-badge{font-size:.52rem;font-weight:800;background:rgba(255,42,109,.18);color:var(--pink);
+                    padding:2px 7px;border-radius:4px;letter-spacing:.6px;display:inline-block;width:fit-content;margin-top:2px;}
+
+    .sb-nav{flex:1;padding:1rem 0;}
+    .sb-section{font-size:.6rem;font-weight:700;color:var(--text3);letter-spacing:1.2px;
+                padding:1rem 1.4rem .35rem;text-transform:uppercase;}
+    .sb-link{display:flex;align-items:center;gap:.75rem;padding:.65rem 1.4rem;font-size:.84rem;font-weight:600;
+             color:var(--text2);width:100%;text-align:left;cursor:pointer;transition:all .2s;position:relative;}
+    .sb-link:hover{color:var(--text);background:rgba(255,255,255,.04);}
+    .sb-link.active{color:var(--pink);background:rgba(255,42,109,.1);border-right:2px solid var(--pink);}
+    .sb-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .sb-count{margin-left:auto;font-size:.62rem;font-weight:800;padding:2px 7px;border-radius:50px;
+              background:var(--red);color:#fff;}
+    .sb-count-warn{background:var(--amber);color:#111;}
+
+    .sb-footer{padding:.9rem 1.2rem;border-top:1px solid var(--border);}
+    .sb-user{display:flex;align-items:center;gap:.7rem;}
+    .sb-user-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--pink),#be185d);
+                display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:.85rem;flex-shrink:0;}
+    .sb-user-name{font-size:.82rem;font-weight:700;color:var(--text);}
+    .sb-user-role{font-size:.64rem;color:var(--text3);}
+
+    /* ── MAIN ── */
+    .main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;width:calc(100% - var(--sb));position:relative;z-index:1;}
+
+    /* TOPBAR */
+    .topbar{background:rgba(11,15,25,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+            padding:.8rem 1.6rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+    .tb-title-box{display:flex;flex-direction:column;}
+    .tb-title{font-size:1rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:.5rem;}
+    .tb-sub{font-size:.72rem;color:var(--text2);margin-top:1px;}
+    .tb-live{display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:var(--green);font-weight:700;
+             background:var(--green-dim);border:1px solid rgba(16,185,129,.25);padding:.3rem .75rem;border-radius:50px;}
+    .live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulseDot 2s infinite;}
+    @keyframes pulseDot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.8);}}
+
+    .tb-actions{margin-left:auto;display:flex;align-items:center;gap:.7rem;}
+    .tb-search{display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.05);border:1px solid var(--border);
+               border-radius:var(--radius-sm);padding:.42rem .8rem;width:240px;transition:all .2s;}
+    .tb-search:focus-within{border-color:rgba(255,42,109,.5);background:rgba(255,255,255,.08);width:280px;}
+    .tb-search input{background:none;border:none;outline:none;font-size:.78rem;font-family:var(--font);color:var(--text);width:100%;}
+    .tb-search input::placeholder{color:var(--text3);}
+
+    .tb-btn{width:36px;height:36px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card);
+            display:flex;align-items:center;justify-content:center;color:var(--text2);cursor:pointer;transition:all .2s;position:relative;}
+    .tb-btn:hover{border-color:rgba(255,255,255,.2);color:var(--text);background:var(--card-hover);}
+    .notif-dot{position:absolute;top:8px;right:8px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid var(--bg);}
+
+    .btn-cta{background:var(--pink);color:#fff;border-radius:var(--radius-sm);padding:.45rem 1rem;font-size:.78rem;font-weight:700;
+             display:flex;align-items:center;gap:.4rem;transition:all .2s;box-shadow:0 4px 12px var(--pink-glow);}
+    .btn-cta:hover{opacity:.9;transform:translateY(-1px);}
+
+    /* ── PAGE CONTENT ── */
+    .page{flex:1;padding:1.5rem;display:flex;flex-direction:column;gap:1.4rem;}
+
+    /* KPI CARDS GRID */
+    .kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;}
+    .kpi-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.2rem;
+              position:relative;overflow:hidden;transition:all .25s;cursor:pointer;}
+    .kpi-card:hover{border-color:rgba(255,255,255,.16);background:var(--card-hover);transform:translateY(-2px);}
+    .kpi-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;}
+    .kpi-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .kpi-badge{font-size:.65rem;font-weight:800;padding:2px 7px;border-radius:50px;display:flex;align-items:center;gap:3px;}
+    .kpi-badge.up{background:var(--green-dim);color:var(--green);}
+    .kpi-badge.down{background:var(--red-dim);color:var(--red);}
+    .kpi-val{font-size:1.55rem;font-weight:900;color:var(--text);letter-spacing:-.5px;margin-bottom:.25rem;}
+    .kpi-lbl{font-size:.7rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;}
+    .kpi-sub{font-size:.65rem;color:var(--text3);margin-top:.4rem;}
+
+    /* ── CHARTS SECTION ── */
+    .charts-grid{display:grid;grid-template-columns:2fr 1.1fr;gap:1.2rem;}
+    .card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.3rem;}
+    .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.6rem;}
+    .card-title{font-size:.9rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:.5rem;}
+
+    /* TIME RANGE TOGGLES */
+    .time-tabs{display:flex;align-items:center;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--radius-sm);padding:2px;}
+    .ttab{padding:.32rem .75rem;font-size:.72rem;font-weight:700;color:var(--text2);border-radius:6px;transition:all .2s;cursor:pointer;}
+    .ttab:hover{color:var(--text);}
+    .ttab.active{background:var(--pink);color:#fff;box-shadow:0 2px 8px var(--pink-glow);}
+
+    .chart-container{position:relative;width:100%;height:270px;}
+
+    /* CATEGORY BREAKDOWN LIST */
+    .cat-legend{display:flex;flex-direction:column;gap:.65rem;margin-top:1rem;}
+    .cat-item{display:flex;align-items:center;justify-content:space-between;font-size:.78rem;padding:.45rem .6rem;
+              background:rgba(255,255,255,.02);border-radius:var(--radius-sm);border:1px solid var(--border);transition:all .2s;}
+    .cat-item:hover{background:rgba(255,255,255,.04);}
+    .cat-name{display:flex;align-items:center;gap:.5rem;font-weight:700;color:var(--text);}
+    .cat-color{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+    .cat-stat{font-weight:800;color:var(--text);display:flex;align-items:center;gap:.6rem;}
+    .cat-pct{font-size:.7rem;color:var(--text3);font-weight:600;}
+
+    /* ── DATA TABLE SECTION ── */
+    .table-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden;}
+    .table-toolbar{padding:1.1rem 1.3rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;border-bottom:1px solid var(--border);}
+    .toolbar-left{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
+    .table-search{display:flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.05);border:1px solid var(--border);
+                  border-radius:var(--radius-sm);padding:.4rem .75rem;width:220px;}
+    .table-search input{background:none;border:none;outline:none;font-size:.78rem;font-family:var(--font);color:var(--text);width:100%;}
+    .table-search input::placeholder{color:var(--text3);}
+
+    .select-sm{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:var(--radius-sm);
+               padding:.4rem .75rem;font-size:.75rem;font-family:var(--font);color:var(--text);outline:none;cursor:pointer;}
+    .select-sm option{background:var(--bg2);color:var(--text);}
+
+    .btn-export{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text2);border-radius:var(--radius-sm);
+                padding:.42rem .9rem;font-size:.75rem;font-weight:700;display:flex;align-items:center;gap:.4rem;transition:all .2s;}
+    .btn-export:hover{background:rgba(255,255,255,.1);color:var(--text);border-color:rgba(255,255,255,.2);}
+
+    .data-table{width:100%;border-collapse:collapse;}
+    .data-table th{font-size:.65rem;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;
+                   padding:.7rem 1.2rem;text-align:left;border-bottom:1px solid var(--border);background:rgba(255,255,255,.015);
+                   cursor:pointer;user-select:none;transition:color .2s;}
+    .data-table th:hover{color:var(--text);}
+    .data-table td{padding:.8rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.04);font-size:.82rem;vertical-align:middle;}
+    .data-table tr:last-child td{border-bottom:none;}
+    .data-table tr:hover td{background:rgba(255,255,255,.025);}
+
+    .partner-pill{display:flex;align-items:center;gap:.6rem;}
+    .partner-avatar{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+                    font-size:.68rem;font-weight:900;color:#fff;flex-shrink:0;}
+    .partner-title{font-weight:800;color:var(--text);}
+    .partner-category{font-size:.65rem;color:var(--text3);}
+
+    .status-badge{font-size:.62rem;font-weight:800;padding:2px 8px;border-radius:50px;display:inline-flex;align-items:center;gap:4px;}
+    .badge-active{background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,.2);}
+    .badge-warning{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
+
+    .sparkline-cell{width:110px;height:24px;}
+
+    /* TOAST NOTIFICATION */
+    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#151f32;border:1px solid rgba(255,255,255,.15);
+           border-radius:12px;padding:.85rem 1.2rem;font-size:.82rem;font-weight:600;color:var(--text);
+           box-shadow:0 12px 36px rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;gap:.6rem;
+           animation:slideUp .25s ease;}
+    @keyframes slideUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+    @media(max-width:1150px){.kpi-grid{grid-template-columns:repeat(3,1fr);}.charts-grid{grid-template-columns:1fr;}}
+    @media(max-width:900px){
+      .sb{transform:translateX(-100%);}
+      .main{margin-left:0;width:100%;}
+      .kpi-grid{grid-template-columns:repeat(2,1fr);}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sb">
+  <div class="sb-brand">
+    <div class="sb-logo-icon">
+      <span class="svg-icon" style="width:20px;height:20px;">
+        <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </span>
+    </div>
+    <div class="sb-brand-text">
+      <div class="sb-logo-name">OfferMatrix</div>
+      <div class="sb-admin-badge">ADMIN PANEL</div>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sb-section">Control Center</div>
+    <a href="admin-dashboard.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+      Dashboard
+    </a>
+    <a href="admin-scraper-health.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/></svg></span>
+      Scraper Health
+    </a>
+    <a href="admin-deals-queue.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+      Deal Queue
+      <span class="sb-count">8</span>
+    </a>
+    <a href="admin-affiliates.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      Affiliate Manager
+    </a>
+    <a href="admin-fraud-reports.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+      Spam & Fraud Center
+      <span class="sb-count">4</span>
+    </a>
+
+    <div class="sb-section">Analytics</div>
+    <a href="admin-platform-analytics.html" class="sb-link active">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17l-5-5-4 4-4-4"/></svg></span>
+      Platform Analytics
+    </a>
+    <a href="admin-search-trends.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></span>
+      Search Trends
+    </a>
+    <a href="admin-alert-manager.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
+      Alert Manager
+      <span class="sb-count sb-count-warn">3</span>
+    </a>
+
+    <div class="sb-section">System</div>
+    <a href="admin-settings.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+      Settings
+    </a>
+    <a href="admin-users.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      User Management
+    </a>
+    <a href="admin-login.html" class="sb-link" style="color:#f87171;margin-top:.5rem;">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      Sign Out
+    </a>
+  </nav>
+
+  <div class="sb-footer">
+    <div class="sb-user">
+      <div class="sb-user-av">SA</div>
+      <div>
+        <div class="sb-user-name">Super Admin</div>
+        <div class="sb-user-role">Superuser · Full Access</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══ MAIN CONTENT ══ -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="tb-title-box">
+      <div class="tb-title">
+        <span class="svg-icon" style="width:20px;height:20px;color:var(--pink);">
+          <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17l-5-5-4 4-4-4"/></svg>
+        </span>
+        Platform Analytics & Insights
+      </div>
+      <div class="tb-sub">Real-time aggregate data, traffic velocity & conversion performance</div>
+    </div>
+
+    <div class="tb-live">
+      <div class="live-dot"></div> Live Telemetry Active
+    </div>
+
+    <div class="tb-actions">
+      <div class="tb-search">
+        <span class="svg-icon" style="width:14px;height:14px;color:var(--text3);">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input type="text" placeholder="Search analytics metrics..." id="global-search"/>
+      </div>
+
+      <div class="tb-btn" title="System Notifications">
+        <span class="svg-icon" style="width:16px;height:16px;">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </span>
+        <div class="notif-dot"></div>
+      </div>
+
+      <button class="btn-cta" onclick="exportAnalyticsData('CSV')">
+        <span class="svg-icon" style="width:15px;height:15px;">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </span>
+        Export Report
+      </button>
+    </div>
+  </header>
+
+  <!-- PAGE BODY -->
+  <main class="page">
+
+    <!-- KPI CARDS GRID -->
+    <div class="kpi-grid">
+      <!-- KPI 1 -->
+      <div class="kpi-card" onclick="filterChartMetric('traffic')">
+        <div class="kpi-head">
+          <div class="kpi-icon" style="background:var(--blue-dim);color:var(--blue);">
+            <span class="svg-icon" style="width:20px;height:20px;">
+              <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </span>
+          </div>
+          <div class="kpi-badge up">
+            <span class="svg-icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg></span>
+            +18.4%
+          </div>
+        </div>
+        <div class="kpi-val" id="kpi-traffic">482.9K</div>
+        <div class="kpi-lbl">Total Impressions</div>
+        <div class="kpi-sub">Across 50+ Bangladesh merchants</div>
+      </div>
+
+      <!-- KPI 2 -->
+      <div class="kpi-card" onclick="filterChartMetric('clicks')">
+        <div class="kpi-head">
+          <div class="kpi-icon" style="background:var(--pink-glow);color:var(--pink);">
+            <span class="svg-icon" style="width:20px;height:20px;">
+              <svg viewBox="0 0 24 24"><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></svg>
+            </span>
+          </div>
+          <div class="kpi-badge up">
+            <span class="svg-icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg></span>
+            +0.64%
+          </div>
+        </div>
+        <div class="kpi-val" id="kpi-ctr">4.82%</div>
+        <div class="kpi-lbl">Aggregate CTR</div>
+        <div class="kpi-sub">23,280 outbound affiliate clicks</div>
+      </div>
+
+      <!-- KPI 3 -->
+      <div class="kpi-card" onclick="filterChartMetric('revenue')">
+        <div class="kpi-head">
+          <div class="kpi-icon" style="background:var(--green-dim);color:var(--green);">
+            <span class="svg-icon" style="width:20px;height:20px;">
+              <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </span>
+          </div>
+          <div class="kpi-badge up">
+            <span class="svg-icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg></span>
+            +22.1%
+          </div>
+        </div>
+        <div class="kpi-val" id="kpi-revenue">৳2,84,500</div>
+        <div class="kpi-lbl">Conversion Value</div>
+        <div class="kpi-sub">Est. Commission: ৳24,180</div>
+      </div>
+
+      <!-- KPI 4 -->
+      <div class="kpi-card" onclick="filterChartMetric('offers')">
+        <div class="kpi-head">
+          <div class="kpi-icon" style="background:var(--purple-dim);color:var(--purple);">
+            <span class="svg-icon" style="width:20px;height:20px;">
+              <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </span>
+          </div>
+          <div class="kpi-badge up">
+            <span class="svg-icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg></span>
+            +2.4k
+          </div>
+        </div>
+        <div class="kpi-val" id="kpi-offers">24,381</div>
+        <div class="kpi-lbl">Active Deals Scraped</div>
+        <div class="kpi-sub">94.8% Live verification score</div>
+      </div>
+
+      <!-- KPI 5 -->
+      <div class="kpi-card">
+        <div class="kpi-head">
+          <div class="kpi-icon" style="background:var(--cyan-dim);color:var(--cyan);">
+            <span class="svg-icon" style="width:20px;height:20px;">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </span>
+          </div>
+          <div class="kpi-badge up">
+            <span class="svg-icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg></span>
+            +14s
+          </div>
+        </div>
+        <div class="kpi-val">3m 48s</div>
+        <div class="kpi-lbl">Avg Session Time</div>
+        <div class="kpi-sub">4.2 deals compared per user</div>
+      </div>
+    </div>
+
+    <!-- ══ CHARTS GRID ══ -->
+    <div class="charts-grid">
+
+      <!-- MAIN TELEMETRY CHART -->
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">
+              <span class="svg-icon" style="width:18px;height:18px;color:var(--blue);">
+                <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </span>
+              Traffic & Conversions Telemetry
+            </div>
+            <div style="font-size:.72rem;color:var(--text3);margin-top:2px;">Correlating visitor search traffic with affiliate click-outs</div>
+          </div>
+          <div class="time-tabs">
+            <button class="ttab" onclick="setTimeRange('7d', this)">7 Days</button>
+            <button class="ttab active" onclick="setTimeRange('30d', this)">30 Days</button>
+            <button class="ttab" onclick="setTimeRange('90d', this)">90 Days</button>
+            <button class="ttab" onclick="setTimeRange('1y', this)">1 Year</button>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="trafficChart"></canvas>
+        </div>
+      </div>
+
+      <!-- CATEGORY BREAKDOWN PIE/DOUGHNUT -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">
+            <span class="svg-icon" style="width:18px;height:18px;color:var(--pink);">
+              <svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+            </span>
+            Clicks by Vertical
+          </div>
+          <span style="font-size:.72rem;color:var(--text3);" id="total-cat-clicks">23,280 Clicks</span>
+        </div>
+
+        <div style="position:relative;width:100%;height:145px;display:flex;justify-content:center;">
+          <canvas id="categoryChart"></canvas>
+        </div>
+
+        <!-- CATEGORY LIST -->
+        <div class="cat-legend" id="cat-legend-list"></div>
+      </div>
+
+    </div>
+
+    <!-- ══ DATA TABLE: TOP PERFORMING MERCHANT CHANNELS ══ -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div class="toolbar-left">
+          <div style="font-weight:800;font-size:.9rem;color:var(--text);margin-right:.4rem;">
+            Merchant Affiliate Performance
+          </div>
+          <div class="table-search">
+            <span class="svg-icon" style="width:13px;height:13px;color:var(--text3);"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            <input type="text" placeholder="Filter merchant or category..." id="table-filter-input" oninput="filterTable()"/>
+          </div>
+
+          <select class="select-sm" id="category-filter" onchange="filterTable()">
+            <option value="all">All Verticals</option>
+            <option value="Electronics & Gadgets">Electronics</option>
+            <option value="Skincare & Beauty">Skincare</option>
+            <option value="Grocery & Daily">Grocery</option>
+            <option value="Ride-Sharing">Rides</option>
+            <option value="Books & Stationeries">Books</option>
+          </select>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:.6rem;">
+          <button class="btn-export" onclick="exportAnalyticsData('CSV')">
+            <span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+            CSV Export
+          </button>
+          <button class="btn-export" onclick="exportAnalyticsData('JSON')">
+            <span class="svg-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+            JSON Dump
+          </button>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th onclick="sortTable('name')">Merchant Platform <span style="font-size:.6rem;color:var(--text3);">↕</span></th>
+              <th onclick="sortTable('category')">Vertical <span style="font-size:.6rem;color:var(--text3);">↕</span></th>
+              <th onclick="sortTable('clicks')">Total Clicks <span style="font-size:.6rem;color:var(--text3);">↕</span></th>
+              <th onclick="sortTable('ctr')">CTR % <span style="font-size:.6rem;color:var(--text3);">↕</span></th>
+              <th onclick="sortTable('revenue')">Estimated Sales (৳) <span style="font-size:.6rem;color:var(--text3);">↕</span></th>
+              <th onclick="sortTable('commission')">Commission Rate <span style="font-size:.6rem;color:var(--text3);">↕</span></th>
+              <th>Live Status</th>
+            </tr>
+          </thead>
+          <tbody id="merchant-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══ SCRIPT: CHART.JS & DATA LOGIC ══ -->
+<script>
+// ── DATA SOURCES ──
+const TIME_DATA = {
+  '7d': {
+    labels: ['Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Today'],
+    traffic: [14200, 15800, 19400, 22100, 20800, 17900, 24300],
+    conversions: [680, 740, 920, 1150, 1020, 890, 1280]
+  },
+  '30d': {
+    labels: ['Aug 04', 'Aug 08', 'Aug 12', 'Aug 16', 'Aug 20', 'Aug 24', 'Aug 28', 'Sep 01'],
+    traffic: [52000, 58400, 64200, 61000, 71500, 79200, 86400, 94200],
+    conversions: [2480, 2810, 3100, 2940, 3450, 3820, 4210, 4820]
+  },
+  '90d': {
+    labels: ['Jun W1', 'Jun W3', 'Jul W1', 'Jul W3', 'Aug W1', 'Aug W3', 'Sep W1'],
+    traffic: [160000, 182000, 210000, 245000, 290000, 340000, 395000],
+    conversions: [7800, 8900, 10200, 11800, 14200, 16800, 19400]
+  },
+  '1y': {
+    labels: ['Oct 25', 'Dec 25', 'Feb 26', 'Apr 26', 'Jun 26', 'Aug 26'],
+    traffic: [420000, 680000, 910000, 1240000, 1650000, 2180000],
+    conversions: [21000, 34000, 46000, 62000, 84000, 112000]
+  }
+};
+
+const CATEGORIES_DATA = [
+  { name: 'Electronics & Gadgets', color: '#38bdf8', clicks: 8840, pct: 38 },
+  { name: 'Skincare & Beauty',      color: '#ff2a6d', clicks: 5580, pct: 24 },
+  { name: 'Grocery & Daily',        color: '#10b981', clicks: 4190, pct: 18 },
+  { name: 'Ride-Sharing & Travel',  color: '#f59e0b', clicks: 2790, pct: 12 },
+  { name: 'Books & Stationeries',   color: '#a78bfa', clicks: 1880, pct: 8  }
+];
+
+let MERCHANTS_DATA = [
+  { id:1, name:'Daraz Bangladesh', category:'Electronics & Gadgets', color:'#ff6900', code:'DZ', clicks:8420, ctr:5.2, revenue:184200, comm:'5.5%', status:'Active' },
+  { id:2, name:'Shajgoj Limited',   category:'Skincare & Beauty',      color:'#ec4899', code:'SJ', clicks:4840, ctr:6.4, revenue:68500,  comm:'8.0%', status:'Active' },
+  { id:3, name:'StarTech & Eng.',   category:'Electronics & Gadgets', color:'#1a56db', code:'ST', clicks:3920, ctr:4.8, revenue:54200,  comm:'3.5%', status:'Active' },
+  { id:4, name:'Chaldal Groceries', category:'Grocery & Daily',        color:'#0d9488', code:'CH', clicks:2810, ctr:3.1, revenue:22400,  comm:'4.5%', status:'Active' },
+  { id:5, name:'Pickaboo Direct',   category:'Electronics & Gadgets', color:'#e31837', code:'PB', clicks:2450, ctr:3.9, revenue:31800,  comm:'4.0%', status:'Active' },
+  { id:6, name:'Pathao Rides',      category:'Ride-Sharing',          color:'#e31837', code:'PA', clicks:1940, ctr:2.4, revenue:9200,   comm:'2.0%', status:'Active' },
+  { id:7, name:'Rokomari Books',    category:'Books & Stationeries',   color:'#16a34a', code:'RK', clicks:1420, ctr:4.1, revenue:12400,  comm:'6.0%', status:'Active' },
+  { id:8, name:'Ogerio Beauty',     category:'Skincare & Beauty',      color:'#8b5cf6', code:'OG', clicks:840,  ctr:3.5, revenue:8600,   comm:'7.0%', status:'Warning' },
+  { id:9, name:'Shohoz Travel',     category:'Ride-Sharing',          color:'#0284c7', code:'SH', clicks:680,  ctr:2.1, revenue:4800,   comm:'3.0%', status:'Active' }
+];
+
+let trafficChartInstance = null;
+let categoryChartInstance = null;
+let currentSortCol = null;
+let sortAsc = true;
+
+// ── INITIALIZE CHARTS ──
+function initCharts() {
+  const ctxTraffic = document.getElementById('trafficChart').getContext('2d');
+  const gradientBlue = ctxTraffic.createLinearGradient(0, 0, 0, 270);
+  gradientBlue.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
+  gradientBlue.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
+
+  const gradientPink = ctxTraffic.createLinearGradient(0, 0, 0, 270);
+  gradientPink.addColorStop(0, 'rgba(255, 42, 109, 0.3)');
+  gradientPink.addColorStop(1, 'rgba(255, 42, 109, 0.0)');
+
+  trafficChartInstance = new Chart(ctxTraffic, {
+    type: 'line',
+    data: {
+      labels: TIME_DATA['30d'].labels,
+      datasets: [
+        {
+          label: 'Visitor Impressions',
+          data: TIME_DATA['30d'].traffic,
+          borderColor: '#38bdf8',
+          backgroundColor: gradientBlue,
+          borderWidth: 2.5,
+          tension: 0.38,
+          fill: true,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointBackgroundColor: '#38bdf8',
+          yAxisID: 'y'
+        },
+        {
+          label: 'Affiliate Conversions',
+          data: TIME_DATA['30d'].conversions,
+          borderColor: '#ff2a6d',
+          backgroundColor: gradientPink,
+          borderWidth: 2,
+          borderDash: [4, 4],
+          tension: 0.38,
+          fill: true,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          pointBackgroundColor: '#ff2a6d',
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          align: 'end',
+          labels: { color: '#94a3b8', font: { family: 'Inter', size: 11, weight: '600' }, boxWidth: 12, usePointStyle: true }
+        },
+        tooltip: {
+          backgroundColor: '#151f32',
+          titleColor: '#f1f5f9',
+          bodyColor: '#94a3b8',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          padding: 10,
+          cornerRadius: 8,
+          callbacks: {
+            label: function(context) {
+              const label = context.dataset.label || '';
+              const val = context.parsed.y.toLocaleString();
+              return `  ${label}: ${val}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+          ticks: { color: '#64748b', font: { family: 'Inter', size: 10 } }
+        },
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+          ticks: { color: '#64748b', font: { family: 'Inter', size: 10 } }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          grid: { drawOnChartArea: false },
+          ticks: { color: '#ff2a6d', font: { family: 'Inter', size: 10 } }
+        }
+      }
+    }
+  });
+
+  // Doughnut Chart
+  const ctxCat = document.getElementById('categoryChart').getContext('2d');
+  categoryChartInstance = new Chart(ctxCat, {
+    type: 'doughnut',
+    data: {
+      labels: CATEGORIES_DATA.map(c => c.name),
+      datasets: [{
+        data: CATEGORIES_DATA.map(c => c.clicks),
+        backgroundColor: CATEGORIES_DATA.map(c => c.color),
+        borderColor: '#0f1624',
+        borderWidth: 2,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '70%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#151f32',
+          titleColor: '#f1f5f9',
+          bodyColor: '#94a3b8',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          padding: 8,
+          cornerRadius: 8
+        }
+      }
+    }
+  });
+
+  renderCategoryLegend();
+}
+
+function renderCategoryLegend() {
+  const container = document.getElementById('cat-legend-list');
+  container.innerHTML = CATEGORIES_DATA.map(c => `
+    <div class="cat-item">
+      <div class="cat-name">
+        <div class="cat-color" style="background:${c.color};"></div>
+        ${c.name}
+      </div>
+      <div class="cat-stat">
+        ${c.clicks.toLocaleString()}
+        <span class="cat-pct">${c.pct}%</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setTimeRange(rangeKey, btnEl) {
+  document.querySelectorAll('.ttab').forEach(b => b.classList.remove('active'));
+  btnEl.classList.add('active');
+
+  const data = TIME_DATA[rangeKey];
+  if (!data) return;
+
+  trafficChartInstance.data.labels = data.labels;
+  trafficChartInstance.data.datasets[0].data = data.traffic;
+  trafficChartInstance.data.datasets[1].data = data.conversions;
+  trafficChartInstance.update();
+
+  showToast(`Timeframe updated to ${btnEl.innerText}`);
+}
+
+function filterChartMetric(metricType) {
+  showToast(`Filtering telemetry by: ${metricType.toUpperCase()}`);
+}
+
+// ── TABLE RENDERING & FILTERING ──
+function renderMerchantTable(dataList) {
+  const tbody = document.getElementById('merchant-table-body');
+  if (!dataList.length) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text3);">No merchants matching filter criteria.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = dataList.map(m => {
+    const isWarn = m.status === 'Warning';
+    return `
+      <tr>
+        <td>
+          <div class="partner-pill">
+            <div class="partner-avatar" style="background:${m.color};">${m.code}</div>
+            <div>
+              <div class="partner-title">${m.name}</div>
+              <div class="partner-category">${m.category}</div>
+            </div>
+          </div>
+        </td>
+        <td style="color:var(--text2);font-weight:600;">${m.category}</td>
+        <td style="font-weight:800;color:var(--text);">${m.clicks.toLocaleString()}</td>
+        <td style="font-weight:700;color:var(--blue);">${m.ctr}%</td>
+        <td style="font-weight:800;color:var(--green);">৳${m.revenue.toLocaleString()}</td>
+        <td style="font-weight:700;color:var(--text);">${m.comm}</td>
+        <td>
+          <span class="status-badge ${isWarn ? 'badge-warning' : 'badge-active'}">
+            <span class="svg-icon" style="width:10px;height:10px;">
+              ${isWarn ? '<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' : '<svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'}
+            </span>
+            ${m.status}
+          </span>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function filterTable() {
+  const query = document.getElementById('table-filter-input').value.toLowerCase();
+  const category = document.getElementById('category-filter').value;
+
+  const filtered = MERCHANTS_DATA.filter(m => {
+    const matchesQuery = m.name.toLowerCase().includes(query) || m.category.toLowerCase().includes(query);
+    const matchesCategory = category === 'all' || m.category === category;
+    return matchesQuery && matchesCategory;
+  });
+
+  renderMerchantTable(filtered);
+}
+
+function sortTable(key) {
+  if (currentSortCol === key) {
+    sortAsc = !sortAsc;
+  } else {
+    currentSortCol = key;
+    sortAsc = true;
+  }
+
+  MERCHANTS_DATA.sort((a, b) => {
+    let valA = a[key];
+    let valB = b[key];
+    if (typeof valA === 'string') valA = valA.toLowerCase();
+    if (typeof valB === 'string') valB = valB.toLowerCase();
+    if (valA < valB) return sortAsc ? -1 : 1;
+    if (valA > valB) return sortAsc ? 1 : -1;
+    return 0;
+  });
+
+  filterTable();
+  showToast(`Sorted by ${key.toUpperCase()} (${sortAsc ? 'Ascending' : 'Descending'})`);
+}
+
+// ── EXPORT ENGINE ──
+function exportAnalyticsData(format) {
+  let content = '';
+  let filename = `OfferMatrix_Analytics_${new Date().toISOString().slice(0,10)}`;
+  let mimeType = '';
+
+  if (format === 'CSV') {
+    const headers = ['Merchant Name', 'Category', 'Total Clicks', 'CTR %', 'Estimated Sales (BDT)', 'Commission Rate', 'Status'];
+    const rows = MERCHANTS_DATA.map(m => [
+      `"${m.name}"`,
+      `"${m.category}"`,
+      m.clicks,
+      m.ctr,
+      m.revenue,
+      `"${m.comm}"`,
+      `"${m.status}"`
+    ]);
+    content = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    filename += '.csv';
+    mimeType = 'text/csv;charset=utf-8;';
+  } else {
+    content = JSON.stringify({
+      generatedAt: new Date().toISOString(),
+      kpiSummary: {
+        totalTraffic: '482,910',
+        aggregateCTR: '4.82%',
+        totalConversionBDT: 284500,
+        activeOffersScraped: 24381
+      },
+      merchantPerformance: MERCHANTS_DATA,
+      categoryDistribution: CATEGORIES_DATA
+    }, null, 2);
+    filename += '.json';
+    mimeType = 'application/json;charset=utf-8;';
+  }
+
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  showToast(`Platform Report successfully exported as ${format}!`);
+}
+
+// ── TOAST NOTIFICATION UTILITY ──
+function showToast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `
+    <span class="svg-icon" style="width:16px;height:16px;color:var(--green);">
+      <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </span>
+    <span>${msg}</span>
+  `;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(10px)';
+    toast.style.transition = 'all 0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 2800);
+}
+
+// ── DOM READY ──
+document.addEventListener('DOMContentLoaded', () => {
+  initCharts();
+  renderMerchantTable(MERCHANTS_DATA);
+});
+</script>
+</body>
+</html>

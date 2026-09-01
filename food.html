@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Food Delivery – OfferMatrix | Compare Foodpanda, Pathao Food & More</title>
+  <meta name="description" content="Compare food delivery prices across Foodpanda, Pathao Food, and more. Find the cheapest total landed cost including VAT and delivery fees." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="js/om-store.js"></script>
+  <script src="js/om-profile.js"></script>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --pink:#ff1a6e;--pink-light:#fff0f5;--green:#22c55e;--green-light:#dcfce7;
+      --red:#ef4444;--orange:#f97316;--yellow:#eab308;
+      --text:#111827;--mid:#4b5563;--light:#9ca3af;--border:#e5e7eb;
+      --bg:#f8fafc;--white:#fff;--font:'Inter',sans-serif;--sb:240px;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden;}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none;}
+    a{color:inherit;text-decoration:none;}
+    ::-webkit-scrollbar{width:5px;height:5px;}
+    ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:5px;}
+
+    /* SIDEBAR */
+    .sb{width:var(--sb);min-height:100vh;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:300;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+    .sb::-webkit-scrollbar{display:none;}
+    .sb-logo{display:flex;align-items:center;gap:10px;padding:1.2rem 1.4rem;border-bottom:1px solid var(--border);}
+    .sb-logo-icon{width:36px;height:36px;background:var(--pink);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;}
+    .sb-logo-text{font-size:1.3rem;font-weight:800;color:#111827;}
+    .sb-nav{flex:1;padding:1rem 0;}
+    .sb-group{font-size:.7rem;font-weight:700;color:var(--light);letter-spacing:1px;padding:1rem 1.4rem .4rem;text-transform:uppercase;}
+    .sb-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 1.4rem;font-size:.9rem;font-weight:600;color:var(--mid);width:100%;text-align:left;cursor:pointer;transition:all .2s;}
+    .sb-item:hover{color:var(--pink);}
+    .sb-item.on{background:var(--pink);color:#fff;border-radius:10px;margin:0 .8rem;padding:.7rem .6rem;width:calc(100% - 1.6rem);}
+    .sb-item.on .sb-ico{color:#fff;}
+    .sb-ico{font-size:1.1rem;width:22px;text-align:center;color:#6b7280;}
+    .sb-badge{margin-left:auto;font-size:.65rem;font-weight:800;padding:2px 8px;border-radius:50px;background:var(--pink);color:#fff;}
+
+    /* MAIN */
+    .main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;width:calc(100% - var(--sb));}
+    .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:.8rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+    .tb-search{display:flex;align-items:center;gap:.5rem;background:#f3f4f6;border-radius:50px;padding:.5rem 1rem;max-width:350px;flex:1;}
+    .tb-search input{border:none;background:transparent;outline:none;font-size:.85rem;color:#111827;font-family:var(--font);}
+    .tb-actions{display:flex;align-items:center;gap:1rem;margin-left:auto;}
+    .tb-icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:#4b5563;position:relative;cursor:pointer;}
+    .notif-dot{position:absolute;top:9px;right:9px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid #fff;}
+    .tb-user{display:flex;align-items:center;gap:.6rem;padding:.3rem .6rem;border-radius:50px;cursor:pointer;}
+    .tb-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#ff1a6e,#f97316);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.9rem;}
+    .tb-uname{font-size:.85rem;font-weight:700;color:#111827;}
+
+    /* PAGE */
+    .page-wrap{flex:1;padding:1.5rem;display:flex;gap:1.5rem;}
+    .col-c{flex:1;min-width:0;display:flex;flex-direction:column;gap:1.2rem;}
+    .col-r{width:290px;flex-shrink:0;display:flex;flex-direction:column;gap:1.2rem;}
+
+    /* FOOD HERO */
+    .food-hero{background:linear-gradient(135deg,#fff7ed,#fff1f2);border-radius:20px;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;}
+    .fh-title{font-size:1.8rem;font-weight:900;color:#111827;letter-spacing:-.5px;}
+    .fh-title span{color:var(--orange);}
+    .fh-sub{font-size:.88rem;color:var(--mid);}
+    .fh-search-row{display:flex;gap:.8rem;}
+    .fh-input{flex:1;border:1.5px solid var(--border);border-radius:50px;padding:.65rem 1.2rem;font-size:.88rem;font-family:var(--font);outline:none;transition:border-color .2s;background:#fff;}
+    .fh-input:focus{border-color:var(--orange);}
+    .fh-select{border:1.5px solid var(--border);border-radius:50px;padding:.65rem 1.2rem;font-size:.88rem;font-family:var(--font);outline:none;background:#fff;color:#111827;}
+    .btn-search-food{background:var(--orange);color:#fff;border-radius:50px;padding:.65rem 1.8rem;font-size:.88rem;font-weight:700;transition:all .2s;white-space:nowrap;}
+    .btn-search-food:hover{background:#ea6500;}
+
+    /* PLATFORM TABS */
+    .platform-pills{display:flex;gap:.6rem;flex-wrap:wrap;}
+    .plat-pill{display:flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border:1.5px solid var(--border);border-radius:50px;font-size:.82rem;font-weight:700;color:var(--mid);cursor:pointer;background:#fff;transition:all .2s;white-space:nowrap;}
+    .plat-pill.on{color:#fff;border-color:transparent;}
+    .plat-pill-fp.on{background:#d70f64;}
+    .plat-pill-pf.on{background:#e31837;}
+    .plat-pill-ue.on{background:#000;}
+    .plat-pill-all.on{background:var(--orange);}
+
+    /* DISH RESULTS */
+    .dish-section-title{font-size:1.05rem;font-weight:800;display:flex;align-items:center;justify-content:space-between;}
+    .dish-count{font-size:.78rem;color:var(--mid);font-weight:400;}
+
+    .dish-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;}
+    .dish-card{background:#fff;border-radius:18px;border:1.5px solid var(--border);overflow:hidden;transition:all .2s;cursor:pointer;}
+    .dish-card:hover{border-color:#d1d5db;box-shadow:0 8px 24px rgba(0,0,0,.09);transform:translateY(-2px);}
+    .dish-card.cheapest{border-color:var(--green);}
+    .dc-img{height:150px;position:relative;overflow:hidden;}
+    .dc-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
+    .dish-card:hover .dc-img img{transform:scale(1.04);}
+    .dc-best-badge{position:absolute;top:8px;left:8px;background:var(--green);color:#fff;font-size:.62rem;font-weight:900;padding:3px 8px;border-radius:5px;}
+    .dc-plat-badge{position:absolute;top:8px;right:8px;font-size:.62rem;font-weight:900;padding:3px 8px;border-radius:5px;color:#fff;}
+    .dc-body{padding:1rem;}
+    .dc-name{font-size:.95rem;font-weight:800;color:#111827;margin-bottom:2px;}
+    .dc-rest{font-size:.75rem;color:var(--mid);margin-bottom:.6rem;}
+    .dc-price-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;}
+    .dc-item-price{font-size:1.1rem;font-weight:900;color:#111827;}
+    .dc-delivery{font-size:.72rem;color:var(--mid);}
+    .dc-vat{font-size:.65rem;color:var(--light);}
+
+    /* COST BREAKDOWN */
+    .dc-breakdown{background:#f8fafc;border-radius:10px;padding:.7rem;margin-bottom:.7rem;}
+    .dcb-row{display:flex;justify-content:space-between;font-size:.72rem;margin-bottom:3px;}
+    .dcb-label{color:var(--mid);}
+    .dcb-val{font-weight:700;color:#111827;}
+    .dcb-total-row{display:flex;justify-content:space-between;font-size:.82rem;font-weight:900;padding-top:.4rem;border-top:1px solid var(--border);margin-top:.3rem;}
+    .dcb-total-val{color:var(--green);}
+    .dcb-total-val.best{color:var(--green);}
+    .dcb-voucher{color:var(--pink);}
+
+    .btn-order{background:var(--orange);color:#fff;border-radius:50px;padding:.5rem 1.2rem;font-size:.78rem;font-weight:800;width:100%;transition:all .2s;}
+    .btn-order:hover{background:#ea6500;}
+    .btn-order.best{background:var(--green);}
+    .btn-order.best:hover{background:#16a34a;}
+
+    /* COMPARE TABLE */
+    .compare-table-wrap{overflow-x:auto;}
+    .compare-table{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;font-size:.82rem;}
+    .compare-table th{background:#f1f5f9;padding:.7rem 1rem;text-align:left;font-size:.72rem;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;}
+    .compare-table td{padding:.7rem 1rem;border-bottom:1px solid #f1f5f9;vertical-align:middle;}
+    .compare-table tr:last-child td{border-bottom:none;}
+    .compare-table tr:hover td{background:#fafafa;}
+    .ct-plat{display:inline-flex;align-items:center;gap:.4rem;font-weight:700;}
+    .ct-plat-dot{width:10px;height:10px;border-radius:50%;}
+    .ct-cheapest-cell{color:var(--green);font-weight:900;}
+    .ct-cheapest-row td{background:#f0fdf4;}
+
+    /* RIGHT PANEL */
+    .panel-card{background:#fff;border-radius:18px;border:1px solid var(--border);padding:1.4rem;}
+    .panel-title{font-size:.95rem;font-weight:800;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+
+    /* COST CALC */
+    .calc-row{display:flex;justify-content:space-between;font-size:.82rem;padding:.4rem 0;border-bottom:1px solid #f8fafc;}
+    .calc-label{color:var(--mid);}
+    .calc-val{font-weight:700;color:#111827;}
+    .calc-val.green{color:var(--green);}
+    .calc-val.red{color:var(--red);}
+    .calc-val.orange{color:var(--orange);}
+    .calc-total-row{display:flex;justify-content:space-between;font-size:1rem;font-weight:900;padding:.6rem 0;margin-top:.4rem;border-top:2px solid var(--border);}
+
+    /* VOUCHER INPUT */
+    .voucher-wrap{display:flex;gap:.5rem;}
+    .voucher-input{flex:1;border:1.5px solid var(--border);border-radius:10px;padding:.55rem .8rem;font-size:.82rem;font-family:var(--font);outline:none;}
+    .voucher-input:focus{border-color:var(--orange);}
+    .btn-apply{background:var(--orange);color:#fff;border-radius:10px;padding:.55rem .9rem;font-size:.78rem;font-weight:700;transition:all .2s;}
+    .btn-apply:hover{background:#ea6500;}
+
+    @media(max-width:768px){
+      .sb{transform:translateX(-100%);}
+      .main{margin-left:0;width:100%;}
+      .page-wrap{flex-direction:column;}
+      .col-r{width:100%;}
+      .dish-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">%</div>
+    <span class="sb-logo-text">OfferMatrix</span>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-group">Discover</div>
+    <a href="dashboard.html" class="sb-item"><span class="sb-ico">🏠</span> Dashboard</a>
+    <a href="search-results.html" class="sb-item"><span class="sb-ico">🔍</span> Search Results</a>
+    <a href="skincare.html" class="sb-item"><span class="sb-ico">💄</span> Skincare</a>
+    <a href="coupons.html" class="sb-item"><span class="sb-ico">🎟️</span> Coupons <span class="sb-badge">12</span></a>
+    <div class="sb-group">Transport</div>
+    <a href="rides.html" class="sb-item"><span class="sb-ico">🚗</span> Rides & Travel</a>
+    <a href="food.html" class="sb-item on"><span class="sb-ico">🍔</span> Food Delivery</a>
+    <div class="sb-group">My Account</div>
+    <a href="saved-deals.html" class="sb-item"><span class="sb-ico">❤️</span> Saved Deals</a>
+    <a href="price-alerts.html" class="sb-item"><span class="sb-ico">🔔</span> Price Alerts <span class="sb-badge">3</span></a>
+    <a href="orders.html" class="sb-item"><span class="sb-ico">📦</span> Orders</a>
+    <a href="profile.html" class="sb-item"><span class="sb-ico">👤</span> Profile</a>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-search"><span>🔍</span><input type="text" placeholder="Search dishes, restaurants…" /></div>
+    <div class="tb-actions">
+      <div class="tb-icon-btn"><span>🔔</span><div class="notif-dot"></div></div>
+      <div class="tb-icon-btn"><span>❤️</span></div>
+      <div class="tb-user">
+        <div class="tb-avatar">R</div>
+        <div><div class="tb-uname">Raad Ahmed</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <div class="col-c">
+
+      <!-- HERO -->
+      <div class="food-hero">
+        <div class="fh-title">Food <span>Delivery</span> Compare</div>
+        <div class="fh-sub">Find the lowest <b>total landed cost</b> — item price + delivery fee + VAT − voucher − cashback</div>
+        <div class="fh-search-row">
+          <input class="fh-input" id="dish-input" type="text" value="Chicken Biryani" placeholder="Search dish or restaurant…" />
+          <select class="fh-select" id="area-select">
+            <option>Gulshan, Dhaka</option>
+            <option>Banani, Dhaka</option>
+            <option>Dhanmondi, Dhaka</option>
+            <option>Mirpur, Dhaka</option>
+            <option>Uttara, Dhaka</option>
+            <option>Motijheel, Dhaka</option>
+          </select>
+          <button class="btn-search-food" onclick="searchDishes()">🔍 Search</button>
+        </div>
+      </div>
+
+      <!-- PLATFORM PILLS -->
+      <div class="platform-pills">
+        <div class="plat-pill plat-pill-all on" id="pp-all" onclick="filterPlat('all',this)">🍽️ All Platforms</div>
+        <div class="plat-pill plat-pill-fp" id="pp-fp" onclick="filterPlat('foodpanda',this)">🐼 Foodpanda</div>
+        <div class="plat-pill plat-pill-pf" id="pp-pf" onclick="filterPlat('pathao',this)">🔴 Pathao Food</div>
+        <div class="plat-pill plat-pill-ue" id="pp-ue" onclick="filterPlat('ubereats',this)">⚫ Uber Eats</div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="dish-section-title">
+        <span id="result-label">🍛 Results for "Chicken Biryani" in Gulshan</span>
+        <span class="dish-count" id="result-sub">9 items found · Total cost with delivery</span>
+      </div>
+
+      <div class="dish-grid" id="dish-grid"></div>
+
+      <!-- COMPARE TABLE -->
+      <div>
+        <div style="font-size:1.05rem;font-weight:800;margin-bottom:.8rem;">📊 Side-by-Side Cost Comparison</div>
+        <div class="compare-table-wrap">
+          <table class="compare-table" id="compare-table">
+            <thead>
+              <tr>
+                <th>Platform</th>
+                <th>Restaurant</th>
+                <th>Item Price</th>
+                <th>Delivery Fee</th>
+                <th>VAT (7.5%)</th>
+                <th>Voucher</th>
+                <th>Total Cost</th>
+              </tr>
+            </thead>
+            <tbody id="compare-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="col-r">
+
+      <!-- COST CALCULATOR -->
+      <div class="panel-card">
+        <div class="panel-title" style="color:var(--orange);">💰 Net Cost Calculator</div>
+        <div class="calc-row"><span class="calc-label">Item Price</span><span class="calc-val" id="calc-item">৳285</span></div>
+        <div class="calc-row"><span class="calc-label">Delivery Fee</span><span class="calc-val orange" id="calc-delivery">৳49</span></div>
+        <div class="calc-row"><span class="calc-label">VAT (7.5%)</span><span class="calc-val orange" id="calc-vat">৳21</span></div>
+        <div class="calc-row"><span class="calc-label">Active Voucher</span><span class="calc-val green" id="calc-voucher">-৳30</span></div>
+        <div class="calc-row"><span class="calc-label">bKash Cashback</span><span class="calc-val green" id="calc-cashback">-৳15</span></div>
+        <div class="calc-total-row"><span>Total Payable</span><span style="color:var(--green);font-size:1.2rem;" id="calc-total">৳310</span></div>
+        <div style="margin-top:.8rem;">
+          <div class="panel-title" style="font-size:.82rem;margin-bottom:.5rem;">🎟️ Apply Voucher</div>
+          <div class="voucher-wrap">
+            <input class="voucher-input" type="text" id="voucher-input" placeholder="e.g. FOOD50" />
+            <button class="btn-apply" onclick="applyVoucher()">Apply</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVE VOUCHERS -->
+      <div class="panel-card">
+        <div class="panel-title">🎟️ Food Vouchers</div>
+        <div style="display:flex;flex-direction:column;gap:.6rem;">
+          <div style="background:#fff0f5;border:1.5px dashed var(--pink);border-radius:10px;padding:.8rem;">
+            <div style="font-size:.82rem;font-weight:900;color:var(--pink);font-family:monospace;">FOOD30FP</div>
+            <div style="font-size:.72rem;color:var(--mid);margin-top:3px;">৳30 off on Foodpanda orders above ৳250</div>
+            <div style="font-size:.65rem;color:var(--light);margin-top:4px;">Expires: Sep 10, 2026</div>
+          </div>
+          <div style="background:#fff7ed;border:1.5px dashed var(--orange);border-radius:10px;padding:.8rem;">
+            <div style="font-size:.82rem;font-weight:900;color:var(--orange);font-family:monospace;">PFNEW100</div>
+            <div style="font-size:.72rem;color:var(--mid);margin-top:3px;">৳100 off on first Pathao Food order</div>
+            <div style="font-size:.65rem;color:var(--light);margin-top:4px;">Expires: Sep 30, 2026</div>
+          </div>
+          <div style="background:#f0fdf4;border:1.5px dashed var(--green);border-radius:10px;padding:.8rem;">
+            <div style="font-size:.82rem;font-weight:900;color:var(--green);font-family:monospace;">BKASH15</div>
+            <div style="font-size:.72rem;color:var(--mid);margin-top:3px;">15% bKash cashback (max ৳50) on any platform</div>
+            <div style="font-size:.65rem;color:var(--light);margin-top:4px;">Expires: Oct 15, 2026</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DELIVERY TIME -->
+      <div class="panel-card">
+        <div class="panel-title">⏱️ Delivery Times — Gulshan</div>
+        <div style="display:flex;flex-direction:column;gap:.6rem;">
+          <div style="display:flex;align-items:center;gap:.8rem;">
+            <div style="width:8px;height:8px;border-radius:50%;background:#d70f64;flex-shrink:0;"></div>
+            <div style="flex:1;font-size:.82rem;font-weight:700;">Foodpanda</div>
+            <div style="font-size:.82rem;font-weight:800;color:#111827;">25–35 min</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.8rem;">
+            <div style="width:8px;height:8px;border-radius:50%;background:#e31837;flex-shrink:0;"></div>
+            <div style="flex:1;font-size:.82rem;font-weight:700;">Pathao Food</div>
+            <div style="font-size:.82rem;font-weight:800;color:#111827;">30–45 min</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.8rem;">
+            <div style="width:8px;height:8px;border-radius:50%;background:#000;flex-shrink:0;"></div>
+            <div style="flex:1;font-size:.82rem;font-weight:700;">Uber Eats</div>
+            <div style="font-size:.82rem;font-weight:800;color:#111827;">35–50 min</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DUMMY DATA ──────────────────────────────────────────────────────────────
+const MENU_ITEMS = [
+  { id:1, name:'Chicken Biryani', category:'biryani', restaurant:'Kacchi Bhai', area:'Gulshan', platform:'foodpanda', platColor:'#d70f64', platLabel:'Foodpanda', platShort:'FP', itemPrice:285, delivery:49, vat:true, voucher:30, cashback:15, img:'https://images.unsplash.com/photo-1567337710282-00832b415979?w=300&q=80' },
+  { id:2, name:'Chicken Biryani', category:'biryani', restaurant:'Star Kabab & Restaurant', area:'Gulshan', platform:'pathao',    platColor:'#e31837', platLabel:'Pathao Food', platShort:'PF', itemPrice:260, delivery:59, vat:true, voucher:100, cashback:0, img:'https://images.unsplash.com/photo-1567337710282-00832b415979?w=300&q=80' },
+  { id:3, name:'Chicken Biryani', category:'biryani', restaurant:'Bhai Bhai Restaurant', area:'Gulshan', platform:'ubereats',  platColor:'#000',    platLabel:'Uber Eats', platShort:'UE', itemPrice:320, delivery:35, vat:true, voucher:0,   cashback:0, img:'https://images.unsplash.com/photo-1567337710282-00832b415979?w=300&q=80' },
+  { id:4, name:'Beef Burger Combo', category:'burger', restaurant:'BFC Dhaka', area:'Gulshan', platform:'foodpanda', platColor:'#d70f64', platLabel:'Foodpanda', platShort:'FP', itemPrice:360, delivery:49, vat:true, voucher:30, cashback:15, img:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&q=80' },
+  { id:5, name:'Beef Burger Combo', category:'burger', restaurant:'Burger Lab', area:'Gulshan', platform:'pathao',    platColor:'#e31837', platLabel:'Pathao Food', platShort:'PF', itemPrice:385, delivery:59, vat:true, voucher:0, cashback:0, img:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&q=80' },
+  { id:6, name:'Margherita Pizza (12")', category:'pizza', restaurant:'Pizza Hut Gulshan', area:'Gulshan', platform:'foodpanda', platColor:'#d70f64', platLabel:'Foodpanda', platShort:'FP', itemPrice:599, delivery:0, vat:true, voucher:60, cashback:30, img:'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300&q=80' },
+  { id:7, name:'Margherita Pizza (12")', category:'pizza', restaurant:'Domino\'s Gulshan', area:'Gulshan', platform:'ubereats',  platColor:'#000',    platLabel:'Uber Eats', platShort:'UE', itemPrice:549, delivery:50, vat:true, voucher:0,  cashback:0, img:'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300&q=80' },
+  { id:8, name:'Chicken Shawarma Roll', category:'shawarma', restaurant:'Shawarma Planet', area:'Gulshan', platform:'pathao', platColor:'#e31837', platLabel:'Pathao Food', platShort:'PF', itemPrice:150, delivery:39, vat:false, voucher:50, cashback:0, img:'https://images.unsplash.com/photo-1561050501-a4be5b1d4b2e?w=300&q=80' },
+  { id:9, name:'Pad Thai Noodles', category:'thai', restaurant:'Spice Garden', area:'Gulshan', platform:'foodpanda', platColor:'#d70f64', platLabel:'Foodpanda', platShort:'FP', itemPrice:310, delivery:49, vat:true, voucher:30, cashback:15, img:'https://images.unsplash.com/photo-1559314809-0d155014e29e?w=300&q=80' },
+];
+
+const VAT_RATE = 0.075;
+
+function calcTotal(item) {
+  const vatAmt = item.vat ? Math.round(item.itemPrice * VAT_RATE) : 0;
+  return item.itemPrice + item.delivery + vatAmt - item.voucher - item.cashback;
+}
+
+let currentPlat = 'all';
+
+function getFiltered() {
+  return MENU_ITEMS.filter(i => currentPlat === 'all' || i.platform === currentPlat);
+}
+
+function findCheapest(items) {
+  const totals = items.map(i => calcTotal(i));
+  return Math.min(...totals);
+}
+
+function renderDishes(items) {
+  const cheapest = findCheapest(items);
+  document.getElementById('dish-grid').innerHTML = items.map(item => {
+    const vatAmt = item.vat ? Math.round(item.itemPrice * VAT_RATE) : 0;
+    const total = calcTotal(item);
+    const isCheapest = total === cheapest;
+    return `
+      <div class="dish-card ${isCheapest ? 'cheapest' : ''}" onclick="selectDish(${item.id})">
+        <div class="dc-img">
+          <img src="${item.img}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/280x150/f97316/fff?text=Food'" />
+          ${isCheapest ? '<div class="dc-best-badge">🏆 CHEAPEST TOTAL</div>' : ''}
+          <div class="dc-plat-badge" style="background:${item.platColor}">${item.platShort}</div>
+        </div>
+        <div class="dc-body">
+          <div class="dc-name">${item.name}</div>
+          <div class="dc-rest">🏪 ${item.restaurant} · ${item.platLabel}</div>
+          <div class="dc-breakdown">
+            <div class="dcb-row"><span class="dcb-label">Item Price</span><span class="dcb-val">৳${item.itemPrice}</span></div>
+            <div class="dcb-row"><span class="dcb-label">Delivery Fee</span><span class="dcb-val">৳${item.delivery}</span></div>
+            ${item.vat ? `<div class="dcb-row"><span class="dcb-label">VAT (7.5%)</span><span class="dcb-val">৳${vatAmt}</span></div>` : ''}
+            ${item.voucher ? `<div class="dcb-row"><span class="dcb-label dcb-voucher">Voucher</span><span class="dcb-val" style="color:var(--green);">-৳${item.voucher}</span></div>` : ''}
+            ${item.cashback ? `<div class="dcb-row"><span class="dcb-label dcb-voucher">bKash Cashback</span><span class="dcb-val" style="color:var(--green);">-৳${item.cashback}</span></div>` : ''}
+            <div class="dcb-total-row"><span>Total Payable</span><span class="dcb-total-val ${isCheapest?'best':''}">৳${total}</span></div>
+          </div>
+          <button class="btn-order ${isCheapest ? 'best' : ''}" onclick="event.stopPropagation();orderNow(${item.id})">
+            ${isCheapest ? '✅ Order (Best Deal)' : '🛒 Order Now'}
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderCompareTable(items) {
+  const cheapest = findCheapest(items);
+  document.getElementById('compare-tbody').innerHTML = items.map(item => {
+    const vatAmt = item.vat ? Math.round(item.itemPrice * VAT_RATE) : 0;
+    const total = calcTotal(item);
+    const isCheapest = total === cheapest;
+    return `
+      <tr class="${isCheapest ? 'ct-cheapest-row' : ''}">
+        <td><span class="ct-plat"><span class="ct-plat-dot" style="background:${item.platColor}"></span>${item.platLabel}</span></td>
+        <td>${item.restaurant}</td>
+        <td>৳${item.itemPrice}</td>
+        <td>৳${item.delivery}</td>
+        <td>৳${vatAmt}</td>
+        <td style="color:var(--green);">${item.voucher ? '-৳'+(item.voucher+item.cashback) : '—'}</td>
+        <td class="${isCheapest?'ct-cheapest-cell':''}"><b>৳${total}</b>${isCheapest?' 🏆':''}</td>
+      </tr>`;
+  }).join('');
+}
+
+function searchDishes() {
+  const q = document.getElementById('dish-input').value.toLowerCase();
+  const area = document.getElementById('area-select').value;
+  document.getElementById('result-label').textContent = `🍛 Results for "${document.getElementById('dish-input').value}" in ${area}`;
+  const items = MENU_ITEMS.filter(i => currentPlat==='all'||i.platform===currentPlat);
+  renderDishes(items);
+  renderCompareTable(items);
+}
+
+function filterPlat(plat, btn) {
+  currentPlat = plat;
+  document.querySelectorAll('.plat-pill').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  const items = getFiltered();
+  renderDishes(items);
+  renderCompareTable(items);
+}
+
+function selectDish(id) {
+  const item = MENU_ITEMS.find(i=>i.id===id);
+  if (!item) return;
+  const vatAmt = item.vat ? Math.round(item.itemPrice * VAT_RATE) : 0;
+  const total = calcTotal(item);
+  document.getElementById('calc-item').textContent = '৳'+item.itemPrice;
+  document.getElementById('calc-delivery').textContent = '৳'+item.delivery;
+  document.getElementById('calc-vat').textContent = '৳'+vatAmt;
+  document.getElementById('calc-voucher').textContent = item.voucher ? '-৳'+item.voucher : '৳0';
+  document.getElementById('calc-cashback').textContent = item.cashback ? '-৳'+item.cashback : '৳0';
+  document.getElementById('calc-total').textContent = '৳'+total;
+}
+
+function applyVoucher() {
+  const code = document.getElementById('voucher-input').value.trim().toUpperCase();
+  const codes = { 'FOOD30FP':30, 'PFNEW100':100, 'BKASH15':15, 'FOOD50':50 };
+  if (codes[code]) {
+    alert(`✅ Voucher "${code}" applied! ৳${codes[code]} discount added.`);
+    const cur = parseInt(document.getElementById('calc-voucher').textContent.replace(/[^\d]/g,''))||0;
+    const newDisc = cur + codes[code];
+    const tot = parseInt(document.getElementById('calc-total').textContent.replace(/[^\d]/g,''));
+    document.getElementById('calc-voucher').textContent = '-৳'+newDisc;
+    document.getElementById('calc-total').textContent = '৳'+Math.max(0, tot - codes[code]);
+  } else {
+    alert('❌ Invalid voucher code. Try FOOD30FP, PFNEW100, or BKASH15.');
+  }
+}
+
+function orderNow(id) {
+  const item = MENU_ITEMS.find(i=>i.id===id);
+  alert(`🛒 Opening ${item.platLabel} to order ${item.name} from ${item.restaurant}.\n\nDeep-link integration will be added in Phase 3.`);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderDishes(MENU_ITEMS);
+  renderCompareTable(MENU_ITEMS);
+});
+</script>
+</body>
+</html>

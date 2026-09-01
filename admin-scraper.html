@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Scraper Health Hub – OfferMatrix Admin</title>
+  <meta name="description" content="Live monitoring dashboard for all OfferMatrix crawler jobs and simulated API endpoints." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --pink:#ff1a6e;--pink-light:#fff0f5;--green:#22c55e;--green-light:#dcfce7;
+      --red:#ef4444;--orange:#f97316;--yellow:#eab308;--blue:#3b82f6;
+      --text:#111827;--mid:#4b5563;--light:#9ca3af;--border:#e5e7eb;
+      --bg:#f8fafc;--white:#fff;--font:'Inter',sans-serif;--sb:240px;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden;}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none;}
+    a{color:inherit;text-decoration:none;}
+    ::-webkit-scrollbar{width:5px;}
+    ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:5px;}
+
+    /* ADMIN SIDEBAR */
+    .sb{width:var(--sb);min-height:100vh;background:#0f172a;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:300;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+    .sb::-webkit-scrollbar{display:none;}
+    .sb-logo{display:flex;align-items:center;gap:10px;padding:1.2rem 1.4rem;border-bottom:1px solid rgba(255,255,255,.06);}
+    .sb-logo-icon{width:36px;height:36px;background:var(--pink);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;}
+    .sb-logo-text{font-size:1.2rem;font-weight:800;color:#f1f5f9;}
+    .sb-logo-badge{font-size:.55rem;font-weight:800;background:rgba(255,26,110,.2);color:var(--pink);padding:2px 7px;border-radius:4px;margin-top:2px;}
+    .sb-nav{flex:1;padding:1rem 0;}
+    .sb-group{font-size:.65rem;font-weight:700;color:#475569;letter-spacing:1px;padding:1rem 1.4rem .4rem;text-transform:uppercase;}
+    .sb-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 1.4rem;font-size:.88rem;font-weight:600;color:#94a3b8;width:100%;text-align:left;cursor:pointer;transition:all .2s;}
+    .sb-item:hover{color:#f1f5f9;}
+    .sb-item.on{background:rgba(255,26,110,.12);color:var(--pink);border-right:3px solid var(--pink);}
+    .sb-ico{font-size:1rem;width:20px;text-align:center;}
+    .sb-badge{margin-left:auto;font-size:.6rem;font-weight:800;padding:2px 6px;border-radius:50px;background:var(--red);color:#fff;}
+    .sb-badge-warn{background:var(--yellow);color:#111;}
+    .sb-footer{padding:1rem 1.4rem;border-top:1px solid rgba(255,255,255,.06);}
+    .admin-info{display:flex;align-items:center;gap:.7rem;}
+    .admin-av{width:34px;height:34px;border-radius:50%;background:var(--pink);display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:.85rem;}
+    .admin-name{font-size:.82rem;font-weight:700;color:#f1f5f9;}
+    .admin-role{font-size:.65rem;color:#64748b;}
+
+    /* MAIN */
+    .main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;width:calc(100% - var(--sb));}
+    .topbar{background:#fff;border-bottom:1px solid var(--border);padding:.8rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+    .tb-title{font-size:1.1rem;font-weight:800;color:#111827;}
+    .tb-actions{display:flex;align-items:center;gap:.8rem;margin-left:auto;}
+    .tb-icon-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:#4b5563;cursor:pointer;font-size:.9rem;transition:all .2s;}
+    .tb-icon-btn:hover{background:#f1f5f9;}
+    .btn-refresh{background:var(--pink);color:#fff;border-radius:8px;padding:.5rem 1rem;font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:.4rem;transition:all .2s;}
+    .btn-refresh:hover{background:#e0155e;}
+    .status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse-green 2s infinite;}
+    @keyframes pulse-green{0%,100%{opacity:1}50%{opacity:.4}}
+
+    /* PAGE */
+    .page-wrap{flex:1;padding:1.5rem;display:flex;gap:1.5rem;flex-direction:column;}
+
+    /* STATS BAR */
+    .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+    .stat-card{background:#fff;border-radius:16px;border:1px solid var(--border);padding:1.2rem;display:flex;align-items:center;gap:1rem;}
+    .stat-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+    .stat-icon-green{background:#dcfce7;}
+    .stat-icon-red{background:#fee2e2;}
+    .stat-icon-yellow{background:#fef9c3;}
+    .stat-icon-blue{background:#eff6ff;}
+    .stat-v{font-size:1.6rem;font-weight:900;color:#111827;}
+    .stat-l{font-size:.72rem;color:var(--mid);font-weight:600;}
+
+    /* SCRAPER TABLE */
+    .section-card{background:#fff;border-radius:18px;border:1px solid var(--border);padding:1.5rem;}
+    .sc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;}
+    .sc-title{font-size:1rem;font-weight:800;display:flex;align-items:center;gap:.6rem;}
+    .sc-count{font-size:.72rem;color:var(--mid);font-weight:600;}
+    .sc-filters{display:flex;gap:.5rem;}
+    .sc-filter{padding:.4rem .8rem;border:1px solid var(--border);border-radius:6px;font-size:.76rem;font-weight:700;color:var(--mid);cursor:pointer;transition:all .2s;}
+    .sc-filter.on{background:var(--pink);color:#fff;border-color:var(--pink);}
+    .sc-filter:hover:not(.on){border-color:#d1d5db;}
+
+    .scraper-table{width:100%;border-collapse:collapse;}
+    .scraper-table th{font-size:.7rem;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;padding:.7rem 1rem;text-align:left;border-bottom:1px solid var(--border);background:#f8fafc;}
+    .scraper-table td{padding:.85rem 1rem;border-bottom:1px solid #f1f5f9;font-size:.84rem;vertical-align:middle;}
+    .scraper-table tr:last-child td{border-bottom:none;}
+    .scraper-table tr:hover td{background:#fafafa;}
+
+    /* STATUS BADGES */
+    .status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:50px;font-size:.7rem;font-weight:800;}
+    .status-live{background:#dcfce7;color:#15803d;}
+    .status-warn{background:#fef9c3;color:#92400e;}
+    .status-error{background:#fee2e2;color:#b91c1c;}
+    .status-paused{background:#f1f5f9;color:#475569;}
+    .status-dot-sm{width:6px;height:6px;border-radius:50%;}
+    .dot-green{background:#22c55e;animation:pulse-green 2s infinite;}
+    .dot-yellow{background:#eab308;}
+    .dot-red{background:#ef4444;animation:pulse-red 1s infinite;}
+    .dot-gray{background:#94a3b8;}
+    @keyframes pulse-red{0%,100%{opacity:1}50%{opacity:.3}}
+
+    /* PROGRESS BAR */
+    .progress-wrap{height:6px;background:#f1f5f9;border-radius:50px;overflow:hidden;min-width:80px;}
+    .progress-fill{height:100%;border-radius:50px;transition:width .3s;}
+    .prog-green{background:var(--green);}
+    .prog-yellow{background:var(--yellow);}
+    .prog-red{background:var(--red);}
+
+    /* ACTION BUTTONS */
+    .btn-action{font-size:.72rem;font-weight:700;padding:.35rem .7rem;border-radius:6px;cursor:pointer;transition:all .2s;}
+    .btn-run{background:var(--green-light);color:#15803d;border:1px solid #bbf7d0;}
+    .btn-run:hover{background:#bbf7d0;}
+    .btn-pause{background:#fef9c3;color:#92400e;border:1px solid #fef08a;}
+    .btn-pause:hover{background:#fef08a;}
+    .btn-logs{background:#f1f5f9;color:var(--mid);border:1px solid var(--border);}
+    .btn-logs:hover{background:#e2e8f0;}
+
+    /* LOGS PANEL */
+    .logs-panel{background:#0f172a;border-radius:14px;padding:1rem;font-family:monospace;font-size:.75rem;max-height:200px;overflow-y:auto;line-height:1.7;}
+    .log-line{color:#94a3b8;}
+    .log-line.ok{color:#4ade80;}
+    .log-line.warn{color:#fbbf24;}
+    .log-line.err{color:#f87171;}
+    .log-line.info{color:#60a5fa;}
+
+    /* API ENDPOINTS */
+    .endpoint-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.8rem;}
+    .endpoint-card{border:1px solid var(--border);border-radius:12px;padding:1rem;background:#fafafa;}
+    .ep-method{font-size:.65rem;font-weight:900;padding:2px 7px;border-radius:4px;display:inline-block;margin-bottom:.4rem;}
+    .ep-get{background:#dcfce7;color:#15803d;}
+    .ep-post{background:#eff6ff;color:#1d4ed8;}
+    .ep-name{font-size:.82rem;font-weight:800;color:#111827;font-family:monospace;margin-bottom:.3rem;}
+    .ep-status{font-size:.7rem;font-weight:700;}
+    .ep-ok{color:var(--green);}
+    .ep-down{color:var(--red);}
+    .ep-slow{color:var(--yellow);}
+    .ep-ms{font-size:.68rem;color:var(--light);}
+
+    /* CHART AREA */
+    .chart-bar-wrap{display:flex;align-items:flex-end;gap:4px;height:60px;}
+    .chart-bar{flex:1;border-radius:4px 4px 0 0;min-height:4px;transition:height .3s;}
+
+    @media(max-width:900px){
+      .sb{transform:translateX(-100%);}
+      .main{margin-left:0;width:100%;}
+      .stats-bar{grid-template-columns:repeat(2,1fr);}
+      .endpoint-grid{grid-template-columns:1fr 1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ADMIN SIDEBAR -->
+<aside class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">%</div>
+    <div>
+      <div class="sb-logo-text">OfferMatrix</div>
+      <div class="sb-logo-badge">ADMIN PANEL</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-group">Control Center</div>
+    <a href="admin-dashboard.html" class="sb-item"><span class="sb-ico">📊</span> Dashboard</a>
+    <a href="admin-scraper-health.html" class="sb-item on"><span class="sb-ico">📡</span> Scraper Health</a>
+    <a href="admin-deals-queue.html" class="sb-item"><span class="sb-ico">📋</span> Deal Queue <span class="sb-badge">8</span></a>
+    <a href="admin-affiliates.html" class="sb-item"><span class="sb-ico">🤝</span> Affiliate Manager</a>
+    <a href="admin-fraud-reports.html" class="sb-item"><span class="sb-ico">🛡️</span> Spam & Fraud Center <span class="sb-badge">4</span></a>
+    <div class="sb-group">Analytics</div>
+    <a href="admin-platform-analytics.html" class="sb-item"><span class="sb-ico">📈</span> Platform Analytics</a>
+    <a href="admin-search-trends.html" class="sb-item"><span class="sb-ico">🔍</span> Search Trends</a>
+    <a href="admin-alert-manager.html" class="sb-item"><span class="sb-ico">🔔</span> Alert Manager <span class="sb-badge sb-badge-warn">3</span></a>
+    <div class="sb-group">System</div>
+    <a href="admin-settings.html" class="sb-item"><span class="sb-ico">⚙️</span> Settings</a>
+    <a href="admin-users.html" class="sb-item"><span class="sb-ico">👥</span> User Management</a>
+    <a href="admin-login.html" class="sb-item" style="color:#f87171;"><span class="sb-ico">🚪</span> Sign Out</a>
+  </nav>
+  <div class="sb-footer">
+    <div class="admin-info">
+      <div class="admin-av">A</div>
+      <div><div class="admin-name">Super Admin</div><div class="admin-role">Full Access</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:.6rem;">
+      <div class="status-dot"></div>
+      <div class="tb-title">Scraper Health Hub</div>
+    </div>
+    <div style="font-size:.78rem;color:var(--mid);margin-left:.5rem;">Last refreshed: <span id="last-refresh">Just now</span></div>
+    <div class="tb-actions">
+      <div class="tb-icon-btn" title="Notifications">🔔</div>
+      <button class="btn-refresh" id="refresh-btn" onclick="refreshAll()">🔄 Refresh All</button>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-green">✅</div>
+        <div><div class="stat-v" style="color:var(--green);" id="stat-live">7</div><div class="stat-l">Crawlers Live</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-yellow">⚠️</div>
+        <div><div class="stat-v" style="color:var(--yellow);" id="stat-warn">2</div><div class="stat-l">With Warnings</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-red">❌</div>
+        <div><div class="stat-v" style="color:var(--red);" id="stat-err">1</div><div class="stat-l">Errors / Down</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-blue">📦</div>
+        <div><div class="stat-v" id="stat-products">24,381</div><div class="stat-l">Products Indexed</div></div>
+      </div>
+    </div>
+
+    <!-- SCRAPER TABLE -->
+    <div class="section-card">
+      <div class="sc-head">
+        <div class="sc-title">📡 Crawler Job Status <span class="sc-count" id="scraper-count">10 jobs</span></div>
+        <div style="display:flex;align-items:center;gap:.8rem;">
+          <div class="sc-filters">
+            <div class="sc-filter on" id="sf-all" onclick="filterScrapers('all',this)">All</div>
+            <div class="sc-filter" id="sf-live" onclick="filterScrapers('live',this)">Live</div>
+            <div class="sc-filter" id="sf-warn" onclick="filterScrapers('warning',this)">Warning</div>
+            <div class="sc-filter" id="sf-error" onclick="filterScrapers('error',this)">Error</div>
+          </div>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="scraper-table">
+          <thead>
+            <tr>
+              <th>Platform / Source</th>
+              <th>Module</th>
+              <th>Status</th>
+              <th>Last Run</th>
+              <th>Next Run</th>
+              <th>Products</th>
+              <th>Success Rate</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="scraper-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LOGS + ENDPOINTS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+
+      <!-- LIVE LOGS -->
+      <div class="section-card">
+        <div class="sc-head">
+          <div class="sc-title">🖥️ Live System Logs</div>
+          <button class="btn-logs" onclick="clearLogs()">Clear</button>
+        </div>
+        <div class="logs-panel" id="logs-panel">
+          <div class="log-line ok">[2026-09-01 21:47:02] ✅ Daraz scraper: 1,243 products indexed</div>
+          <div class="log-line info">[2026-09-01 21:47:05] ℹ️ Pickaboo: Navigating to electronics page…</div>
+          <div class="log-line ok">[2026-09-01 21:47:08] ✅ StarTech: 342 laptops updated</div>
+          <div class="log-line warn">[2026-09-01 21:47:12] ⚠️ Shajgoj: Rate limit hit (429). Retrying in 30s…</div>
+          <div class="log-line ok">[2026-09-01 21:47:15] ✅ Ryans: 288 products synced</div>
+          <div class="log-line err">[2026-09-01 21:47:18] ❌ Chaldal: HTTP 503 – Service unavailable</div>
+          <div class="log-line info">[2026-09-01 21:47:21] ℹ️ Foodpanda (dummy): Generating 150 menu items…</div>
+          <div class="log-line ok">[2026-09-01 21:47:25] ✅ Pathao ride API: Rules synced (5 vehicles)</div>
+          <div class="log-line warn">[2026-09-01 21:47:30] ⚠️ Ogerio: 3 products returned 404</div>
+          <div class="log-line ok">[2026-09-01 21:47:33] ✅ Rokomari: 621 book titles indexed</div>
+          <div class="log-line info">[2026-09-01 21:47:36] ℹ️ Price alert cron: Checking 312 active alerts…</div>
+          <div class="log-line ok">[2026-09-01 21:47:40] ✅ 4 price drop alerts dispatched via SMS</div>
+        </div>
+      </div>
+
+      <!-- API ENDPOINTS -->
+      <div class="section-card">
+        <div class="sc-head">
+          <div class="sc-title">🔌 Simulated API Endpoints</div>
+          <span style="font-size:.72rem;color:var(--mid);">All endpoints</span>
+        </div>
+        <div class="endpoint-grid" id="endpoint-grid"></div>
+      </div>
+
+    </div>
+
+    <!-- HOURLY SCRAPE CHART -->
+    <div class="section-card">
+      <div class="sc-head">
+        <div class="sc-title">📈 Hourly Products Scraped (Last 12 Hours)</div>
+      </div>
+      <div style="display:flex;gap:.5rem;align-items:flex-end;height:80px;padding:.5rem 0;">
+        <div id="hourly-chart" style="display:flex;gap:4px;align-items:flex-end;height:80px;flex:1;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--light);padding-top:.3rem;" id="hourly-labels"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─── DUMMY DATA ──────────────────────────────────────────────────────────────
+const SCRAPERS = [
+  { id:'daraz',    name:'Daraz',          module:'E-Commerce', status:'live',    lastRun:'2m ago',   nextRun:'58m',   products:8420, successRate:98, paused:false },
+  { id:'pickaboo', name:'Pickaboo',       module:'E-Commerce', status:'live',    lastRun:'5m ago',   nextRun:'55m',   products:3210, successRate:96, paused:false },
+  { id:'startech', name:'StarTech',       module:'E-Commerce', status:'live',    lastRun:'8m ago',   nextRun:'52m',   products:2880, successRate:99, paused:false },
+  { id:'ryans',    name:'Ryans Computers',module:'E-Commerce', status:'live',    lastRun:'8m ago',   nextRun:'52m',   products:2340, successRate:97, paused:false },
+  { id:'shajgoj',  name:'Shajgoj',        module:'Skincare',   status:'warning', lastRun:'22m ago',  nextRun:'38m',   products:1580, successRate:72, paused:false },
+  { id:'chaldal',  name:'Chaldal',        module:'Grocery',    status:'error',   lastRun:'45m ago',  nextRun:'Manual',products:0,    successRate:0,  paused:false },
+  { id:'rokomari', name:'Rokomari',       module:'Books',      status:'live',    lastRun:'12m ago',  nextRun:'48m',   products:4210, successRate:94, paused:false },
+  { id:'foodpanda',name:'Dummy Foodpanda',module:'Food',        status:'live',    lastRun:'30m ago',  nextRun:'30m',   products:840,  successRate:100,paused:false },
+  { id:'ogerio',   name:'Ogerio',         module:'Skincare',   status:'warning', lastRun:'18m ago',  nextRun:'42m',   products:690,  successRate:81, paused:false },
+  { id:'pathao',   name:'Pathao Ride API',module:'Rides',       status:'live',    lastRun:'1m ago',   nextRun:'59m',   products:5,    successRate:100,paused:false },
+];
+
+const ENDPOINTS = [
+  { method:'GET',  path:'/api/products',         status:'ok',  ms:42  },
+  { method:'GET',  path:'/api/search',           status:'ok',  ms:87  },
+  { method:'POST', path:'/api/rides/estimate',   status:'ok',  ms:31  },
+  { method:'GET',  path:'/api/buses',            status:'ok',  ms:55  },
+  { method:'GET',  path:'/api/food/search',      status:'slow',ms:320 },
+  { method:'GET',  path:'/api/price-history/:id',status:'ok',  ms:68  },
+  { method:'POST', path:'/api/alerts',           status:'ok',  ms:24  },
+  { method:'POST', path:'/api/checkout/calculate',status:'ok', ms:58  },
+  { method:'GET',  path:'/api/locations',        status:'ok',  ms:19  },
+  { method:'PATCH',path:'/api/deals/:id/verify', status:'ok',  ms:41  },
+  { method:'GET',  path:'/api/feed/recommendations',status:'ok',ms:145 },
+  { method:'POST', path:'/api/auth/login',       status:'ok',  ms:89  },
+];
+
+let scraperFilter = 'all';
+
+function renderScrapers() {
+  const items = scraperFilter === 'all' ? SCRAPERS : SCRAPERS.filter(s=>s.status===scraperFilter);
+  document.getElementById('scraper-count').textContent = items.length+' jobs';
+  document.getElementById('scraper-tbody').innerHTML = items.map(s => {
+    const statusBadge = {
+      live:    `<span class="status-badge status-live"><span class="status-dot-sm dot-green"></span>Live</span>`,
+      warning: `<span class="status-badge status-warn"><span class="status-dot-sm dot-yellow"></span>Warning</span>`,
+      error:   `<span class="status-badge status-error"><span class="status-dot-sm dot-red"></span>Error</span>`,
+      paused:  `<span class="status-badge status-paused"><span class="status-dot-sm dot-gray"></span>Paused</span>`,
+    }[s.status];
+
+    const progColor = s.successRate>=90?'prog-green':s.successRate>=60?'prog-yellow':'prog-red';
+    return `
+      <tr id="scraper-row-${s.id}">
+        <td><b>${s.name}</b></td>
+        <td><span style="background:#f1f5f9;padding:2px 8px;border-radius:4px;font-size:.72rem;font-weight:700;">${s.module}</span></td>
+        <td>${statusBadge}</td>
+        <td style="color:var(--mid);">${s.lastRun}</td>
+        <td style="color:var(--mid);">${s.nextRun}</td>
+        <td><b>${s.products.toLocaleString()}</b></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:.6rem;">
+            <div class="progress-wrap"><div class="progress-fill ${progColor}" style="width:${s.successRate}%"></div></div>
+            <span style="font-size:.75rem;font-weight:700;">${s.successRate}%</span>
+          </div>
+        </td>
+        <td>
+          <div style="display:flex;gap:.3rem;">
+            <button class="btn-action btn-run" onclick="runScraper('${s.id}')">▶ Run</button>
+            <button class="btn-action btn-pause" onclick="pauseScraper('${s.id}')">${s.paused?'Resume':'Pause'}</button>
+            <button class="btn-action btn-logs" onclick="viewLogs('${s.id}')">Logs</button>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function renderEndpoints() {
+  document.getElementById('endpoint-grid').innerHTML = ENDPOINTS.map(e => {
+    const statusInfo = {
+      ok:   { cls:'ep-ok',   label:'✅ Online', icon:'🟢' },
+      down: { cls:'ep-down', label:'❌ Down',   icon:'🔴' },
+      slow: { cls:'ep-slow', label:'⚠️ Slow',   icon:'🟡' },
+    }[e.status];
+    return `
+      <div class="endpoint-card">
+        <div class="ep-method ${e.method==='GET'?'ep-get':'ep-post'}">${e.method}</div>
+        <div class="ep-name">${e.path}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="ep-status ${statusInfo.cls}">${statusInfo.label}</span>
+          <span class="ep-ms">${e.ms}ms</span>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderHourlyChart() {
+  const data = [820,950,1100,880,760,1320,1540,1820,2100,1980,2240,1650];
+  const labels = ['10AM','11AM','12PM','1PM','2PM','3PM','4PM','5PM','6PM','7PM','8PM','9PM'];
+  const maxVal = Math.max(...data);
+  document.getElementById('hourly-chart').innerHTML = data.map((v,i) => {
+    const h = Math.round((v/maxVal)*70);
+    return `<div style="flex:1;height:${h}px;background:${i===data.length-1?'var(--pink)':'#e2e8f0'};border-radius:4px 4px 0 0;min-height:4px;cursor:pointer;transition:background .2s;" title="${labels[i]}: ${v.toLocaleString()} products" onmouseover="this.style.background='var(--pink)'" onmouseout="this.style.background='${i===data.length-1?'var(--pink)':'#e2e8f0'}'"></div>`;
+  }).join('');
+  document.getElementById('hourly-labels').innerHTML = labels.map((l,i) => `<span>${i%3===0?l:''}</span>`).join('');
+}
+
+function filterScrapers(filter, btn) {
+  scraperFilter = filter;
+  document.querySelectorAll('.sc-filter').forEach(f=>f.classList.remove('on'));
+  btn.classList.add('on');
+  renderScrapers();
+}
+
+function runScraper(id) {
+  const s = SCRAPERS.find(x=>x.id===id);
+  s.status = 'live'; s.lastRun = 'Just now'; s.successRate = 95;
+  renderScrapers();
+  addLog(`✅ ${s.name} scraper manually triggered`, 'ok');
+}
+
+function pauseScraper(id) {
+  const s = SCRAPERS.find(x=>x.id===id);
+  s.paused = !s.paused;
+  if (s.paused) { s.status = 'paused'; s.nextRun = 'Paused'; }
+  else { s.status = 'live'; s.nextRun = '60m'; }
+  renderScrapers();
+  addLog(`${s.paused?'⏸️ Paused':'▶️ Resumed'}: ${s.name}`, s.paused?'warn':'ok');
+}
+
+function viewLogs(id) {
+  const s = SCRAPERS.find(x=>x.id===id);
+  addLog(`ℹ️ Viewing logs for ${s.name}…`, 'info');
+}
+
+function addLog(msg, type='info') {
+  const panel = document.getElementById('logs-panel');
+  const now = new Date().toLocaleTimeString('en-BD', {hour12:false});
+  const div = document.createElement('div');
+  div.className = 'log-line '+type;
+  div.textContent = `[2026-09-01 ${now}] ${msg}`;
+  panel.appendChild(div);
+  panel.scrollTop = panel.scrollHeight;
+}
+
+function clearLogs() { document.getElementById('logs-panel').innerHTML = '<div class="log-line info">-- Log cleared --</div>'; }
+
+function refreshAll() {
+  document.getElementById('refresh-btn').textContent = '🔄 Refreshing…';
+  setTimeout(() => {
+    SCRAPERS.forEach(s => { if(s.status==='live') s.lastRun = Math.ceil(Math.random()*10)+'m ago'; });
+    renderScrapers();
+    document.getElementById('last-refresh').textContent = 'Just now';
+    document.getElementById('refresh-btn').textContent = '🔄 Refresh All';
+    addLog('ℹ️ All scrapers status refreshed', 'info');
+  }, 1200);
+}
+
+// Auto-add logs every 8 seconds
+const autoLogs = [
+  ['✅ Daraz price_history: 48 new records written','ok'],
+  ['ℹ️ Running price alert cron job…','info'],
+  ['⚠️ Shajgoj: Slow response (4.2s), threshold exceeded','warn'],
+  ['✅ Pickaboo: Flash sale tags updated (12 items)','ok'],
+  ['ℹ️ StarTech: Navigating laptops page 3/8…','info'],
+];
+let autoLogIdx = 0;
+setInterval(() => {
+  const [msg, type] = autoLogs[autoLogIdx % autoLogs.length];
+  addLog(msg, type);
+  autoLogIdx++;
+}, 8000);
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderScrapers();
+  renderEndpoints();
+  renderHourlyChart();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Rides & Travel – OfferMatrix | Compare Uber, Pathao, Shohoz, inDrive & Obhai</title>
+  <meta name="description" content="Compare ride fares across Uber, Pathao, Shohoz, inDrive, and Obhai in Bangladesh. Find the cheapest ride with OfferMatrix." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="js/om-store.js"></script>
+  <script src="js/om-profile.js"></script>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --pink:#ff1a6e;--pink-light:#fff0f5;--green:#22c55e;--green-light:#dcfce7;
+      --red:#ef4444;--blue:#3b82f6;--orange:#f97316;--yellow:#eab308;
+      --text:#111827;--mid:#4b5563;--light:#9ca3af;--border:#e5e7eb;
+      --bg:#f8fafc;--white:#fff;--font:'Inter',sans-serif;--sb:240px;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden;}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none;}
+    a{color:inherit;text-decoration:none;}
+    ::-webkit-scrollbar{width:5px;height:5px;}
+    ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:5px;}
+
+    /* SIDEBAR */
+    .sb{width:var(--sb);min-height:100vh;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:300;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+    .sb::-webkit-scrollbar{display:none;}
+    .sb-logo{display:flex;align-items:center;gap:10px;padding:1.2rem 1.4rem;border-bottom:1px solid var(--border);}
+    .sb-logo-icon{width:36px;height:36px;background:var(--pink);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;}
+    .sb-logo-text{font-size:1.3rem;font-weight:800;color:#111827;}
+    .sb-nav{flex:1;padding:1rem 0;}
+    .sb-group{font-size:.7rem;font-weight:700;color:var(--light);letter-spacing:1px;padding:1rem 1.4rem .4rem;text-transform:uppercase;}
+    .sb-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 1.4rem;font-size:.9rem;font-weight:600;color:var(--mid);width:100%;text-align:left;cursor:pointer;transition:all .2s;}
+    .sb-item:hover{color:var(--pink);}
+    .sb-item.on{background:var(--pink);color:#fff;border-radius:10px;margin:0 .8rem;padding:.7rem .6rem;width:calc(100% - 1.6rem);}
+    .sb-item.on .sb-ico{color:#fff;}
+    .sb-ico{font-size:1.1rem;width:22px;text-align:center;color:#6b7280;}
+    .sb-badge{margin-left:auto;font-size:.65rem;font-weight:800;padding:2px 8px;border-radius:50px;background:var(--pink);color:#fff;}
+
+    /* MAIN */
+    .main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;width:calc(100% - var(--sb));}
+    .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:.8rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+    .tb-search{display:flex;align-items:center;gap:.5rem;background:#f3f4f6;border-radius:50px;padding:.5rem 1rem;max-width:350px;flex:1;}
+    .tb-search input{border:none;background:transparent;outline:none;font-size:.85rem;color:#111827;font-family:var(--font);}
+    .tb-actions{display:flex;align-items:center;gap:1rem;margin-left:auto;}
+    .tb-icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:#4b5563;position:relative;cursor:pointer;}
+    .notif-dot{position:absolute;top:9px;right:9px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid #fff;}
+    .tb-user{display:flex;align-items:center;gap:.6rem;padding:.3rem .6rem;border-radius:50px;cursor:pointer;}
+    .tb-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#ff1a6e,#f97316);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.9rem;}
+    .tb-uname{font-size:.85rem;font-weight:700;color:#111827;}
+
+    /* PAGE LAYOUT */
+    .page-wrap{flex:1;padding:1.5rem;display:flex;gap:1.5rem;}
+    .col-c{flex:1;min-width:0;display:flex;flex-direction:column;gap:1.2rem;}
+    .col-r{width:290px;flex-shrink:0;display:flex;flex-direction:column;gap:1.2rem;}
+
+    /* TABS */
+    .mode-tabs{display:flex;background:#f1f5f9;border-radius:14px;padding:5px;gap:4px;}
+    .mtab{flex:1;padding:.65rem 1rem;border-radius:10px;font-size:.88rem;font-weight:700;color:#475569;text-align:center;cursor:pointer;transition:all .2s;}
+    .mtab.on{background:#fff;color:var(--pink);box-shadow:0 2px 8px rgba(0,0,0,.08);}
+
+    /* ROUTE CARD */
+    .route-card{background:#fff;border-radius:20px;border:1px solid var(--border);padding:1.5rem;display:flex;flex-direction:column;gap:1rem;}
+    .rc-title{font-size:1rem;font-weight:800;color:#111827;}
+    .route-inputs{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+    .ri-wrap{display:flex;flex-direction:column;gap:4px;}
+    .ri-label{font-size:.72rem;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;}
+    .ri-input{border:1.5px solid var(--border);border-radius:12px;padding:.7rem 1rem;font-size:.88rem;font-family:var(--font);outline:none;transition:border-color .2s;background:#fafafa;}
+    .ri-input:focus{border-color:var(--pink);background:#fff;}
+    .ri-select{border:1.5px solid var(--border);border-radius:12px;padding:.7rem 1rem;font-size:.88rem;font-family:var(--font);outline:none;background:#fafafa;color:#111827;}
+    .route-swap-btn{width:36px;height:36px;border-radius:50%;background:var(--pink-light);color:var(--pink);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;align-self:flex-end;flex-shrink:0;transition:all .2s;}
+    .route-swap-btn:hover{background:var(--pink);color:#fff;}
+    .route-inputs-row{display:flex;align-items:flex-end;gap:.8rem;}
+    .btn-compare{background:var(--pink);color:#fff;border-radius:50px;padding:.85rem 2.5rem;font-size:.95rem;font-weight:800;transition:all .2s;width:100%;}
+    .btn-compare:hover{background:#e0155e;transform:translateY(-1px);}
+
+    /* VEHICLE TYPE PILLS */
+    .vtype-row{display:flex;gap:.6rem;}
+    .vtype-pill{display:flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border:1.5px solid var(--border);border-radius:50px;font-size:.82rem;font-weight:700;color:var(--mid);cursor:pointer;background:#fff;transition:all .2s;}
+    .vtype-pill.on{border-color:var(--pink);background:var(--pink-light);color:var(--pink);}
+    .vtype-pill:hover{border-color:var(--pink);color:var(--pink);}
+
+    /* FARE MATRIX */
+    .fare-section-title{font-size:1.05rem;font-weight:800;display:flex;align-items:center;gap:.5rem;}
+    .fare-meta{font-size:.78rem;color:var(--mid);}
+    .fare-badge{font-size:.62rem;font-weight:800;padding:3px 8px;border-radius:4px;background:#dcfce7;color:#15803d;}
+    .fare-grid{display:flex;flex-direction:column;gap:.8rem;}
+    .fare-card{background:#fff;border-radius:16px;border:1.5px solid var(--border);padding:1.1rem 1.3rem;display:flex;align-items:center;gap:1rem;transition:all .2s;cursor:pointer;}
+    .fare-card:hover{border-color:#d1d5db;box-shadow:0 4px 12px rgba(0,0,0,.06);}
+    .fare-card.cheapest{border-color:var(--green);box-shadow:0 6px 20px rgba(34,197,94,.12);}
+    .fare-card.surge{border-color:var(--orange);}
+    .fare-logo{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;color:#fff;flex-shrink:0;}
+    .fare-provider-name{font-size:.92rem;font-weight:800;color:#111827;}
+    .fare-provider-sub{font-size:.72rem;color:var(--mid);}
+    .fare-badges{display:flex;gap:4px;margin-top:3px;flex-wrap:wrap;}
+    .fbadge{font-size:.58rem;font-weight:800;padding:2px 6px;border-radius:4px;}
+    .fbadge-green{background:#dcfce7;color:#15803d;}
+    .fbadge-orange{background:#fff7ed;color:#c2410c;}
+    .fbadge-blue{background:#eff6ff;color:#1d4ed8;}
+    .fare-vehicle{font-size:.82rem;font-weight:700;color:#111827;margin-left:auto;text-align:center;}
+    .fare-vehicle-sub{font-size:.7rem;color:var(--mid);}
+    .fare-time{text-align:center;}
+    .fare-time-val{font-size:.92rem;font-weight:800;color:#111827;}
+    .fare-time-sub{font-size:.68rem;color:var(--mid);}
+    .fare-price-col{text-align:right;flex-shrink:0;}
+    .fare-final{font-size:1.25rem;font-weight:900;color:var(--green);}
+    .fare-orig{font-size:.78rem;color:var(--light);text-decoration:line-through;}
+    .fare-save{font-size:.68rem;color:#e0155e;font-weight:800;}
+    .btn-book-ride{background:linear-gradient(135deg,#ff1a6e,#be185d);color:#fff;border-radius:50px;padding:.45rem 1rem;font-size:.75rem;font-weight:800;margin-top:.4rem;white-space:nowrap;transition:all .2s;}
+    .btn-book-ride.best{background:var(--green);}
+    .btn-book-ride:hover{opacity:.88;}
+
+    /* SUMMARY WIDGET */
+    .summary-card{background:#fff;border-radius:18px;border:1px solid var(--border);padding:1.4rem;}
+    .sc-title{font-size:.95rem;font-weight:800;margin-bottom:1rem;}
+    .sc-route{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem;}
+    .sc-point{display:flex;align-items:flex-start;gap:.7rem;}
+    .sc-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+    .sc-dot-green{background:var(--green);}
+    .sc-dot-red{background:var(--red);}
+    .sc-line-wrap{display:flex;flex-direction:column;align-items:center;padding:.1rem 0;}
+    .sc-vline{width:2px;height:30px;background:#e2e8f0;}
+    .sc-lbl{font-size:.68rem;color:var(--light);font-weight:600;}
+    .sc-val{font-size:.85rem;font-weight:700;color:#111827;}
+    .sc-stat-row{display:flex;justify-content:space-between;margin-bottom:1rem;}
+    .sc-stat{text-align:center;}
+    .sc-stat-v{font-size:1rem;font-weight:800;color:#111827;}
+    .sc-stat-l{font-size:.68rem;color:var(--light);}
+    .sc-best-box{background:var(--green-light);border-radius:10px;padding:.8rem;text-align:center;margin-bottom:.8rem;}
+    .sc-best-price{font-size:1.4rem;font-weight:900;color:var(--green);}
+    .sc-best-save{font-size:.75rem;font-weight:700;color:#15803d;}
+
+    /* INTERCITY SECTION */
+    .bus-card{background:#fff;border-radius:16px;border:1.5px solid var(--border);padding:1.2rem 1.4rem;display:flex;align-items:center;gap:1.2rem;transition:all .2s;}
+    .bus-card:hover{border-color:#d1d5db;box-shadow:0 4px 14px rgba(0,0,0,.07);}
+    .bus-card.best{border-color:var(--green);box-shadow:0 4px 14px rgba(34,197,94,.1);}
+    .bus-op-logo{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;color:#fff;flex-shrink:0;text-align:center;line-height:1.2;}
+    .bus-op-name{font-size:.9rem;font-weight:800;color:#111827;}
+    .bus-op-sub{font-size:.72rem;color:var(--mid);}
+    .bus-times{font-size:.78rem;color:var(--mid);margin-top:3px;}
+    .bus-route-col{flex:1;}
+    .bus-price{font-size:1.1rem;font-weight:900;color:#111827;text-align:right;}
+    .bus-price-type{font-size:.68rem;color:var(--mid);}
+    .bus-dur{font-size:.78rem;color:var(--mid);text-align:right;margin-top:2px;}
+    .btn-book-bus{background:var(--pink);color:#fff;border-radius:50px;padding:.4rem .9rem;font-size:.75rem;font-weight:800;display:block;margin-top:.5rem;transition:all .2s;}
+    .btn-book-bus:hover{background:#e0155e;}
+
+    /* HANGOUT PLANNER */
+    .planner-card{background:linear-gradient(135deg,#fff1f2,#fffbeb);border-radius:18px;border:1px solid #fce7f3;padding:1.4rem;}
+    .plan-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(0,0,0,.06);}
+    .plan-row:last-child{border-bottom:none;}
+    .plan-lbl{font-size:.82rem;color:var(--mid);}
+    .plan-val{font-size:.9rem;font-weight:700;color:#111827;}
+    .plan-total{font-size:1.2rem;font-weight:900;color:var(--pink);}
+
+    @media(max-width:768px){
+      .sb{transform:translateX(-100%);}
+      .main{margin-left:0;width:100%;}
+      .page-wrap{flex-direction:column;}
+      .col-r{width:100%;}
+      .route-inputs{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">%</div>
+    <span class="sb-logo-text">OfferMatrix</span>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-group">Discover</div>
+    <a href="dashboard.html" class="sb-item"><span class="sb-ico">🏠</span> Dashboard</a>
+    <a href="search-results.html" class="sb-item"><span class="sb-ico">🔍</span> Search Results</a>
+    <a href="skincare.html" class="sb-item"><span class="sb-ico">💄</span> Skincare</a>
+    <a href="coupons.html" class="sb-item"><span class="sb-ico">🎟️</span> Coupons <span class="sb-badge">12</span></a>
+    <div class="sb-group">Transport</div>
+    <a href="rides.html" class="sb-item on"><span class="sb-ico">🚗</span> Rides & Travel</a>
+    <a href="food.html" class="sb-item"><span class="sb-ico">🍔</span> Food Delivery</a>
+    <div class="sb-group">My Account</div>
+    <a href="saved-deals.html" class="sb-item"><span class="sb-ico">❤️</span> Saved Deals</a>
+    <a href="price-alerts.html" class="sb-item"><span class="sb-ico">🔔</span> Price Alerts <span class="sb-badge">3</span></a>
+    <a href="orders.html" class="sb-item"><span class="sb-ico">📦</span> Orders</a>
+    <a href="profile.html" class="sb-item"><span class="sb-ico">👤</span> Profile</a>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-search"><span>🔍</span><input type="text" placeholder="Search routes, locations…" /></div>
+    <div class="tb-actions">
+      <div class="tb-icon-btn"><span>🔔</span><div class="notif-dot"></div></div>
+      <div class="tb-icon-btn"><span>❤️</span></div>
+      <div class="tb-user">
+        <div class="tb-avatar">R</div>
+        <div><div class="tb-uname">Raad Ahmed</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <div class="col-c">
+
+      <!-- MODE TABS -->
+      <div class="mode-tabs">
+        <div class="mtab on" id="tab-intra" onclick="switchMode('intra')">🏙️ Intra-City Rides</div>
+        <div class="mtab" id="tab-intercity" onclick="switchMode('intercity')">🛣️ Intercity Buses</div>
+        <div class="mtab" id="tab-planner" onclick="switchMode('planner')">🎉 Hangout Planner</div>
+      </div>
+
+      <!-- INTRA-CITY SECTION -->
+      <div id="section-intra">
+        <div class="route-card">
+          <div class="rc-title">🗺️ Compare Intra-City Rides</div>
+          <div class="route-inputs-row">
+            <div class="ri-wrap" style="flex:1">
+              <div class="ri-label">📍 Pickup</div>
+              <input class="ri-input" id="pickup" type="text" value="Mirpur 10, Dhaka" list="loc-list" placeholder="Enter pickup location" />
+            </div>
+            <div class="route-swap-btn" onclick="swapLocations()" title="Swap">⇄</div>
+            <div class="ri-wrap" style="flex:1">
+              <div class="ri-label">🏁 Drop-off</div>
+              <input class="ri-input" id="dropoff" type="text" value="Gulshan 2, Dhaka" list="loc-list" placeholder="Enter destination" />
+            </div>
+          </div>
+          <datalist id="loc-list">
+            <option value="Mirpur 10, Dhaka" /><option value="Gulshan 2, Dhaka" /><option value="Dhanmondi 27, Dhaka" />
+            <option value="Uttara Sector 7, Dhaka" /><option value="Banani, Dhaka" /><option value="Motijheel, Dhaka" />
+            <option value="Wari, Old Dhaka" /><option value="Tejgaon, Dhaka" /><option value="Mohammadpur, Dhaka" />
+            <option value="Rampura, Dhaka" /><option value="Badda, Dhaka" /><option value="Khilgaon, Dhaka" />
+          </datalist>
+          <div>
+            <div class="ri-label" style="margin-bottom:.5rem">Vehicle Type</div>
+            <div class="vtype-row">
+              <div class="vtype-pill on" id="vt-bike" onclick="setVehicle('bike',this)">🏍️ Bike</div>
+              <div class="vtype-pill" id="vt-cng" onclick="setVehicle('cng',this)">🚕 CNG</div>
+              <div class="vtype-pill" id="vt-car" onclick="setVehicle('car',this)">🚗 Car Economy</div>
+              <div class="vtype-pill" id="vt-premium" onclick="setVehicle('premium',this)">🚙 Car Premium</div>
+            </div>
+          </div>
+          <button class="btn-compare" onclick="calculateFares()">🔍 Compare Fares</button>
+        </div>
+
+        <div id="fare-section" style="display:none;">
+          <div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;">
+            <div class="fare-section-title" id="fare-section-title">🚗 Fare Matrix</div>
+            <span class="fare-meta" id="fare-meta-txt">Mirpur 10 → Gulshan 2 • 12.4 km • ~25 min</span>
+            <span class="fare-badge" id="cheapest-badge">Cheapest: ৳158</span>
+          </div>
+          <div class="fare-grid" id="fare-grid" style="margin-top:.8rem;"></div>
+        </div>
+      </div>
+
+      <!-- INTERCITY SECTION -->
+      <div id="section-intercity" style="display:none;">
+        <div class="route-card">
+          <div class="rc-title">🛣️ Search Intercity Bus Routes</div>
+          <div class="route-inputs">
+            <div class="ri-wrap">
+              <div class="ri-label">🚌 From</div>
+              <select class="ri-select" id="bus-from">
+                <option value="dhaka">Dhaka</option>
+                <option value="chittagong">Chittagong</option>
+                <option value="sylhet">Sylhet</option>
+                <option value="rajshahi">Rajshahi</option>
+                <option value="khulna">Khulna</option>
+                <option value="cox">Cox's Bazar</option>
+              </select>
+            </div>
+            <div class="ri-wrap">
+              <div class="ri-label">🏁 To</div>
+              <select class="ri-select" id="bus-to">
+                <option value="cox" selected>Cox's Bazar</option>
+                <option value="dhaka">Dhaka</option>
+                <option value="chittagong">Chittagong</option>
+                <option value="sylhet">Sylhet</option>
+                <option value="rajshahi">Rajshahi</option>
+                <option value="khulna">Khulna</option>
+              </select>
+            </div>
+            <div class="ri-wrap">
+              <div class="ri-label">📅 Date</div>
+              <input class="ri-input" type="date" id="bus-date" value="2026-09-05" />
+            </div>
+            <div class="ri-wrap">
+              <div class="ri-label">💺 Class</div>
+              <select class="ri-select" id="bus-class">
+                <option>AC Sleeper</option>
+                <option>Non-AC Chair</option>
+                <option>Business Class</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-compare" onclick="searchBuses()">🔍 Search Buses</button>
+        </div>
+
+        <div id="bus-results">
+          <div class="fare-section-title">🚌 Available Buses — Dhaka → Cox's Bazar</div>
+          <div style="font-size:.78rem;color:var(--mid);margin-top:.3rem;margin-bottom:1rem;">5 Sep 2026 · AC Sleeper · 4 services found</div>
+          <div style="display:flex;flex-direction:column;gap:.8rem;" id="bus-list"></div>
+        </div>
+      </div>
+
+      <!-- HANGOUT PLANNER -->
+      <div id="section-planner" style="display:none;">
+        <div class="route-card">
+          <div class="rc-title">🎉 Hangout Planner — Budget Calculator</div>
+          <div class="route-inputs">
+            <div class="ri-wrap">
+              <div class="ri-label">📍 Start Location</div>
+              <input class="ri-input" id="plan-from" type="text" value="Mirpur 10, Dhaka" placeholder="Your starting point" />
+            </div>
+            <div class="ri-wrap">
+              <div class="ri-label">🍽️ Restaurant Area</div>
+              <input class="ri-input" id="plan-rest" type="text" value="Banani, Dhaka" placeholder="Restaurant location" />
+            </div>
+            <div class="ri-wrap">
+              <div class="ri-label">💸 Food Budget (৳)</div>
+              <input class="ri-input" id="plan-food" type="number" value="1200" placeholder="Estimated food cost" />
+            </div>
+            <div class="ri-wrap">
+              <div class="ri-label">👥 Group Size</div>
+              <select class="ri-select" id="plan-group">
+                <option value="2">2 People</option>
+                <option value="3">3 People</option>
+                <option value="4" selected>4 People</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-compare" onclick="calcPlanner()">📊 Calculate Total Budget</button>
+        </div>
+        <div id="planner-results" style="display:none;">
+          <div class="planner-card" id="planner-breakdown"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="col-r">
+      <!-- RIDE SUMMARY -->
+      <div class="summary-card" id="ride-summary">
+        <div class="sc-title">📍 Route Summary</div>
+        <div class="sc-route">
+          <div class="sc-point"><div class="sc-dot sc-dot-green"></div><div><div class="sc-lbl">Pickup</div><div class="sc-val" id="sum-pickup">Mirpur 10, Dhaka</div></div></div>
+          <div class="sc-line-wrap"><div class="sc-vline"></div></div>
+          <div class="sc-point"><div class="sc-dot sc-dot-red"></div><div><div class="sc-lbl">Drop-off</div><div class="sc-val" id="sum-dropoff">Gulshan 2, Dhaka</div></div></div>
+        </div>
+        <div class="sc-stat-row">
+          <div class="sc-stat"><div class="sc-stat-v" id="sum-dist">12.4 km</div><div class="sc-stat-l">Distance</div></div>
+          <div class="sc-stat"><div class="sc-stat-v" id="sum-time">~25 min</div><div class="sc-stat-l">Est. Time</div></div>
+        </div>
+        <div class="sc-best-box">
+          <div style="font-size:.72rem;color:#15803d;font-weight:700;margin-bottom:4px;">🏆 CHEAPEST OPTION</div>
+          <div class="sc-best-price" id="sum-best-price">৳158</div>
+          <div class="sc-best-save" id="sum-best-save">Save ৳42 vs most expensive</div>
+        </div>
+        <div style="font-size:.65rem;color:var(--mid);text-align:center;">💳 Extra bKash/Nagad cashback available</div>
+      </div>
+
+      <!-- QUICK LOCATIONS -->
+      <div class="summary-card">
+        <div class="sc-title">⚡ Quick Locations</div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;">
+          <div class="quick-loc" onclick="setQuickRoute('Mirpur 10, Dhaka','Gulshan 2, Dhaka')">
+            <div style="font-size:.82rem;font-weight:700;">🏠 Home → Office</div>
+            <div style="font-size:.72rem;color:var(--mid);">Mirpur 10 → Gulshan 2</div>
+          </div>
+          <div class="quick-loc" onclick="setQuickRoute('Dhanmondi 27, Dhaka','Uttara Sector 7, Dhaka')">
+            <div style="font-size:.82rem;font-weight:700;">🏫 Uni → Home</div>
+            <div style="font-size:.72rem;color:var(--mid);">Dhanmondi 27 → Uttara 7</div>
+          </div>
+          <div class="quick-loc" onclick="setQuickRoute('Banani, Dhaka','Wari, Old Dhaka')">
+            <div style="font-size:.82rem;font-weight:700;">🍔 Restaurant → Home</div>
+            <div style="font-size:.72rem;color:var(--mid);">Banani → Wari</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SURGE ALERT -->
+      <div class="summary-card" style="background:linear-gradient(135deg,#fff7ed,#fff);border-color:#fed7aa;">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;">
+          <span style="font-size:1.1rem;">⚡</span>
+          <div style="font-size:.92rem;font-weight:800;color:#c2410c;">Surge Pricing Active</div>
+        </div>
+        <div style="font-size:.8rem;color:#7c2d12;line-height:1.5;">
+          Uber &amp; Pathao are showing <b>1.4× surge</b> pricing in your area due to high demand (5:30 PM rush hour).
+          <br /><br />
+          <b>Tip:</b> inDrive &amp; Obhai are surge-free right now.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.quick-loc{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:.7rem;cursor:pointer;transition:all .2s;}
+.quick-loc:hover{border-color:var(--pink);background:var(--pink-light);}
+</style>
+
+<script>
+// ─── DUMMY DATA ──────────────────────────────────────────────────────────────
+const LOCATIONS = {
+  'Mirpur 10, Dhaka':    { lat:23.8103, lng:90.3661 },
+  'Gulshan 2, Dhaka':    { lat:23.7934, lng:90.4149 },
+  'Dhanmondi 27, Dhaka': { lat:23.7420, lng:90.3740 },
+  'Uttara Sector 7, Dhaka': { lat:23.8769, lng:90.3818 },
+  'Banani, Dhaka':       { lat:23.7936, lng:90.4043 },
+  'Motijheel, Dhaka':    { lat:23.7337, lng:90.4181 },
+  'Tejgaon, Dhaka':      { lat:23.7537, lng:90.3953 },
+  'Mohammadpur, Dhaka':  { lat:23.7584, lng:90.3584 },
+};
+
+const RIDE_PROVIDERS = [
+  { id:'uber',    name:'Uber',    short:'U',  color:'#000',    baseFare:25, perKm:14, perMin:1.5, surgeMultiplier:1.4, rating:4.6, reviews:'12.4k', cashback:'৳20 Nagad', tag:'SURGE ⚡' },
+  { id:'pathao',  name:'Pathao',  short:'PA', color:'#e31837', baseFare:20, perKm:13, perMin:1.2, surgeMultiplier:1.4, rating:4.5, reviews:'18.1k', cashback:'৳30 bKash',   tag:'SURGE ⚡' },
+  { id:'shohoz',  name:'Shohoz',  short:'SH', color:'#00b300', baseFare:18, perKm:12, perMin:1.0, surgeMultiplier:1.0, rating:4.3, reviews:'9.8k',  cashback:'৳15 Nagad', tag:null },
+  { id:'indrive', name:'inDrive', short:'ID', color:'#1a1a2e', baseFare:15, perKm:11, perMin:0.9, surgeMultiplier:1.0, rating:4.2, reviews:'6.2k',  cashback:'৳10 bKash',  tag:'NO SURGE ✅' },
+  { id:'obhai',   name:'Obhai',   short:'OB', color:'#0d6efd', baseFare:16, perKm:11.5, perMin:0.8, surgeMultiplier:1.0, rating:4.1, reviews:'4.5k', cashback:'Free',      tag:'NO SURGE ✅' },
+];
+
+const VEHICLE_MULTS = { bike:0.45, cng:0.75, car:1.0, premium:1.45 };
+const VEHICLE_ICONS = { bike:'🏍️ Bike', cng:'🚕 CNG', car:'🚗 Car Economy', premium:'🚙 Car Premium' };
+
+let currentVehicle = 'bike';
+
+const BUS_ROUTES = [
+  { id:1, operator:'Green Line Paribahan', color:'#22c55e', price:1800, priceClass:'AC Sleeper',  duration:540, departures:['21:00','22:00','23:00'], route:'Padma Bridge', seats:8, source:'Shohoz' },
+  { id:2, operator:'Hanif Enterprise',     color:'#3b82f6', price:1500, priceClass:'AC Chair',    duration:600, departures:['20:00','21:30','23:30'], route:'Ferry',        seats:4, source:'bdtickets' },
+  { id:3, operator:'Shyamoli Paribahan',   color:'#f97316', price:2200, priceClass:'Business',    duration:510, departures:['20:30','22:30'],          route:'Padma Bridge', seats:2, source:'Jatri' },
+  { id:4, operator:'Ena Transport',        color:'#a855f7', price:1600, priceClass:'AC Sleeper',  duration:555, departures:['21:30','22:30'],          route:'Padma Bridge', seats:12, source:'Shohoz' },
+];
+
+function haversine(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2-lat1)*Math.PI/180;
+  const dLng = (lng2-lng1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function getKm(from, to) {
+  const f = LOCATIONS[from], t = LOCATIONS[to];
+  if (f && t) return Math.round(haversine(f.lat,f.lng,t.lat,t.lng) * 10)/10;
+  return 10 + Math.random()*8; // fallback
+}
+
+function setVehicle(v, btn) {
+  currentVehicle = v;
+  document.querySelectorAll('.vtype-pill').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function swapLocations() {
+  const p = document.getElementById('pickup'), d = document.getElementById('dropoff');
+  [p.value, d.value] = [d.value, p.value];
+}
+
+function setQuickRoute(from, to) {
+  document.getElementById('pickup').value = from;
+  document.getElementById('dropoff').value = to;
+  calculateFares();
+}
+
+function calculateFares() {
+  const from = document.getElementById('pickup').value || 'Mirpur 10, Dhaka';
+  const to   = document.getElementById('dropoff').value || 'Gulshan 2, Dhaka';
+  const km = getKm(from, to);
+  const mins = Math.round(km * 3);
+  const mult = VEHICLE_MULTS[currentVehicle];
+
+  document.getElementById('sum-pickup').textContent = from;
+  document.getElementById('sum-dropoff').textContent = to;
+  document.getElementById('sum-dist').textContent = km.toFixed(1)+' km';
+  document.getElementById('sum-time').textContent = '~'+mins+' min';
+
+  const fares = RIDE_PROVIDERS.map(p => {
+    const base = Math.round((p.baseFare + km*p.perKm*mult + mins*p.perMin) * p.surgeMultiplier);
+    return { ...p, finalFare: base };
+  }).sort((a,b)=>a.finalFare-b.finalFare);
+
+  const cheapest = fares[0].finalFare;
+  const expensive = fares[fares.length-1].finalFare;
+  document.getElementById('sum-best-price').textContent = '৳'+cheapest;
+  document.getElementById('sum-best-save').textContent = 'Save ৳'+(expensive-cheapest)+' vs priciest';
+  document.getElementById('cheapest-badge').textContent = 'Cheapest: ৳'+cheapest;
+  document.getElementById('fare-meta-txt').textContent = from+' → '+to+' • '+km.toFixed(1)+' km • ~'+mins+' min';
+  document.getElementById('fare-section-title').textContent = VEHICLE_ICONS[currentVehicle]+' Fare Matrix';
+
+  document.getElementById('fare-section').style.display = 'block';
+  document.getElementById('fare-grid').innerHTML = fares.map((p,i) => {
+    const isCheapest = i===0;
+    const isSurge = p.surgeMultiplier > 1;
+    return `
+      <div class="fare-card ${isCheapest?'cheapest':''} ${isSurge&&!isCheapest?'surge':''}">
+        <div class="fare-logo" style="background:${p.color}">${p.short}</div>
+        <div style="flex:1">
+          <div class="fare-provider-name">${p.name}</div>
+          <div class="fare-provider-sub">⭐ ${p.rating} (${p.reviews})</div>
+          <div class="fare-badges">
+            ${isCheapest?'<span class="fbadge fbadge-green">🏆 CHEAPEST</span>':''}
+            ${isSurge?'<span class="fbadge fbadge-orange">⚡ SURGE ${p.surgeMultiplier}×</span>':''}
+            ${p.tag&&!isSurge?`<span class="fbadge fbadge-blue">${p.tag}</span>`:''}
+            <span class="fbadge" style="background:#f3f4f6;color:var(--mid);">${p.cashback}</span>
+          </div>
+        </div>
+        <div class="fare-time">
+          <div class="fare-time-val">~${mins} min</div>
+          <div class="fare-time-sub">${km.toFixed(1)} km</div>
+        </div>
+        <div class="fare-price-col">
+          <div class="fare-final">৳${p.finalFare}</div>
+          <button class="btn-book-ride ${isCheapest?'best':''}" onclick="bookRide('${p.id}',${p.finalFare})">Book →</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function searchBuses() {
+  document.getElementById('bus-results').style.display = 'block';
+  const list = document.getElementById('bus-list');
+  list.innerHTML = BUS_ROUTES.map((b,i) => `
+    <div class="bus-card ${i===0?'best':''}">
+      <div class="bus-op-logo" style="background:${b.color};padding:.4rem;">${b.operator.split(' ')[0]}</div>
+      <div class="bus-route-col">
+        <div class="bus-op-name">${b.operator}</div>
+        <div class="bus-op-sub">${b.priceClass} · ${b.route} Route</div>
+        <div class="bus-times">🕐 ${b.departures.join(' / ')} · Sold at ${b.source}</div>
+        <div style="font-size:.7rem;color:var(--green);font-weight:700;margin-top:3px;">${b.seats} seats left</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div class="bus-price">৳${b.price.toLocaleString()}</div>
+        <div class="bus-price-type">${b.priceClass}</div>
+        <div class="bus-dur">~${Math.floor(b.duration/60)}h ${b.duration%60}m</div>
+        <button class="btn-book-bus" onclick="bookBus(${b.id})">Book Ticket</button>
+      </div>
+    </div>`).join('');
+}
+
+function calcPlanner() {
+  const from = document.getElementById('plan-from').value;
+  const rest = document.getElementById('plan-rest').value;
+  const food = Number(document.getElementById('plan-food').value) || 1200;
+  const group = Number(document.getElementById('plan-group').value) || 4;
+  const kmGo = 8, kmReturn = 8;
+  const rideFareGo = Math.round(kmGo*13*0.45+20);
+  const rideFareReturn = Math.round(kmReturn*13*0.45+20);
+  const perPerson = Math.round((food + rideFareGo + rideFareReturn) / group);
+
+  document.getElementById('planner-results').style.display = 'block';
+  document.getElementById('planner-breakdown').innerHTML = `
+    <div style="font-size:1rem;font-weight:800;margin-bottom:1rem;">🎉 Hangout Budget Summary</div>
+    <div class="plan-row"><span class="plan-lbl">🏍️ Ride to ${rest} (cheapest)</span><span class="plan-val">৳${rideFareGo}</span></div>
+    <div class="plan-row"><span class="plan-lbl">🍔 Food Budget (${group} people)</span><span class="plan-val">৳${food.toLocaleString()}</span></div>
+    <div class="plan-row"><span class="plan-lbl">🏍️ Return Ride to ${from}</span><span class="plan-val">৳${rideFareReturn}</span></div>
+    <div class="plan-row"><span class="plan-lbl">🎟️ Coupon Savings (est.)</span><span class="plan-val" style="color:var(--green);">-৳${Math.round(food*0.1)}</span></div>
+    <div class="plan-row" style="border-top:2px solid #fce7f3;padding-top:.8rem;margin-top:.5rem;">
+      <span style="font-weight:800;font-size:.9rem;">💰 Total</span>
+      <span class="plan-total">৳${(rideFareGo+food+rideFareReturn-Math.round(food*0.1)).toLocaleString()}</span>
+    </div>
+    <div class="plan-row">
+      <span class="plan-lbl">👤 Per Person</span>
+      <span class="plan-val" style="color:var(--pink);font-size:1rem;font-weight:900;">৳${perPerson}</span>
+    </div>`;
+}
+
+function switchMode(mode) {
+  ['intra','intercity','planner'].forEach(m => {
+    document.getElementById('tab-'+m).classList.toggle('on', m===mode);
+    document.getElementById('section-'+m).style.display = m===mode ? 'flex' : 'none';
+    document.getElementById('section-'+m).style.flexDirection = 'column';
+    document.getElementById('section-'+m).style.gap = '1.2rem';
+  });
+  if (mode === 'intercity') { document.getElementById('section-intercity').style.display='flex'; searchBuses(); }
+}
+
+function bookRide(id, fare) {
+  alert(`🚕 Booking ${id.charAt(0).toUpperCase()+id.slice(1)}!\n\nFare: ৳${fare}\nDeep link will launch the app in Phase 3.`);
+}
+function bookBus(id) {
+  const bus = BUS_ROUTES.find(b=>b.id===id);
+  alert(`🚌 Booking ticket on ${bus.operator}!\n\nPrice: ৳${bus.price}\nRedirecting to ${bus.source}… (Phase 3)`);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  calculateFares();
+  document.getElementById('section-intra').style.display = 'flex';
+  document.getElementById('section-intra').style.flexDirection = 'column';
+  document.getElementById('section-intra').style.gap = '1.2rem';
+});
+</script>
+</body>
+</html>

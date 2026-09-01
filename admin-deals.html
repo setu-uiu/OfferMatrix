@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Deal Approval Queue – OfferMatrix Admin</title>
+  <meta name="description" content="Review, approve, or reject community-submitted deals in the OfferMatrix admin moderation queue." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --pink:#ff1a6e;--pink-light:#fff0f5;--green:#22c55e;--green-light:#dcfce7;
+      --red:#ef4444;--orange:#f97316;--yellow:#eab308;--blue:#3b82f6;
+      --text:#111827;--mid:#4b5563;--light:#9ca3af;--border:#e5e7eb;
+      --bg:#f8fafc;--white:#fff;--font:'Inter',sans-serif;--sb:240px;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden;}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none;}
+    a{color:inherit;text-decoration:none;}
+    ::-webkit-scrollbar{width:5px;}
+    ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:5px;}
+
+    /* ADMIN SIDEBAR */
+    .sb{width:var(--sb);min-height:100vh;background:#0f172a;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:300;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+    .sb::-webkit-scrollbar{display:none;}
+    .sb-logo{display:flex;align-items:center;gap:10px;padding:1.2rem 1.4rem;border-bottom:1px solid rgba(255,255,255,.06);}
+    .sb-logo-icon{width:36px;height:36px;background:var(--pink);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;}
+    .sb-logo-text{font-size:1.2rem;font-weight:800;color:#f1f5f9;}
+    .sb-logo-badge{font-size:.55rem;font-weight:800;background:rgba(255,26,110,.2);color:var(--pink);padding:2px 7px;border-radius:4px;margin-top:2px;}
+    .sb-nav{flex:1;padding:1rem 0;}
+    .sb-group{font-size:.65rem;font-weight:700;color:#475569;letter-spacing:1px;padding:1rem 1.4rem .4rem;text-transform:uppercase;}
+    .sb-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 1.4rem;font-size:.88rem;font-weight:600;color:#94a3b8;width:100%;text-align:left;cursor:pointer;transition:all .2s;}
+    .sb-item:hover{color:#f1f5f9;}
+    .sb-item.on{background:rgba(255,26,110,.12);color:var(--pink);border-right:3px solid var(--pink);}
+    .sb-ico{font-size:1rem;width:20px;text-align:center;}
+    .sb-badge{margin-left:auto;font-size:.6rem;font-weight:800;padding:2px 6px;border-radius:50px;background:var(--red);color:#fff;}
+    .sb-badge-warn{background:var(--yellow);color:#111;}
+    .sb-footer{padding:1rem 1.4rem;border-top:1px solid rgba(255,255,255,.06);}
+    .admin-info{display:flex;align-items:center;gap:.7rem;}
+    .admin-av{width:34px;height:34px;border-radius:50%;background:var(--pink);display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:.85rem;}
+    .admin-name{font-size:.82rem;font-weight:700;color:#f1f5f9;}
+    .admin-role{font-size:.65rem;color:#64748b;}
+
+    /* MAIN */
+    .main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;width:calc(100% - var(--sb));}
+    .topbar{background:#fff;border-bottom:1px solid var(--border);padding:.8rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+    .tb-title{font-size:1.1rem;font-weight:800;color:#111827;}
+    .tb-badge{font-size:.75rem;font-weight:800;background:#fee2e2;color:var(--red);padding:3px 10px;border-radius:50px;}
+    .tb-actions{display:flex;align-items:center;gap:.8rem;margin-left:auto;}
+    .input-sm{border:1px solid var(--border);border-radius:8px;padding:.4rem .8rem;font-size:.8rem;font-family:var(--font);outline:none;}
+    .btn-bulk-approve{background:var(--green);color:#fff;border-radius:8px;padding:.5rem 1rem;font-size:.82rem;font-weight:700;transition:all .2s;}
+    .btn-bulk-approve:hover{background:#16a34a;}
+    .btn-bulk-reject{background:#fee2e2;color:var(--red);border-radius:8px;padding:.5rem 1rem;font-size:.82rem;font-weight:700;transition:all .2s;border:1px solid #fca5a5;}
+    .btn-bulk-reject:hover{background:#fca5a5;}
+
+    /* PAGE */
+    .page-wrap{flex:1;padding:1.5rem;display:flex;gap:1.5rem;}
+    .col-main{flex:1;display:flex;flex-direction:column;gap:1.2rem;}
+    .col-side{width:280px;flex-shrink:0;display:flex;flex-direction:column;gap:1.2rem;}
+
+    /* STATS */
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+    .stat-card{background:#fff;border-radius:14px;border:1px solid var(--border);padding:1rem;text-align:center;}
+    .stat-v{font-size:1.4rem;font-weight:900;color:#111827;}
+    .stat-l{font-size:.7rem;color:var(--mid);font-weight:600;margin-top:2px;}
+
+    /* FILTER TABS */
+    .filter-tabs{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;}
+    .ftab{padding:.45rem 1rem;border:1.5px solid var(--border);border-radius:50px;font-size:.82rem;font-weight:700;color:var(--mid);cursor:pointer;background:#fff;transition:all .2s;white-space:nowrap;}
+    .ftab.on{background:var(--pink);color:#fff;border-color:var(--pink);}
+    .ftab:hover:not(.on){border-color:#d1d5db;}
+    .sort-select{border:1px solid var(--border);border-radius:8px;padding:.4rem .8rem;font-size:.78rem;font-family:var(--font);outline:none;margin-left:auto;}
+
+    /* DEAL CARDS */
+    .deal-list{display:flex;flex-direction:column;gap:1rem;}
+
+    .deal-card{background:#fff;border-radius:18px;border:1.5px solid var(--border);overflow:hidden;transition:all .2s;}
+    .deal-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.08);}
+    .deal-card.selected{border-color:var(--pink);}
+
+    .dc-top{display:flex;align-items:flex-start;gap:1rem;padding:1.2rem;}
+    .dc-check{width:20px;height:20px;border-radius:5px;border:2px solid var(--border);flex-shrink:0;margin-top:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+    .dc-check.checked{background:var(--pink);border-color:var(--pink);color:#fff;font-size:.7rem;}
+
+    .dc-img-wrap{width:80px;height:80px;border-radius:12px;overflow:hidden;flex-shrink:0;background:#f1f5f9;position:relative;}
+    .dc-img-wrap img{width:100%;height:100%;object-fit:cover;}
+    .dc-no-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;}
+
+    .dc-info{flex:1;min-width:0;}
+    .dc-store{font-size:1rem;font-weight:800;color:#111827;margin-bottom:2px;}
+    .dc-desc{font-size:.82rem;color:var(--mid);margin-bottom:.5rem;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .dc-meta-row{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
+    .dc-loc{font-size:.72rem;color:var(--mid);display:flex;align-items:center;gap:.3rem;}
+    .dc-time{font-size:.68rem;color:var(--light);}
+    .dc-user-chip{display:flex;align-items:center;gap:.4rem;background:#f1f5f9;border-radius:50px;padding:3px 8px;}
+    .dc-user-av{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#ff1a6e,#f97316);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.55rem;font-weight:900;}
+    .dc-user-name{font-size:.68rem;font-weight:700;color:var(--mid);}
+    .dc-trust-pts{font-size:.65rem;color:var(--green);font-weight:700;}
+
+    .dc-status-badge{font-size:.65rem;font-weight:800;padding:3px 9px;border-radius:50px;margin-left:auto;flex-shrink:0;}
+    .badge-pending{background:#fef9c3;color:#92400e;}
+    .badge-approved{background:var(--green-light);color:#15803d;}
+    .badge-rejected{background:#fee2e2;color:var(--red);}
+
+    .dc-actions{border-top:1px solid #f1f5f9;padding:.8rem 1.2rem;display:flex;align-items:center;gap:.6rem;background:#fafafa;}
+    .dc-rejection-note{flex:1;font-size:.78rem;color:var(--mid);display:flex;align-items:center;gap:.5rem;}
+    .dc-note-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.78rem;font-family:var(--font);outline:none;}
+    .dc-note-input:focus{border-color:var(--red);}
+    .btn-approve{background:var(--green);color:#fff;border-radius:8px;padding:.45rem 1.1rem;font-size:.78rem;font-weight:800;transition:all .2s;display:flex;align-items:center;gap:.3rem;}
+    .btn-approve:hover{background:#16a34a;}
+    .btn-reject{background:#fee2e2;color:var(--red);border:1px solid #fca5a5;border-radius:8px;padding:.45rem 1rem;font-size:.78rem;font-weight:800;transition:all .2s;display:flex;align-items:center;gap:.3rem;}
+    .btn-reject:hover{background:#fca5a5;}
+    .btn-preview{background:#eff6ff;color:var(--blue);border:1px solid #bfdbfe;border-radius:8px;padding:.45rem .9rem;font-size:.78rem;font-weight:700;}
+    .btn-preview:hover{background:#bfdbfe;}
+
+    /* EMPTY STATE */
+    .empty-state{text-align:center;padding:3rem;color:var(--mid);}
+    .empty-icon{font-size:3rem;margin-bottom:1rem;}
+
+    /* SIDE PANEL */
+    .panel-card{background:#fff;border-radius:16px;border:1px solid var(--border);padding:1.2rem;}
+    .panel-title{font-size:.92rem;font-weight:800;margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem;}
+
+    .leaderboard-item{display:flex;align-items:center;gap:.7rem;padding:.5rem 0;border-bottom:1px solid #f1f5f9;}
+    .leaderboard-item:last-child{border-bottom:none;}
+    .lb-rank{width:24px;height:24px;border-radius:50%;background:var(--pink-light);color:var(--pink);font-size:.68rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .lb-rank.gold{background:#fef9c3;color:#92400e;}
+    .lb-rank.silver{background:#f1f5f9;color:#475569;}
+    .lb-rank.bronze{background:#fff7ed;color:#c2410c;}
+    .lb-name{font-size:.8rem;font-weight:700;flex:1;}
+    .lb-pts{font-size:.72rem;font-weight:800;color:var(--green);}
+    .lb-deals{font-size:.65rem;color:var(--mid);}
+
+    .rejection-reasons{display:flex;flex-direction:column;gap:.4rem;}
+    .reason-btn{text-align:left;background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:.5rem .7rem;font-size:.78rem;font-weight:600;color:var(--mid);cursor:pointer;transition:all .2s;}
+    .reason-btn:hover{border-color:var(--red);color:var(--red);background:#fff5f5;}
+
+    @media(max-width:900px){
+      .sb{transform:translateX(-100%);}
+      .main{margin-left:0;width:100%;}
+      .page-wrap{flex-direction:column;}
+      .col-side{width:100%;}
+      .stats-row{grid-template-columns:repeat(2,1fr);}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ADMIN SIDEBAR -->
+<aside class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">%</div>
+    <div>
+      <div class="sb-logo-text">OfferMatrix</div>
+      <div class="sb-logo-badge">ADMIN PANEL</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-group">Control Center</div>
+    <a href="admin-dashboard.html" class="sb-item"><span class="sb-ico">📊</span> Dashboard</a>
+    <a href="admin-scraper-health.html" class="sb-item"><span class="sb-ico">📡</span> Scraper Health</a>
+    <a href="admin-deals-queue.html" class="sb-item on"><span class="sb-ico">📋</span> Deal Queue <span class="sb-badge" id="sb-pending-count">8</span></a>
+    <a href="admin-affiliates.html" class="sb-item"><span class="sb-ico">🤝</span> Affiliate Manager</a>
+    <a href="admin-fraud-reports.html" class="sb-item"><span class="sb-ico">🛡️</span> Spam & Fraud Center <span class="sb-badge">4</span></a>
+    <div class="sb-group">Analytics</div>
+    <a href="admin-platform-analytics.html" class="sb-item"><span class="sb-ico">📈</span> Platform Analytics</a>
+    <a href="admin-search-trends.html" class="sb-item"><span class="sb-ico">🔍</span> Search Trends</a>
+    <a href="admin-alert-manager.html" class="sb-item"><span class="sb-ico">🔔</span> Alert Manager <span class="sb-badge sb-badge-warn">3</span></a>
+    <div class="sb-group">System</div>
+    <a href="admin-settings.html" class="sb-item"><span class="sb-ico">⚙️</span> Settings</a>
+    <a href="admin-users.html" class="sb-item"><span class="sb-ico">👥</span> User Management</a>
+    <a href="admin-login.html" class="sb-item" style="color:#f87171;"><span class="sb-ico">🚪</span> Sign Out</a>
+  </nav>
+  <div class="sb-footer">
+    <div class="admin-info">
+      <div class="admin-av">A</div>
+      <div><div class="admin-name">Super Admin</div><div class="admin-role">Full Access</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-title">📋 Community Deal Approval Queue</div>
+    <div class="tb-badge" id="topbar-pending">8 Pending</div>
+    <div class="tb-actions">
+      <input class="input-sm" type="text" placeholder="Search deals…" oninput="filterDeals(this.value)" />
+      <button class="btn-bulk-approve" onclick="bulkApprove()">✅ Approve Selected</button>
+      <button class="btn-bulk-reject" onclick="bulkReject()">❌ Reject Selected</button>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <div class="col-main">
+
+      <!-- STATS -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-v" style="color:var(--yellow);" id="s-pending">8</div>
+          <div class="stat-l">⏳ Pending</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-v" style="color:var(--green);" id="s-approved">142</div>
+          <div class="stat-l">✅ Approved</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-v" style="color:var(--red);" id="s-rejected">37</div>
+          <div class="stat-l">❌ Rejected</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-v" id="s-today">24</div>
+          <div class="stat-l">📅 Today</div>
+        </div>
+      </div>
+
+      <!-- FILTER TABS -->
+      <div class="filter-tabs">
+        <div class="ftab on" onclick="filterByStatus('all',this)">📋 All Deals</div>
+        <div class="ftab" onclick="filterByStatus('pending',this)">⏳ Pending <span style="background:#fef9c3;color:#92400e;border-radius:50px;padding:0 6px;font-size:.68rem;margin-left:2px;" id="pending-chip">8</span></div>
+        <div class="ftab" onclick="filterByStatus('approved',this)">✅ Approved</div>
+        <div class="ftab" onclick="filterByStatus('rejected',this)">❌ Rejected</div>
+        <select class="sort-select" onchange="sortDeals(this.value)">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="trust">Trust Points</option>
+        </select>
+      </div>
+
+      <!-- DEAL LIST -->
+      <div class="deal-list" id="deal-list"></div>
+
+    </div>
+
+    <!-- SIDE PANEL -->
+    <div class="col-side">
+
+      <!-- QUEUE STATS -->
+      <div class="panel-card">
+        <div class="panel-title">📊 Queue Overview</div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;">
+          <div style="display:flex;justify-content:space-between;font-size:.82rem;">
+            <span style="color:var(--mid);">Avg. Review Time</span>
+            <span style="font-weight:700;">14 min</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.82rem;">
+            <span style="color:var(--mid);">Approval Rate</span>
+            <span style="font-weight:700;color:var(--green);">79.3%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.82rem;">
+            <span style="color:var(--mid);">Deals Today</span>
+            <span style="font-weight:700;">24</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.82rem;">
+            <span style="color:var(--mid);">Oldest Pending</span>
+            <span style="font-weight:700;color:var(--orange);">2h 14m ago</span>
+          </div>
+        </div>
+        <div style="margin-top:1rem;background:linear-gradient(135deg,#dcfce7,#fff);border-radius:10px;padding:.8rem;text-align:center;">
+          <div style="font-size:1.3rem;font-weight:900;color:var(--green);">142</div>
+          <div style="font-size:.7rem;color:#15803d;font-weight:700;">Deals Live on Platform</div>
+        </div>
+      </div>
+
+      <!-- QUICK REJECTION REASONS -->
+      <div class="panel-card">
+        <div class="panel-title">⚡ Quick Rejection Reasons</div>
+        <div class="rejection-reasons">
+          <button class="reason-btn" onclick="setReason('Duplicate deal already exists on platform')">📋 Duplicate Deal</button>
+          <button class="reason-btn" onclick="setReason('Deal expired or no longer valid')">⏰ Deal Expired</button>
+          <button class="reason-btn" onclick="setReason('Insufficient evidence / No photo attached')">📷 No Evidence</button>
+          <button class="reason-btn" onclick="setReason('Spam or promotional content')">🚫 Spam</button>
+          <button class="reason-btn" onclick="setReason('Inaccurate pricing information')">💰 Wrong Price</button>
+          <button class="reason-btn" onclick="setReason('Policy violation')">⚠️ Policy Violation</button>
+        </div>
+      </div>
+
+      <!-- CONTRIBUTOR LEADERBOARD -->
+      <div class="panel-card">
+        <div class="panel-title">🏆 Top Contributors</div>
+        <div id="leaderboard-list">
+          <div class="leaderboard-item"><div class="lb-rank gold">1</div><div><div class="lb-name">Farhan Hossain</div><div class="lb-deals">48 deals approved</div></div><div class="lb-pts">+2,400 pts</div></div>
+          <div class="leaderboard-item"><div class="lb-rank silver">2</div><div><div class="lb-name">Tasnim Akter</div><div class="lb-deals">36 deals approved</div></div><div class="lb-pts">+1,800 pts</div></div>
+          <div class="leaderboard-item"><div class="lb-rank bronze">3</div><div><div class="lb-name">Rifat Islam</div><div class="lb-deals">31 deals approved</div></div><div class="lb-pts">+1,550 pts</div></div>
+          <div class="leaderboard-item"><div class="lb-rank">4</div><div><div class="lb-name">Raad Ahmed</div><div class="lb-deals">24 deals approved</div></div><div class="lb-pts">+1,200 pts</div></div>
+          <div class="leaderboard-item"><div class="lb-rank">5</div><div><div class="lb-name">Nadia Sultana</div><div class="lb-deals">19 deals approved</div></div><div class="lb-pts">+950 pts</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DUMMY DATA ──────────────────────────────────────────────────────────────
+let DEALS = [
+  { id:1, store:'Daraz Flash Sale',       desc:'Samsung Galaxy A55 listed for ৳38,000 on Daraz — massive ৳8,000 below normal RRP. Verified price at checkout today 3 PM.',                category:'Electronics', location:'Daraz.com.bd (Online)', user:'Farhan H.', trustPts:2400, time:'12 min ago',   status:'pending',  img:'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=120&q=80', hasImg:true  },
+  { id:2, store:'Pizza Place Dhanmondi',  desc:'Buy 1 Get 1 Free on all large pizzas every Thursday 6–9 PM. I visited today and got a free Margherita with my Chicken BBQ.',              category:'Food',        location:'Dhanmondi, Dhaka',       user:'Tasnim A.', trustPts:1800, time:'38 min ago',  status:'pending',  img:'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=120&q=80', hasImg:true  },
+  { id:3, store:'Shajgoj Sale',           desc:'Shajgoj running a secret 30% off on all Korean skincare items if you use SHAJGOJ30 at checkout. Tested and works!',                        category:'Skincare',    location:'shajgoj.com (Online)',    user:'Nadia S.',  trustPts:950,  time:'1h 20m ago',  status:'pending',  img:null, hasImg:false },
+  { id:4, store:'StarTech Dhaka',         desc:'Anker 737 Power Bank available for ৳5,200 in-store at StarTech Elephant Road. Online price shows ৳6,100.',                                category:'Electronics', location:'Elephant Road, Dhaka',    user:'Rifat I.',  trustPts:1550, time:'2h 14m ago',  status:'pending',  img:'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=120&q=80', hasImg:true  },
+  { id:5, store:'Bhai Bhai Restaurant',   desc:'Mutton Kacchi Biryani for ৳220 on Thursdays only — normal price is ৳320. Must mention "OfferMatrix" at counter.',                          category:'Food',        location:'Mirpur 1, Dhaka',         user:'Raad A.',   trustPts:1200, time:'3h 05m ago',  status:'pending',  img:null, hasImg:false },
+  { id:6, store:'Chaldal Grocery',        desc:'Chaldal offering free delivery on all orders above ৳499 until end of September. No coupon needed — just add items.',                       category:'Grocery',     location:'chaldal.com (Online)',    user:'Farhan H.', trustPts:2400, time:'4h 30m ago',  status:'pending',  img:'https://images.unsplash.com/photo-1542838132-92c53300491e?w=120&q=80', hasImg:true  },
+  { id:7, store:'Ryans Computers',        desc:'i7 13th Gen gaming laptops available 15% below their website price in-store only. Great deals on ASUS ROG and Lenovo Legion.',             category:'Electronics', location:'Uttara, Dhaka',           user:'Tasnim A.', trustPts:1800, time:'5h 50m ago',  status:'pending',  img:null, hasImg:false },
+  { id:8, store:'Pathao Food Offer',      desc:'Pathao Food is giving ৳100 off on orders above ৳400 using promo PATHAONEW. First 500 users only. Just used it and it works!',             category:'Food',        location:'Pathao App (Online)',      user:'Nadia S.',  trustPts:950,  time:'6h 22m ago',  status:'pending',  img:'https://images.unsplash.com/photo-1567337710282-00832b415979?w=120&q=80', hasImg:true  },
+  // APPROVED
+  { id:9, store:'Daraz 11.11 Teaser',     desc:'Early bird discount on smartphones spotted on Daraz — prices visible in cart before official announcement.',                               category:'Electronics', location:'Daraz.com.bd (Online)',    user:'Rifat I.',  trustPts:1550, time:'2 days ago',   status:'approved', img:null, hasImg:false },
+  { id:10, store:'BFC Burger Deal',       desc:'BFC Gulshan running BOGO on Zinger Burgers every weekend — confirmed with receipt.',                                                       category:'Food',        location:'Gulshan 2, Dhaka',        user:'Farhan H.', trustPts:2400, time:'3 days ago',   status:'approved', img:null, hasImg:false },
+  // REJECTED
+  { id:11, store:'Random Deal',           desc:'Get 99% off on iPhones using this link! Limited time!!!',                                                                                  category:'Electronics', location:'Unknown',                  user:'Unknown',   trustPts:0,    time:'1 day ago',    status:'rejected', img:null, hasImg:false, rejectReason:'Spam or promotional content' },
+];
+
+let currentFilter = 'all';
+let selectedIds = new Set();
+let activeReason = '';
+
+function renderDeals(deals) {
+  const list = document.getElementById('deal-list');
+  if (!deals.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><div>No deals in this category.</div></div>`;
+    return;
+  }
+  list.innerHTML = deals.map(d => {
+    const statusBadge = {
+      pending:  `<span class="dc-status-badge badge-pending">⏳ Pending Review</span>`,
+      approved: `<span class="dc-status-badge badge-approved">✅ Approved</span>`,
+      rejected: `<span class="dc-status-badge badge-rejected">❌ Rejected</span>`,
+    }[d.status];
+
+    const isSelected = selectedIds.has(d.id);
+    const catColors = { Electronics:'#eff6ff', Food:'#fff7ed', Skincare:'#fdf2f8', Grocery:'#f0fdf4', General:'#f8fafc' };
+    const catTextColors = { Electronics:'var(--blue)', Food:'var(--orange)', Skincare:'#be185d', Grocery:'var(--green)', General:'var(--mid)' };
+
+    return `
+      <div class="deal-card ${isSelected?'selected':''}" id="deal-card-${d.id}">
+        <div class="dc-top">
+          <div class="dc-check ${isSelected?'checked':''}" onclick="toggleSelect(${d.id})">${isSelected?'✓':''}</div>
+          <div class="dc-img-wrap">
+            ${d.hasImg && d.img
+              ? `<img src="${d.img}" alt="${d.store}" onerror="this.parentElement.innerHTML='<div class=\\'dc-no-img\\'>📷</div>'" />`
+              : `<div class="dc-no-img">📷</div>`}
+          </div>
+          <div class="dc-info">
+            <div style="display:flex;align-items:flex-start;gap:.5rem;">
+              <div class="dc-store">${d.store}</div>
+              ${statusBadge}
+            </div>
+            <div class="dc-desc">${d.desc}</div>
+            <div class="dc-meta-row">
+              <div class="dc-user-chip">
+                <div class="dc-user-av">${d.user.charAt(0)}</div>
+                <span class="dc-user-name">${d.user}</span>
+                <span class="dc-trust-pts">+${d.trustPts} pts</span>
+              </div>
+              <span style="font-size:.65rem;background:${catColors[d.category]||'#f8fafc'};color:${catColors[d.category]?'inherit':'var(--mid)'};padding:2px 7px;border-radius:4px;font-weight:700;">${d.category}</span>
+              <span class="dc-loc">📍 ${d.location}</span>
+              <span class="dc-time">${d.time}</span>
+            </div>
+            ${d.rejectReason?`<div style="font-size:.72rem;color:var(--red);margin-top:.4rem;">❌ Reason: ${d.rejectReason}</div>`:''}
+          </div>
+        </div>
+        ${d.status==='pending'?`
+        <div class="dc-actions">
+          <input class="dc-note-input" id="note-${d.id}" type="text" placeholder="Add rejection note (optional)…" value="${activeReason}" />
+          <button class="btn-preview" onclick="previewDeal(${d.id})">👁 Preview</button>
+          <button class="btn-reject" onclick="rejectDeal(${d.id})">❌ Reject</button>
+          <button class="btn-approve" onclick="approveDeal(${d.id})">✅ Approve</button>
+        </div>`:''}
+      </div>`;
+  }).join('');
+}
+
+function getFiltered() {
+  if (currentFilter==='all') return DEALS;
+  return DEALS.filter(d=>d.status===currentFilter);
+}
+
+function approveDeal(id) {
+  const deal = DEALS.find(d=>d.id===id);
+  deal.status = 'approved';
+  selectedIds.delete(id);
+  updateStats();
+  renderDeals(getFiltered());
+  showToast(`✅ Deal from "${deal.store}" approved! ${deal.user} earned +50 trust points.`, 'green');
+}
+
+function rejectDeal(id) {
+  const deal = DEALS.find(d=>d.id===id);
+  const noteEl = document.getElementById('note-'+id);
+  const reason = noteEl ? noteEl.value.trim() : '';
+  deal.status = 'rejected';
+  deal.rejectReason = reason || 'Does not meet quality guidelines';
+  selectedIds.delete(id);
+  updateStats();
+  renderDeals(getFiltered());
+  showToast(`❌ Deal from "${deal.store}" rejected.`, 'red');
+}
+
+function previewDeal(id) {
+  const d = DEALS.find(x=>x.id===id);
+  alert(`👁 Deal Preview\n\n🏪 Store: ${d.store}\n📍 Location: ${d.location}\n📂 Category: ${d.category}\n👤 Submitted by: ${d.user} (${d.trustPts} pts)\n⏰ Submitted: ${d.time}\n\n📝 Description:\n${d.desc}`);
+}
+
+function toggleSelect(id) {
+  if (selectedIds.has(id)) selectedIds.delete(id);
+  else selectedIds.add(id);
+  renderDeals(getFiltered());
+}
+
+function bulkApprove() {
+  if (!selectedIds.size) { alert('No deals selected. Check the boxes to select deals first.'); return; }
+  selectedIds.forEach(id => {
+    const d = DEALS.find(x=>x.id===id);
+    if (d && d.status==='pending') d.status = 'approved';
+  });
+  selectedIds.clear();
+  updateStats();
+  renderDeals(getFiltered());
+  showToast('✅ Selected deals approved in bulk!', 'green');
+}
+
+function bulkReject() {
+  if (!selectedIds.size) { alert('No deals selected. Check the boxes to select deals first.'); return; }
+  selectedIds.forEach(id => {
+    const d = DEALS.find(x=>x.id===id);
+    if (d && d.status==='pending') { d.status='rejected'; d.rejectReason='Bulk rejection by admin'; }
+  });
+  selectedIds.clear();
+  updateStats();
+  renderDeals(getFiltered());
+  showToast('❌ Selected deals rejected in bulk.', 'red');
+}
+
+function filterByStatus(status, btn) {
+  currentFilter = status;
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  selectedIds.clear();
+  renderDeals(getFiltered());
+}
+
+function filterDeals(q) {
+  const items = getFiltered().filter(d =>
+    d.store.toLowerCase().includes(q.toLowerCase()) ||
+    d.desc.toLowerCase().includes(q.toLowerCase()) ||
+    d.category.toLowerCase().includes(q.toLowerCase())
+  );
+  renderDeals(items);
+}
+
+function sortDeals(val) {
+  if (val==='newest') DEALS.sort((a,b)=>a.id-b.id).reverse();
+  else if (val==='oldest') DEALS.sort((a,b)=>a.id-b.id);
+  else if (val==='trust') DEALS.sort((a,b)=>b.trustPts-a.trustPts);
+  renderDeals(getFiltered());
+}
+
+function setReason(reason) {
+  activeReason = reason;
+  document.querySelectorAll('.dc-note-input').forEach(el => el.value = reason);
+}
+
+function updateStats() {
+  const pending  = DEALS.filter(d=>d.status==='pending').length;
+  const approved = DEALS.filter(d=>d.status==='approved').length;
+  const rejected = DEALS.filter(d=>d.status==='rejected').length;
+  document.getElementById('s-pending').textContent  = pending;
+  document.getElementById('s-approved').textContent = approved;
+  document.getElementById('s-rejected').textContent = rejected;
+  document.getElementById('pending-chip').textContent = pending;
+  document.getElementById('topbar-pending').textContent = pending+' Pending';
+  document.getElementById('sb-pending-count').textContent = pending;
+}
+
+function showToast(msg, color) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  Object.assign(t.style, {
+    position:'fixed', bottom:'1.5rem', right:'1.5rem', background: color==='green'?'#15803d':'#b91c1c',
+    color:'#fff', padding:'.8rem 1.4rem', borderRadius:'12px', fontWeight:'700', fontSize:'.85rem',
+    boxShadow:'0 8px 24px rgba(0,0,0,.2)', zIndex:'9999', animation:'none', transition:'opacity .3s'
+  });
+  document.body.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(),300); }, 2500);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderDeals(getFiltered());
+  updateStats();
+});
+</script>
+</body>
+</html>

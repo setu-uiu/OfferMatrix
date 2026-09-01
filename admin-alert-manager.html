@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Alert & Incident Manager – OfferMatrix Admin</title>
+  <meta name="description" content="OfferMatrix Alert & Incident Manager — System alarms, scraper rate limit anomalies, automated diagnostics and alert rules."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       DARK GRID DESIGN SYSTEM — Zero Emojis, Pure Vector UI
+    ═══════════════════════════════════════════════════════ */
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --bg:         #0b0f19;
+      --bg2:        #0f1624;
+      --bg3:        #151f32;
+      --card:       rgba(22, 27, 34, 0.75);
+      --card-border:rgba(255,255,255,0.08);
+      --card-hover: rgba(255,255,255,0.05);
+      --pink:       #ff2a6d;
+      --pink-glow:  rgba(255,42,109,0.25);
+      --green:      #10b981;
+      --green-dim:  rgba(16,185,129,0.12);
+      --blue:       #38bdf8;
+      --blue-dim:   rgba(56,189,248,0.12);
+      --cyan:       #06b6d4;
+      --cyan-dim:   rgba(6,182,212,0.12);
+      --amber:      #f59e0b;
+      --amber-dim:  rgba(245,158,11,0.12);
+      --red:        #ef4444;
+      --red-dim:    rgba(239,68,68,0.12);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --text:       #f1f5f9;
+      --text2:      #94a3b8;
+      --text3:      #475569;
+      --border:     rgba(255,255,255,0.08);
+      --font:       'Inter',sans-serif;
+      --sb:         240px;
+      --radius:     12px;
+      --radius-sm:  8px;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden;}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none;}
+    a{color:inherit;text-decoration:none;}
+    ::-webkit-scrollbar{width:5px;height:5px;}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:4px;}
+
+    body::before{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+                       linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+      background-size:36px 36px;
+    }
+
+    .svg-icon{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;vertical-align:middle;}
+    .svg-icon svg{width:100%;height:100%;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+
+    /* ── SIDEBAR ── */
+    .sb{width:var(--sb);min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);
+        display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:300;
+        overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+    .sb::-webkit-scrollbar{display:none;}
+    .sb-brand{display:flex;align-items:center;gap:10px;padding:1.3rem 1.4rem;border-bottom:1px solid var(--border);}
+    .sb-logo-icon{width:36px;height:36px;background:var(--pink);border-radius:10px;
+                  display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;
+                  color:#fff;box-shadow:0 4px 12px var(--pink-glow);flex-shrink:0;}
+    .sb-brand-text{display:flex;flex-direction:column;}
+    .sb-logo-name{font-size:1.15rem;font-weight:800;color:var(--text);letter-spacing:-.3px;}
+    .sb-admin-badge{font-size:.52rem;font-weight:800;background:rgba(255,42,109,.18);color:var(--pink);
+                    padding:2px 7px;border-radius:4px;letter-spacing:.6px;display:inline-block;width:fit-content;margin-top:2px;}
+
+    .sb-nav{flex:1;padding:1rem 0;}
+    .sb-section{font-size:.6rem;font-weight:700;color:var(--text3);letter-spacing:1.2px;
+                padding:1rem 1.4rem .35rem;text-transform:uppercase;}
+    .sb-link{display:flex;align-items:center;gap:.75rem;padding:.65rem 1.4rem;font-size:.84rem;font-weight:600;
+             color:var(--text2);width:100%;text-align:left;cursor:pointer;transition:all .2s;position:relative;}
+    .sb-link:hover{color:var(--text);background:rgba(255,255,255,.04);}
+    .sb-link.active{color:var(--pink);background:rgba(255,42,109,.1);border-right:2px solid var(--pink);}
+    .sb-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .sb-count{margin-left:auto;font-size:.62rem;font-weight:800;padding:2px 7px;border-radius:50px;
+              background:var(--red);color:#fff;}
+    .sb-count-warn{background:var(--amber);color:#111;}
+
+    .sb-footer{padding:.9rem 1.2rem;border-top:1px solid var(--border);}
+    .sb-user{display:flex;align-items:center;gap:.7rem;}
+    .sb-user-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--pink),#be185d);
+                display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:.85rem;flex-shrink:0;}
+    .sb-user-name{font-size:.82rem;font-weight:700;color:var(--text);}
+    .sb-user-role{font-size:.64rem;color:var(--text3);}
+
+    /* ── MAIN ── */
+    .main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;width:calc(100% - var(--sb));position:relative;z-index:1;}
+
+    .topbar{background:rgba(11,15,25,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+            padding:.8rem 1.6rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+    .tb-title-box{display:flex;flex-direction:column;}
+    .tb-title{font-size:1rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:.5rem;}
+    .tb-sub{font-size:.72rem;color:var(--text2);margin-top:1px;}
+    .tb-actions{margin-left:auto;display:flex;align-items:center;gap:.7rem;}
+
+    .btn-cta{background:var(--pink);color:#fff;border-radius:var(--radius-sm);padding:.45rem 1rem;font-size:.78rem;font-weight:700;
+             display:flex;align-items:center;gap:.4rem;transition:all .2s;box-shadow:0 4px 12px var(--pink-glow);}
+    .btn-cta:hover{opacity:.9;transform:translateY(-1px);}
+
+    /* ── PAGE CONTENT ── */
+    .page{flex:1;padding:1.5rem;display:flex;flex-direction:column;gap:1.4rem;}
+
+    /* KPI CARDS GRID */
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+    .kpi-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.2rem;
+              position:relative;overflow:hidden;transition:all .25s;}
+    .kpi-card:hover{border-color:rgba(255,255,255,.16);background:var(--card-hover);transform:translateY(-2px);}
+    .kpi-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;}
+    .kpi-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .kpi-badge{font-size:.65rem;font-weight:800;padding:2px 7px;border-radius:50px;}
+    .badge-critical{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+    .badge-warning{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,.3);}
+    .badge-resolved{background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,.3);}
+    .badge-info{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(56,189,248,.3);}
+
+    .kpi-val{font-size:1.55rem;font-weight:900;color:var(--text);letter-spacing:-.5px;margin-bottom:.25rem;}
+    .kpi-lbl{font-size:.7rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;}
+    .kpi-sub{font-size:.65rem;color:var(--text3);margin-top:.4rem;}
+
+    /* ALERTS SECTION */
+    .card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.3rem;}
+    .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.8rem;}
+    .card-title{font-size:.9rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:.5rem;}
+
+    /* FILTER TABS */
+    .filter-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+    .ftab{padding:.38rem .85rem;border:1px solid var(--card-border);border-radius:50px;font-size:.75rem;font-weight:700;color:var(--text2);cursor:pointer;background:none;transition:all .2s;}
+    .ftab:hover{color:var(--text);border-color:rgba(255,255,255,.18);}
+    .ftab.active{background:var(--pink);color:#fff;border-color:var(--pink);box-shadow:0 2px 8px var(--pink-glow);}
+
+    .table-search{display:flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.05);border:1px solid var(--border);
+                  border-radius:var(--radius-sm);padding:.4rem .75rem;width:220px;}
+    .table-search input{background:none;border:none;outline:none;font-size:.78rem;font-family:var(--font);color:var(--text);width:100%;}
+    .table-search input::placeholder{color:var(--text3);}
+
+    /* ALERT TABLE */
+    .alert-table{width:100%;border-collapse:collapse;}
+    .alert-table th{font-size:.65rem;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;
+                    padding:.75rem 1.1rem;text-align:left;border-bottom:1px solid var(--border);background:rgba(255,255,255,.015);}
+    .alert-table td{padding:.85rem 1.1rem;border-bottom:1px solid rgba(255,255,255,.04);font-size:.82rem;vertical-align:middle;transition:all .3s;}
+    .alert-table tr.fade-out{opacity:0;transform:scale(0.96);}
+    .alert-table tr:hover td{background:rgba(255,255,255,.025);}
+
+    .alert-type-badge{font-size:.65rem;font-weight:800;padding:3px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;}
+    .type-critical{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+    .type-warning{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,.3);}
+    .type-resolved{background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,.3);}
+    .type-info{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(56,189,248,.3);}
+
+    .alert-title{font-weight:800;color:var(--text);margin-bottom:2px;}
+    .alert-desc{font-size:.72rem;color:var(--text2);line-height:1.4;}
+    .alert-source{font-size:.68rem;font-weight:700;color:var(--text3);background:rgba(255,255,255,.05);padding:2px 7px;border-radius:4px;display:inline-block;}
+
+    .btn-act{padding:.32rem .65rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:.3rem;border:1px solid;}
+    .btn-resolve{background:var(--green-dim);border-color:rgba(16,185,129,.3);color:var(--green);}
+    .btn-resolve:hover{background:var(--green);color:#fff;}
+    .btn-diag{background:var(--blue-dim);border-color:rgba(56,189,248,.3);color:var(--blue);}
+    .btn-diag:hover{background:var(--blue);color:#0f1624;}
+    .btn-del{background:var(--red-dim);border-color:rgba(239,68,68,.3);color:var(--red);}
+    .btn-del:hover{background:var(--red);color:#fff;}
+
+    /* ── RULES GRID ── */
+    .rules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+    .rule-card{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;display:flex;flex-direction:column;justify-content:space-between;gap:.8rem;}
+    .rule-head{display:flex;align-items:flex-start;justify-content:space-between;}
+    .rule-name{font-size:.85rem;font-weight:800;color:var(--text);}
+    .rule-metric{font-size:.72rem;color:var(--text2);margin-top:2px;}
+    .rule-toggle{position:relative;width:38px;height:20px;}
+    .rule-toggle input{opacity:0;width:0;height:0;}
+    .toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:50px;cursor:pointer;transition:.3s;}
+    .toggle-slider::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:rgba(255,255,255,.6);border-radius:50%;transition:.3s;}
+    .rule-toggle input:checked+.toggle-slider{background:var(--green);}
+    .rule-toggle input:checked+.toggle-slider::before{transform:translateX(18px);background:#fff;}
+
+    /* ── MODALS ── */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--bg2);border:1px solid var(--card-border);border-radius:18px;padding:1.8rem;width:500px;max-width:94vw;box-shadow:0 25px 60px rgba(0,0,0,.7);animation:modalIn .25s ease;}
+    @keyframes modalIn{from{opacity:0;transform:translateY(18px)scale(.96);}to{opacity:1;transform:none;}}
+    .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;}
+    .modal-title{font-size:1.05rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:.5rem;}
+    .btn-close-modal{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+    .btn-close-modal:hover{color:var(--text);border-color:rgba(255,255,255,.2);}
+
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+    .field{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.8rem;}
+    .field-label{font-size:.65rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;}
+    .field-input{background:rgba(255,255,255,.05);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:.6rem .85rem;font-size:.85rem;font-family:var(--font);color:var(--text);outline:none;transition:all .2s;}
+    .field-input:focus{border-color:rgba(255,42,109,.5);background:rgba(255,255,255,.08);}
+
+    .modal-actions{display:flex;gap:.8rem;margin-top:1.2rem;}
+    .btn-modal-save{flex:1;background:var(--pink);color:#fff;border-radius:var(--radius-sm);padding:.65rem;font-size:.85rem;font-weight:800;transition:all .2s;box-shadow:0 4px 12px var(--pink-glow);display:flex;align-items:center;justify-content:center;gap:.4rem;}
+    .btn-modal-save:hover{opacity:.9;}
+    .btn-modal-cancel{flex:1;background:rgba(255,255,255,.05);border:1px solid var(--card-border);color:var(--text2);border-radius:var(--radius-sm);padding:.65rem;font-size:.85rem;font-weight:700;transition:all .2s;}
+    .btn-modal-cancel:hover{background:rgba(255,255,255,.08);color:var(--text);}
+
+    /* DIAGNOSTIC TERMINAL */
+    .diag-box{background:#070a12;border:1px solid var(--border);border-radius:10px;padding:1rem;font-family:monospace;font-size:.75rem;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:.4rem;}
+    .diag-line{display:flex;align-items:center;gap:.5rem;}
+    .diag-ok{color:#4ade80;}
+    .diag-wait{color:#fbbf24;}
+    .diag-err{color:#f87171;}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#151f32;border:1px solid rgba(255,255,255,.15);
+           border-radius:12px;padding:.85rem 1.2rem;font-size:.82rem;font-weight:600;color:var(--text);
+           box-shadow:0 12px 36px rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;gap:.6rem;
+           animation:slideUp .25s ease;}
+    @keyframes slideUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+    @media(max-width:1100px){.rules-grid{grid-template-columns:repeat(2,1fr);}.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:900px){
+      .sb{transform:translateX(-100%);}
+      .main{margin-left:0;width:100%;}
+      .rules-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sb">
+  <div class="sb-brand">
+    <div class="sb-logo-icon">
+      <span class="svg-icon" style="width:20px;height:20px;">
+        <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </span>
+    </div>
+    <div class="sb-brand-text">
+      <div class="sb-logo-name">OfferMatrix</div>
+      <div class="sb-admin-badge">ADMIN PANEL</div>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sb-section">Control Center</div>
+    <a href="admin-dashboard.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+      Dashboard
+    </a>
+    <a href="admin-scraper-health.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/></svg></span>
+      Scraper Health
+    </a>
+    <a href="admin-deals-queue.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+      Deal Queue
+      <span class="sb-count">8</span>
+    </a>
+    <a href="admin-affiliates.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      Affiliate Manager
+    </a>
+    <a href="admin-fraud-reports.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+      Spam & Fraud Center
+      <span class="sb-count">4</span>
+    </a>
+
+    <div class="sb-section">Analytics</div>
+    <a href="admin-platform-analytics.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17l-5-5-4 4-4-4"/></svg></span>
+      Platform Analytics
+    </a>
+    <a href="admin-search-trends.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></span>
+      Search Trends
+    </a>
+    <a href="admin-alert-manager.html" class="sb-link active">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
+      Alert Manager
+      <span class="sb-count sb-count-warn" id="sb-alert-count">3</span>
+    </a>
+
+    <div class="sb-section">System</div>
+    <a href="admin-settings.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+      Settings
+    </a>
+    <a href="admin-users.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      User Management
+    </a>
+    <a href="admin-login.html" class="sb-link" style="color:#f87171;margin-top:.5rem;">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      Sign Out
+    </a>
+  </nav>
+
+  <div class="sb-footer">
+    <div class="sb-user">
+      <div class="sb-user-av">SA</div>
+      <div>
+        <div class="sb-user-name">Super Admin</div>
+        <div class="sb-user-role">Superuser · Full Access</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══ MAIN CONTENT ══ -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="tb-title-box">
+      <div class="tb-title">
+        <span class="svg-icon" style="width:20px;height:20px;color:var(--pink);">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </span>
+        Alert & Incident Manager
+      </div>
+      <div class="tb-sub">Real-time system telemetry anomalies, crawler timeouts & auto-remediation</div>
+    </div>
+
+    <div class="tb-actions">
+      <button class="btn-cta" onclick="openModal('modal-create-rule')">
+        <span class="svg-icon" style="width:15px;height:15px;">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </span>
+        Create Alert Rule
+      </button>
+    </div>
+  </header>
+
+  <!-- PAGE BODY -->
+  <main class="page">
+
+    <!-- KPI CARDS -->
+    <div class="kpi-grid">
+      <!-- 1 -->
+      <div class="kpi-card">
+        <div class="kpi-head">
+          <div class="kpi-icon" style="background:var(--red-dim);color:var(--red);">
+            <span class="svg-icon" style="width:20px;height:20px;">
+              <svg viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </span>
+          </div>
+          <div class="kpi-badge badge-critical" id="kpi-crit-badge">3 Active</div>
+        </div>
+        <div class="kpi-val" style="color:var(--red);" id="kpi-crit-val">3</div>
+        <div class="kpi-lbl">Critical Incidents</div>
+        <div class="kpi-sub">Immediate attention required</div>
+      </div>
+
+      <!-- 2 -->
+      <div class="kpi-card">
+        <div class="kpi-head">
+          <div class="kpi-icon" style="background:var(--amber-dim);color:var(--amber);">
+            <span class="svg-icon" style="width:20px;height:20px;">
+              <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </span>
+          </div>
+          <div class="kpi-badge badge-warning" id="kpi-warn-badge">5 Active</div>
+        </div>
+        <div class="kpi-val" style="color:var(--amber);" id="kpi-warn-val">5</div>
+        <div class="kpi-lbl">Warnings & Delays</div>
+        <div class="kpi-sub">Crawler throttling or latency spikes</div>
+      </div>
+
+      <!-- 3 -->
+      <div class="kpi-card">
+        <div class="kpi-head">
+          <div class="kpi-icon" style="background:var(--green-dim);color:var(--green);">
+            <span class="svg-icon" style="width:20px;height:20px;">
+              <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </span>
+          </div>
+          <div class="kpi-badge badge-resolved" id="kpi-res-badge">18 Resolved</div>
+        </div>
+        <div class="kpi-val" style="color:var(--green);" id="kpi-res-val">18</div>
+        <div class="kpi-lbl">Resolved Today</div>
+        <div class="kpi-sub">Auto-recovered or acknowledged</div>
+      </div>
+
+      <!-- 4 -->
+      <div class="kpi-card">
+        <div class="kpi-head">
+          <div class="kpi-icon" style="background:var(--blue-dim);color:var(--blue);">
+            <span class="svg-icon" style="width:20px;height:20px;">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </span>
+          </div>
+          <div class="kpi-badge badge-info">MTTR: 8.4m</div>
+        </div>
+        <div class="kpi-val">85.7%</div>
+        <div class="kpi-lbl">Resolution Rate</div>
+        <div class="kpi-sub">Mean Time To Remediation</div>
+      </div>
+    </div>
+
+    <!-- ══ LIVE ALERTS FEED TABLE ══ -->
+    <div class="card">
+      <div class="card-head">
+        <div class="filter-row">
+          <button class="ftab active" onclick="filterAlerts('all', this)">All Incidents (<span id="count-all">8</span>)</button>
+          <button class="ftab" onclick="filterAlerts('critical', this)">Critical (<span id="count-crit">3</span>)</button>
+          <button class="ftab" onclick="filterAlerts('warning', this)">Warnings (<span id="count-warn">5</span>)</button>
+          <button class="ftab" onclick="filterAlerts('resolved', this)">Resolved</button>
+        </div>
+
+        <div class="table-search">
+          <span class="svg-icon" style="width:13px;height:13px;color:var(--text3);"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input type="text" placeholder="Search alerts or systems..." id="alert-search-input" oninput="searchAlerts()"/>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="alert-table">
+          <thead>
+            <tr>
+              <th>Severity</th>
+              <th>Incident Summary</th>
+              <th>Source Component</th>
+              <th>Trigger Time</th>
+              <th>Status</th>
+              <th>Remediation Actions</th>
+            </tr>
+          </thead>
+          <tbody id="alerts-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ ALERT RULES CONFIGURATION ══ -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">
+            <span class="svg-icon" style="width:18px;height:18px;color:var(--purple);"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+            Active Threshold & Alert Rules
+          </div>
+          <div style="font-size:.72rem;color:var(--text3);margin-top:2px;">Automated rules monitoring platform telemetry and triggering notifications</div>
+        </div>
+        <span style="font-size:.72rem;color:var(--green);font-weight:700;">6 Rules Running</span>
+      </div>
+
+      <div class="rules-grid" id="rules-grid"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══ MODAL 1: RUN DIAGNOSTIC SIMULATION ══ -->
+<div class="modal-overlay" id="modal-diag">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">
+        <span class="svg-icon" style="width:20px;height:20px;color:var(--blue);"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+        Automated Diagnostics & Health Check
+      </div>
+      <button class="btn-close-modal" onclick="closeModal('modal-diag')">
+        <span class="svg-icon" style="width:16px;height:16px;"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+      </button>
+    </div>
+
+    <div style="font-size:.8rem;color:var(--text2);margin-bottom:.8rem;" id="diag-target-text">Running automated telemetry check for: <b>Chaldal Grocery API</b></div>
+
+    <div class="diag-box" id="diag-output"></div>
+
+    <div class="modal-actions">
+      <button class="btn-modal-save" style="background:var(--green);box-shadow:0 4px 12px rgba(16,185,129,.3);" onclick="autoFixIncident()">
+        <span class="svg-icon" style="width:16px;height:16px;"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+        Auto-Remediate & Resolve
+      </button>
+      <button class="btn-modal-cancel" onclick="closeModal('modal-diag')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL 2: CREATE ALERT RULE ══ -->
+<div class="modal-overlay" id="modal-create-rule">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">
+        <span class="svg-icon" style="width:20px;height:20px;color:var(--pink);"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
+        Configure New Alert Rule
+      </div>
+      <button class="btn-close-modal" onclick="closeModal('modal-create-rule')">
+        <span class="svg-icon" style="width:16px;height:16px;"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+      </button>
+    </div>
+
+    <div class="field">
+      <div class="field-label">Rule Identifier Name</div>
+      <input class="field-input" type="text" id="rule-name" placeholder="e.g. Daraz Rate Limit 429 Sentinel"/>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <div class="field-label">Target System / Component</div>
+        <select class="field-input" id="rule-source">
+          <option>Daraz Crawler</option>
+          <option>Pickaboo Scraper</option>
+          <option>StarTech Engine</option>
+          <option>Pathao Ride API</option>
+          <option>PostgreSQL Database</option>
+          <option>Elasticsearch Cluster</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Severity Level</div>
+        <select class="field-input" id="rule-severity">
+          <option>Critical (P1)</option>
+          <option>Warning (P2)</option>
+          <option>Info (P3)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <div class="field-label">Condition Metric</div>
+        <select class="field-input">
+          <option>HTTP 5xx Errors > 5 / min</option>
+          <option>Crawler Response Time > 5,000ms</option>
+          <option>Price Discrepancy > 40%</option>
+          <option>Proxy Pool Health < 80%</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Notification Route</div>
+        <select class="field-input">
+          <option>Admin Email + SMS Gateway</option>
+          <option>Discord / Slack Webhook</option>
+          <option>Dashboard Badge Only</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-modal-save" onclick="saveAlertRule()">
+        <span class="svg-icon" style="width:16px;height:16px;"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span>
+        Save & Activate Rule
+      </button>
+      <button class="btn-modal-cancel" onclick="closeModal('modal-create-rule')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCRIPT ══ -->
+<script>
+let ALERTS_DATA = [
+  { id:1, severity:'critical', title:'HTTP 503 Service Unavailable', desc:'Chaldal grocery crawler failed × 3 consecutive attempts due to cloudflare challenge.', source:'Chaldal Crawler', time:'12m ago', status:'Active' },
+  { id:2, severity:'critical', title:'Price Surge Anomaly Detected', desc:'Samsung S24 Ultra price dropped by 84% on unverified 3rd-party merchant (Potential Bug).', source:'Pickaboo Ingestion', time:'24m ago', status:'Active' },
+  { id:3, severity:'critical', title:'Elasticsearch Cluster High Memory', desc:'JVM heap allocation exceeded 88% on node bd-es-02.', source:'Search Cluster', time:'45m ago', status:'Active' },
+  { id:4, severity:'warning',  title:'Rate Limit 429 Throttling', desc:'Shajgoj skincare engine hitting 429 response. Auto-throttled to 1 req/5s.', source:'Shajgoj Engine', time:'1h 10m ago', status:'Active' },
+  { id:5, severity:'warning',  title:'Proxy Node BD-03 Latency > 3,200ms', desc:'Residential proxy pool degraded throughput for Daraz price tracker.', source:'Proxy Pool Gateway', time:'1h 45m ago', status:'Active' },
+  { id:6, severity:'warning',  title:'Unmatched Query Spike: iPhone 16', desc:'Over 800 search queries returned 0 deals in last 2 hours.', source:'Query Telemetry', time:'2h 15m ago', status:'Active' },
+  { id:7, severity:'warning',  title:'StarTech Out-of-Stock Desync', desc:'14 items marked available on OfferMatrix were OOS on vendor site.', source:'StarTech Scraper', time:'3h ago', status:'Active' },
+  { id:8, severity:'warning',  title:'Rokomari API SSL Cert Expiry Warning', desc:'SSL certificate will expire in 9 days for partner webhook endpoint.', source:'Rokomari Partner API', time:'4h ago', status:'Active' }
+];
+
+let RULES_DATA = [
+  { id:1, name:'Scraper 5xx Circuit Breaker', metric:'HTTP 500/503 > 3 in 5m', source:'All Crawlers', active:true },
+  { id:2, name:'Price Glitch Guard', metric:'Price Drop > 50% threshold', source:'Deal Validator', active:true },
+  { id:3, name:'Proxy Failover Trigger', metric:'Proxy Health < 75%', source:'Proxy Pool', active:true },
+  { id:4, name:'Zero-Result Surge Alert', metric:'Unmatched Searches > 500/h', source:'Search Engine', active:true },
+  { id:5, name:'DB Connection Pool Monitor', metric:'Active Connections > 90%', source:'PostgreSQL Core', active:true },
+  { id:6, name:'SMS Gateway Credit Alert', metric:'Remaining Balance < ৳500', source:'SMS Dispatcher', active:false }
+];
+
+let activeTab = 'all';
+let currentDiagId = null;
+
+// ── RENDER ALERTS TABLE ──
+function renderAlertsTable(list) {
+  const tbody = document.getElementById('alerts-tbody');
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text3);">No incidents matching selected filter.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = list.map(a => {
+    const isCrit = a.severity === 'critical';
+    const isRes = a.status === 'Resolved';
+    const typeCls = isRes ? 'type-resolved' : isCrit ? 'type-critical' : 'type-warning';
+    const statusText = isRes ? 'Resolved' : 'Active';
+
+    return `
+      <tr id="alert-row-${a.id}">
+        <td>
+          <span class="alert-type-badge ${typeCls}">
+            <span class="svg-icon" style="width:10px;height:10px;">
+              ${isRes ? '<svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' :
+                isCrit ? '<svg viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' :
+                '<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'}
+            </span>
+            ${isRes ? 'Resolved' : isCrit ? 'Critical' : 'Warning'}
+          </span>
+        </td>
+        <td>
+          <div class="alert-title">${a.title}</div>
+          <div class="alert-desc">${a.desc}</div>
+        </td>
+        <td><span class="alert-source">${a.source}</span></td>
+        <td style="color:var(--text3);font-size:.75rem;">${a.time}</td>
+        <td>
+          <span style="font-weight:800;font-size:.75rem;color:${isRes ? 'var(--green)' : isCrit ? 'var(--red)' : 'var(--amber)'};">
+            ${statusText}
+          </span>
+        </td>
+        <td>
+          <div style="display:flex;gap:.3rem;">
+            ${!isRes ? `
+              <button class="btn-act btn-resolve" onclick="resolveAlert(${a.id})">
+                <span class="svg-icon" style="width:11px;height:11px;"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+                Resolve
+              </button>
+            ` : ''}
+            <button class="btn-act btn-diag" onclick="runDiagnostic(${a.id})">
+              <span class="svg-icon" style="width:11px;height:11px;"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+              Diag
+            </button>
+            <button class="btn-act btn-del" onclick="deleteAlert(${a.id})">
+              <span class="svg-icon" style="width:11px;height:11px;"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function renderRules() {
+  const container = document.getElementById('rules-grid');
+  container.innerHTML = RULES_DATA.map(r => `
+    <div class="rule-card">
+      <div class="rule-head">
+        <div>
+          <div class="rule-name">${r.name}</div>
+          <div class="rule-metric">${r.metric}</div>
+          <div style="font-size:.65rem;color:var(--text3);margin-top:2px;">Target: ${r.source}</div>
+        </div>
+        <label class="rule-toggle">
+          <input type="checkbox" ${r.active ? 'checked' : ''} onchange="toggleRule(${r.id}, this.checked)"/>
+          <div class="toggle-slider"></div>
+        </label>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── FILTERING ──
+function filterAlerts(tabKey, btnEl) {
+  activeTab = tabKey;
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  btnEl.classList.add('active');
+
+  applyFilter();
+}
+
+function searchAlerts() {
+  applyFilter();
+}
+
+function applyFilter() {
+  const q = document.getElementById('alert-search-input').value.toLowerCase();
+  const filtered = ALERTS_DATA.filter(a => {
+    const matchesTab = activeTab === 'all' ||
+      (activeTab === 'critical' && a.severity === 'critical' && a.status === 'Active') ||
+      (activeTab === 'warning' && a.severity === 'warning' && a.status === 'Active') ||
+      (activeTab === 'resolved' && a.status === 'Resolved');
+
+    const matchesQuery = a.title.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q) || a.source.toLowerCase().includes(q);
+    return matchesTab && matchesQuery;
+  });
+
+  renderAlertsTable(filtered);
+}
+
+// ── ACTIONS ──
+function resolveAlert(id) {
+  const alert = ALERTS_DATA.find(a => a.id === id);
+  if (!alert) return;
+
+  alert.status = 'Resolved';
+  updateCounts();
+  applyFilter();
+  showToast(`Incident #${id} (${alert.title}) marked as Resolved!`);
+}
+
+function deleteAlert(id) {
+  const row = document.getElementById(`alert-row-${id}`);
+  if (row) {
+    row.classList.add('fade-out');
+    setTimeout(() => {
+      ALERTS_DATA = ALERTS_DATA.filter(a => a.id !== id);
+      updateCounts();
+      applyFilter();
+      showToast(`Incident #${id} removed.`);
+    }, 250);
+  }
+}
+
+function runDiagnostic(id) {
+  currentDiagId = id;
+  const alert = ALERTS_DATA.find(a => a.id === id);
+  document.getElementById('diag-target-text').innerHTML = `Telemetry diagnostics for: <b>${alert ? alert.source : 'System Component'}</b>`;
+
+  const output = document.getElementById('diag-output');
+  output.innerHTML = `
+    <div class="diag-line diag-ok"><span>[0.00s]</span> <span>Initializing sandbox telemetry probe...</span></div>
+    <div class="diag-line diag-ok"><span>[0.12s]</span> <span>Sending ICMP ping to gateway route (14ms)... OK</span></div>
+    <div class="diag-line diag-wait"><span>[0.34s]</span> <span>Probing API endpoint headers & status code...</span></div>
+    <div class="diag-line diag-ok"><span>[0.68s]</span> <span>Proxy pool rotation: 8/8 nodes operational</span></div>
+    <div class="diag-line diag-ok"><span>[0.95s]</span> <span>Database query latency check: 4.2ms (healthy)</span></div>
+    <div class="diag-line diag-ok"><span>[1.20s]</span> <span>Ready for auto-remediation.</span></div>
+  `;
+
+  openModal('modal-diag');
+}
+
+function autoFixIncident() {
+  if (currentDiagId) {
+    resolveAlert(currentDiagId);
+  }
+  closeModal('modal-diag');
+  showToast(`Diagnostic remediations applied and incident resolved!`);
+}
+
+function toggleRule(id, isChecked) {
+  const rule = RULES_DATA.find(r => r.id === id);
+  if (rule) {
+    rule.active = isChecked;
+    showToast(`Rule "${rule.name}" is now ${isChecked ? 'Active' : 'Disabled'}`);
+  }
+}
+
+function saveAlertRule() {
+  const name = document.getElementById('rule-name').value.trim();
+  const source = document.getElementById('rule-source').value;
+  if (!name) { showToast('Please enter a rule identifier name.'); return; }
+
+  RULES_DATA.push({
+    id: RULES_DATA.length + 1,
+    name: name,
+    metric: 'Custom Telemetry Rule',
+    source: source,
+    active: true
+  });
+
+  renderRules();
+  closeModal('modal-create-rule');
+  showToast(`New rule "${name}" successfully registered!`);
+}
+
+function updateCounts() {
+  const crit = ALERTS_DATA.filter(a => a.severity === 'critical' && a.status === 'Active').length;
+  const warn = ALERTS_DATA.filter(a => a.severity === 'warning' && a.status === 'Active').length;
+  const res = ALERTS_DATA.filter(a => a.status === 'Resolved').length;
+
+  document.getElementById('kpi-crit-val').innerText = crit;
+  document.getElementById('kpi-crit-badge').innerText = `${crit} Active`;
+  document.getElementById('kpi-warn-val').innerText = warn;
+  document.getElementById('kpi-warn-badge').innerText = `${warn} Active`;
+  document.getElementById('kpi-res-val').innerText = res + 18; // base 18 resolved
+  document.getElementById('kpi-res-badge').innerText = `${res + 18} Resolved`;
+
+  document.getElementById('count-all').innerText = crit + warn;
+  document.getElementById('count-crit').innerText = crit;
+  document.getElementById('count-warn').innerText = warn;
+  document.getElementById('sb-alert-count').innerText = crit;
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── TOAST NOTIFICATION ──
+function showToast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `
+    <span class="svg-icon" style="width:16px;height:16px;color:var(--green);">
+      <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </span>
+    <span>${msg}</span>
+  `;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(10px)';
+    toast.style.transition = 'all 0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 2800);
+}
+
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderAlertsTable(ALERTS_DATA);
+  renderRules();
+  updateCounts();
+});
+</script>
+</body>
+</html>

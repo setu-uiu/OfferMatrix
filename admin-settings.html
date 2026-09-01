@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Admin Settings – OfferMatrix</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --bg:#0b0f19;--bg2:#0f1624;
+      --card:rgba(255,255,255,.03);--card-border:rgba(255,255,255,.08);--card-hover:rgba(255,255,255,.055);
+      --pink:#ff2a6d;--pink-glow:rgba(255,42,109,.25);
+      --green:#10b981;--green-dim:rgba(16,185,129,.15);
+      --blue:#38bdf8;--blue-dim:rgba(56,189,248,.15);
+      --amber:#f59e0b;--amber-dim:rgba(245,158,11,.15);
+      --red:#ef4444;--red-dim:rgba(239,68,68,.15);
+      --text:#e2e8f0;--text2:#94a3b8;--text3:#475569;
+      --border:rgba(255,255,255,.08);--font:'Inter',sans-serif;--sb:240px;--radius:14px;--radius-sm:10px;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden;}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none;}
+    a{color:inherit;text-decoration:none;}
+    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:4px;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:40px 40px;}
+    .sb{width:var(--sb);min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:300;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+    .sb::-webkit-scrollbar{display:none;}
+    .sb-brand{display:flex;align-items:center;gap:10px;padding:1.3rem 1.4rem;border-bottom:1px solid var(--border);}
+    .sb-logo-icon{width:36px;height:36px;background:var(--pink);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;box-shadow:0 4px 12px var(--pink-glow);flex-shrink:0;}
+    .sb-logo-name{font-size:1.15rem;font-weight:800;color:var(--text);letter-spacing:-.3px;}
+    .sb-admin-badge{font-size:.5rem;font-weight:800;background:rgba(255,42,109,.2);color:var(--pink);padding:2px 7px;border-radius:4px;display:inline-block;}
+    .sb-nav{flex:1;padding:1rem 0;}
+    .sb-section{font-size:.6rem;font-weight:700;color:var(--text3);letter-spacing:1.2px;padding:1rem 1.4rem .35rem;text-transform:uppercase;}
+    .sb-link{display:flex;align-items:center;gap:.75rem;padding:.65rem 1.4rem;font-size:.84rem;font-weight:600;color:var(--text2);width:100%;text-align:left;cursor:pointer;transition:all .2s;}
+    .sb-link:hover{color:var(--text);background:rgba(255,255,255,.04);}
+    .sb-link.active{color:var(--pink);background:rgba(255,42,109,.1);border-right:2px solid var(--pink);}
+    .sb-icon{font-size:.95rem;width:20px;text-align:center;flex-shrink:0;}
+    .sb-count{margin-left:auto;font-size:.6rem;font-weight:800;padding:2px 7px;border-radius:50px;background:var(--red);color:#fff;}
+    .sb-count-warn{background:var(--amber);color:#111;}
+    .sb-footer{padding:.9rem 1.2rem;border-top:1px solid var(--border);}
+    .sb-user{display:flex;align-items:center;gap:.7rem;}
+    .sb-user-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--pink),#be185d);display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:.85rem;flex-shrink:0;}
+    .sb-user-name{font-size:.82rem;font-weight:700;color:var(--text);}
+    .sb-user-role{font-size:.62rem;color:var(--text3);}
+    .main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;width:calc(100% - var(--sb));position:relative;z-index:1;}
+    .topbar{background:rgba(11,15,25,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.8rem 1.6rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+    .tb-title{font-size:1rem;font-weight:800;color:var(--text);}
+    .btn-primary{background:var(--pink);color:#fff;border-radius:var(--radius-sm);padding:.48rem 1.1rem;font-size:.82rem;font-weight:700;transition:all .2s;box-shadow:0 4px 12px var(--pink-glow);margin-left:auto;}
+    .btn-primary:hover{opacity:.88;}
+
+    /* PAGE */
+    .page{flex:1;padding:1.5rem;display:flex;gap:1.4rem;}
+    .settings-tabs-col{width:200px;flex-shrink:0;}
+    .settings-content{flex:1;display:flex;flex-direction:column;gap:1rem;}
+
+    /* SETTINGS NAV TABS */
+    .stab-list{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:.5rem;display:flex;flex-direction:column;gap:.2rem;}
+    .stab{display:flex;align-items:center;gap:.6rem;padding:.6rem .8rem;border-radius:var(--radius-sm);font-size:.82rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .2s;}
+    .stab:hover{color:var(--text);background:rgba(255,255,255,.04);}
+    .stab.active{background:rgba(255,42,109,.12);color:var(--pink);}
+    .stab-icon{font-size:.9rem;width:18px;text-align:center;}
+
+    /* SECTION CARD */
+    .card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.4rem;}
+    .card-title{font-size:.9rem;font-weight:800;color:var(--text);margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem;}
+
+    /* FORM */
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+    .field{display:flex;flex-direction:column;gap:.3rem;}
+    .field-full{grid-column:1/-1;}
+    .field-label{font-size:.65rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;}
+    .field-input{background:rgba(255,255,255,.05);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:.65rem .9rem;font-size:.85rem;font-family:var(--font);color:var(--text);outline:none;transition:all .2s;}
+    .field-input:focus{border-color:rgba(255,42,109,.5);}
+    .field-input::placeholder{color:var(--text3);}
+    .field-input:disabled{opacity:.5;cursor:not-allowed;}
+    .btn-save{background:var(--pink);color:#fff;border-radius:var(--radius-sm);padding:.65rem 1.5rem;font-size:.85rem;font-weight:700;transition:all .2s;box-shadow:0 4px 12px var(--pink-glow);}
+    .btn-save:hover{opacity:.88;}
+    .btn-secondary{background:rgba(255,255,255,.05);border:1px solid var(--card-border);color:var(--text2);border-radius:var(--radius-sm);padding:.65rem 1.2rem;font-size:.85rem;font-weight:700;transition:all .2s;}
+    .btn-secondary:hover{background:rgba(255,255,255,.08);}
+
+    /* TOGGLE ROW */
+    .toggle-rows{display:flex;flex-direction:column;gap:1rem;}
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.9rem;background:rgba(255,255,255,.025);border-radius:var(--radius-sm);border:1px solid var(--border);}
+    .tr-text .tr-label{font-size:.85rem;font-weight:700;color:var(--text);}
+    .tr-text .tr-sub{font-size:.72rem;color:var(--text2);margin-top:2px;}
+    .toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
+    .toggle input{opacity:0;width:0;height:0;}
+    .toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:50px;cursor:pointer;transition:.3s;}
+    .toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:rgba(255,255,255,.5);border-radius:50%;transition:.3s;}
+    .toggle input:checked+.toggle-slider{background:var(--pink);}
+    .toggle input:checked+.toggle-slider::before{transform:translateX(20px);background:#fff;}
+
+    /* SYSTEM LOG TABLE */
+    .log-table{width:100%;border-collapse:collapse;}
+    .log-table th{font-size:.62rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:.55rem 1rem;text-align:left;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02);}
+    .log-table td{padding:.7rem 1rem;border-bottom:1px solid rgba(255,255,255,.04);font-size:.8rem;vertical-align:middle;}
+    .log-table tr:last-child td{border-bottom:none;}
+    .event-pill{font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:50px;}
+    .ev-login{background:var(--green-dim);color:var(--green);}
+    .ev-change{background:var(--blue-dim);color:var(--blue);}
+    .ev-security{background:var(--amber-dim);color:var(--amber);}
+    .ev-delete{background:var(--red-dim);color:var(--red);}
+
+    /* DANGER ZONE */
+    .danger-zone{background:var(--red-dim);border:1px solid rgba(239,68,68,.25);border-radius:var(--radius);padding:1.4rem;}
+    .btn-danger{background:var(--red-dim);border:1px solid rgba(239,68,68,.4);color:var(--red);border-radius:var(--radius-sm);padding:.55rem 1.2rem;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s;}
+    .btn-danger:hover{background:rgba(239,68,68,.3);}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#0f1624;border:1px solid var(--card-border);border-radius:12px;padding:.8rem 1.2rem;font-size:.82rem;font-weight:600;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:9999;animation:slideUp .25s ease;}
+    @keyframes slideUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+    .tab-panel{display:none;}
+    .tab-panel.active{display:flex;flex-direction:column;gap:1rem;}
+
+    @media(max-width:900px){.sb{transform:translateX(-100);}.main{margin-left:0;width:100%;}.page{flex-direction:column;}.settings-tabs-col{width:100%;}.stab-list{flex-direction:row;flex-wrap:wrap;overflow-x:auto;}.form-grid{grid-template-columns:1fr;}.field-full{grid-column:unset;}}
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-brand">
+    <div class="sb-logo-icon">%</div>
+    <div><div class="sb-logo-name">OfferMatrix</div><div class="sb-admin-badge">ADMIN PANEL</div></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Control Center</div>
+    <a href="admin-dashboard.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+      Dashboard
+    </a>
+    <a href="admin-scraper-health.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/></svg></span>
+      Scraper Health
+    </a>
+    <a href="admin-deals-queue.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+      Deal Queue
+      <span class="sb-count">8</span>
+    </a>
+    <a href="admin-affiliates.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      Affiliate Manager
+    </a>
+    <a href="admin-fraud-reports.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+      Spam & Fraud Center
+      <span class="sb-count">4</span>
+    </a>
+
+    <div class="sb-section">Analytics</div>
+    <a href="admin-platform-analytics.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M3 3v18h18"/><path d="M18 17l-5-5-4 4-4-4"/></svg></span>
+      Platform Analytics
+    </a>
+    <a href="admin-search-trends.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></span>
+      Search Trends
+    </a>
+    <a href="admin-alert-manager.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
+      Alert Manager
+      <span class="sb-count sb-count-warn">3</span>
+    </a>
+
+    <div class="sb-section">System</div>
+    <a href="admin-settings.html" class="sb-link active">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+      Settings
+    </a>
+    <a href="admin-users.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      User Management
+    </a>
+    <a href="admin-login.html" class="sb-link" style="color:#f87171;margin-top:.5rem;">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      Sign Out
+    </a>
+  </nav>
+  <div class="sb-footer"><div class="sb-user"><div class="sb-user-av">A</div><div><div class="sb-user-name">Super Admin</div><div class="sb-user-role">Full Access</div></div></div></div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-title">⚙️ Platform Settings</div>
+    <button class="btn-primary" onclick="saveAll()">💾 Save All Changes</button>
+  </div>
+
+  <div class="page">
+
+    <!-- SETTINGS TABS NAV -->
+    <div class="settings-tabs-col">
+      <div class="stab-list">
+        <div class="stab active" onclick="showTab('general',this)"><span class="stab-icon">🏠</span>General</div>
+        <div class="stab" onclick="showTab('security',this)"><span class="stab-icon">🔐</span>Security & Auth</div>
+        <div class="stab" onclick="showTab('scraper',this)"><span class="stab-icon">📡</span>Scraper Config</div>
+        <div class="stab" onclick="showTab('notifications',this)"><span class="stab-icon">🔔</span>Notifications</div>
+        <div class="stab" onclick="showTab('syslog',this)"><span class="stab-icon">📋</span>System Logs</div>
+        <div class="stab" onclick="showTab('danger',this)" style="color:var(--red);"><span class="stab-icon">⚠️</span>Danger Zone</div>
+      </div>
+    </div>
+
+    <!-- SETTINGS CONTENT -->
+    <div class="settings-content">
+
+      <!-- GENERAL -->
+      <div id="tab-general" class="tab-panel active">
+        <div class="card">
+          <div class="card-title">🏠 General Platform Settings</div>
+          <div class="form-grid">
+            <div class="field"><div class="field-label">Platform Name</div><input class="field-input" type="text" value="OfferMatrix"/></div>
+            <div class="field"><div class="field-label">Admin Email</div><input class="field-input" type="email" value="admin@offermatrix.bd"/></div>
+            <div class="field"><div class="field-label">Support Email</div><input class="field-input" type="email" value="support@offermatrix.bd"/></div>
+            <div class="field"><div class="field-label">Default Currency</div><select class="field-input"><option>BDT (৳)</option><option>USD ($)</option></select></div>
+            <div class="field field-full"><div class="field-label">Platform Description (SEO)</div><textarea class="field-input" rows="2" style="resize:vertical;">OfferMatrix — Bangladesh's AI-powered price comparison and deal aggregation platform covering 50+ online stores.</textarea></div>
+            <div class="field"><div class="field-label">VAT Rate (%)</div><input class="field-input" type="number" value="7.5" step="0.5"/></div>
+            <div class="field"><div class="field-label">Max Price Alert Per User</div><input class="field-input" type="number" value="20"/></div>
+          </div>
+          <div style="display:flex;gap:.8rem;margin-top:1rem;">
+            <button class="btn-save" onclick="showToast('✅ General settings saved!')">Save Settings</button>
+            <button class="btn-secondary">Discard Changes</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECURITY -->
+      <div id="tab-security" class="tab-panel">
+        <div class="card">
+          <div class="card-title">🔐 Authentication & Security</div>
+          <div class="form-grid" style="margin-bottom:1rem;">
+            <div class="field"><div class="field-label">JWT Secret Key</div><input class="field-input" type="password" value="••••••••••••••••••••••••••••••••"/></div>
+            <div class="field"><div class="field-label">JWT Expiry (hours)</div><input class="field-input" type="number" value="24"/></div>
+            <div class="field"><div class="field-label">Session Timeout (min)</div><input class="field-input" type="number" value="30"/></div>
+            <div class="field"><div class="field-label">Max Login Attempts</div><input class="field-input" type="number" value="5"/></div>
+          </div>
+          <div class="toggle-rows">
+            <div class="toggle-row">
+              <div class="tr-text"><div class="tr-label">Two-Factor Authentication (2FA)</div><div class="tr-sub">Require OTP for all admin logins</div></div>
+              <label class="toggle"><input type="checkbox" checked/><div class="toggle-slider"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-text"><div class="tr-label">Force HTTPS Everywhere</div><div class="tr-sub">Redirect all HTTP traffic to HTTPS</div></div>
+              <label class="toggle"><input type="checkbox" checked/><div class="toggle-slider"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-text"><div class="tr-label">IP Allowlist for Admin Panel</div><div class="tr-sub">Only allow specific IPs to access /admin</div></div>
+              <label class="toggle"><input type="checkbox"/><div class="toggle-slider"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-text"><div class="tr-label">Rate Limiting on API</div><div class="tr-sub">Limit to 60 requests/min per IP</div></div>
+              <label class="toggle"><input type="checkbox" checked/><div class="toggle-slider"></div></label>
+            </div>
+          </div>
+          <button class="btn-save" style="margin-top:1rem;" onclick="showToast('🔐 Security settings saved!')">Save Security Config</button>
+        </div>
+      </div>
+
+      <!-- SCRAPER CONFIG -->
+      <div id="tab-scraper" class="tab-panel">
+        <div class="card">
+          <div class="card-title">📡 Scraper Configuration</div>
+          <div class="form-grid" style="margin-bottom:1rem;">
+            <div class="field"><div class="field-label">Default Interval (minutes)</div><input class="field-input" type="number" value="60"/></div>
+            <div class="field"><div class="field-label">Max Concurrent Scrapers</div><input class="field-input" type="number" value="5"/></div>
+            <div class="field"><div class="field-label">Request Timeout (seconds)</div><input class="field-input" type="number" value="30"/></div>
+            <div class="field"><div class="field-label">Rate Limit Retry Delay (s)</div><input class="field-input" type="number" value="30"/></div>
+            <div class="field"><div class="field-label">Proxy Pool (comma-separated)</div><input class="field-input" type="text" placeholder="proxy1:port, proxy2:port"/></div>
+            <div class="field"><div class="field-label">User Agent</div><input class="field-input" type="text" value="OfferMatrix-Crawler/1.0"/></div>
+          </div>
+          <div class="toggle-rows">
+            <div class="toggle-row">
+              <div class="tr-text"><div class="tr-label">Auto-Retry on Failure</div><div class="tr-sub">Retry failed jobs up to 3 times</div></div>
+              <label class="toggle"><input type="checkbox" checked/><div class="toggle-slider"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-text"><div class="tr-label">Headless Browser Mode</div><div class="tr-sub">Use Puppeteer for JS-heavy pages</div></div>
+              <label class="toggle"><input type="checkbox" checked/><div class="toggle-slider"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-text"><div class="tr-label">Price Change Threshold Alerts</div><div class="tr-sub">Alert when price drops more than 10%</div></div>
+              <label class="toggle"><input type="checkbox" checked/><div class="toggle-slider"></div></label>
+            </div>
+          </div>
+          <button class="btn-save" style="margin-top:1rem;" onclick="showToast('📡 Scraper config saved!')">Save Scraper Config</button>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div id="tab-notifications" class="tab-panel">
+        <div class="card">
+          <div class="card-title">🔔 Notification Settings</div>
+          <div class="toggle-rows">
+            <div class="toggle-row">
+              <div class="tr-text"><div class="tr-label">Email Notifications (Admin)</div><div class="tr-sub">Critical error alerts to admin email</div></div>
+              <label class="toggle"><input type="checkbox" checked/><div class="toggle-slider"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-text"><div class="tr-label">SMS Price Drop Alerts (Users)</div><div class="tr-sub">Send SMS via BD SMS gateway</div></div>
+              <label class="toggle"><input type="checkbox" checked/><div class="toggle-slider"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-text"><div class="tr-label">Push Notifications (Web)</div><div class="tr-sub">Browser push for deal alerts</div></div>
+              <label class="toggle"><input type="checkbox"/><div class="toggle-slider"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-text"><div class="tr-label">Weekly Admin Digest Email</div><div class="tr-sub">Platform summary every Monday 9 AM</div></div>
+              <label class="toggle"><input type="checkbox" checked/><div class="toggle-slider"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-text"><div class="tr-label">Deal Submission Confirmation</div><div class="tr-sub">Notify users when their deal is reviewed</div></div>
+              <label class="toggle"><input type="checkbox" checked/><div class="toggle-slider"></div></label>
+            </div>
+          </div>
+          <div class="form-grid" style="margin-top:1rem;">
+            <div class="field"><div class="field-label">SMS Gateway API Key</div><input class="field-input" type="password" placeholder="••••••••••••••••"/></div>
+            <div class="field"><div class="field-label">SendGrid API Key</div><input class="field-input" type="password" placeholder="••••••••••••••••"/></div>
+          </div>
+          <button class="btn-save" style="margin-top:1rem;" onclick="showToast('🔔 Notification settings saved!')">Save Notification Config</button>
+        </div>
+      </div>
+
+      <!-- SYSTEM LOG -->
+      <div id="tab-syslog" class="tab-panel">
+        <div class="card">
+          <div class="card-head" style="margin-bottom:1.2rem;">
+            <div class="card-title">📋 Admin Activity Log</div>
+            <button class="btn-secondary" style="font-size:.75rem;padding:.35rem .8rem;" onclick="exportLogs()">⬇ Export CSV</button>
+          </div>
+          <table class="log-table">
+            <thead>
+              <tr><th>Admin</th><th>Event</th><th>Details</th><th>IP Address</th><th>Timestamp</th></tr>
+            </thead>
+            <tbody id="syslog-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DANGER ZONE -->
+      <div id="tab-danger" class="tab-panel">
+        <div class="danger-zone">
+          <div style="font-size:.95rem;font-weight:800;color:var(--red);margin-bottom:1rem;">⚠️ Danger Zone — Irreversible Actions</div>
+          <div style="display:flex;flex-direction:column;gap:.8rem;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:var(--radius-sm);">
+              <div><div style="font-size:.85rem;font-weight:700;color:var(--text);">Clear Scraper Cache</div><div style="font-size:.72rem;color:var(--text2);">Forces all crawlers to rebuild their product index from scratch</div></div>
+              <button class="btn-danger" onclick="confirmAction('Clear Scraper Cache?','All cached product data will be deleted and re-scraped.')">Clear Cache</button>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:var(--radius-sm);">
+              <div><div style="font-size:.85rem;font-weight:700;color:var(--text);">Reset All API Rate Limits</div><div style="font-size:.72rem;color:var(--text2);">Removes all IP-based rate limit entries</div></div>
+              <button class="btn-danger" onclick="confirmAction('Reset Rate Limits?','All active rate limits will be cleared.')">Reset Limits</button>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:var(--radius-sm);">
+              <div><div style="font-size:.85rem;font-weight:700;color:var(--text);">Flush All Price History</div><div style="font-size:.72rem;color:var(--text2);">Permanently deletes all historical price data</div></div>
+              <button class="btn-danger" onclick="confirmAction('Flush Price History?','This will permanently delete ALL price history records.')">Flush History</button>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem;background:rgba(239,68,68,.12);border:1.5px solid rgba(239,68,68,.35);border-radius:var(--radius-sm);">
+              <div><div style="font-size:.85rem;font-weight:800;color:var(--red);">⛔ Disable Platform (Maintenance Mode)</div><div style="font-size:.72rem;color:var(--text2);">Takes the entire site offline for all users</div></div>
+              <button class="btn-danger" style="background:var(--red);color:#fff;border-color:var(--red);" onclick="confirmAction('Enable Maintenance Mode?','The entire platform will go offline for all users immediately.')">Enable Maintenance</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const SYS_LOGS = [
+  { admin:'Super Admin', event:'login',    details:'Successful login from Chrome/Mac',      ip:'103.4.14.12',   time:'2026-09-01 21:30' },
+  { admin:'Super Admin', event:'change',   details:'Updated JWT expiry from 12h → 24h',     ip:'103.4.14.12',   time:'2026-09-01 20:15' },
+  { admin:'Super Admin', event:'security', details:'2FA verification successful',           ip:'103.4.14.12',   time:'2026-09-01 19:48' },
+  { admin:'Mod Admin',   event:'change',   details:'Approved 5 community deals in bulk',    ip:'202.12.44.88',  time:'2026-09-01 18:30' },
+  { admin:'Super Admin', event:'change',   details:'Added affiliate partner: Chaldal',      ip:'103.4.14.12',   time:'2026-09-01 17:22' },
+  { admin:'Mod Admin',   event:'delete',   details:'Removed spam deal submission #ID-142',  ip:'202.12.44.88',  time:'2026-09-01 16:10' },
+  { admin:'Super Admin', event:'login',    details:'Successful login from Firefox/Android', ip:'121.200.44.1',  time:'2026-08-31 22:05' },
+  { admin:'Super Admin', event:'change',   details:'Updated scraper interval: 30m → 60m',  ip:'103.4.14.12',   time:'2026-08-31 20:00' },
+];
+
+function renderSysLog() {
+  const evCls = {login:'ev-login',change:'ev-change',security:'ev-security',delete:'ev-delete'};
+  document.getElementById('syslog-tbody').innerHTML = SYS_LOGS.map(l=>`
+    <tr>
+      <td style="font-weight:700;color:var(--text);">${l.admin}</td>
+      <td><span class="event-pill ${evCls[l.event]||'ev-change'}">${l.event}</span></td>
+      <td style="color:var(--text2);">${l.details}</td>
+      <td style="font-family:monospace;font-size:.75rem;color:var(--text3);">${l.ip}</td>
+      <td style="font-size:.75rem;color:var(--text3);">${l.time}</td>
+    </tr>`).join('');
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  if (id==='syslog') renderSysLog();
+}
+
+function saveAll() { showToast('💾 All settings saved successfully!'); }
+function exportLogs() { showToast('⬇ System log exported as CSV.'); }
+function confirmAction(title, msg) {
+  if (confirm(`⚠️ ${title}\n\n${msg}\n\nThis action cannot be undone. Continue?`)) {
+    showToast(`⚠️ Action executed: ${title}`);
+  }
+}
+
+function showToast(msg) {
+  const ex=document.querySelector('.toast'); if(ex)ex.remove();
+  const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300);},2800);
+}
+
+document.addEventListener('DOMContentLoaded', renderSysLog);
+</script>
+</body>
+</html>

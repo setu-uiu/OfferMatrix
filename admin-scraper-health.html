@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Scraper Health – OfferMatrix Admin</title>
+  <meta name="description" content="Live crawler monitoring, API endpoint status, and system logs for OfferMatrix."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --bg:#0b0f19;--bg2:#0f1624;--bg3:#141c2e;
+      --card:rgba(255,255,255,.03);--card-border:rgba(255,255,255,.08);--card-hover:rgba(255,255,255,.06);
+      --pink:#ff2a6d;--pink-glow:rgba(255,42,109,.25);
+      --green:#10b981;--green-dim:rgba(16,185,129,.15);
+      --blue:#38bdf8;--blue-dim:rgba(56,189,248,.15);
+      --amber:#f59e0b;--amber-dim:rgba(245,158,11,.15);
+      --red:#ef4444;--red-dim:rgba(239,68,68,.15);
+      --text:#e2e8f0;--text2:#94a3b8;--text3:#475569;
+      --border:rgba(255,255,255,.08);--font:'Inter',sans-serif;--sb:240px;--radius:14px;--radius-sm:10px;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden;}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none;}
+    a{color:inherit;text-decoration:none;}
+    ::-webkit-scrollbar{width:4px;height:4px;}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:4px;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+                       linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+      background-size:40px 40px;}
+
+    /* SIDEBAR */
+    .sb{width:var(--sb);min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);
+        display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:300;
+        overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
+    .sb::-webkit-scrollbar{display:none;}
+    .sb-brand{display:flex;align-items:center;gap:10px;padding:1.3rem 1.4rem;border-bottom:1px solid var(--border);}
+    .sb-logo-icon{width:36px;height:36px;background:var(--pink);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;box-shadow:0 4px 12px var(--pink-glow);flex-shrink:0;}
+    .sb-logo-name{font-size:1.15rem;font-weight:800;color:var(--text);letter-spacing:-.3px;}
+    .sb-admin-badge{font-size:.5rem;font-weight:800;background:rgba(255,42,109,.2);color:var(--pink);padding:2px 7px;border-radius:4px;letter-spacing:.5px;display:inline-block;}
+    .sb-nav{flex:1;padding:1rem 0;}
+    .sb-section{font-size:.6rem;font-weight:700;color:var(--text3);letter-spacing:1.2px;padding:1rem 1.4rem .35rem;text-transform:uppercase;}
+    .sb-link{display:flex;align-items:center;gap:.75rem;padding:.65rem 1.4rem;font-size:.84rem;font-weight:600;color:var(--text2);width:100%;text-align:left;cursor:pointer;transition:all .2s;}
+    .sb-link:hover{color:var(--text);background:rgba(255,255,255,.04);}
+    .sb-link.active{color:var(--pink);background:rgba(255,42,109,.1);border-right:2px solid var(--pink);}
+    .sb-icon{font-size:.95rem;width:20px;text-align:center;flex-shrink:0;}
+    .sb-count{margin-left:auto;font-size:.6rem;font-weight:800;padding:2px 7px;border-radius:50px;background:var(--red);color:#fff;}
+    .sb-count-warn{background:var(--amber);color:#111;}
+    .sb-footer{padding:.9rem 1.2rem;border-top:1px solid var(--border);}
+    .sb-user{display:flex;align-items:center;gap:.7rem;}
+    .sb-user-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--pink),#be185d);display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:.85rem;flex-shrink:0;}
+    .sb-user-name{font-size:.82rem;font-weight:700;color:var(--text);}
+    .sb-user-role{font-size:.62rem;color:var(--text3);}
+
+    /* MAIN */
+    .main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;width:calc(100% - var(--sb));position:relative;z-index:1;}
+    .topbar{background:rgba(11,15,25,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+            padding:.8rem 1.6rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+    .tb-title{font-size:1rem;font-weight:800;color:var(--text);}
+    .live-chip{display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:var(--green);font-weight:700;
+               background:var(--green-dim);border:1px solid rgba(16,185,129,.25);padding:.3rem .7rem;border-radius:50px;}
+    .live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulseDot 2s infinite;}
+    @keyframes pulseDot{0%,100%{opacity:1;}50%{opacity:.4;}}
+    .tb-actions{margin-left:auto;display:flex;align-items:center;gap:.7rem;}
+    .btn-primary{background:var(--pink);color:#fff;border-radius:var(--radius-sm);padding:.5rem 1.1rem;font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:.4rem;transition:all .2s;box-shadow:0 4px 12px var(--pink-glow);}
+    .btn-primary:hover{opacity:.88;}
+    .btn-ghost-sm{background:var(--card);border:1px solid var(--card-border);color:var(--text2);border-radius:var(--radius-sm);padding:.45rem .9rem;font-size:.78rem;font-weight:700;transition:all .2s;}
+    .btn-ghost-sm:hover{border-color:rgba(255,255,255,.15);color:var(--text);}
+
+    /* PAGE */
+    .page{flex:1;padding:1.5rem;display:flex;flex-direction:column;gap:1.2rem;}
+
+    /* STATS BAR */
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+    .stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.2rem;display:flex;align-items:center;gap:.9rem;}
+    .stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+    .stat-val{font-size:1.5rem;font-weight:900;color:var(--text);}
+    .stat-lbl{font-size:.68rem;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+
+    /* CARD */
+    .card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:1.4rem;}
+    .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.6rem;}
+    .card-title{font-size:.9rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:.5rem;}
+    .filter-row{display:flex;gap:.4rem;}
+    .ftab{padding:.35rem .8rem;border:1px solid var(--card-border);border-radius:50px;font-size:.75rem;font-weight:700;color:var(--text2);cursor:pointer;background:none;transition:all .2s;}
+    .ftab.on{background:var(--pink);color:#fff;border-color:var(--pink);}
+    .ftab:hover:not(.on){border-color:rgba(255,255,255,.15);}
+
+    /* TABLE */
+    .data-table{width:100%;border-collapse:collapse;}
+    .data-table th{font-size:.65rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:.6rem 1rem;text-align:left;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02);}
+    .data-table td{padding:.8rem 1rem;border-bottom:1px solid rgba(255,255,255,.04);font-size:.82rem;vertical-align:middle;}
+    .data-table tr:last-child td{border-bottom:none;}
+    .data-table tr:hover td{background:rgba(255,255,255,.025);}
+
+    /* STATUS PILLS */
+    .pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:50px;font-size:.65rem;font-weight:800;}
+    .pill-green{background:var(--green-dim);color:var(--green);}
+    .pill-yellow{background:var(--amber-dim);color:var(--amber);}
+    .pill-red{background:var(--red-dim);color:var(--red);}
+    .pill-gray{background:rgba(255,255,255,.06);color:var(--text3);}
+    .dot-sm{width:6px;height:6px;border-radius:50%;}
+    .dot-green{background:var(--green);animation:pulseDot 2s infinite;}
+    .dot-yellow{background:var(--amber);}
+    .dot-red{background:var(--red);animation:blinkRed 1s infinite;}
+    .dot-gray{background:var(--text3);}
+    @keyframes blinkRed{0%,100%{opacity:1;}50%{opacity:.2;}}
+
+    /* PROGRESS BAR */
+    .prog-wrap{height:5px;background:rgba(255,255,255,.06);border-radius:50px;overflow:hidden;min-width:80px;}
+    .prog-fill{height:100%;border-radius:50px;}
+
+    /* ACTION BTNS */
+    .act-btn{font-size:.68rem;font-weight:700;padding:.3rem .6rem;border-radius:6px;cursor:pointer;transition:all .2s;border:1px solid;}
+    .act-run{background:var(--green-dim);color:var(--green);border-color:rgba(16,185,129,.3);}
+    .act-run:hover{background:rgba(16,185,129,.3);}
+    .act-pause{background:var(--amber-dim);color:var(--amber);border-color:rgba(245,158,11,.3);}
+    .act-pause:hover{background:rgba(245,158,11,.3);}
+    .act-logs{background:rgba(255,255,255,.04);color:var(--text2);border-color:var(--border);}
+    .act-logs:hover{background:rgba(255,255,255,.08);}
+
+    /* LOGS PANEL */
+    .logs-panel{background:#060a14;border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;font-family:monospace;font-size:.73rem;max-height:210px;overflow-y:auto;line-height:1.75;}
+    .log-ok{color:#4ade80;}
+    .log-warn{color:#fbbf24;}
+    .log-err{color:#f87171;}
+    .log-info{color:#60a5fa;}
+    .log-dim{color:var(--text3);}
+
+    /* ENDPOINT GRID */
+    .ep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.7rem;}
+    .ep-card{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.85rem;}
+    .ep-method{font-size:.58rem;font-weight:900;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:.4rem;}
+    .ep-get{background:var(--green-dim);color:var(--green);}
+    .ep-post{background:var(--blue-dim);color:var(--blue);}
+    .ep-patch{background:var(--amber-dim);color:var(--amber);}
+    .ep-path{font-size:.76rem;font-weight:800;color:var(--text);font-family:monospace;margin-bottom:.35rem;}
+    .ep-stat{font-size:.68rem;font-weight:700;}
+    .ep-ok{color:var(--green);}
+    .ep-slow{color:var(--amber);}
+    .ep-ms{font-size:.62rem;color:var(--text3);}
+
+    /* 2COL */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+
+    /* HOURLY CHART */
+    .h-chart{display:flex;align-items:flex-end;gap:4px;height:70px;}
+    .h-bar{flex:1;border-radius:3px 3px 0 0;min-height:4px;cursor:pointer;transition:opacity .2s;}
+    .h-bar:hover{opacity:1!important;}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#1e293b;border:1px solid var(--card-border);border-radius:12px;padding:.8rem 1.2rem;font-size:.82rem;font-weight:600;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:9999;animation:slideUp .25s ease;}
+    @keyframes slideUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+    @media(max-width:900px){.sb{transform:translateX(-100);}.main{margin-left:0;width:100%;}.stats-row{grid-template-columns:repeat(2,1fr);}.two-col{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-brand">
+    <div class="sb-logo-icon">%</div>
+    <div>
+      <div class="sb-logo-name">OfferMatrix</div>
+      <div class="sb-admin-badge">ADMIN PANEL</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Control Center</div>
+    <a href="admin-dashboard.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+      Dashboard
+    </a>
+    <a href="admin-scraper-health.html" class="sb-link active">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/></svg></span>
+      Scraper Health
+    </a>
+    <a href="admin-deals-queue.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+      Deal Queue
+      <span class="sb-count">8</span>
+    </a>
+    <a href="admin-affiliates.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      Affiliate Manager
+    </a>
+    <a href="admin-fraud-reports.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+      Spam & Fraud Center
+      <span class="sb-count">4</span>
+    </a>
+
+    <div class="sb-section">Analytics</div>
+    <a href="admin-platform-analytics.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M3 3v18h18"/><path d="M18 17l-5-5-4 4-4-4"/></svg></span>
+      Platform Analytics
+    </a>
+    <a href="admin-search-trends.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></span>
+      Search Trends
+    </a>
+    <a href="admin-alert-manager.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
+      Alert Manager
+      <span class="sb-count sb-count-warn">3</span>
+    </a>
+
+    <div class="sb-section">System</div>
+    <a href="admin-settings.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+      Settings
+    </a>
+    <a href="admin-users.html" class="sb-link">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      User Management
+    </a>
+    <a href="admin-login.html" class="sb-link" style="color:#f87171;margin-top:.5rem;">
+      <span class="sb-icon svg-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      Sign Out
+    </a>
+  </nav>
+  <div class="sb-footer">
+    <div class="sb-user">
+      <div class="sb-user-av">A</div>
+      <div><div class="sb-user-name">Super Admin</div><div class="sb-user-role">Full Access</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="live-chip"><div class="live-dot"></div>Live Monitoring</div>
+    <div class="tb-title" style="margin-left:.5rem;">📡 Scraper Health Hub</div>
+    <div style="font-size:.72rem;color:var(--text3);margin-left:.5rem;">Refreshed: <span id="last-refresh">Just now</span></div>
+    <div class="tb-actions">
+      <button class="btn-ghost-sm" onclick="clearLogs()">Clear Logs</button>
+      <button class="btn-primary" id="refresh-btn" onclick="refreshAll()">🔄 Refresh All</button>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--green-dim)">✅</div>
+        <div><div class="stat-val" style="color:var(--green)" id="s-live">7</div><div class="stat-lbl">Crawlers Live</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--amber-dim)">⚠️</div>
+        <div><div class="stat-val" style="color:var(--amber)" id="s-warn">2</div><div class="stat-lbl">With Warnings</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--red-dim)">❌</div>
+        <div><div class="stat-val" style="color:var(--red)" id="s-err">1</div><div class="stat-lbl">Errors / Down</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--blue-dim)">📦</div>
+        <div><div class="stat-val" id="s-products">24,381</div><div class="stat-lbl">Products Indexed</div></div>
+      </div>
+    </div>
+
+    <!-- CRAWLER TABLE -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">🕷️ Crawler Job Status <span style="font-size:.7rem;color:var(--text3);font-weight:400;" id="job-count">(10 jobs)</span></div>
+        <div class="filter-row">
+          <button class="ftab on" onclick="filterJobs('all',this)">All</button>
+          <button class="ftab" onclick="filterJobs('live',this)">Live</button>
+          <button class="ftab" onclick="filterJobs('warning',this)">Warning</button>
+          <button class="ftab" onclick="filterJobs('error',this)">Error</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Platform</th>
+              <th>Module</th>
+              <th>Status</th>
+              <th>Last Run</th>
+              <th>Next Run</th>
+              <th>Products</th>
+              <th>Success Rate</th>
+              <th>Proxy</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="jobs-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LOGS + ENDPOINTS -->
+    <div class="two-col">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">🖥️ Live System Logs</div>
+          <button class="btn-ghost-sm" onclick="clearLogs()">Clear</button>
+        </div>
+        <div class="logs-panel" id="logs-panel"></div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">🔌 API Endpoint Status</div>
+          <span style="font-size:.7rem;color:var(--text3);" id="ep-count">12 endpoints</span>
+        </div>
+        <div class="ep-grid" id="ep-grid"></div>
+      </div>
+    </div>
+
+    <!-- HOURLY CHART -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">📈 Hourly Products Scraped — Last 12 Hours</div>
+        <span style="font-size:.72rem;color:var(--green);font-weight:700;">Total: 18,650</span>
+      </div>
+      <div class="h-chart" id="hourly-chart"></div>
+      <div style="display:flex;justify-content:space-between;font-size:.62rem;color:var(--text3);margin-top:.4rem;" id="hourly-labels"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const JOBS = [
+  { id:'daraz',    name:'Daraz',           module:'E-Commerce', status:'live',    lastRun:'2m',  nextRun:'58m', products:8420, rate:98, proxy:'BD-Proxy-01', paused:false },
+  { id:'pickaboo', name:'Pickaboo',        module:'E-Commerce', status:'live',    lastRun:'5m',  nextRun:'55m', products:3210, rate:96, proxy:'BD-Proxy-02', paused:false },
+  { id:'startech', name:'StarTech',        module:'E-Commerce', status:'live',    lastRun:'8m',  nextRun:'52m', products:2880, rate:99, proxy:'BD-Proxy-01', paused:false },
+  { id:'ryans',    name:'Ryans Computers', module:'E-Commerce', status:'live',    lastRun:'8m',  nextRun:'52m', products:2340, rate:97, proxy:'BD-Proxy-03', paused:false },
+  { id:'shajgoj',  name:'Shajgoj',         module:'Skincare',   status:'warning', lastRun:'22m', nextRun:'38m', products:1580, rate:72, proxy:'BD-Proxy-02', paused:false },
+  { id:'chaldal',  name:'Chaldal',         module:'Grocery',    status:'error',   lastRun:'45m', nextRun:'—',   products:0,    rate:0,  proxy:'None',        paused:false },
+  { id:'rokomari', name:'Rokomari',        module:'Books',      status:'live',    lastRun:'12m', nextRun:'48m', products:4210, rate:94, proxy:'BD-Proxy-01', paused:false },
+  { id:'foodpanda',name:'Foodpanda(sim)',   module:'Food',       status:'live',    lastRun:'30m', nextRun:'30m', products:840,  rate:100,proxy:'None',        paused:false },
+  { id:'ogerio',   name:'Ogerio',          module:'Skincare',   status:'warning', lastRun:'18m', nextRun:'42m', products:690,  rate:81, proxy:'BD-Proxy-03', paused:false },
+  { id:'pathao',   name:'Pathao Ride API', module:'Rides',      status:'live',    lastRun:'1m',  nextRun:'59m', products:5,    rate:100,proxy:'None',        paused:false },
+];
+
+const ENDPOINTS = [
+  { method:'GET',  path:'/api/products',          status:'ok',  ms:42  },
+  { method:'GET',  path:'/api/search',            status:'ok',  ms:87  },
+  { method:'POST', path:'/api/rides/estimate',    status:'ok',  ms:31  },
+  { method:'GET',  path:'/api/buses',             status:'ok',  ms:55  },
+  { method:'GET',  path:'/api/food/search',       status:'slow',ms:320 },
+  { method:'GET',  path:'/api/price-history/:id', status:'ok',  ms:68  },
+  { method:'POST', path:'/api/alerts',            status:'ok',  ms:24  },
+  { method:'POST', path:'/api/checkout/calculate',status:'ok',  ms:58  },
+  { method:'GET',  path:'/api/locations',         status:'ok',  ms:19  },
+  { method:'PATCH',path:'/api/deals/:id/verify',  status:'ok',  ms:41  },
+  { method:'GET',  path:'/api/feed',              status:'ok',  ms:145 },
+  { method:'POST', path:'/api/auth/login',        status:'ok',  ms:89  },
+];
+
+const INIT_LOGS = [
+  ['ok',  '✅ Daraz scraper: 1,243 products indexed'],
+  ['info','ℹ️ Pickaboo: Navigating electronics page…'],
+  ['ok',  '✅ StarTech: 342 laptops updated'],
+  ['warn','⚠️ Shajgoj: Rate limit 429. Retrying in 30s…'],
+  ['ok',  '✅ Ryans: 288 products synced'],
+  ['err', '❌ Chaldal: HTTP 503 – Service unavailable'],
+  ['info','ℹ️ Pathao ride API: Rules synced (5 vehicles)'],
+  ['warn','⚠️ Ogerio: 3 products returned 404'],
+  ['ok',  '✅ Rokomari: 621 titles indexed'],
+];
+
+let jobFilter = 'all';
+
+function renderJobs() {
+  const list = jobFilter==='all' ? JOBS : JOBS.filter(j=>j.status===jobFilter);
+  document.getElementById('job-count').textContent = `(${list.length} jobs)`;
+  const pillMap = {
+    live:    `<span class="pill pill-green"><span class="dot-sm dot-green"></span>Live</span>`,
+    warning: `<span class="pill pill-yellow"><span class="dot-sm dot-yellow"></span>Warning</span>`,
+    error:   `<span class="pill pill-red"><span class="dot-sm dot-red"></span>Error</span>`,
+    paused:  `<span class="pill pill-gray"><span class="dot-sm dot-gray"></span>Paused</span>`,
+  };
+  document.getElementById('jobs-tbody').innerHTML = list.map(j => {
+    const progColor = j.rate>=90?'var(--green)':j.rate>=60?'var(--amber)':'var(--red)';
+    return `<tr>
+      <td style="font-weight:700;color:var(--text);">${j.name}</td>
+      <td><span style="background:rgba(255,255,255,.06);padding:2px 7px;border-radius:5px;font-size:.68rem;color:var(--text2);font-weight:700;">${j.module}</span></td>
+      <td>${pillMap[j.status]}</td>
+      <td style="color:var(--text2);">${j.lastRun} ago</td>
+      <td style="color:var(--text2);">${j.nextRun}</td>
+      <td style="font-weight:800;color:var(--text);">${j.products.toLocaleString()}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:.5rem;">
+          <div class="prog-wrap" style="flex:1;"><div class="prog-fill" style="width:${j.rate}%;background:${progColor};"></div></div>
+          <span style="font-size:.72rem;font-weight:700;color:var(--text);">${j.rate}%</span>
+        </div>
+      </td>
+      <td style="font-size:.72rem;color:var(--text3);">${j.proxy}</td>
+      <td>
+        <div style="display:flex;gap:.3rem;">
+          <button class="act-btn act-run" onclick="runJob('${j.id}')">▶ Run</button>
+          <button class="act-btn act-pause" onclick="pauseJob('${j.id}')">${j.paused?'Resume':'Pause'}</button>
+          <button class="act-btn act-logs" onclick="viewJobLogs('${j.id}')">Logs</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function renderEndpoints() {
+  document.getElementById('ep-grid').innerHTML = ENDPOINTS.map(e => {
+    const mCls = {GET:'ep-get',POST:'ep-post',PATCH:'ep-patch'}[e.method]||'ep-get';
+    const sCls = e.status==='ok'?'ep-ok':'ep-slow';
+    const sLabel = e.status==='ok'?'✅ Online':'⚠️ Slow';
+    return `<div class="ep-card">
+      <div class="ep-method ${mCls}">${e.method}</div>
+      <div class="ep-path">${e.path}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span class="ep-stat ${sCls}">${sLabel}</span>
+        <span class="ep-ms">${e.ms}ms</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addLog(msg, type='info') {
+  const panel = document.getElementById('logs-panel');
+  const now = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const div = document.createElement('div');
+  div.className = 'log-'+type;
+  div.textContent = `[${now}] ${msg}`;
+  panel.appendChild(div);
+  panel.scrollTop = panel.scrollHeight;
+}
+
+function clearLogs() { document.getElementById('logs-panel').innerHTML = '<span class="log-dim">-- Log cleared --</span>'; }
+
+function filterJobs(f, btn) {
+  jobFilter = f;
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  renderJobs();
+}
+
+function runJob(id) {
+  const j = JOBS.find(x=>x.id===id);
+  j.status='live'; j.lastRun='0m'; j.rate=95;
+  renderJobs(); addLog(`✅ ${j.name} manually triggered by admin`, 'ok');
+}
+function pauseJob(id) {
+  const j = JOBS.find(x=>x.id===id);
+  j.paused=!j.paused; j.status=j.paused?'paused':'live';
+  renderJobs(); addLog(`${j.paused?'⏸️ Paused':'▶️ Resumed'}: ${j.name}`, j.paused?'warn':'ok');
+}
+function viewJobLogs(id) {
+  const j = JOBS.find(x=>x.id===id);
+  addLog(`ℹ️ Viewing logs for: ${j.name}`, 'info');
+}
+
+function renderHourly() {
+  const data = [820,950,1100,880,760,1320,1540,1820,2100,1980,2240,1650];
+  const labels = ['10AM','11AM','12PM','1PM','2PM','3PM','4PM','5PM','6PM','7PM','8PM','9PM'];
+  const max = Math.max(...data);
+  document.getElementById('hourly-chart').innerHTML = data.map((v,i)=>{
+    const h = Math.round((v/max)*66);
+    const isLast = i===data.length-1;
+    return `<div class="h-bar" title="${labels[i]}: ${v.toLocaleString()} products" style="height:${h}px;background:${isLast?'var(--pink)':'var(--blue)'};opacity:${isLast?1:.3+i*.06};"></div>`;
+  }).join('');
+  document.getElementById('hourly-labels').innerHTML = labels.map((l,i)=>`<span>${i%3===0?l:''}</span>`).join('');
+}
+
+function refreshAll() {
+  document.getElementById('refresh-btn').textContent = '⏳ Refreshing…';
+  setTimeout(()=>{
+    JOBS.forEach(j=>{ if(j.status==='live') j.lastRun = Math.ceil(Math.random()*10)+'m'; });
+    renderJobs();
+    document.getElementById('last-refresh').textContent = 'Just now';
+    document.getElementById('refresh-btn').textContent = '🔄 Refresh All';
+    addLog('ℹ️ All scraper statuses refreshed by admin', 'info');
+  }, 1200);
+}
+
+// Auto log stream
+const AUTO_LOGS = [
+  ['✅ Daraz price_history: 48 new records written','ok'],
+  ['ℹ️ Running price alert cron job…','info'],
+  ['⚠️ Shajgoj: Slow response 4.2s, threshold exceeded','warn'],
+  ['✅ Pickaboo: Flash sale tags updated (12 items)','ok'],
+];
+let autoIdx=0;
+setInterval(()=>{ const [m,t]=AUTO_LOGS[autoIdx%AUTO_LOGS.length]; addLog(m,t); autoIdx++; }, 7000);
+
+document.addEventListener('DOMContentLoaded',()=>{
+  INIT_LOGS.forEach(([t,m])=>addLog(m,t));
+  renderJobs(); renderEndpoints(); renderHourly();
+});
+</script>
+</body>
+</html>
