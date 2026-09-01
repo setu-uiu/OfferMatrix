@@ -1046,7 +1046,7 @@
   </style>
 </head>
 
-<body>
+<body class="skincare-lime-theme">
 
   <!-- ══════════════ SIDEBAR ══════════════ -->
   <aside class="sb">
@@ -1075,10 +1075,15 @@
       <button class="sb-item" onclick="window.location.href='reviews.html'"><span class="sb-ico">&#11088;</span>
         Reviews</button>
       <div class="sb-group">COMMUNITY</div>
-      <button class="sb-item sb-red" onclick="document.getElementById('sc-fraud-section') && document.getElementById('sc-fraud-section').scrollIntoView({behavior:'smooth'})"><span class="sb-ico">&#128680;</span> Fraud Pages <span class="sb-badge red">Alert</span></button>
-      <button class="sb-item" onclick="window.OMWallet && window.OMWallet.open('skincare')"><span class="sb-ico">&#128179;</span> My Wallet</button>
-      <button class="sb-item" onclick="window.OMBankCards && window.OMBankCards.open()"><span class="sb-ico">&#128179;</span> Bank Cards</button>
-      <button class="sb-item" onclick="window.OMReferral && window.OMReferral.open()"><span class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
+      <button class="sb-item sb-red"
+        onclick="window.location.href='fraud-pages.html'"><span
+          class="sb-ico">&#128680;</span> Fraud Pages <span class="sb-badge red">Alert</span></button>
+      <button class="sb-item" onclick="window.OMWallet && window.OMWallet.open('skincare')"><span
+          class="sb-ico">&#128179;</span> My Wallet</button>
+      <button class="sb-item" onclick="window.OMBankCards && window.OMBankCards.open()"><span
+          class="sb-ico">&#128179;</span> Bank Cards</button>
+      <button class="sb-item" onclick="window.OMReferral && window.OMReferral.open()"><span
+          class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
       <div class="sb-group">ACCOUNT</div>
       <button class="sb-item"><span class="sb-ico">&#9881;</span> Settings</button>
       <button class="sb-item"><span class="sb-ico">&#10067;</span> Help &amp; Support</button>
@@ -1107,7 +1112,10 @@
           🔔
         </button>
         <button class="tb-saved" onclick="window.location.href='saved-deals.html?cat=skincare'">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
           Saved (<span class="tb-saved-count">6</span>)
         </button>
         <div class="tb-user">
@@ -1489,12 +1497,12 @@
         </div>
 
         <!-- FRAUD BANNER -->
-        <div class="fraud-banner">
+        <div class="fraud-banner" id="sc-fraud-section" style="cursor:pointer" onclick="window.location.href='fraud-pages.html'">
           <div class="fraud-txt">
             <div class="fraud-title">Fraud Pages &amp; Fake Products</div>
             <div class="fraud-sub">Report scam pages or fake skincare products to help others stay safe.</div>
           </div>
-          <button class="btn-report">Report Now</button>
+          <button class="btn-report" onclick="event.stopPropagation(); window.location.href='fraud-pages.html'">Report Now</button>
           <div class="fraud-icon">&#128737;</div>
         </div>
 

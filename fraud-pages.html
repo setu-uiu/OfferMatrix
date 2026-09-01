@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Viral Restaurant Raid - OfferMatrix</title>
+  <title>Skincare Fraud Pages &amp; Fake Product Raids - OfferMatrix</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -56,9 +56,13 @@
     }
 
     ::-webkit-scrollbar {
-      display: none;
-      width: 0;
-      height: 0;
+      width: 5px;
+      height: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 5px;
     }
 
     /* ── SIDEBAR ── */
@@ -272,8 +276,8 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1.2rem;
-      background: linear-gradient(135deg, #fff0f5 0%, #ffffff 100%);
-      border: 1px solid #ffccd8;
+      background: linear-gradient(135deg, #fdf2f1 0%, #ffffff 100%);
+      border: 1px solid #f8b8b5;
       border-radius: 20px;
       padding: 1.5rem;
     }
@@ -285,7 +289,7 @@
     .stat-val {
       font-size: 1.8rem;
       font-weight: 900;
-      color: #ff1a6e;
+      color: #E37C78;
     }
 
     .stat-lbl {
@@ -321,24 +325,24 @@
     }
 
     .pill:hover {
-      border-color: #ff1a6e;
-      color: #ff1a6e;
+      border-color: #E37C78;
+      color: #E37C78;
     }
 
     .pill.on {
-      background: #ff1a6e;
+      background: #E37C78;
       color: #fff;
-      border-color: #ff1a6e;
+      border-color: #E37C78;
     }
 
     .btn-complain {
-      background: #ff1a6e;
+      background: #E37C78;
       color: #fff;
       font-weight: 800;
       font-size: .8rem;
       padding: .65rem 1.3rem;
       border-radius: 50px;
-      box-shadow: 0 4px 14px rgba(255, 26, 110, 0.35);
+      box-shadow: 0 4px 12px rgba(227, 124, 120, 0.3);
     }
 
     /* Grid of Cards */
@@ -350,7 +354,7 @@
 
     .raid-card {
       background: #fff;
-      border: 1px solid #ffccd8;
+      border: 1px solid #f8b8b5;
       border-radius: 20px;
       padding: 1.4rem;
       display: flex;
@@ -362,7 +366,7 @@
 
     .raid-card:hover {
       transform: translateY(-2px);
-      border-color: #ff1a6e;
+      border-color: #E37C78;
     }
 
     .raid-img {
@@ -371,7 +375,7 @@
       border-radius: 14px;
       object-fit: cover;
       flex-shrink: 0;
-      border: 1px solid #ffccd8;
+      border: 1px solid #f8b8b5;
     }
 
     .raid-info {
@@ -388,9 +392,9 @@
     .status-badge {
       font-size: .65rem;
       font-weight: 800;
-      background: #fff0f5;
-      color: #d90052;
-      border: 1px solid #ffccd8;
+      background: #fdf2f1;
+      color: #8c2e2a;
+      border: 1px solid #f8b8b5;
       padding: 3px 10px;
       border-radius: 50px;
       text-transform: uppercase;
@@ -412,7 +416,7 @@
     .viral-dish-tag {
       font-size: .78rem;
       font-weight: 800;
-      color: #ff1a6e;
+      color: #E37C78;
       margin-bottom: 8px;
     }
 
@@ -432,15 +436,15 @@
     .finding-pill {
       font-size: .68rem;
       font-weight: 700;
-      background: #fff0f5;
-      color: #d90052;
+      background: #fdf2f1;
+      color: #8c2e2a;
       padding: 3px 9px;
       border-radius: 6px;
-      border: 1px solid #ffccd8;
+      border: 1px solid #f8b8b5;
     }
   </style>
 </head>
-<body>
+<body class="skincare-lime-theme">
   <!-- SIDEBAR -->
   <aside class="sb">
     <div class="sb-logo">
@@ -460,8 +464,8 @@
       <button class="sb-item" onclick="window.location.href='reviews.html'"><span class="sb-ico">&#11088;</span> Reviews</button>
 
       <div class="sb-group">COMMUNITY</div>
-      <button class="sb-item sb-red on"><span class="sb-ico">&#128680;</span> <span id="sb-complaint-label">Complain Issues</span> <span class="sb-badge red">Alert</span></button>
-      <button class="sb-item" onclick="window.OMWallet && window.OMWallet.open('food')"><span class="sb-ico">&#128179;</span> My Wallet</button>
+      <button class="sb-item sb-red on"><span class="sb-ico">&#128680;</span> <span id="sb-complaint-label">Fraud Pages</span> <span class="sb-badge red">Alert</span></button>
+      <button class="sb-item" onclick="window.OMWallet && window.OMWallet.open('skincare')"><span class="sb-ico">&#128179;</span> My Wallet</button>
       <button class="sb-item" onclick="window.OMBankCards && window.OMBankCards.open()"><span class="sb-ico">&#128179;</span> Bank Cards</button>
       <button class="sb-item" onclick="window.OMReferral && window.OMReferral.open()"><span class="sb-ico">&#127873;</span> Refer &amp; Earn</button>
     </nav>
@@ -471,10 +475,10 @@
   <div class="main">
     <div class="topbar">
       <div class="tb-title-group">
-        <div class="tb-page-title">Complain Issues &amp; Magistrate Raid Monitor</div>
+        <div class="tb-page-title">Skincare Fraud &amp; Fake Product Raids Monitor</div>
       </div>
       <div class="tb-actions">
-        <div class="tb-saved" onclick="window.location.href='saved-deals.html'">
+        <div class="tb-saved" onclick="window.location.href='saved-deals.html?cat=skincare'">
           &#10084; Saved (<span id="saved-deals-count">6</span>)
         </div>
         <div class="tb-user">
@@ -491,32 +495,28 @@
       <!-- Statistics Banner -->
       <div class="stats-banner">
         <div class="stat-box">
-          <div class="stat-val">৳8,80,000+</div>
-          <div class="stat-lbl">Total Fines &amp; Penalties</div>
+          <div class="stat-val">৳4,80,000+</div>
+          <div class="stat-lbl">Court Fines Imposed</div>
         </div>
-        <div class="stat-box" style="border-left:1px solid #7dd3fc;border-right:1px solid #7dd3fc">
-          <div class="stat-val">18 Raids</div>
-          <div class="stat-lbl">Outlets &amp; Fake Pages Inspected</div>
+        <div class="stat-box" style="border-left:1px solid #fbcfe8;border-right:1px solid #fbcfe8">
+          <div class="stat-val">12 Sellers</div>
+          <div class="stat-lbl">Fake Skincare Pages Confiscated</div>
         </div>
         <div class="stat-box">
-          <div class="stat-val">5 Sealed</div>
-          <div class="stat-lbl">Kitchens &amp; Scam Pages Blocked</div>
+          <div class="stat-val">4 Sealed</div>
+          <div class="stat-lbl">Illegal Warehouses Sealed</div>
         </div>
       </div>
 
       <!-- Filters & Complain Button -->
       <div class="filter-row">
         <div class="pills">
-          <button class="pill on" onclick="filterRaids('all', this)">All Fraud &amp; Raids</button>
-          <button class="pill" onclick="filterRaids('skincare', this)">💧 Fake Pages &amp; Products</button>
-          <button class="pill" onclick="filterRaids('food', this)">🍽️ Restaurant Raids</button>
-          <button class="pill" onclick="filterRaids('app', this)">📱 App &amp; General Issues</button>
-          <button class="pill" onclick="filterRaids('Dhanmondi', this)">Dhanmondi</button>
-          <button class="pill" onclick="filterRaids('Gulshan', this)">Gulshan</button>
-          <button class="pill" onclick="filterRaids('Banani', this)">Banani</button>
-          <button class="pill" onclick="filterRaids('Uttara', this)">Uttara</button>
+          <button class="pill on" onclick="filterSkincareRaids('all', this)">All Skincare Raids</button>
+          <button class="pill" onclick="filterSkincareRaids('confiscated', this)">Confiscated Stock</button>
+          <button class="pill" onclick="filterSkincareRaids('sealed', this)">Sealed Warehouses</button>
+          <button class="pill" onclick="filterSkincareRaids('serum', this)">Fake Serums &amp; Creams</button>
         </div>
-        <button class="btn-complain" onclick="openFoodSafetyModal()">+ File Complaint / Fraud Report</button>
+        <button class="btn-complain" onclick="openSkincareModal()">+ Report Fake Product / Fraud Page</button>
       </div>
 
       <!-- Cards Container -->
@@ -526,69 +526,59 @@
     </div>
   </div>
 
-  <!-- FILE COMPLAINT MODAL -->
-  <div id="modal-food-safety" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center;">
+  <!-- FILE SKINCARE FRAUD MODAL -->
+  <div id="modal-skincare-fraud" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center;">
     <div style="background:#fff;border-radius:20px;padding:1.8rem;width:90%;max-width:480px;box-shadow:0 10px 30px rgba(0,0,0,0.2)">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;">
-        <h3 style="font-size:1.1rem;font-weight:800;color:#111827">File Complaint or Report App / Fraud Issue</h3>
-        <button onclick="closeFoodSafetyModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#9ca3af">&times;</button>
+        <h3 style="font-size:1.1rem;font-weight:800;color:#111827">Report Fake Product or Fraud Page</h3>
+        <button onclick="closeSkincareModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#9ca3af">&times;</button>
       </div>
-      <form id="form-food-safety" onsubmit="submitFoodSafetyForm(event)">
+      <form id="form-skincare-fraud" onsubmit="submitSkincareForm(event)">
         <div style="margin-bottom:1rem">
-          <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:4px">Complaint Type Category *</label>
-          <select id="fs-input-type" style="width:100%;padding:.6rem 1rem;border:1px solid #e2e8f0;border-radius:10px;outline:none;font-size:.85rem">
-            <option value="raid">🚨 Fraud &amp; Magistrate Raid Report (Fake Pages / Restaurant)</option>
-            <option value="app">📱 OfferMatrix App Technical Bug / General Issue</option>
-          </select>
-        </div>
-        <div style="margin-bottom:1rem">
-          <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:4px">Target Entity / App Feature Name *</label>
-          <input id="fs-input-name" type="text" required placeholder="e.g. Sultan's Kacchi / bKash Promo / Login Page" style="width:100%;padding:.6rem 1rem;border:1px solid #e2e8f0;border-radius:10px;outline:none;font-size:.85rem"/>
+          <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:4px">Brand / Scam Page Name</label>
+          <input id="sk-input-name" type="text" required placeholder="e.g. CosmoCare BD / Shajgoj Fake Seller" style="width:100%;padding:.6rem 1rem;border:1px solid #e2e8f0;border-radius:10px;outline:none;font-size:.85rem"/>
         </div>
         <div style="display:flex;gap:1rem;margin-bottom:1rem">
           <div style="flex:1">
-            <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:4px">Location / Social / App Section</label>
-            <input id="fs-input-branch" type="text" required placeholder="e.g. Dhanmondi / Mobile App v4.2" style="width:100%;padding:.6rem 1rem;border:1px solid #e2e8f0;border-radius:10px;outline:none;font-size:.85rem"/>
+            <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:4px">Website / Social Page Link</label>
+            <input id="sk-input-link" type="text" required placeholder="e.g. fb.com/scampage" style="width:100%;padding:.6rem 1rem;border:1px solid #e2e8f0;border-radius:10px;outline:none;font-size:.85rem"/>
           </div>
           <div style="flex:1">
-            <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:4px">Item / Feature Reference</label>
-            <input id="fs-input-dish" type="text" required placeholder="e.g. Biryani / Code BKASH2026" style="width:100%;padding:.6rem 1rem;border:1px solid #e2e8f0;border-radius:10px;outline:none;font-size:.85rem"/>
+            <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:4px">Fake Skincare Item</label>
+            <input id="sk-input-product" type="text" required placeholder="e.g. Counterfeit CeraVe / Sunscreen" style="width:100%;padding:.6rem 1rem;border:1px solid #e2e8f0;border-radius:10px;outline:none;font-size:.85rem"/>
           </div>
         </div>
         <div style="margin-bottom:1rem">
-          <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:4px">Issue Description &amp; Details *</label>
-          <textarea id="fs-input-desc" required rows="3" placeholder="Describe unhygienic practices, counterfeit products, or app technical bugs/glitches experienced..." style="width:100%;padding:.6rem 1rem;border:1px solid #e2e8f0;border-radius:10px;outline:none;font-size:.85rem;resize:none"></textarea>
+          <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:4px">Violations &amp; Chemical Concerns</label>
+          <textarea id="sk-input-desc" required rows="3" placeholder="Describe relabeled manufacturing dates, toxic ingredients, missing BSTI seals..." style="width:100%;padding:.6rem 1rem;border:1px solid #e2e8f0;border-radius:10px;outline:none;font-size:.85rem;resize:none"></textarea>
         </div>
         <div style="margin-bottom:1.4rem">
-          <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:4px">Image / Evidence Proof Attachment</label>
-          <input type="file" accept="image/*,video/*" style="width:100%;font-size:.85rem;color:#475569"/>
+          <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:4px">Image / Packaging Proof Attachment</label>
+          <input type="file" accept="image/*" style="width:100%;font-size:.85rem;color:#475569"/>
         </div>
-        <button type="submit" style="width:100%;padding:.75rem;font-size:.9rem;background:#ff1a6e;color:#fff;border:none;border-radius:50px;font-weight:800;cursor:pointer" id="fs-btn-submit">Submit Complaint Issue Report</button>
+        <button type="submit" style="width:100%;padding:.75rem;font-size:.9rem;background:#be185d;color:#fff;border:none;border-radius:50px;font-weight:800;cursor:pointer">Submit Skincare Fraud Report</button>
       </form>
     </div>
   </div>
 
   <script>
-    var currentActiveFilter = 'all';
+    var currentSkincareFilter = 'all';
 
-    function renderRaids() {
+    function renderSkincareRaids() {
       const container = document.getElementById('raids-container');
       if (!container || !window.OMStore) return;
 
-      const list = window.OMStore.getAllFraudAndRaids();
+      const list = window.OMStore.getSkincareFraud() || [];
       const filtered = list.filter(item => {
-        if (currentActiveFilter === 'all') return true;
-        if (currentActiveFilter === 'skincare') return item.category === 'skincare';
-        if (currentActiveFilter === 'food') return item.category === 'food';
-        if (currentActiveFilter === 'app') return item.category === 'app';
-        const searchText = (item.name + ' ' + item.subName + ' ' + item.subtitle + ' ' + item.magistrate).toLowerCase();
-        return searchText.includes(currentActiveFilter.toLowerCase());
+        if (currentSkincareFilter === 'all') return true;
+        const text = (item.brandName + ' ' + item.violations + ' ' + (item.confiscatedProducts || []).join(' ') + ' ' + item.operationalStatus).toLowerCase();
+        return text.includes(currentSkincareFilter.toLowerCase());
       });
 
       if (filtered.length === 0) {
         container.innerHTML = `<div style="text-align:center;padding:3rem;background:#fff;border-radius:20px;border:1px solid #fbcfe8;color:var(--mid)">
-          <div style="font-size:2rem;margin-bottom:8px">🚨</div>
-          <div style="font-weight:800;font-size:1rem">No Magistrate Raids or Fraud Reports Found</div>
+          <div style="font-size:2rem;margin-bottom:8px">💧</div>
+          <div style="font-weight:800;font-size:1rem">No Skincare Product Raids Found</div>
           <div style="font-size:.8rem;color:var(--light)">Try selecting a different filter category above.</div>
         </div>`;
         return;
@@ -596,100 +586,69 @@
 
       container.innerHTML = filtered.map(item => `
         <div class="raid-card" style="position:relative">
-          <img class="raid-img" src="${item.img}" alt="${item.name}"/>
+          <img class="raid-img" src="${item.img}" alt="${item.brandName}"/>
           <div class="raid-info">
             <div class="card-top">
-              <span class="status-badge">&#128680; ${item.badgeLabel} &bull; ${item.status.toUpperCase()}</span>
+              <span class="status-badge">&#128680; FAKE PAGE RAID &bull; ${item.operationalStatus.toUpperCase()}</span>
               <span class="raid-date">&#128197; Raid Date: ${item.date}</span>
             </div>
-            <h3 class="restaurant-name">${item.name} <span style="font-size:.85rem;color:var(--mid);font-weight:700">(${item.subName})</span></h3>
-            <div class="viral-dish-tag">${item.subtitle}</div>
-            <div class="violation-details" style="background:#fff5f8;padding:.8rem 1rem;border-radius:12px;margin:.6rem 0;border:1px solid #fbcfe8;">
-              <div style="margin-bottom:4px"><b>&#9878; Magistrate Report:</b> ${item.magistrate}</div>
+            <h3 class="restaurant-name">${item.brandName} <span style="font-size:.85rem;color:var(--mid);font-weight:700">(${item.socialWebLinks})</span></h3>
+            <div class="viral-dish-tag">Violations: ${item.violations}</div>
+            <div class="violation-details" style="background:#fdf2f1;padding:.8rem 1rem;border-radius:12px;margin:.6rem 0;border:1px solid #f8b8b5;">
+              <div style="margin-bottom:4px"><b>&#9878; Magistrate Raid Unit:</b> ${item.magistrateDetails}</div>
               <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
                 <b>&#128176; Penalty Fine:</b> 
-                <span style="color:#be185d;font-weight:900;font-size:.9rem;background:#fce7f3;padding:2px 10px;border-radius:6px;border:1px solid #fbcfe8;display:inline-block">
-                  ${item.penalty}
+                <span style="color:#8c2e2a;font-weight:900;font-size:.9rem;background:#fdf2f1;padding:2px 10px;border-radius:6px;border:1px solid #f8b8b5;display:inline-block">
+                  ${item.penaltyFine}
                 </span>
               </div>
             </div>
             <div class="findings-pills">
-              ${(item.findings || []).map(f => `<span class="finding-pill">&bull; ${f}</span>`).join('')}
+              ${(item.confiscatedProducts || []).map(p => `<span class="finding-pill">&bull; Confiscated: ${p}</span>`).join('')}
             </div>
           </div>
         </div>
       `).join('');
     }
 
-    function filterRaids(filterVal, btn) {
-      currentActiveFilter = filterVal;
+    function filterSkincareRaids(filterVal, btn) {
+      currentSkincareFilter = filterVal;
       document.querySelectorAll('.pills .pill').forEach(b => b.classList.remove('on'));
       if (btn) btn.classList.add('on');
-      renderRaids();
+      renderSkincareRaids();
     }
 
-    function openFoodSafetyModal() {
-      document.getElementById('modal-food-safety').style.display = 'flex';
+    function openSkincareModal() {
+      document.getElementById('modal-skincare-fraud').style.display = 'flex';
     }
 
-    function closeFoodSafetyModal() {
-      document.getElementById('modal-food-safety').style.display = 'none';
+    function closeSkincareModal() {
+      document.getElementById('modal-skincare-fraud').style.display = 'none';
     }
 
-    function submitFoodSafetyForm(e) {
+    function submitSkincareForm(e) {
       e.preventDefault();
-      const type = document.getElementById('fs-input-type').value;
-      const name = document.getElementById('fs-input-name').value;
-      const branch = document.getElementById('fs-input-branch').value;
-      const dish = document.getElementById('fs-input-dish').value;
-      const desc = document.getElementById('fs-input-desc').value;
+      const brandName = document.getElementById('sk-input-name').value;
+      const socialWebLinks = document.getElementById('sk-input-link').value;
+      const productName = document.getElementById('sk-input-product').value;
+      const violations = document.getElementById('sk-input-desc').value;
 
       if (window.OMStore) {
-        if (type === 'app') {
-          window.OMStore.raiseSupportTicket({
-            issueCategory: 'OfferMatrix App & General Issue',
-            promoCode: dish || 'OfferMatrix Mobile App',
-            headline: name,
-            details: desc,
-            img: 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=300'
-          });
-          currentActiveFilter = 'app';
-          document.querySelectorAll('.pills .pill').forEach(b => {
-            b.classList.toggle('on', b.textContent.includes('App & General'));
-          });
-          alert('🎉 App Technical / General Issue Ticket Submitted Successfully!\n\nOfferMatrix Product & Engineering Support has received your report.');
-        } else {
-          window.OMStore.fileFoodSafetyComplain({
-            restaurantName: name,
-            branchLocation: branch,
-            viralFoodItem: dish,
-            findings: [desc]
-          });
-          alert('Report submitted successfully! Mobile court inspectors notified.');
-        }
-        closeFoodSafetyModal();
-        document.getElementById('form-food-safety').reset();
-        renderRaids();
+        window.OMStore.submitFakeProductReport({
+          brandName,
+          socialWebLinks,
+          confiscatedProducts: [productName],
+          violations
+        });
+        closeSkincareModal();
+        document.getElementById('form-skincare-fraud').reset();
+        renderSkincareRaids();
+        alert('Skincare fraud report submitted successfully! Legal cell & mobile court inspectors notified.');
       }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      var params = new URLSearchParams(window.location.search);
-      var catParam = params.get('cat');
-      if (catParam === 'skincare' || catParam === 'fraud') {
-        currentActiveFilter = 'skincare';
-        document.querySelectorAll('.pills .pill').forEach(b => {
-          if (b.textContent.includes('Fake Pages')) b.classList.add('on');
-          else b.classList.remove('on');
-        });
-      } else if (catParam === 'food') {
-        currentActiveFilter = 'food';
-        document.querySelectorAll('.pills .pill').forEach(b => {
-          if (b.textContent.includes('Restaurant')) b.classList.add('on');
-          else b.classList.remove('on');
-        });
-      }
-      renderRaids();
+      renderSkincareRaids();
       if (window.OMStore) {
         window.OMStore.updateBadges();
         const savedCount = window.OMStore.getSavedDeals().length;

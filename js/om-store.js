@@ -401,6 +401,105 @@
             date: 'Yesterday'
           }
         ]
+      },
+      {
+        id: 'rev-3',
+        userName: 'Nusrat Jahan',
+        userAvatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100',
+        itemTitle: 'CeraVe Foaming Cleanser 473ml',
+        appName: 'Beautybooth BD',
+        category: 'skincare',
+        rating: 4.9,
+        sentiment: 'best',
+        title: 'Genuine Imported Formula & Fast 2-Day Delivery!',
+        reviewText: 'Scanned the barcode and verified the authentic batch code. Cleared my oily breakout in 2 weeks! Got ৳350 discount using OfferMatrix promo code SKINCARE20.',
+        pros: ['Authentic BSTI Batch Code', 'Non-Drying Cleanser', 'Fast Delivery'],
+        cons: ['Pump bottle lock was slightly tight on arrival'],
+        upvotes: 38,
+        date: '3 hours ago',
+        replies: [
+          {
+            id: 'rep-3',
+            userName: 'Setu Meherunnesa',
+            text: 'CeraVe Foaming Cleanser is an absolute holy grail for oily skin!',
+            date: '2 hours ago'
+          }
+        ]
+      },
+      {
+        id: 'rev-4',
+        userName: 'Ayesha Siddiqua',
+        userAvatar: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=100',
+        itemTitle: 'COSRX Snail Mucin 96 Essence',
+        appName: 'Shajgoj',
+        category: 'skincare',
+        rating: 5.0,
+        sentiment: 'best',
+        title: 'Unbelievable Hydration & Glass Skin Glow!',
+        reviewText: 'My skin barrier feels completely repaired! Ordered during Shajgoj Super Sale with Nagad cashback. Soothing texture and instant glow.',
+        pros: ['Deep Hydration', 'Glass Skin Finish', 'Nagad Cashback Applied'],
+        cons: ['Tacky texture for first 60 seconds'],
+        upvotes: 52,
+        date: 'Yesterday',
+        replies: []
+      },
+      {
+        id: 'rev-5',
+        userName: 'Mahmudul Hasan',
+        userAvatar: 'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=100',
+        itemTitle: 'Chillox Cheesy Beef Smash Burger',
+        appName: 'Pathao Food',
+        category: 'food',
+        rating: 4.8,
+        sentiment: 'best',
+        title: 'Juicy Double Patty & 30% Off Pathao Promo!',
+        reviewText: 'Steaming hot beef burger delivered within 25 mins in Uttara. Double cheese smash patty was so juicy. Used code PATHAOFOOD30.',
+        pros: ['Hot & Fresh Delivery', 'Juicy Double Patty', 'Great Discount'],
+        cons: ['French fries were slightly soft'],
+        upvotes: 19,
+        date: '1 day ago',
+        replies: []
+      },
+      {
+        id: 'rev-6',
+        userName: 'Shahriar Hossain',
+        userAvatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=100',
+        itemTitle: 'Pathao Bike Rush Hour Ride',
+        appName: 'Pathao Rides',
+        category: 'ride',
+        rating: 4.7,
+        sentiment: 'best',
+        title: 'Bypassed Gulshan Traffic Jam in 15 Minutes!',
+        reviewText: 'Rider provided a clean sanitized helmet, drove very safely through evening peak hour traffic from Banani to Motijheel. Fare was ৳120 net after promo.',
+        pros: ['Clean Helmet Provided', 'Punctual & Safe Driver', 'Beat Rush Hour'],
+        cons: ['App GPS recalibrated once near Mohakhali'],
+        upvotes: 31,
+        date: '2 days ago',
+        replies: []
+      },
+      {
+        id: 'rev-7',
+        userName: 'Farhana Akhtar',
+        userAvatar: 'https://images.pexels.com/photos/3762879/pexels-photo-3762879.jpeg?auto=compress&cs=tinysrgb&w=100',
+        itemTitle: 'Fake Sunscreen Cream (Unverified Seller)',
+        appName: 'Social Scam Shop',
+        category: 'skincare',
+        rating: 1.0,
+        sentiment: 'worst',
+        title: 'Fake Relabeled Expiry Date & Severe Skin Rash Warning!',
+        reviewText: 'Bought from an unverified Facebook shop claiming 70% off. Product caused redness and had a pungent chemical odor. Reported to OfferMatrix Legal & Magistrate Raid Team!',
+        pros: ['None'],
+        cons: ['Fake Relabeled Expiry', 'Toxic Chemical Smell', 'Severe Skin Irritation'],
+        upvotes: 64,
+        date: '3 days ago',
+        replies: [
+          {
+            id: 'rep-4',
+            userName: 'OfferMatrix Legal Cell',
+            text: 'Thank you for reporting. This shop has been flagged on our Fraud Pages monitor and escalated to DNCC Mobile Court.',
+            date: '2 days ago'
+          }
+        ]
       }
     ],
     // ── FOOD ITEMS WITH MULTI-APP PRICING ──
@@ -508,6 +607,30 @@
         operationalStatus: 'Sealed & Page Admin Arrested',
         date: '20 Aug 2026',
         img: 'https://images.pexels.com/photos/3685530/pexels-photo-3685530.jpeg?auto=compress&cs=tinysrgb&w=400'
+      },
+      {
+        id: 'sk-frd-3',
+        brandName: 'Glow Skin BD (Fake Online Shop)',
+        socialWebLinks: 'glowskinbd.shop | fb.com/glowskinbd',
+        confiscatedProducts: ['200 Containers Counterfeit Sunblock', 'Toxic Bleaching Cream Batch #409'],
+        violations: 'Selling illegal mercury-laden whitening creams with forged BSTI seals',
+        magistrateDetails: 'RAB Mobile Court Raid led by Executive Magistrate',
+        penaltyFine: '৳1,50,000 Fine & Page Blocked',
+        operationalStatus: 'Sealed & Operator Fined',
+        date: '28 Aug 2026',
+        img: 'https://images.pexels.com/photos/3373736/pexels-photo-3373736.jpeg?auto=compress&cs=tinysrgb&w=400'
+      },
+      {
+        id: 'sk-frd-4',
+        brandName: 'K-Glam Bangladesh (Scam Facebook Page)',
+        socialWebLinks: 'fb.com/kglambangladesh',
+        confiscatedProducts: ['350 Fake Korean Serums & Toners', 'Expired Unlabeled Bottles'],
+        violations: 'Distributing fake imported skincare products without import license',
+        magistrateDetails: 'BSTI & DNCC Joint Mobile Court Raid',
+        penaltyFine: '৳80,000 Court Penalty',
+        operationalStatus: 'Stock Confiscated & Fined',
+        date: '15 Aug 2026',
+        img: 'https://images.pexels.com/photos/3762879/pexels-photo-3762879.jpeg?auto=compress&cs=tinysrgb&w=400'
       }
     ],
 
@@ -637,13 +760,19 @@
         const stored = localStorage.getItem(STORE_KEY);
         if (stored) {
           const parsed = JSON.parse(stored);
+          let loadedReviews = parsed.reviews || defaultState.reviews;
+          (defaultState.reviews || []).forEach(defR => {
+            if (!loadedReviews.some(r => r.id === defR.id)) {
+              loadedReviews.push(defR);
+            }
+          });
           return {
             user: { ...defaultState.user, ...(parsed.user || {}) },
             savedDeals: parsed.savedDeals || defaultState.savedDeals,
             priceAlerts: parsed.priceAlerts || defaultState.priceAlerts,
             orders: parsed.orders || defaultState.orders,
             coupons: parsed.coupons || defaultState.coupons,
-            reviews: parsed.reviews || defaultState.reviews,
+            reviews: loadedReviews,
             skincareFraud: parsed.skincareFraud || defaultState.skincareFraud,
             foodRaids: parsed.foodRaids || defaultState.foodRaids,
             rideComplaints: parsed.rideComplaints || defaultState.rideComplaints,
@@ -888,6 +1017,55 @@
       return this.state.skincareFraud || defaultState.skincareFraud;
     }
 
+    getAllFraudAndRaids() {
+      const food = (this.getFoodRaids() || []).map(r => ({
+        id: r.id,
+        category: 'food',
+        name: r.restaurantName,
+        subName: r.branchLocation,
+        subtitle: 'Viral Dish: ' + (r.viralFoodItem || 'Featured Food Item'),
+        magistrate: r.magistrateReport || 'Executive Magistrate Mobile Court Raid',
+        penalty: r.fineAmount || 'Penalty Fine Imposed',
+        status: r.closureNotice || 'Inspection Completed',
+        date: r.date || 'Recent Raid',
+        img: r.img,
+        findings: r.inspectionFindings || [],
+        badgeLabel: 'RESTAURANT RAID'
+      }));
+
+      const skincare = (this.getSkincareFraud() || []).map(s => ({
+        id: s.id,
+        category: 'skincare',
+        name: s.brandName,
+        subName: s.socialWebLinks,
+        subtitle: 'Violations: ' + (s.violations || 'Counterfeit Skincare Products'),
+        magistrate: s.magistrateDetails || 'Executive Mobile Court Unit',
+        penalty: s.penaltyFine || 'Court Fine Imposed',
+        status: s.operationalStatus || 'Confiscated & Fined',
+        date: s.date || 'Recent Raid',
+        img: s.img,
+        findings: s.confiscatedProducts || [],
+        badgeLabel: 'FAKE PAGE RAID'
+      }));
+
+      const app = (this.getDashboardIssues() || []).map(a => ({
+        id: a.id,
+        category: 'app',
+        name: a.headline || 'App Technical & General Problem',
+        subName: 'Issue Category: ' + (a.issueCategory || 'App Technical / General Issue'),
+        subtitle: 'Promo / Feature Ref: ' + (a.promoCode || 'OfferMatrix Mobile App'),
+        magistrate: 'OfferMatrix Product & Engineering Support',
+        penalty: a.trackerStatus || 'Under Investigation',
+        status: a.trackerStatus || 'Investigating',
+        date: a.date || 'Recent Issue',
+        img: a.img || 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=400',
+        findings: Array.isArray(a.details) ? a.details : [a.details || 'User submitted general app feedback.'],
+        badgeLabel: 'APP TECHNICAL ISSUE'
+      }));
+
+      return [...app, ...skincare, ...food];
+    }
+
     submitFakeProductReport(data) {
       const newReport = {
         id: 'sk-frd-' + Date.now(),
@@ -1068,7 +1246,160 @@
       });
     }
 
+    injectLimeThemeStyles() {
+      if (document.getElementById('om-skincare-lime-styles')) return;
+      const styleEl = document.createElement('style');
+      styleEl.id = 'om-skincare-lime-styles';
+      styleEl.textContent = `
+        body.skincare-lime-theme {
+          --pink: #E37C78 !important;
+          --pink-light: #fdf2f1 !important;
+          --pink-dark: #b84541 !important;
+          --red: #E37C78 !important;
+        }
+
+        body.skincare-lime-theme .sb-item.on {
+          background: #E37C78 !important;
+          color: #ffffff !important;
+        }
+
+        body.skincare-lime-theme .sb-item.on .sb-ico {
+          color: #ffffff !important;
+        }
+
+        body.skincare-lime-theme .sb-item:hover {
+          color: #b84541 !important;
+        }
+
+        body.skincare-lime-theme .sb-item.sb-red.on {
+          background: #E37C78 !important;
+          color: #ffffff !important;
+        }
+
+        body.skincare-lime-theme .sb-badge.red,
+        body.skincare-lime-theme .sb-badge {
+          background: #fdf2f1 !important;
+          color: #8c2e2a !important;
+          border-color: #E37C78 !important;
+        }
+
+        body.skincare-lime-theme .sb-logo-icon,
+        body.skincare-lime-theme .sd-tab-pill.active,
+        body.skincare-lime-theme .pa-tab-pill.active,
+        body.skincare-lime-theme .cpn-tab-pill.active,
+        body.skincare-lime-theme .rev-tab.active,
+        body.skincare-lime-theme .pill.on,
+        body.skincare-lime-theme .filter-tab.active,
+        body.skincare-lime-theme .rtab.on,
+        body.skincare-lime-theme .btn-action,
+        body.skincare-lime-theme .btn-grab,
+        body.skincare-lime-theme .btn-copy-code,
+        body.skincare-lime-theme .btn-complain,
+        body.skincare-lime-theme .btn-use,
+        body.skincare-lime-theme .btn-report,
+        body.skincare-lime-theme .btn-invite,
+        body.skincare-lime-theme .btn-file-complaint,
+        body.skincare-lime-theme .w-tab-btn.active {
+          background: #E37C78 !important;
+          color: #ffffff !important;
+          border-color: #E37C78 !important;
+          box-shadow: 0 4px 14px rgba(227, 124, 120, 0.35) !important;
+        }
+
+        body.skincare-lime-theme .tb-saved {
+          border-color: #f8b8b5 !important;
+          color: #8c2e2a !important;
+          background: #fdf2f1 !important;
+        }
+
+        body.skincare-lime-theme .sd-stats-banner,
+        body.skincare-lime-theme .stats-banner,
+        body.skincare-lime-theme .fraud-banner,
+        body.skincare-lime-theme .stats-row .stat-card,
+        body.skincare-lime-theme .w-hero-card {
+          background: linear-gradient(135deg, #fdf2f1 0%, #ffffff 100%) !important;
+          border-color: #f8b8b5 !important;
+          color: #111827 !important;
+        }
+
+        body.skincare-lime-theme .w-hero-card .w-hc-lbl {
+          color: #8c2e2a !important;
+          font-weight: 800 !important;
+        }
+
+        body.skincare-lime-theme .w-hero-card .w-hc-val,
+        body.skincare-lime-theme .w-hero-card .w-hci-val {
+          color: #8c2e2a !important;
+          font-weight: 900 !important;
+        }
+
+        body.skincare-lime-theme .w-hero-card .w-hc-grid {
+          background: rgba(255, 255, 255, 0.85) !important;
+          border: 1px solid #f8b8b5 !important;
+        }
+
+        body.skincare-lime-theme .w-hero-card .w-hci-lbl {
+          color: #475569 !important;
+          font-weight: 800 !important;
+        }
+
+        body.skincare-lime-theme #w-hc-count-badge {
+          color: #8c2e2a !important;
+          background: #ffffff !important;
+          border: 1px solid #f8b8b5 !important;
+        }
+
+        body.skincare-lime-theme .sds-val,
+        body.skincare-lime-theme .stat-val,
+        body.skincare-lime-theme .sd-title span,
+        body.skincare-lime-theme .stat-lbl,
+        body.skincare-lime-theme .viral-dish-tag,
+        body.skincare-lime-theme .trend-name {
+          color: #8c2e2a !important;
+        }
+
+        body.skincare-lime-theme .cat-skincare,
+        body.skincare-lime-theme .status-badge,
+        body.skincare-lime-theme .finding-pill {
+          background: #fdf2f1 !important;
+          color: #8c2e2a !important;
+          border-color: #f8b8b5 !important;
+        }
+
+        body.skincare-lime-theme .heart-btn {
+          color: #E37C78 !important;
+        }
+      `;
+      document.head.appendChild(styleEl);
+    }
+
+    injectGlobalNoDoubleScrollbarStyle() {
+      if (document.getElementById('om-global-noscrollbar-style')) return;
+      const styleEl = document.createElement('style');
+      styleEl.id = 'om-global-noscrollbar-style';
+      styleEl.textContent = `
+        /* Remove double scrollbars & duplicate grey scrollbar tracks */
+        html, body, .main, .content, .sb, aside, div, iframe {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        ::-webkit-scrollbar {
+          width: 0px !important;
+          height: 0px !important;
+          display: none !important;
+        }
+        ::-webkit-scrollbar-track,
+        ::-webkit-scrollbar-thumb {
+          background: transparent !important;
+          border: none !important;
+          display: none !important;
+        }
+      `;
+      document.head.appendChild(styleEl);
+    }
+
     applySkyThemeIfFood() {
+      this.injectGlobalNoDoubleScrollbarStyle();
       const urlParams = new URLSearchParams(window.location.search);
       const cat = urlParams.get('cat');
       const tab = urlParams.get('tab');
@@ -1081,11 +1412,34 @@
     }
 
     syncSkySidebarLinks() {
+      this.injectLimeThemeStyles();
       const p = new URLSearchParams(window.location.search);
-      const isRide = document.body.classList.contains('ride-theme') || p.get('cat') === 'ride' || p.get('tab') === 'ride' || window.location.pathname.toLowerCase().includes('ride');
-      const isSky = document.body.classList.contains('food-sky-theme') || p.get('cat') === 'food' || p.get('tab') === 'food';
+      let urlCat = p.get('cat') || p.get('tab');
 
-      if (isRide) {
+      if (window.location.pathname.toLowerCase().includes('skincare.html') || window.location.pathname.toLowerCase().includes('fraud-pages.html')) {
+        urlCat = 'skincare';
+        localStorage.setItem('om_active_category', 'skincare');
+      }
+
+      let activeCat = urlCat;
+      if (!activeCat) {
+        activeCat = localStorage.getItem('om_active_category') || '';
+      } else {
+        localStorage.setItem('om_active_category', activeCat);
+      }
+
+      const isSkincare = (activeCat === 'skincare');
+      const isRide = (activeCat === 'ride') || document.body.classList.contains('ride-theme') || window.location.pathname.toLowerCase().includes('ride');
+      const isFood = (activeCat === 'food') || document.body.classList.contains('food-sky-theme');
+
+      if (isSkincare) {
+        document.body.classList.add('skincare-lime-theme');
+        document.body.classList.remove('food-sky-theme', 'ride-theme');
+      } else {
+        document.body.classList.remove('skincare-lime-theme');
+      }
+
+      if (isRide && !isSkincare) {
         document.body.classList.add('ride-theme');
       }
 
@@ -1093,7 +1447,17 @@
       const complaintBtn = document.getElementById('sb-complaints-btn') || document.querySelector('.sb-item.sb-red');
       const complaintLabel = document.getElementById('sb-complaint-label');
 
-      if (isRide) {
+      if (isSkincare) {
+        if (complaintLabel) {
+          complaintLabel.textContent = 'Fraud Pages';
+        } else if (complaintBtn) {
+          const ico = complaintBtn.querySelector('.sb-ico');
+          const badge = complaintBtn.querySelector('.sb-badge');
+          const icoHtml = ico ? ico.outerHTML : '<span class="sb-ico">&#128680;</span>';
+          const badgeHtml = badge ? badge.outerHTML : '<span class="sb-badge red">Alert</span>';
+          complaintBtn.innerHTML = `${icoHtml} <span id="sb-complaint-label">Fraud Pages</span> ${badgeHtml}`;
+        }
+      } else if (isRide) {
         if (complaintLabel) {
           complaintLabel.textContent = 'Ride complain';
         } else if (complaintBtn) {
@@ -1103,7 +1467,7 @@
           const badgeHtml = badge ? badge.outerHTML : '<span class="sb-badge red">Alert</span>';
           complaintBtn.innerHTML = `${icoHtml} <span id="sb-complaint-label">Ride complain</span> ${badgeHtml}`;
         }
-      } else if (isSky) {
+      } else if (isFood) {
         if (complaintLabel) {
           complaintLabel.textContent = 'Viral Restaurant Raid';
         } else if (complaintBtn) {
@@ -1113,20 +1477,67 @@
           const badgeHtml = badge ? badge.outerHTML : '<span class="sb-badge red">Alert</span>';
           complaintBtn.innerHTML = `${icoHtml} <span id="sb-complaint-label">Viral Restaurant Raid</span> ${badgeHtml}`;
         }
+      } else {
+        if (complaintLabel) {
+          complaintLabel.textContent = 'Complain Issues';
+        } else if (complaintBtn) {
+          const ico = complaintBtn.querySelector('.sb-ico');
+          const badge = complaintBtn.querySelector('.sb-badge');
+          const icoHtml = ico ? ico.outerHTML : '<span class="sb-ico">&#128680;</span>';
+          const badgeHtml = badge ? badge.outerHTML : '<span class="sb-badge red">Alert</span>';
+          complaintBtn.innerHTML = `${icoHtml} <span id="sb-complaint-label">Complain Issues</span> ${badgeHtml}`;
+        }
       }
 
       sbItems.forEach(item => {
         const text = item.textContent.toLowerCase();
-        if (text.includes('wallet')) {
+        if (text.includes('ride complain') || text.includes('viral restaurant raid') || text.includes('complain issues') || text.includes('fraud pages') || text.includes('fraud')) {
           item.onclick = (e) => {
             e.preventDefault();
-            const cat = isRide ? 'ride' : (isSky ? 'food' : '');
+            if (isSkincare) {
+              window.location.href = 'fraud-pages.html';
+            } else if (isRide) {
+              window.location.href = 'ride-complaints.html';
+            } else if (isFood) {
+              window.location.href = 'viral-restaurant-raid.html?cat=food';
+            } else {
+              window.location.href = 'viral-restaurant-raid.html';
+            }
+          };
+        } else if (text.includes('dashboard')) {
+          item.onclick = (e) => {
+            e.preventDefault();
+            localStorage.setItem('om_active_category', 'all');
+            window.location.href = 'dashboard.html';
+          };
+        } else if (text.includes('food')) {
+          item.onclick = (e) => {
+            e.preventDefault();
+            localStorage.setItem('om_active_category', 'food');
+            window.location.href = 'dashboard.html?tab=food';
+          };
+        } else if (text.includes('ride')) {
+          item.onclick = (e) => {
+            e.preventDefault();
+            localStorage.setItem('om_active_category', 'ride');
+            window.location.href = 'dashboard.html?tab=ride';
+          };
+        } else if (text.includes('skincare')) {
+          item.onclick = (e) => {
+            e.preventDefault();
+            localStorage.setItem('om_active_category', 'skincare');
+            window.location.href = 'skincare.html';
+          };
+        } else if (text.includes('wallet')) {
+          item.onclick = (e) => {
+            e.preventDefault();
+            const cat = isSkincare ? 'skincare' : (isRide ? 'ride' : (isFood ? 'food' : ''));
             window.location.href = cat ? 'wallet.html?cat=' + cat : 'wallet.html';
           };
         } else if (text.includes('bank cards')) {
           item.onclick = (e) => {
             e.preventDefault();
-            const cat = isRide ? 'ride' : '';
+            const cat = isSkincare ? 'skincare' : (isRide ? 'ride' : '');
             window.location.href = cat ? 'bank-cards.html?cat=' + cat : 'bank-cards.html';
           };
         } else if (text.includes('refer')) {
@@ -1135,34 +1546,35 @@
             if (window.OMReferral) window.OMReferral.open();
           };
         } else if (text.includes('orders')) {
-          item.onclick = (e) => { e.preventDefault(); window.location.href = isRide ? 'orders.html?cat=ride' : (isSky ? 'orders.html?cat=food' : 'orders.html'); };
-        } else if (text.includes('saved deals')) {
-          item.onclick = (e) => { e.preventDefault(); window.location.href = isRide ? 'saved-deals.html?cat=ride' : (isSky ? 'saved-deals.html?cat=food' : 'saved-deals.html'); };
-        } else if (text.includes('price alerts')) {
-          item.onclick = (e) => { e.preventDefault(); window.location.href = isRide ? 'price-alerts.html?cat=ride' : (isSky ? 'price-alerts.html?cat=food' : 'price-alerts.html'); };
-        } else if (text.includes('coupons')) {
-          item.onclick = (e) => { e.preventDefault(); window.location.href = isRide ? 'coupons.html?cat=ride' : (isSky ? 'coupons.html?cat=food' : 'coupons.html'); };
-        } else if (text.includes('reviews')) {
-          item.onclick = (e) => { e.preventDefault(); window.location.href = isRide ? 'reviews.html?cat=ride' : (isSky ? 'reviews.html?cat=food' : 'reviews.html'); };
-        } else if (text.includes('viral restaurant raid') || text.includes('complain issues') || text.includes('ride complain')) {
           item.onclick = (e) => {
             e.preventDefault();
-            if (isRide) {
-              window.location.href = 'ride-complaints.html';
-            } else if (isSky) {
-              window.location.href = 'viral-restaurant-raid.html?cat=food';
-            } else {
-              window.location.href = 'complaints.html';
-            }
+            const cat = isSkincare ? 'skincare' : (isRide ? 'ride' : (isFood ? 'food' : ''));
+            window.location.href = cat ? 'orders.html?cat=' + cat : 'orders.html';
           };
-        } else if (text.includes('dashboard')) {
-          item.onclick = (e) => { e.preventDefault(); window.location.href = 'dashboard.html'; };
-        } else if (text.includes('food')) {
-          item.onclick = (e) => { e.preventDefault(); window.location.href = 'dashboard.html?tab=food'; };
-        } else if (text.includes('ride')) {
-          item.onclick = (e) => { e.preventDefault(); window.location.href = 'dashboard.html?tab=ride'; };
-        } else if (text.includes('skincare')) {
-          item.onclick = (e) => { e.preventDefault(); window.location.href = 'skincare.html'; };
+        } else if (text.includes('saved deals')) {
+          item.onclick = (e) => {
+            e.preventDefault();
+            const cat = isSkincare ? 'skincare' : (isRide ? 'ride' : (isFood ? 'food' : ''));
+            window.location.href = cat ? 'saved-deals.html?cat=' + cat : 'saved-deals.html';
+          };
+        } else if (text.includes('price alerts')) {
+          item.onclick = (e) => {
+            e.preventDefault();
+            const cat = isSkincare ? 'skincare' : (isRide ? 'ride' : (isFood ? 'food' : ''));
+            window.location.href = cat ? 'price-alerts.html?cat=' + cat : 'price-alerts.html';
+          };
+        } else if (text.includes('coupons')) {
+          item.onclick = (e) => {
+            e.preventDefault();
+            const cat = isSkincare ? 'skincare' : (isRide ? 'ride' : (isFood ? 'food' : ''));
+            window.location.href = cat ? 'coupons.html?cat=' + cat : 'coupons.html';
+          };
+        } else if (text.includes('reviews')) {
+          item.onclick = (e) => {
+            e.preventDefault();
+            const cat = isSkincare ? 'skincare' : (isRide ? 'ride' : (isFood ? 'food' : ''));
+            window.location.href = cat ? 'reviews.html?cat=' + cat : 'reviews.html';
+          };
         }
       });
 

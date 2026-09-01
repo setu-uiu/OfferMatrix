@@ -759,8 +759,11 @@
 
     window.addEventListener('DOMContentLoaded', function () {
       var params = new URLSearchParams(window.location.search);
-      var catParam = params.get('cat');
-      if (catParam === 'food') {
+      var catParam = params.get('cat') || localStorage.getItem('om_active_category');
+      if (catParam === 'skincare') {
+        document.body.classList.add('skincare-lime-theme');
+        renderCoupons('skincare');
+      } else if (catParam === 'food') {
         document.body.classList.add('food-sky-theme');
         renderCoupons('food');
       } else {

@@ -726,6 +726,41 @@
       background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%) !important;
       box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35) !important;
     }
+
+    /* SKINCARE THEME FOR WALLET PAGE */
+    body.skincare-lime-theme .w-hero-card {
+      background: linear-gradient(135deg, #fdf2f1 0%, #ffffff 100%) !important;
+      border: 1.5px solid #f8b8b5 !important;
+      box-shadow: 0 16px 36px rgba(227, 124, 120, 0.18) !important;
+      color: #111827 !important;
+    }
+
+    body.skincare-lime-theme .w-hero-card .w-hc-lbl {
+      color: #8c2e2a !important;
+      font-weight: 800 !important;
+    }
+
+    body.skincare-lime-theme .w-hero-card .w-hc-val,
+    body.skincare-lime-theme .w-hero-card .w-hci-val {
+      color: #8c2e2a !important;
+      font-weight: 900 !important;
+    }
+
+    body.skincare-lime-theme .w-hero-card .w-hc-grid {
+      background: rgba(255, 255, 255, 0.85) !important;
+      border: 1px solid #f8b8b5 !important;
+    }
+
+    body.skincare-lime-theme .w-hero-card .w-hci-lbl {
+      color: #475569 !important;
+      font-weight: 800 !important;
+    }
+
+    body.skincare-lime-theme #w-hc-count-badge {
+      color: #8c2e2a !important;
+      background: #ffffff !important;
+      border: 1px solid #f8b8b5 !important;
+    }
   </style>
 </head>
 
@@ -1087,7 +1122,16 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-      renderWalletPage();
+      var params = new URLSearchParams(window.location.search);
+      var catParam = params.get('cat') || localStorage.getItem('om_active_category');
+      if (catParam === 'skincare') {
+        document.body.classList.add('skincare-lime-theme');
+        switchCategory('skincare');
+      } else if (catParam === 'food' || catParam === 'ride') {
+        switchCategory(catParam);
+      } else {
+        renderWalletPage();
+      }
     });
   </script>
 </body>

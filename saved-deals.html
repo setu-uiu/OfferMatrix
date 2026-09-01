@@ -1167,11 +1167,16 @@
 
     window.addEventListener('DOMContentLoaded', function () {
       var params = new URLSearchParams(window.location.search);
-      var catParam = params.get('cat');
-      if (catParam === 'food') {
+      var catParam = params.get('cat') || localStorage.getItem('om_active_category');
+      if (catParam === 'skincare') {
+        document.body.classList.add('skincare-lime-theme');
+        renderSavedDeals('skincare');
+      } else if (catParam === 'food') {
         document.body.classList.add('food-sky-theme');
+        renderSavedDeals('food');
+      } else {
+        renderSavedDeals(catParam && ['food', 'ride', 'skincare'].includes(catParam) ? catParam : 'all');
       }
-      renderSavedDeals(catParam && ['food', 'ride', 'skincare'].includes(catParam) ? catParam : 'all');
     });
   </script>
 

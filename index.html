@@ -1611,13 +1611,470 @@
 
   </section>
 
+  <!-- FEATURE SHOWCASE SECTIONS -->
+  <style>
+    .feat-section {
+      padding: 4rem 2rem;
+      max-width: 1260px;
+      margin: 0 auto;
+    }
+    .feat-hdr {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .feat-tag {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.75rem;
+    }
+    .ft-food { background: #fff0f5; color: #ff1a6e; }
+    .ft-ride { background: #e0f2fe; color: #0284c7; }
+    .ft-skincare { background: #fdf2f8; color: #db2777; }
+    .ft-coupon { background: #fef3c7; color: #d97706; }
+    .ft-fraud { background: #fee2e2; color: #dc2626; }
+    .ft-reviews { background: #f0fdf4; color: #16a34a; }
+    
+    .feat-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #111827;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.75rem;
+    }
+    .feat-sub {
+      font-size: 1rem;
+      color: #64748b;
+      max-width: 650px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.8rem;
+    }
+    .feat-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 1.6rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    .feat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+      border-color: #cbd5e1;
+    }
+    .fc-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 14px;
+      margin-bottom: 1rem;
+    }
+    .fc-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 50px;
+      display: inline-block;
+      margin-bottom: 0.6rem;
+    }
+    .fc-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+    .fc-desc {
+      font-size: 0.88rem;
+      color: #64748b;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .fc-price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.8rem;
+      border-top: 1px dashed #e2e8f0;
+    }
+    .fc-price {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #ff1a6e;
+    }
+    .fc-old-price {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      text-decoration: line-through;
+      margin-left: 6px;
+    }
+    .btn-feat-action {
+      background: #111827;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    
+    /* FOOTER */
+    .landing-footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 4rem 2rem 2rem;
+      margin-top: 4rem;
+    }
+    .lf-inner {
+      max-width: 1260px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .lf-logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .lf-logo span { color: #22c55e; }
+    .lf-desc {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      max-width: 320px;
+    }
+    .lf-col h4 {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 1.2rem;
+    }
+    .lf-col ul {
+      list-style: none;
+    }
+    .lf-col li {
+      margin-bottom: 0.75rem;
+    }
+    .lf-col a {
+      color: #94a3b8;
+      font-size: 0.88rem;
+      transition: color 0.2s;
+    }
+    .lf-col a:hover { color: #fff; }
+    .lf-bottom {
+      max-width: 1260px;
+      margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid #1e293b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+  </style>
+
+  <!-- 1. FOOD COMPARISON FEATURE SHOWCASE -->
+  <section class="feat-section" id="feat-food">
+    <div class="feat-hdr">
+      <span class="feat-tag ft-food">🍔 Food App Price Comparison</span>
+      <h2 class="feat-title">Compare Foodpanda, Pathao Food &amp; HungryNaki</h2>
+      <p class="feat-sub">Never overpay for delivery! OfferMatrix checks real-time meal prices, delivery charges, and restaurant promos across all top food apps.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <img class="fc-img" src="images/chicken-biryani-hero.jpg" alt="Chicken Biryani" onerror="this.src='https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=600'" />
+        <span class="fc-badge" style="background:#fff0f5;color:#ff1a6e;">🔥 30% OFF DEAL</span>
+        <h3 class="fc-title">Kacchi Bhai - Chicken Biryani Combo</h3>
+        <p class="fc-desc">Foodpanda: ৳195 • HungryNaki: ৳210 • Pathao Food: ৳220</p>
+        <div class="fc-price-row">
+          <div>
+            <span class="fc-price">৳195</span>
+            <span class="fc-old-price">৳270</span>
+          </div>
+          <button class="btn-feat-action">Compare Now &rarr;</button>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <img class="fc-img" src="https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Cheesy Pizza" />
+        <span class="fc-badge" style="background:#eff6ff;color:#2563eb;">🍕 Pizza Hut Promo</span>
+        <h3 class="fc-title">Pizza Hut - Cheesy Pepperoni Large</h3>
+        <p class="fc-desc">Foodpanda: ৳599 • Pathao Food: ৳620 • Domino's App: ৳650</p>
+        <div class="fc-price-row">
+          <div>
+            <span class="fc-price">৳599</span>
+            <span class="fc-old-price">৳850</span>
+          </div>
+          <button class="btn-feat-action">Compare Now &rarr;</button>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <img class="fc-img" src="https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Smash Burger" />
+        <span class="fc-badge" style="background:#fef3c7;color:#d97706;">🍔 Takeout Burger</span>
+        <h3 class="fc-title">Takeout - Double Beef Cheese Burger</h3>
+        <p class="fc-desc">Pathao Food: ৳320 • Foodpanda: ৳340 • HungryNaki: ৳360</p>
+        <div class="fc-price-row">
+          <div>
+            <span class="fc-price">৳320</span>
+            <span class="fc-old-price">৳420</span>
+          </div>
+          <button class="btn-feat-action">Compare Now &rarr;</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. RIDE FARE COMPARISON FEATURE SHOWCASE -->
+  <section class="feat-section" id="feat-ride" style="background:#f8fafc;border-top:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;">
+    <div class="feat-hdr">
+      <span class="feat-tag ft-ride">🚗 Ride Fare &amp; Safety Monitor</span>
+      <h2 class="feat-title">Compare Uber, Pathao &amp; Shohoz Ride Fares</h2>
+      <p class="feat-sub">Save on commute costs! Track price surge algorithms, driver misconduct reports, and route fare comparisons instantly.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <img class="fc-img" src="https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Ride Fare" />
+        <span class="fc-badge" style="background:#e0f2fe;color:#0284c7;">⚡ Save ৳35</span>
+        <h3 class="fc-title">Dhanmondi 27 &rarr; Gulshan 1 Premier Drop</h3>
+        <p class="fc-desc">Shohoz: ৳175 (Lowest) • Pathao: ৳185 • Uber BD: ৳210</p>
+        <div class="fc-price-row">
+          <div>
+            <span class="fc-price" style="color:#0284c7;">৳175</span>
+            <span class="fc-old-price">৳210</span>
+          </div>
+          <button class="btn-feat-action" style="background:#0284c7;">Check Fare &rarr;</button>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <img class="fc-img" src="https://images.pexels.com/photos/38637/car-audi-auto-automotive-38637.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Intercity Ride" />
+        <span class="fc-badge" style="background:#f0fdf4;color:#16a34a;">🛣️ Intercity Travel</span>
+        <h3 class="fc-title">Uttara Sector 7 &rarr; Airport / Motijheel</h3>
+        <p class="fc-desc">Pathao Car: ৳220 • Uber Intercity: ৳280 • CNG Meter: ৳300</p>
+        <div class="fc-price-row">
+          <div>
+            <span class="fc-price" style="color:#16a34a;">৳220</span>
+            <span class="fc-old-price">৳300</span>
+          </div>
+          <button class="btn-feat-action" style="background:#16a34a;">Check Fare &rarr;</button>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <img class="fc-img" src="https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Driver Safety" />
+        <span class="fc-badge" style="background:#fee2e2;color:#dc2626;">🚨 Rider Warning Feed</span>
+        <h3 class="fc-title">Public Rider Warnings &amp; Overcharge Reports</h3>
+        <p class="fc-desc">Flagged driver license plates, overprice demands &amp; vehicle safety alerts.</p>
+        <div class="fc-price-row">
+          <div>
+            <span class="fc-price" style="color:#dc2626;">184 Alert Reports</span>
+          </div>
+          <button class="btn-feat-action" style="background:#dc2626;">View Warnings &rarr;</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. SKINCARE AUTHENTICITY FEATURE SHOWCASE -->
+  <section class="feat-section" id="feat-skincare">
+    <div class="feat-hdr">
+      <span class="feat-tag ft-skincare">✨ Skincare Authenticity &amp; BSTI Seals</span>
+      <h2 class="feat-title">Verify Original Cosmetics &amp; Avoid Counterfeits</h2>
+      <p class="feat-sub">Protect your skin! Verify imported serums, cleansers, and moisturizers with authentic importer seals and BSTI verification databases.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <img class="fc-img" src="https://images.pexels.com/photos/3762879/pexels-photo-3762879.jpeg?auto=compress&cs=tinysrgb&w=600" alt="CeraVe Cleanser" />
+        <span class="fc-badge" style="background:#fdf2f8;color:#db2777;">✓ 100% Original Verified</span>
+        <h3 class="fc-title">CeraVe Hydrating Cleanser 473ml</h3>
+        <p class="fc-desc">Beautybooth BD: ৳1,250 • Cosmetica: ৳1,320 • Daraz Mall: ৳1,400</p>
+        <div class="fc-price-row">
+          <div>
+            <span class="fc-price" style="color:#db2777;">৳1,250</span>
+            <span class="fc-old-price">৳1,650</span>
+          </div>
+          <button class="btn-feat-action" style="background:#db2777;">Verify Product &rarr;</button>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <img class="fc-img" src="https://images.pexels.com/photos/3685530/pexels-photo-3685530.jpeg?auto=compress&cs=tinysrgb&w=600" alt="The Ordinary Serum" />
+        <span class="fc-badge" style="background:#fdf2f8;color:#db2777;">✨ Best Price</span>
+        <h3 class="fc-title">The Ordinary Niacinamide 10% + Zinc 1%</h3>
+        <p class="fc-desc">Daraz: ৳850 • Beauty.com.bd: ৳890 • Pickaboo: ৳950</p>
+        <div class="fc-price-row">
+          <div>
+            <span class="fc-price" style="color:#db2777;">৳850</span>
+            <span class="fc-old-price">৳1,200</span>
+          </div>
+          <button class="btn-feat-action" style="background:#db2777;">Verify Product &rarr;</button>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <img class="fc-img" src="https://images.pexels.com/photos/4041392/pexels-photo-4041392.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Fake Product Raid" />
+        <span class="fc-badge" style="background:#fee2e2;color:#dc2626;">🛑 BSTI Raid Alert</span>
+        <h3 class="fc-title">Fake Cosmetics &amp; Counterfeit Raids</h3>
+        <p class="fc-desc">Track confiscated fake creams, illegal packaging, and blacklisted facebook pages.</p>
+        <div class="fc-price-row">
+          <div>
+            <span class="fc-price" style="color:#dc2626;">94 Confiscated Items</span>
+          </div>
+          <button class="btn-feat-action" style="background:#dc2626;">Check Fraud Pages &rarr;</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. VERIFIED COUPONS & CASHBACKS -->
+  <section class="feat-section" id="feat-coupons" style="background:#fffbeb;border-top:1px solid #fef3c7;border-bottom:1px solid #fef3c7;">
+    <div class="feat-hdr">
+      <span class="feat-tag ft-coupon">🎟️ Verified Promo Codes &amp; bKash Offers</span>
+      <h2 class="feat-title">Exclusive Discount Coupons &amp; Instant Cashback</h2>
+      <p class="feat-sub">Copy verified discount codes for Foodpanda, bKash payments, Uber rides, and top e-commerce platforms.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <span class="fc-badge" style="background:#fef3c7;color:#b45309;">🎁 bKash Special</span>
+        <h3 class="fc-title">10% Instant bKash Cashback on All Deals</h3>
+        <p class="fc-desc">Use promo code <strong>BKASH2026</strong> at checkout to get instant ৳100 cashback.</p>
+        <div class="fc-price-row">
+          <div><span class="fc-price" style="color:#b45309;">CODE: BKASH2026</span></div>
+          <button class="btn-feat-action" style="background:#b45309;">Copy Code &rarr;</button>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <span class="fc-badge" style="background:#fef3c7;color:#b45309;">🍔 Foodpanda Voucher</span>
+        <h3 class="fc-title">৳100 OFF First Food Delivery Order</h3>
+        <p class="fc-desc">Valid on orders above ৳300 across all participating restaurants.</p>
+        <div class="fc-price-row">
+          <div><span class="fc-price" style="color:#b45309;">CODE: FOOD100</span></div>
+          <button class="btn-feat-action" style="background:#b45309;">Copy Code &rarr;</button>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <span class="fc-badge" style="background:#fef3c7;color:#b45309;">🚗 Ride Discount</span>
+        <h3 class="fc-title">50% OFF Pathao &amp; Uber Intercity Rides</h3>
+        <p class="fc-desc">Save up to ৳150 on your next 3 intercity car rides in Dhaka.</p>
+        <div class="fc-price-row">
+          <div><span class="fc-price" style="color:#b45309;">CODE: RIDE50</span></div>
+          <button class="btn-feat-action" style="background:#b45309;">Copy Code &rarr;</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. COMMUNITY REVIEWS -->
+  <section class="feat-section" id="feat-reviews">
+    <div class="feat-hdr">
+      <span class="feat-tag ft-reviews">⭐ Verified Buyer Reviews</span>
+      <h2 class="feat-title">Trusted Community Experience &amp; Ratings</h2>
+      <p class="feat-sub">See real feedback, delivery time ratings, and authentic seller scores shared by active shoppers in Bangladesh.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div style="font-size:1.1rem;color:#f59e0b;margin-bottom:6px;">⭐⭐⭐⭐⭐ 5.0</div>
+        <h3 class="fc-title">"Saved over ৳850 on my monthly skincare order!"</h3>
+        <p class="fc-desc">"OfferMatrix verified that the CeraVe cleanser I was buying had an original importer seal and found the lowest price on Beautybooth BD!"</p>
+        <div class="fc-price-row">
+          <span style="font-size:0.82rem;color:#64748b;font-weight:700;">Setu Meherunnesa • Platinum Member</span>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div style="font-size:1.1rem;color:#f59e0b;margin-bottom:6px;">⭐⭐⭐⭐⭐ 4.9</div>
+        <h3 class="fc-title">"Best ride fare comparison tool in Dhaka"</h3>
+        <p class="fc-desc">"I compare Shohoz, Uber, and Pathao before taking any ride from Dhanmondi to Gulshan. Saves me at least ৳50 per trip!"</p>
+        <div class="fc-price-row">
+          <span style="font-size:0.82rem;color:#64748b;font-weight:700;">Tanvir Ahmed • Verified Commuter</span>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div style="font-size:1.1rem;color:#f59e0b;margin-bottom:6px;">⭐⭐⭐⭐⭐ 4.8</div>
+        <h3 class="fc-title">"Avoided fake pages thanks to Fraud Monitor!"</h3>
+        <p class="fc-desc">"The Magistrate Raid feed alerted me about a fake cosmetics seller page before I made a payment. Truly a public safety hero!"</p>
+        <div class="fc-price-row">
+          <span style="font-size:0.82rem;color:#64748b;font-weight:700;">Anika Rahman • Dhaka Resident</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="landing-footer">
+    <div class="lf-inner">
+      <div>
+        <div class="lf-logo">Offer<span>Matrix</span></div>
+        <p class="lf-desc">Bangladesh's premier smart deal platform. Compare food delivery prices, ride fares, skincare authenticity, coupons, and community safety reports in one place.</p>
+      </div>
+
+      <div class="lf-col">
+        <h4>Features</h4>
+        <ul>
+          <li><a href="signin.html">Food App Comparison</a></li>
+          <li><a href="signin.html">Ride Fare Monitor</a></li>
+          <li><a href="signin.html">Skincare Authenticity</a></li>
+          <li><a href="signin.html">Verified Coupons</a></li>
+          <li><a href="signin.html">Fraud Pages &amp; Raids</a></li>
+        </ul>
+      </div>
+
+      <div class="lf-col">
+        <h4>Community</h4>
+        <ul>
+          <li><a href="signin.html">Customer Reviews</a></li>
+          <li><a href="signin.html">Rider Misconduct Reports</a></li>
+          <li><a href="signin.html">Magistrate Raid Alerts</a></li>
+          <li><a href="signin.html">Refer &amp; Earn Rewards</a></li>
+        </ul>
+      </div>
+
+      <div class="lf-col">
+        <h4>Account</h4>
+        <ul>
+          <li><a href="signin.html">Sign In / Register</a></li>
+          <li><a href="signin.html">My Wallet</a></li>
+          <li><a href="signin.html">Saved Deals</a></li>
+          <li><a href="signin.html">Help &amp; Support</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="lf-bottom">
+      <div>&copy; 2026 OfferMatrix Bangladesh. All rights reserved.</div>
+      <div>Designed for Maximum Savings &amp; Consumer Protection.</div>
+    </div>
+  </footer>
+
   <script>
-    document.getElementById('btn-copy-code').addEventListener('click', function () {
-      try { navigator.clipboard.writeText('SAVE10'); } catch (e) { }
-      const orig = this.textContent;
-      this.textContent = 'Copied! ✓';
-      this.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
-      setTimeout(() => { this.textContent = orig; this.style.background = ''; }, 2000);
+    document.getElementById('btn-copy-code')?.addEventListener('click', function (e) {
+      e.preventDefault();
+      try { navigator.clipboard.writeText('SAVE10'); } catch (err) { }
+    });
+
+    // GLOBAL CLICK LISTENER: Clicking ANY feature, card, button, or link redirects to signin.html
+    document.addEventListener('click', function (e) {
+      const target = e.target.closest('a, button, input, select, .fcard, .stat-it, .sc-item, .cat-item, .feat-card, .btn-feat-action, .fc-badge, .nav-links a, .sb-item');
+      if (target) {
+        e.preventDefault();
+        window.location.href = 'signin.html';
+      }
     });
   </script>
 </body>
