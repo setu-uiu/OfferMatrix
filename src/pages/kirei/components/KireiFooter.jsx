@@ -4,7 +4,7 @@ import {
   Heart, Mail, Phone, MapPin, Facebook, Instagram, Youtube,
   ArrowRight, Shield, Truck, RotateCcw,
 } from 'lucide-react'
-import OfferMatrixLogo from '../../../../components/shared/OfferMatrixLogo'
+import OfferMatrixLogo from "../../../../components/shared/OfferMatrixLogo.jsx";
 
 const footerColumns = [
   {
