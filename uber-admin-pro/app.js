@@ -1,9 +1,5 @@
-/**
- * ==========================================================================
- * UBER OFFICIAL 3-IN-1 APPLICATION ENGINE
- * 🧑‍💼 Customer | 👨‍✈️ Driver | 🛡️ Admin HQ with Dedicated Login Gate
- * ==========================================================================
- */
+* UBER OFFICIAL 3-IN-1 APPLICATION ENGINE
+ 
 
 // Default Pricing Configuration
 const defaultPricing = {
