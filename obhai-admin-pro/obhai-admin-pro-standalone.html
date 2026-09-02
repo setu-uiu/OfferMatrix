@@ -1,0 +1,3143 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ওভাই (OBHAI) - ডিজিটাল রাইড শেয়ারিং, সিএনজি ও ক্যাপ্টেন পোর্টাল</title>
+  
+  <!-- Google Fonts: Hind Siliguri for Bengali + Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS for Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <!-- OBHAI Stylesheet -->
+  <style>
+/* ==========================================================================
+   OBHAI BANGLADESH - FULL-FRAME MODERN EDGE-TO-EDGE DESIGN SYSTEM
+   Colors: OBHAI Green (#00A859), Gold (#FFC800), Deep Slate (#0B1320)
+   Typography: Hind Siliguri (Bengali) + Plus Jakarta Sans
+   ========================================================================== */
+
+:root {
+  --obhai-green: #00a859;
+  --obhai-green-dark: #008746;
+  --obhai-green-light: #e6f7ef;
+  --obhai-green-glow: rgba(0, 168, 89, 0.18);
+  
+  --obhai-yellow: #ffc800;
+  --obhai-yellow-light: #fffbeb;
+  
+  --bg-main: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-subtle: #f1f5f9;
+  --border-color: #e2e8f0;
+  --border-focus: #00a859;
+
+  --text-main: #0f172a;
+  --text-sub: #475569;
+  --text-muted: #94a3b8;
+  --text-white: #ffffff;
+
+  --accent-danger: #ef4444;
+  --accent-blue: #2563eb;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 18px rgba(0, 168, 89, 0.08);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-float: 0 20px 40px rgba(0, 0, 0, 0.14);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+
+  --font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif;
+  --transition: 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+[data-theme="dark"] {
+  --bg-main: #080f1a;
+  --bg-surface: #101c2e;
+  --bg-card: #142238;
+  --bg-subtle: #1a2b44;
+  --border-color: #233754;
+
+  --text-main: #f8fafc;
+  --text-sub: #94a3b8;
+  --text-muted: #64748b;
+  --obhai-green-light: rgba(0, 168, 89, 0.15);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-family);
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-main);
+  overflow-x: hidden;
+  width: 100%;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; outline: none; }
+
+/* Full-Screen Page Containers */
+.obhai-app-screen {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-main);
+}
+
+/* ==========================================================================
+   OBHAI BRAND LOGO
+   ========================================================================== */
+.obhai-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 800;
+  font-size: 30px;
+  letter-spacing: -0.5px;
+}
+
+.obhai-brand.mini { font-size: 26px; }
+.obhai-main-logo { color: var(--obhai-green); font-family: 'Plus Jakarta Sans', sans-serif; }
+.obhai-yellow-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--obhai-yellow);
+  display: inline-block;
+  margin-top: 6px;
+}
+
+.obhai-tagline {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-sub);
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   SCREEN 1: AUTH / LOGIN GATE (FULLSCREEN)
+   ========================================================================== */
+.obhai-auth-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background: radial-gradient(circle at 50% 15%, rgba(0, 168, 89, 0.12) 0%, var(--bg-main) 70%);
+  width: 100%;
+}
+
+.auth-box-container {
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-brand-area {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-selection-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 34px 30px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-title { font-size: 22px; font-weight: 700; }
+.auth-desc { font-size: 13px; color: var(--text-sub); }
+
+.obhai-role-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.obhai-role-item {
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  background-color: var(--bg-surface);
+  transition: all var(--transition);
+}
+
+.obhai-role-item:hover {
+  border-color: var(--obhai-green);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.obhai-role-item.active {
+  border-color: var(--obhai-green);
+  background-color: var(--obhai-green-light);
+}
+
+.role-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.green-circle { background: rgba(0, 168, 89, 0.15); }
+.yellow-circle { background: rgba(255, 200, 0, 0.2); }
+.navy-circle { background: rgba(37, 99, 235, 0.15); }
+
+.role-text-meta { flex: 1; }
+.role-text-meta h3 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+.role-text-meta p { font-size: 12px; color: var(--text-sub); }
+
+.role-check-mark {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--border-color);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.obhai-role-item.active .role-check-mark {
+  background: var(--obhai-green);
+}
+
+.obhai-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.obhai-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.obhai-form-field label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.phone-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-surface);
+  overflow: hidden;
+}
+
+.country-prefix {
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-sub);
+  background-color: var(--bg-subtle);
+  height: 44px;
+  display: flex;
+  align-items: center;
+  border-right: 1px solid var(--border-color);
+}
+
+.obhai-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: none;
+  background-color: transparent;
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.obhai-input:focus { outline: none; }
+.phone-input-wrap:focus-within {
+  border-color: var(--obhai-green);
+  box-shadow: 0 0 0 3px var(--obhai-green-glow);
+}
+
+.btn-obhai-primary {
+  height: 46px;
+  background-color: var(--obhai-green);
+  color: #ffffff;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 168, 89, 0.3);
+  transition: all var(--transition);
+  padding: 0 18px;
+}
+
+.btn-obhai-primary:hover {
+  background-color: var(--obhai-green-dark);
+}
+
+.full-width { width: 100%; }
+
+.quick-demo-strip {
+  border-top: 1px solid var(--border-color);
+  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quick-title { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+.quick-btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.btn-demo-chip {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  transition: all var(--transition);
+}
+
+.btn-demo-chip:hover {
+  background-color: var(--obhai-green);
+  color: #fff;
+  border-color: var(--obhai-green);
+}
+
+/* ==========================================================================
+   TOP FULL-WIDTH OBHAI NAVBAR
+   ========================================================================== */
+.obhai-top-navbar {
+  background-color: var(--bg-surface);
+  border-bottom: 2px solid var(--obhai-green);
+  height: 68px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+}
+
+.nav-content-wrap {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.nav-left-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.nav-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.brand-slogan-pill {
+  font-size: 12px;
+  font-weight: 700;
+  background-color: var(--obhai-green-light);
+  color: var(--obhai-green-dark);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.obhai-miles-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--obhai-green-light);
+  border: 1px solid rgba(0, 168, 89, 0.3);
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.obhai-miles-badge:hover {
+  transform: translateY(-1px);
+  border-color: var(--obhai-green);
+}
+
+.miles-star { font-size: 16px; color: var(--obhai-yellow); }
+.miles-info { display: flex; flex-direction: column; line-height: 1.1; }
+.m-label { font-size: 10px; color: var(--text-sub); font-weight: 600; }
+.m-amount { font-size: 14px; color: var(--obhai-green-dark); font-weight: 800; }
+
+.obhai-user-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.user-avatar-sm { font-size: 18px; }
+
+.btn-obhai-logout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-danger);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn-obhai-logout:hover {
+  background-color: var(--accent-danger);
+  color: #fff;
+}
+
+.icon-sm { width: 14px; height: 14px; }
+
+/* ==========================================================================
+   MAIN FULL-FRAME CONTAINER (MAX-WIDTH 1600PX)
+   ========================================================================== */
+.passenger-main-container {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 24px 32px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.obhai-live-banner {
+  background: linear-gradient(90deg, rgba(0, 168, 89, 0.15) 0%, rgba(255, 200, 0, 0.15) 100%);
+  border: 1px solid rgba(0, 168, 89, 0.35);
+  border-radius: var(--radius-md);
+  padding: 14px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  width: 100%;
+}
+
+.banner-left-content { display: flex; align-items: center; gap: 10px; }
+
+.pulse-green {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--obhai-green);
+  box-shadow: 0 0 0 0 rgba(0, 168, 89, 0.7);
+  animation: pulseGreen 1.8s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulseGreen {
+  0% { box-shadow: 0 0 0 0 rgba(0, 168, 89, 0.7); }
+  70% { box-shadow: 0 0 0 8px rgba(0, 168, 89, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 168, 89, 0); }
+}
+
+.btn-banner-link { font-size: 13px; font-weight: 800; color: var(--obhai-green-dark); white-space: nowrap; }
+
+/* 6-Category Service Bubbles Bar (Full Width Spanning) */
+.obhai-services-bar {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+  width: 100%;
+}
+
+.service-bubble-card {
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.service-bubble-card:hover {
+  border-color: var(--obhai-green);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.service-bubble-card.active {
+  border-color: var(--obhai-green);
+  background-color: var(--obhai-green-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.bubble-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.cng-bg { background: rgba(0, 168, 89, 0.15); }
+.moto-bg { background: rgba(255, 200, 0, 0.2); }
+.car-bg { background: rgba(37, 99, 235, 0.15); }
+.micro-bg { background: rgba(147, 51, 234, 0.15); }
+.parcel-bg { background: rgba(249, 115, 22, 0.15); }
+.seba-bg { background: rgba(239, 68, 68, 0.15); }
+
+.service-name { font-size: 13px; font-weight: 700; color: var(--text-main); }
+.service-badge-sub { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
+
+/* ==========================================================================
+   FULL-FRAME PASSENGER BOOKING GRID & MAP
+   ========================================================================== */
+.obhai-booking-grid {
+  display: grid;
+  grid-template-columns: 480px minmax(0, 1fr);
+  gap: 28px;
+  min-height: 640px;
+  width: 100%;
+}
+
+.obhai-card-booking {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card-top-title h2 { font-size: 22px; font-weight: 800; color: var(--text-main); }
+.card-top-title p { font-size: 13px; color: var(--text-sub); }
+
+.obhai-locations-form {
+  display: flex;
+  gap: 12px;
+  position: relative;
+}
+
+.route-vertical-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 0;
+  width: 14px;
+}
+
+.p-dot { width: 10px; height: 10px; border-radius: 50%; }
+.green-dot { background-color: var(--obhai-green); }
+.v-line { width: 2px; flex: 1; background-color: var(--border-color); margin: 4px 0; }
+.d-dot { width: 10px; height: 10px; }
+.red-dot { background-color: var(--accent-danger); border-radius: 2px; }
+
+.inputs-column { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+.obhai-input-box {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  height: 46px;
+}
+
+.obhai-input-box:focus-within {
+  border-color: var(--obhai-green);
+  background-color: var(--bg-surface);
+  box-shadow: 0 0 0 2px var(--obhai-green-glow);
+}
+
+.input-icon { font-size: 14px; margin-right: 8px; }
+.route-input { width: 100%; border: none; background: transparent; font-size: 14px; font-weight: 600; color: var(--text-main); font-family: inherit; }
+.route-input:focus { outline: none; }
+
+.btn-gps, .btn-swap {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-sub);
+}
+
+.dhaka-chips-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.chips-title { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+.dhaka-chip {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  color: var(--text-sub);
+}
+.dhaka-chip:hover { background-color: var(--obhai-green-light); color: var(--obhai-green-dark); border-color: var(--obhai-green); }
+
+/* Applied Coupon Strip */
+.applied-coupon-strip {
+  background-color: var(--obhai-green-light);
+  border: 1px dashed var(--obhai-green);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.coupon-left-tag { display: flex; align-items: center; gap: 10px; }
+.tag-icon { font-size: 18px; }
+.tag-meta strong { font-size: 13px; color: var(--obhai-green-dark); }
+.tag-desc { font-size: 11px; color: var(--text-sub); display: block; }
+.remove-coupon-btn { font-size: 20px; color: var(--text-muted); }
+
+/* Digital Meter Box */
+.obhai-meter-box {
+  background: linear-gradient(135deg, #0b1728 0%, #162a45 100%);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.meter-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; }
+.gov-rate-tag { background: rgba(0, 168, 89, 0.3); color: #4ade80; font-size: 11px; padding: 2px 8px; border-radius: var(--radius-pill); }
+.meter-breakdown-row { display: flex; justify-content: space-between; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 8px; }
+.m-col { display: flex; flex-direction: column; }
+.m-lbl { font-size: 10px; color: #94a3b8; }
+.m-val { font-size: 13px; font-weight: 700; color: #f8fafc; }
+.m-val.text-green { color: #4ade80; }
+
+/* Vehicle Options List */
+.obhai-vehicles-list { display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; padding-right: 4px; }
+
+.vehicle-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-surface);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.vehicle-item-row:hover { background-color: var(--bg-subtle); }
+.vehicle-item-row.selected { background-color: var(--obhai-green-light); border-color: var(--obhai-green); }
+
+.v-icon-wrap { font-size: 24px; width: 38px; display: flex; justify-content: center; }
+.v-details { flex: 1; padding: 0 10px; }
+.v-title-line { display: flex; align-items: center; gap: 8px; }
+.v-name { font-size: 14px; font-weight: 700; }
+.v-capacity { font-size: 11px; color: var(--text-sub); }
+.v-sub { font-size: 11px; color: var(--text-sub); }
+.eta-green { color: var(--obhai-green-dark); font-weight: 700; }
+
+.v-pricing { text-align: right; }
+.old-price-val { font-size: 11px; text-decoration: line-through; color: var(--text-muted); display: block; }
+.v-final-price { font-size: 16px; font-weight: 800; color: var(--obhai-green-dark); }
+
+.booking-footer-box { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 12px; }
+.pay-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+.pay-info { font-weight: 600; }
+.btn-text-coupons { font-size: 13px; font-weight: 700; color: var(--obhai-green-dark); }
+
+.btn-obhai-confirm {
+  height: 50px;
+  background-color: var(--obhai-green);
+  color: #ffffff;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: 0 4px 16px rgba(0, 168, 89, 0.35);
+  transition: all var(--transition);
+}
+
+.btn-obhai-confirm:hover { background-color: var(--obhai-green-dark); }
+.btn-fare-pill { background: rgba(0, 0, 0, 0.25); padding: 4px 12px; border-radius: var(--radius-pill); font-size: 14px; }
+
+/* Full-Width Edge-to-Edge Leaflet Map */
+.obhai-map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+}
+
+.interactive-map { width: 100%; height: 100%; }
+
+.map-floating-overlay {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
+}
+.map-floating-overlay > * { pointer-events: auto; }
+
+.map-live-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+.map-tool-btn {
+  width: 38px;
+  height: 38px;
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+}
+
+.trip-summary-strip {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  box-shadow: var(--shadow-lg);
+  z-index: 10;
+}
+
+.summary-item { display: flex; flex-direction: column; align-items: center; }
+.sum-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+.sum-value { font-size: 14px; font-weight: 800; }
+.text-green { color: var(--obhai-green-dark); }
+.summary-divider { width: 1px; height: 28px; background-color: var(--border-color); }
+
+/* Miles Promo Card */
+.obhai-miles-promo-card {
+  background: linear-gradient(135deg, #0b1728 0%, #172d4c 100%);
+  color: #ffffff;
+  border-radius: var(--radius-lg);
+  padding: 24px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.miles-club-badge { font-size: 11px; font-weight: 800; color: var(--obhai-yellow); letter-spacing: 1px; text-transform: uppercase; }
+.promo-text-wrap h3 { font-size: 18px; font-weight: 800; margin: 4px 0; }
+.promo-text-wrap p { font-size: 13px; color: #94a3b8; }
+
+.tier-box {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: 14px 22px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.tier-title { font-size: 11px; color: #94a3b8; }
+.tier-name { font-size: 16px; font-weight: 800; color: var(--obhai-yellow); margin: 2px 0; }
+.tier-points { font-size: 12px; color: #4ade80; }
+
+.obhai-footer { background-color: #0b1320; color: #fff; padding: 36px 32px; margin-top: auto; width: 100%; }
+.footer-container { max-width: 1600px; margin: 0 auto; }
+.footer-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #1e293b; margin-bottom: 20px; }
+.footer-help-link { color: #fff; text-decoration: underline; font-size: 13px; font-weight: 600; }
+.footer-bottom { font-size: 12px; color: #94a3b8; }
+
+/* ==========================================================================
+   CAPTAIN PORTAL FULL-FRAME
+   ========================================================================== */
+.captain-badge-nav {
+  background-color: var(--obhai-yellow);
+  color: #000;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  margin-left: 6px;
+}
+
+.captain-online-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--obhai-green-light);
+  color: var(--obhai-green-dark);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.captain-income-box { display: flex; flex-direction: column; text-align: right; }
+.inc-lbl { font-size: 11px; color: var(--text-sub); }
+.inc-val { font-size: 15px; font-weight: 800; color: var(--obhai-green-dark); }
+
+.captain-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  width: 100%;
+}
+
+.captain-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.c-card-header { display: flex; justify-content: space-between; align-items: center; }
+.c-card-header h3 { font-size: 18px; font-weight: 800; }
+.live-radar-tag { background: var(--obhai-green-light); color: var(--obhai-green-dark); font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: var(--radius-pill); }
+
+.incoming-trip-card {
+  background-color: var(--bg-subtle);
+  border: 2px solid var(--obhai-green);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.trip-card-top { display: flex; justify-content: space-between; align-items: center; }
+.passenger-brief { display: flex; align-items: center; gap: 10px; }
+.p-avatar { font-size: 26px; }
+.trip-fare-badge { font-size: 20px; font-weight: 800; color: var(--obhai-green-dark); }
+.trip-route-meta { background: var(--bg-surface); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 13px; display: flex; flex-direction: column; gap: 6px; }
+.trip-actions-row { display: flex; gap: 10px; }
+.btn-decline { font-size: 13px; font-weight: 700; color: var(--accent-danger); padding: 8px 16px; border-radius: var(--radius-sm); background: var(--bg-surface); border: 1px solid var(--border-color); }
+
+.earnings-highlight-box {
+  background: linear-gradient(135deg, #00a859 0%, #008746 100%);
+  color: #fff;
+  border-radius: var(--radius-md);
+  padding: 26px;
+  text-align: center;
+}
+
+.eh-lbl { font-size: 13px; opacity: 0.9; }
+.eh-amount { font-size: 36px; font-weight: 800; margin: 4px 0; }
+.eh-sub { font-size: 13px; opacity: 0.9; }
+
+.captain-quest-card {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 18px;
+}
+
+.quest-head { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
+.quest-bonus { color: var(--obhai-green-dark); font-weight: 800; }
+.quest-bar-bg { height: 8px; background-color: var(--border-color); border-radius: var(--radius-pill); overflow: hidden; }
+.quest-bar-fill { height: 100%; background-color: var(--obhai-green); }
+.captain-vehicle-info-box { background-color: var(--bg-subtle); border-radius: var(--radius-md); padding: 16px; }
+.captain-vehicle-info-box h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+
+.btn-toggle-online { font-size: 12px; font-weight: 700; padding: 6px 16px; border-radius: var(--radius-pill); background: var(--bg-surface); border: 1px solid var(--border-color); }
+
+/* ==========================================================================
+   ADMIN HQ FULL-FRAME CONTROL PANEL
+   ========================================================================== */
+.admin-badge-nav {
+  background-color: var(--obhai-green);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  margin-left: 6px;
+}
+
+.admin-metrics-bar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.metric-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 20px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+  min-width: 0;
+}
+
+.metric-icon { font-size: 26px; width: 48px; height: 48px; border-radius: var(--radius-sm); background-color: var(--bg-subtle); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.metric-info { display: flex; flex-direction: column; min-width: 0; }
+.metric-label { font-size: 12px; font-weight: 700; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.metric-value { font-size: 20px; font-weight: 800; margin: 2px 0; white-space: nowrap; }
+.metric-delta { font-size: 12px; font-weight: 700; white-space: nowrap; }
+
+/* Admin 3-Column Full-Frame Layout */
+.admin-grid-layout {
+  display: grid;
+  grid-template-columns: 380px minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  width: 100%;
+}
+
+/* Exact Reference Image Replica Card */
+.company-control-panel-card {
+  background: var(--bg-card);
+  border: 2px solid #00a859;
+  border-radius: 20px;
+  padding: 26px 22px;
+  box-shadow: 0 10px 30px rgba(0, 168, 89, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.ccp-header { display: flex; flex-direction: column; gap: 2px; }
+.ccp-title { font-size: 20px; font-weight: 800; color: #008746; line-height: 1.2; }
+.ccp-subtitle { font-size: 16px; font-weight: 800; color: #0f172a; }
+[data-theme="dark"] .ccp-subtitle { color: #e2e8f0; }
+.ccp-desc { font-size: 13px; color: var(--text-sub); margin-top: 2px; }
+
+.ccp-input-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.ccp-label-row { display: flex; justify-content: space-between; align-items: center; }
+.ccp-label-row label { font-size: 13px; font-weight: 700; color: var(--text-main); }
+.ccp-info-icon { color: #94a3b8; font-size: 13px; cursor: help; }
+
+.ccp-input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+.ccp-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 34px 0 14px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all var(--transition);
+}
+
+.ccp-input:focus {
+  outline: none;
+  border-color: var(--obhai-green);
+  box-shadow: 0 0 0 3px rgba(0, 168, 89, 0.15);
+}
+
+.ccp-unit {
+  position: absolute;
+  right: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-sub);
+  pointer-events: none;
+}
+
+.text-uppercase { text-transform: uppercase; }
+.ccp-current-hint { font-size: 11px; color: #64748b; font-weight: 500; }
+
+.btn-ccp-apply {
+  width: 100%;
+  height: 46px;
+  background-color: var(--obhai-green);
+  color: #ffffff;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 168, 89, 0.3);
+  transition: all var(--transition);
+  margin-top: 4px;
+}
+
+.btn-ccp-apply:hover { background-color: var(--obhai-green-dark); transform: translateY(-1px); }
+.ccp-refresh-icon { font-size: 16px; }
+.ccp-footer-note { font-size: 12px; color: #64748b; text-align: center; display: block; margin-top: 4px; }
+
+/* Admin Extra Cards */
+.admin-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+}
+
+.admin-card-header h3 { font-size: 17px; font-weight: 800; }
+.admin-card-header p { font-size: 12px; color: var(--text-sub); }
+
+.admin-sub-box {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+
+.admin-sub-box h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+
+.create-coupon-form-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr auto;
+  gap: 8px;
+}
+
+.form-input-sm {
+  height: 38px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  font-size: 13px;
+  width: 100%;
+}
+
+.admin-table-wrap { overflow-x: auto; width: 100%; }
+.admin-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+.admin-table th { padding: 10px 8px; border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-weight: 700; }
+.admin-table td { padding: 10px 8px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+
+.coupon-table-code { font-family: monospace; font-weight: 800; background-color: var(--bg-subtle); padding: 3px 8px; border-radius: var(--radius-sm); }
+.table-status-pill { font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: var(--radius-pill); }
+.status-active { background-color: var(--obhai-green-light); color: var(--obhai-green-dark); }
+.btn-delete-row { color: var(--accent-danger); font-size: 12px; font-weight: 700; }
+
+.disputes-list { display: flex; flex-direction: column; gap: 12px; max-height: 520px; overflow-y: auto; }
+.dispute-admin-item { background-color: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.dispute-admin-item.resolved { border-left: 4px solid var(--obhai-green); }
+.dispute-top-bar { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 700; }
+.dispute-user-note { font-size: 13px; color: var(--text-sub); background-color: var(--bg-surface); padding: 10px; border-radius: var(--radius-sm); }
+.dispute-resolution-controls { display: flex; flex-direction: column; gap: 8px; background-color: var(--bg-surface); padding: 12px; border-radius: var(--radius-sm); }
+.refund-input-row { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
+.refund-num-input { width: 100px; height: 34px; padding: 0 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); }
+.btn-resolve-credit { height: 38px; background-color: var(--obhai-green); color: #fff; font-size: 13px; font-weight: 800; border-radius: var(--radius-sm); width: 100%; }
+
+/* ==========================================================================
+   MODALS
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(5px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 3000;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay.active { display: flex; opacity: 1; }
+.modal-close-x { position: absolute; top: 16px; right: 16px; font-size: 26px; color: var(--text-sub); }
+
+.dashboard-modal-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 800px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 28px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboard-user-header { display: flex; align-items: center; justify-content: space-between; background-color: var(--bg-subtle); border-radius: var(--radius-md); padding: 16px 20px; }
+.user-big-avatar { font-size: 32px; }
+.verified-badge { font-size: 11px; font-weight: 800; color: var(--obhai-green-dark); background-color: var(--obhai-green-light); padding: 2px 8px; border-radius: var(--radius-pill); }
+.wallet-balance-card { text-align: right; }
+.wallet-title { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+.wallet-amount { font-size: 22px; font-weight: 800; color: var(--obhai-green-dark); }
+.btn-wallet-topup { font-size: 12px; font-weight: 700; color: var(--accent-blue); }
+
+.dashboard-nav-tabs { display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+.dash-tab-btn { padding: 8px 16px; border-radius: var(--radius-pill); font-size: 13px; font-weight: 600; color: var(--text-sub); background-color: var(--bg-subtle); }
+.dash-tab-btn.active { background-color: var(--obhai-green); color: #ffffff; font-weight: 800; }
+
+.cust-dash-panel { display: none; flex-direction: column; gap: 14px; }
+.cust-dash-panel.active { display: flex; }
+
+.coupons-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.coupon-card { background-color: var(--bg-card); border: 1px dashed var(--border-color); border-left: 4px solid var(--obhai-green); border-radius: var(--radius-md); padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.btn-apply-coupon { align-self: flex-start; padding: 4px 14px; font-size: 12px; font-weight: 700; border-radius: var(--radius-pill); background-color: var(--obhai-green); color: #ffffff; }
+.form-input-textarea { padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background-color: var(--bg-subtle); color: var(--text-main); font-family: inherit; font-size: 13px; width: 100%; }
+.tickets-list { display: flex; flex-direction: column; gap: 10px; }
+.ticket-item { background-color: var(--bg-subtle); border-radius: var(--radius-md); padding: 12px; font-size: 12px; display: flex; flex-direction: column; gap: 6px; }
+
+/* Simulation Modal */
+.ride-simulation-modal { background-color: var(--bg-surface); border-radius: var(--radius-lg); width: 100%; max-width: 420px; padding: 28px; box-shadow: var(--shadow-float); text-align: center; }
+.sim-stage { display: none; flex-direction: column; align-items: center; }
+.sim-stage.active { display: flex; }
+.radar-pulse-wrapper { position: relative; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; margin: 10px 0 20px; }
+.radar-ring { position: absolute; border-radius: 50%; border: 2px solid var(--obhai-green); animation: pulseRadar 2s infinite ease-out; }
+.radar-ring.r1 { width: 30px; height: 30px; }
+.radar-ring.r2 { width: 60px; height: 60px; animation-delay: 0.5s; }
+.radar-ring.r3 { width: 100px; height: 100px; animation-delay: 1s; }
+.radar-center-icon { font-size: 26px; }
+@keyframes pulseRadar { 0% { transform: scale(0.3); opacity: 0.9; } 100% { transform: scale(1.3); opacity: 0; } }
+
+.driver-matched-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.driver-card-details { width: 100%; display: flex; align-items: center; gap: 14px; background-color: var(--bg-subtle); border-radius: var(--radius-md); padding: 14px; margin-bottom: 14px; text-align: left; }
+.driver-profile-pic { font-size: 26px; }
+.trip-completed-icon { font-size: 44px; margin-bottom: 10px; }
+
+/* Toast Notifications */
+.toast-container { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 10px; z-index: 4000; }
+.toast { background-color: #0b1320; color: #ffffff; padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 8px; animation: toastSlideIn 0.3s cubic-bezier(0.2, 0, 0, 1), toastFadeOut 0.3s ease 2.7s forwards; }
+@keyframes toastSlideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes toastFadeOut { to { transform: translateY(-10px); opacity: 0; } }
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS (FULL-FRAME SCALE)
+   ========================================================================== */
+@media (max-width: 1280px) {
+  .admin-metrics-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-grid-layout { grid-template-columns: 360px minmax(0, 1fr); }
+  .admin-grid-layout .admin-card:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 1024px) {
+  .obhai-booking-grid { grid-template-columns: 1fr; }
+  .obhai-map-wrapper { min-height: 440px; height: 440px; }
+  .admin-grid-layout { grid-template-columns: 1fr; }
+  .captain-grid-container { grid-template-columns: 1fr; }
+  .obhai-services-bar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .brand-slogan-pill { display: none; }
+  .nav-content-wrap { padding: 0 16px; }
+  .passenger-main-container { padding: 16px 16px 40px; }
+}
+
+@media (max-width: 640px) {
+  .obhai-services-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-metrics-bar { grid-template-columns: 1fr; }
+  .coupons-grid { grid-template-columns: 1fr; }
+  .create-coupon-form-grid { grid-template-columns: 1fr; }
+  .obhai-miles-promo-card { flex-direction: column; align-items: flex-start; }
+}
+
+</style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SCREEN 1: OBHAI AUTHENTIC LOGIN GATE (ওভাই লগইন গেট)
+       ========================================================================== -->
+  <section id="screen-auth" class="obhai-auth-screen active">
+    <div class="auth-box-container">
+      
+      <!-- Brand Header -->
+      <div class="auth-brand-area">
+        <div class="obhai-brand">
+          <span class="obhai-main-logo">OBHAI</span>
+          <span class="obhai-yellow-dot"></span>
+        </div>
+        <p class="obhai-tagline">সহজ ও নিরাপদ পথচলা • চলো একসাথে</p>
+      </div>
+
+      <!-- Auth Selection Card -->
+      <div class="auth-selection-card">
+        <h2 class="auth-title">স্বাগতম! আপনার পোর্টাল সিলেক্ট করুন</h2>
+        <p class="auth-desc">Select how you want to use the OBHAI Bangladesh platform:</p>
+
+        <!-- 3-Role Grid -->
+        <div class="obhai-role-grid">
+          
+          <!-- Role 1: Passenger -->
+          <div class="obhai-role-item active" data-role="customer">
+            <div class="role-icon-circle green-circle">🛺</div>
+            <div class="role-text-meta">
+              <h3>ওভাই যাত্রী (Passenger)</h3>
+              <p>সিএনজি মিটার রেট, বাইক ও প্রাইম কার রাইড বুকিং</p>
+            </div>
+            <span class="role-check-mark">✓</span>
+          </div>
+
+          <!-- Role 2: Captain -->
+          <div class="obhai-role-item" data-role="driver">
+            <div class="role-icon-circle yellow-circle">👨‍✈️</div>
+            <div class="role-text-meta">
+              <h3>ওভাই ক্যাপ্টেন (Captain)</h3>
+              <p>সিএনজি ও কার ট্রিপ গ্রহণ, দৈনিক আয় ও বোনাস</p>
+            </div>
+            <span class="role-check-mark">✓</span>
+          </div>
+
+          <!-- Role 3: Admin HQ -->
+          <div class="obhai-role-item" data-role="admin">
+            <div class="role-icon-circle navy-circle">🛡️</div>
+            <div class="role-text-meta">
+              <h3>ওভাই হেডকোয়ার্টার (Admin HQ)</h3>
+              <p>প্রাইসিং ইনপুট, অফার কুপন ও কাস্টমার রিফান্ড কন্ট্রোল</p>
+            </div>
+            <span class="role-check-mark">✓</span>
+          </div>
+
+        </div>
+
+        <!-- Login Input Form -->
+        <form class="obhai-login-form" onsubmit="event.preventDefault(); window.performLogin();">
+          <div class="obhai-form-field">
+            <label id="auth-input-label">মোবাইল নম্বর (Mobile Number)</label>
+            <div class="phone-input-wrap">
+              <span class="country-prefix">🇧🇩 +880</span>
+              <input type="tel" id="login-phone-input" class="obhai-input" value="1711234567" required>
+            </div>
+          </div>
+
+          <div class="obhai-form-field">
+            <label>৪-সংখ্যার গোপন পিন (PIN Code)</label>
+            <input type="password" id="login-pin-input" class="obhai-input" value="1234" maxlength="6" required>
+          </div>
+
+          <button type="submit" class="btn-obhai-primary full-width" id="btn-login-submit">
+            <span id="login-btn-text">যাত্রী হিসেবে লগইন করুন (Sign In as Passenger)</span>
+            <span>➔</span>
+          </button>
+        </form>
+
+        <!-- Fast 1-Click Demo Logins -->
+        <div class="quick-demo-strip">
+          <span class="quick-title">⚡ দ্রুত টেস্টের জন্য ১-ক্লিক লগইন:</span>
+          <div class="quick-btn-row">
+            <button class="btn-demo-chip" onclick="window.quickLogin('customer')">🛺 যাত্রী লগইন</button>
+            <button class="btn-demo-chip" onclick="window.quickLogin('driver')">👨‍✈️ ক্যাপ্টেন লগইন</button>
+            <button class="btn-demo-chip" onclick="window.quickLogin('admin')">🛡️ অ্যাডমিন HQ</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SCREEN 2: 🧑‍💼 OBHAI PASSENGER PORTAL (ওভাই যাত্রী ড্যাশবোর্ড)
+       ========================================================================== -->
+  <section id="screen-customer" class="obhai-app-screen" style="display: none;">
+    
+    <!-- Top Green OBHAI Header -->
+    <header class="obhai-top-navbar">
+      <div class="nav-content-wrap">
+        <div class="nav-left-brand">
+          <div class="obhai-brand mini">
+            <span class="obhai-main-logo">OBHAI</span>
+            <span class="obhai-yellow-dot"></span>
+          </div>
+          <span class="brand-slogan-pill">ঢাকা ও বাংলাদেশ</span>
+        </div>
+
+        <div class="nav-right-actions">
+          <!-- OBHAI Miles Loyalty Badge -->
+          <div class="obhai-miles-badge" id="open-wallet-btn" title="Click to view OBHAI Pay & Vouchers">
+            <span class="miles-star">⭐</span>
+            <div class="miles-info">
+              <span class="m-label">OBHAI Pay Balance</span>
+              <strong class="m-amount" id="cust-cash-amount">৳ 450.00</strong>
+            </div>
+          </div>
+
+          <!-- User Profile -->
+          <div class="obhai-user-pill">
+            <div class="user-avatar-sm">🧑‍💼</div>
+            <span>নাজমুস সাকিব (যাত্রী)</span>
+          </div>
+
+          <!-- Log Out Button -->
+          <button class="btn-obhai-logout" onclick="window.logOutToGate();" title="Log Out">
+            <span>লগ আউট</span>
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Passenger Container -->
+    <main class="passenger-main-container">
+      
+      <!-- Top Live Admin Announcement Banner -->
+      <div class="obhai-live-banner" id="customer-offer-announcement-strip">
+        <div class="banner-left-content">
+          <span class="pulse-green"></span>
+          <span id="announcement-offer-title">🎉 বিশেষ অফার: ১০% ওভাই ডিসকাউন্ট ও ৳ ১৫০ bKash ক্যাশব্যাক চালু রয়েছে!</span>
+        </div>
+        <button class="btn-banner-link" id="announcement-view-coupons-btn">অফার কুপনসমূহ (৫টি) ➔</button>
+      </div>
+
+      <!-- OBHAI Signature 6-Category Service Icons Bar -->
+      <div class="obhai-services-bar">
+        
+        <!-- 1. OBHAI CNG (Hero Service) -->
+        <div class="service-bubble-card active" data-service="cng">
+          <div class="bubble-icon-wrap cng-bg">🛺</div>
+          <span class="service-name">OBHAI CNG</span>
+          <span class="service-badge-sub">ডিজিটাল মিটার</span>
+        </div>
+
+        <!-- 2. OBHAI Moto -->
+        <div class="service-bubble-card" data-service="moto">
+          <div class="bubble-icon-wrap moto-bg">🏍️</div>
+          <span class="service-name">OBHAI Moto</span>
+          <span class="service-badge-sub">দ্রুততম বাইক</span>
+        </div>
+
+        <!-- 3. OBHAI Prime AC -->
+        <div class="service-bubble-card" data-service="prime">
+          <div class="bubble-icon-wrap car-bg">🚗</div>
+          <span class="service-name">OBHAI Prime</span>
+          <span class="service-badge-sub">এসি সেডান কার</span>
+        </div>
+
+        <!-- 4. OBHAI Micro -->
+        <div class="service-bubble-card" data-service="micro">
+          <div class="bubble-icon-wrap micro-bg">🚙</div>
+          <span class="service-name">OBHAI Micro</span>
+          <span class="service-badge-sub">৭-১১ সিট মাইক্রো</span>
+        </div>
+
+        <!-- 5. OBHAI Express -->
+        <div class="service-bubble-card" data-service="parcel">
+          <div class="bubble-icon-wrap parcel-bg">📦</div>
+          <span class="service-name">Express Parcel</span>
+          <span class="service-badge-sub">পার্সেল ডেলিভারি</span>
+        </div>
+
+        <!-- 6. OBHAI Seba -->
+        <div class="service-bubble-card" data-service="seba">
+          <div class="bubble-icon-wrap seba-bg">🚑</div>
+          <span class="service-name">OBHAI Seba</span>
+          <span class="service-badge-sub">অ্যাম্বুলেন্স সাপোর্ট</span>
+        </div>
+
+      </div>
+
+      <!-- Main 2-Column Booking Section & Map -->
+      <div class="obhai-booking-grid">
+        
+        <!-- Left Column: OBHAI Ride Booking Panel -->
+        <div class="obhai-card-booking">
+          
+          <div class="card-top-title">
+            <h2>কোথায় যাবেন? (Where to?)</h2>
+            <p>আপনার পিকআপ ও গন্তব্য লিখুন</p>
+          </div>
+
+          <!-- Locations Form -->
+          <div class="obhai-locations-form">
+            <div class="route-vertical-line">
+              <div class="p-dot green-dot"></div>
+              <div class="v-line"></div>
+              <div class="d-dot red-dot"></div>
+            </div>
+
+            <div class="inputs-column">
+              <div class="obhai-input-box">
+                <span class="input-icon">🟢</span>
+                <input type="text" id="pickup-input" class="route-input" placeholder="পিকআপ লোকেশন" value="মিরপুর ১০ গোলচত্বর, ঢাকা">
+                <button class="btn-gps" id="current-loc-btn" title="আমার বর্তমান লোকেশন">📍 GPS</button>
+              </div>
+
+              <div class="obhai-input-box">
+                <span class="input-icon">🔴</span>
+                <input type="text" id="dest-input" class="route-input" placeholder="কোথায় নামবেন?" value="ফার্মগেট ও কারওয়ান বাজার">
+                <button class="btn-swap" id="swap-locations-btn" title="লোকেশন অদলবদল">⇅</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dhaka Landmark Quick Chips -->
+          <div class="dhaka-chips-row">
+            <span class="chips-title">জনপ্রিয়:</span>
+            <button class="dhaka-chip" data-dest="ধানমন্ডি ২৭">ধানমন্ডি ২৭</button>
+            <button class="dhaka-chip" data-dest="মহাখালী বাস টার্মিনাল">মহাখালী</button>
+            <button class="dhaka-chip" data-dest="গুলশান ২ সার্কেল">গুলশান ২</button>
+            <button class="dhaka-chip" data-dest="মতিঝিল শাপলা চত্বর">মতিঝিল</button>
+            <button class="dhaka-chip" data-dest="উত্তরা হাউজবিল্ডিং">উত্তরা</button>
+          </div>
+
+          <!-- Applied Coupon Strip -->
+          <div class="applied-coupon-strip" id="applied-coupon-strip" style="display: none;">
+            <div class="coupon-left-tag">
+              <span class="tag-icon">🎟️</span>
+              <div class="tag-meta">
+                <strong id="active-coupon-code-text">OBHAI10</strong>
+                <span class="tag-desc" id="active-coupon-desc-text">১০% ওভাই ডিসকাউন্ট ভাউচার যুক্ত হয়েছে</span>
+              </div>
+            </div>
+            <button class="remove-coupon-btn" id="remove-coupon-btn">&times;</button>
+          </div>
+
+          <!-- OBHAI Digital Meter Display Box (Unique to OBHAI CNG!) -->
+          <div class="obhai-meter-box" id="obhai-meter-box">
+            <div class="meter-header">
+              <span>📟 OBHAI ডিজিটাল মিটার ক্যালকুলেশন</span>
+              <span class="gov-rate-tag">সরকারি রেট অনুযায়ী</span>
+            </div>
+            <div class="meter-breakdown-row">
+              <div class="m-col">
+                <span class="m-lbl">প্রথম ২ কিমি বেস</span>
+                <strong class="m-val">৳ ৬০.০০</strong>
+              </div>
+              <div class="m-col">
+                <span class="m-lbl">প্রতি কিমি রেট</span>
+                <strong class="m-val">৳ ১৮.০০ / কিমি</strong>
+              </div>
+              <div class="m-col">
+                <span class="m-lbl">অ্যাডমিন ছাড়</span>
+                <strong class="m-val text-green" id="meter-discount-label">- ১০% OFF</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vehicle Options List (Reactive to Admin Settings) -->
+          <div class="obhai-vehicles-list" id="vehicle-list">
+            
+            <!-- 1. OBHAI CNG -->
+            <div class="vehicle-item-row selected" data-car="cng" data-base-price="220">
+              <div class="v-icon-wrap">🛺</div>
+              <div class="v-details">
+                <div class="v-title-line">
+                  <strong class="v-name">OBHAI CNG (সিএনজি)</strong>
+                  <span class="v-capacity">👥 ৩ জন</span>
+                </div>
+                <div class="v-sub"><span class="eta-green">২ মিনিটে আসবে</span> • ডিজিটাল মিটারে নিরাপদ যাত্রা</div>
+              </div>
+              <div class="v-pricing">
+                <span class="old-price-val" style="display: none;">৳ 220</span>
+                <span class="v-final-price price-val">৳ 198</span>
+              </div>
+            </div>
+
+            <!-- 2. OBHAI Moto -->
+            <div class="vehicle-item-row" data-car="moto" data-base-price="130">
+              <div class="v-icon-wrap">🏍️</div>
+              <div class="v-details">
+                <div class="v-title-line">
+                  <strong class="v-name">OBHAI Moto (বাইক)</strong>
+                  <span class="v-capacity">👥 ১ জন</span>
+                </div>
+                <div class="v-sub"><span class="eta-green">১ মিনিটে আসবে</span> • জ্যামমুক্ত দ্রুত যাতায়াত</div>
+              </div>
+              <div class="v-pricing">
+                <span class="old-price-val" style="display: none;">৳ 130</span>
+                <span class="v-final-price price-val">৳ 117</span>
+              </div>
+            </div>
+
+            <!-- 3. OBHAI Prime AC -->
+            <div class="vehicle-item-row" data-car="prime" data-base-price="390">
+              <div class="v-icon-wrap">🚗</div>
+              <div class="v-details">
+                <div class="v-title-line">
+                  <strong class="v-name">OBHAI Prime AC (কার)</strong>
+                  <span class="v-capacity">👥 ৪ জন</span>
+                </div>
+                <div class="v-sub"><span class="eta-green">৪ মিনিটে আসবে</span> • এসি প্রিমিয়াম সেডান কার</div>
+              </div>
+              <div class="v-pricing">
+                <span class="old-price-val" style="display: none;">৳ 390</span>
+                <span class="v-final-price price-val">৳ 351</span>
+              </div>
+            </div>
+
+            <!-- 4. OBHAI Micro -->
+            <div class="vehicle-item-row" data-car="micro" data-base-price="620">
+              <div class="v-icon-wrap">🚙</div>
+              <div class="v-details">
+                <div class="v-title-line">
+                  <strong class="v-name">OBHAI Micro (মাইক্রোবাস)</strong>
+                  <span class="v-capacity">👥 ৭ জন</span>
+                </div>
+                <div class="v-sub"><span class="eta-green">৬ মিনিটে আসবে</span> • বড় পরিবার বা দলগত ভ্রমণের জন্য</div>
+              </div>
+              <div class="v-pricing">
+                <span class="old-price-val" style="display: none;">৳ 620</span>
+                <span class="v-final-price price-val">৳ 558</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Payment Method & Booking Confirmation Button -->
+          <div class="booking-footer-box">
+            <div class="pay-row">
+              <div class="pay-info">
+                <span>💳 পেমেন্ট মাধ্যম:</span>
+                <strong id="cust-payment-label">bKash (৳ ১৫০ ক্যাশব্যাক) / OBHAI Pay</strong>
+              </div>
+              <button class="btn-text-coupons" id="customer-open-coupons-btn">অফার কুপনসমূহ (৫টি) ➔</button>
+            </div>
+
+            <button class="btn-obhai-confirm" id="request-ride-btn">
+              <span id="request-btn-text">Request OBHAI CNG (সিএনজি বুক করুন)</span>
+              <span class="btn-fare-pill" id="btn-price-display">৳ 198</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Interactive Leaflet Map with CNG Markers -->
+        <div class="obhai-map-wrapper">
+          <div id="obhai-map" class="interactive-map"></div>
+          
+          <div class="map-floating-overlay">
+            <div class="map-live-tag">
+              <span class="pulse-green"></span>
+              <span>ঢাকা লাইভ রাডার: ৬৪টি সিএনজি ও কার সচল রয়েছে</span>
+            </div>
+            <button class="map-tool-btn" id="map-recenter-btn" title="Recenter Route">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            </button>
+          </div>
+
+          <div class="trip-summary-strip">
+            <div class="summary-item">
+              <span class="sum-label">আনুমানিক দূরত্ব</span>
+              <span class="sum-value" id="sum-dist">৭.৮ কিমি</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-item">
+              <span class="sum-label">আনুমানিক সময়</span>
+              <span class="sum-value" id="sum-duration">২২ মিনিট</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-item">
+              <span class="sum-label">bKash ক্যাশব্যাক</span>
+              <span class="sum-value text-green" id="sum-cashback">৳ ১৫০</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- OBHAI Miles & Safety Perks Card -->
+      <div class="obhai-miles-promo-card">
+        <div class="promo-text-wrap">
+          <span class="miles-club-badge">OBHAI MILES CLUB</span>
+          <h3>প্রতিটি রাইডে পয়েন্ট ও ক্যাশব্যাক জিতুন</h3>
+          <p>ওভাই-তে যত বেশি রাইড করবেন, তত বেশি মাইলস পয়েন্ট পাবেন যা পরবর্তীতে ফ্রি রাইডে রিডিম করা যাবে।</p>
+        </div>
+        <div class="promo-metric-wrap">
+          <div class="tier-box">
+            <span class="tier-title">আপনার বর্তমান ক্লাব টিয়ার:</span>
+            <strong class="tier-name">🥈 Silver Passenger</strong>
+            <span class="tier-points">২৪০ মাইলস পয়েন্ট অর্জিত</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="obhai-footer">
+        <div class="footer-container">
+          <div class="footer-top">
+            <div class="obhai-brand mini">
+              <span class="obhai-main-logo" style="color:#fff;">OBHAI</span>
+              <span class="obhai-yellow-dot"></span>
+            </div>
+            <button class="footer-help-link" id="footer-help-btn">সাহায্য ও অভিযোগ জানান (File a Complaint)</button>
+          </div>
+          <div class="footer-bottom">
+            <p>© ২০২৬ ওভাই সলিউশন্স লিমিটেড (OBHAI Solutions Ltd.) • রহিমআফরোজ গ্রুপ (Rahimafrooz Group) • ঢাকা, বাংলাদেশ।</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </section>
+
+  <!-- ==========================================================================
+       SCREEN 3: 👨‍✈️ OBHAI CAPTAIN PORTAL (ওভাই চালক / ক্যাপ্টেন প্যানেল)
+       ========================================================================== -->
+  <section id="screen-driver" class="obhai-app-screen" style="display: none;">
+    
+    <!-- Captain Navbar -->
+    <header class="obhai-top-navbar captain-nav">
+      <div class="nav-content-wrap">
+        <div class="nav-left-brand">
+          <div class="obhai-brand mini">
+            <span class="obhai-main-logo">OBHAI</span>
+            <span class="captain-badge-nav">CAPTAIN</span>
+          </div>
+          <div class="captain-online-status" id="driver-online-indicator">
+            <span class="pulse-green"></span>
+            <span id="driver-status-text">অনলাইন আছেন (ONLINE)</span>
+          </div>
+        </div>
+
+        <div class="nav-right-actions">
+          <div class="captain-income-box">
+            <span class="inc-lbl">আজকের মোট আয়:</span>
+            <strong class="inc-val" id="driver-nav-earnings">৳ ২,৮৫০.০০</strong>
+          </div>
+
+          <div class="obhai-user-pill">
+            <div class="user-avatar-sm">👨‍✈️</div>
+            <span>ক্যাপ্টেন আবুল কালাম (★ ৪.৯৩)</span>
+          </div>
+
+          <button class="btn-obhai-logout" onclick="window.logOutToGate();" title="Log Out">
+            <span>লগ আউট</span>
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Captain Main Body -->
+    <main class="passenger-main-container">
+      <div class="captain-grid-container">
+        
+        <!-- Column 1: Incoming CNG & Car Trip Requests -->
+        <div class="captain-card">
+          <div class="c-card-header">
+            <h3>🛺 নতুন ট্রিপ রিকোয়েস্ট (Live Requests)</h3>
+            <span class="live-radar-tag">● লাইভ রাডার সচল</span>
+          </div>
+
+          <div class="incoming-requests-queue" id="incoming-requests-queue">
+            <div class="incoming-trip-card">
+              <div class="trip-card-top">
+                <div class="passenger-brief">
+                  <div class="p-avatar">🧑‍💼</div>
+                  <div>
+                    <strong>নাজমুস সাকিব</strong>
+                    <div style="font-size:12px; color:var(--text-secondary);">★ ৪.৯৫ রেটিং • OBHAI CNG</div>
+                  </div>
+                </div>
+                <div class="trip-fare-badge">৳ ১৯৮.০০</div>
+              </div>
+
+              <div class="trip-route-meta">
+                <div>🟢 <strong>পিকআপ:</strong> মিরপুর ১০ গোলচত্বর (০.৪ কিমি দূরে)</div>
+                <div>🔴 <strong>ড্রপ-অফ:</strong> ফার্মগেট ও কারওয়ান বাজার (৭.৮ কিমি)</div>
+              </div>
+
+              <div class="trip-actions-row">
+                <button class="btn-obhai-primary full-width" id="driver-accept-btn">✅ ট্রিপ গ্রহণ করুন (Accept Trip)</button>
+                <button class="btn-decline" id="driver-decline-btn">বাতিল</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2: Today's Earnings & Quests -->
+        <div class="captain-card">
+          <div class="c-card-header">
+            <h3>💰 আজকের আয় ও বোনাস ড্যাশবোর্ড</h3>
+            <button class="btn-toggle-online" id="toggle-online-btn">অফলাইন যান</button>
+          </div>
+
+          <div class="earnings-highlight-box">
+            <span class="eh-lbl">আজকের মোট অর্জিত আয় (Today's Earnings)</span>
+            <div class="eh-amount" id="driver-today-earnings-val">৳ ২,৮৫০.০০</div>
+            <div class="eh-sub">
+              <span id="driver-completed-trips-count">১৪টি সফল ট্রিপ সম্পন্ন</span> • <span>৭.২ ঘণ্টা অনলাইন</span>
+            </div>
+          </div>
+
+          <div class="captain-quest-card">
+            <div class="quest-head">
+              <strong>সিএনজি ডেইলি টার্গেট কোয়েস্ট (৯০% সম্পন্ন)</strong>
+              <span class="quest-bonus">+ ৳ ৪০০ বোনাস</span>
+            </div>
+            <div class="quest-bar-bg">
+              <div class="quest-bar-fill" style="width: 90%;"></div>
+            </div>
+            <p style="font-size:12px; color:var(--text-secondary); margin-top:8px;">রাত ১০:৩০ এর মধ্যে আর মাত্র ১টি সিএনজি ট্রিপ সম্পন্ন করলেই ৳ ৪০০ বোনাস পাবেন!</p>
+          </div>
+
+          <div class="captain-vehicle-info-box">
+            <h4>🛺 নিবন্ধিত গাড়ির তথ্য</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">• গাড়ির নম্বর: <strong>ঢাকা-থ-১২-৩৪৫৬ (সবুজ সিএনজি)</strong><br>• লাইসেন্স ভেরিফিকেশন: <strong>অনুমোদিত ✓</strong></p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </section>
+
+  <!-- ==========================================================================
+       SCREEN 4: 🛡️ OBHAI COMPANY ADMIN HQ PORTAL (ওভাই অ্যাডমিন কন্ট্রোল প্যানেল)
+       ========================================================================== -->
+  <section id="screen-admin" class="obhai-app-screen" style="display: none;">
+    
+    <!-- Admin Navbar -->
+    <header class="obhai-top-navbar admin-nav">
+      <div class="nav-content-wrap">
+        <div class="nav-left-brand">
+          <div class="obhai-brand mini">
+            <span class="obhai-main-logo">OBHAI</span>
+            <span class="admin-badge-nav">ADMIN HQ</span>
+          </div>
+          <span class="brand-slogan-pill">কোম্পানি কন্ট্রোল প্যানেল</span>
+        </div>
+
+        <div class="nav-right-actions">
+          <div class="obhai-user-pill">
+            <div class="user-avatar-sm">🛡️</div>
+            <span>Super Admin</span>
+          </div>
+
+          <button class="btn-obhai-logout" onclick="window.logOutToGate();" title="Log Out">
+            <span>লগ আউট</span>
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Admin Main Body -->
+    <main class="passenger-main-container">
+      
+      <!-- Metrics Bar -->
+      <div class="admin-metrics-bar">
+        <div class="metric-card">
+          <div class="metric-icon">💰</div>
+          <div class="metric-info">
+            <span class="metric-label">আজকের মোট প্ল্যাটফর্ম ভলিউম</span>
+            <span class="metric-value">৳ ১,১২,৪০০</span>
+            <span class="metric-delta text-green">↑ ১৬.৮% প্রবৃদ্ধি</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">🛺</div>
+          <div class="metric-info">
+            <span class="metric-label">সচল সিএনজি ও কার (ঢাকা)</span>
+            <span class="metric-value">৮৬</span>
+            <span class="metric-delta text-green">● ২১০ জন ক্যাপ্টেন অনলাইন</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">🎟️</div>
+          <div class="metric-info">
+            <span class="metric-label">সক্রিয় প্রোমো অফার</span>
+            <span class="metric-value" id="admin-active-campaign-metric">OBHAI10 (10% OFF)</span>
+            <span class="metric-delta">৳ ১৫০ bKash ক্যাশব্যাক</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">🎧</div>
+          <div class="metric-info">
+            <span class="metric-label">যাত্রীদের অভিযোগ</span>
+            <span class="metric-value" id="admin-pending-disputes-count">১টি অপেক্ষমান</span>
+            <span class="metric-delta text-green">রিফান্ড প্রস্তুত ⚡</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin 3-Column Grid -->
+      <div class="admin-grid-layout">
+        
+        <!-- CARD 1: YOUR PRICING INPUTS (COMPANY CONTROL PANEL) -->
+        <!-- Exact replica of your reference image! -->
+        <div class="company-control-panel-card">
+          <div class="ccp-header">
+            <h2 class="ccp-title">Your Pricing Inputs</h2>
+            <span class="ccp-subtitle">(Company Control Panel)</span>
+            <p class="ccp-desc">Adjust your offer parameters</p>
+          </div>
+
+          <form id="pricing-control-form" onsubmit="event.preventDefault(); window.applyAdminPricingChanges();">
+            
+            <!-- 1. Store Discount (%) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-store-discount">Store Discount</label>
+                <span class="ccp-info-icon" title="Percentage discount applied to all rides">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-store-discount" class="ccp-input" value="10" min="0" max="90" step="1">
+                <span class="ccp-unit">%</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-store-discount">10% off</span></span>
+            </div>
+
+            <!-- 2. Coupon Code -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-coupon-code">Coupon Code</label>
+                <span class="ccp-info-icon" title="Global promotional voucher code">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="text" id="admin-coupon-code" class="ccp-input text-uppercase" value="OBHAI10">
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-coupon-code">OBHAI10</span></span>
+            </div>
+
+            <!-- 3. bKash Cashback (৳) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-bkash-cashback">bKash Cashback</label>
+                <span class="ccp-info-icon" title="Cashback in BDT credited on digital payment">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-bkash-cashback" class="ccp-input" value="150" min="0" max="1000" step="10">
+                <span class="ccp-unit">৳</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-bkash-cashback">৳ 150</span></span>
+            </div>
+
+            <!-- 4. Shipping / Surge Cost (৳) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-shipping-cost">Shipping Cost / Surge</label>
+                <span class="ccp-info-icon" title="Base pickup fee or peak surge addition in BDT">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-shipping-cost" class="ccp-input" value="0" min="0" max="500" step="10">
+                <span class="ccp-unit">৳</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-shipping-cost">Free shipping / ৳ 0 Surge</span></span>
+            </div>
+
+            <!-- 5. Sale Price (Optional) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-sale-price">Sale Price (Optional)</label>
+                <span class="ccp-info-icon" title="Fixed package price cap or base rate">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-sale-price" class="ccp-input" value="2050" min="100" max="10000" step="50">
+                <span class="ccp-unit">৳</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-sale-price">৳ 2,050</span></span>
+            </div>
+
+            <!-- Apply Changes Button -->
+            <button type="submit" class="btn-ccp-apply" id="btn-ccp-apply">
+              <span class="ccp-refresh-icon">🔄</span>
+              <span>Apply Changes</span>
+            </button>
+
+            <span class="ccp-footer-note">Changes reflect in real-time</span>
+          </form>
+        </div>
+
+        <!-- CARD 2: COUPON & PROMO MANAGER -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h3>🎟️ ওভাই কুপন ও প্রমো ম্যানেজার</h3>
+              <p>নতুন ডিসকাউন্ট ভাউচার তৈরি ও ম্যানেজ করুন</p>
+            </div>
+          </div>
+
+          <div class="admin-sub-box">
+            <h4>+ নতুন কুপন পাবলিশ করুন</h4>
+            <div class="create-coupon-form-grid">
+              <input type="text" id="new-code-input" placeholder="কুপন কোড (যেমন: CNG30)" class="form-input-sm text-uppercase">
+              <input type="number" id="new-discount-input" placeholder="ছাড় % (যেমন: ৩০)" class="form-input-sm" min="1" max="90">
+              <input type="number" id="new-max-input" placeholder="সর্বোচ্চ ৳ (যেমন: ১৫০)" class="form-input-sm" min="10">
+              <button class="btn-obhai-primary btn-sm" id="admin-create-coupon-btn" style="height:36px; padding:0 12px; font-size:12px;">+ পাবলিশ করুন</button>
+            </div>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Discount</th>
+                  <th>Max Cap</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-coupons-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CARD 3: CUSTOMER DISPUTES & REFUNDS INBOX -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h3>🎧 কাস্টমার বিরোধ ও রিফান্ড ইনবক্স</h3>
+              <p>যাত্রীদের অভিযোগ পর্যালোচনা ও ওয়ালেটে রিফান্ড জমা দিন</p>
+            </div>
+          </div>
+
+          <div class="disputes-list" id="admin-disputes-list"></div>
+        </div>
+
+      </div>
+    </main>
+  </section>
+
+  <!-- ==================== CUSTOMER WALLET & COMPLAINTS MODAL ==================== -->
+  <div class="modal-overlay" id="customer-account-modal">
+    <div class="dashboard-modal-card">
+      <button class="modal-close-x" id="customer-account-close-btn">&times;</button>
+      
+      <div class="dashboard-user-header">
+        <div class="user-big-avatar">🧑‍💼</div>
+        <div class="user-meta-details">
+          <div class="user-name-row">
+            <h3>নাজমুস সাকিব (ওভাই যাত্রী)</h3>
+            <span class="verified-badge">✓ ভেরিফাইড ইউজার</span>
+          </div>
+          <div class="user-sub-meta">★ ৪.৯৫ রেটিং • +৮৮০ ১৭১১-২৩৪৫৬৭</div>
+        </div>
+
+        <div class="wallet-balance-card">
+          <span class="wallet-title">OBHAI Pay Balance</span>
+          <div class="wallet-amount" id="modal-wallet-balance">৳ 450.00</div>
+          <button class="btn-wallet-topup" id="modal-topup-btn">+ টাকা যোগ করুন</button>
+        </div>
+      </div>
+
+      <div class="dashboard-nav-tabs">
+        <button class="dash-tab-btn active" data-cust-tab="coupons">🎟️ অফার কুপনসমূহ</button>
+        <button class="dash-tab-btn" data-cust-tab="complaints">🎧 অভিযোগ জানান</button>
+        <button class="dash-tab-btn" data-cust-tab="tickets">📋 বিরোধের ইতিহাস</button>
+      </div>
+
+      <div class="dashboard-tab-content">
+        <!-- 1. Coupons Panel -->
+        <div class="cust-dash-panel active" id="cust-panel-coupons">
+          <h4>আপনার জন্য বিশেষ প্রোমো কুপন</h4>
+          <div class="coupons-grid" id="customer-coupons-container"></div>
+        </div>
+
+        <!-- 2. File Complaint Panel -->
+        <div class="cust-dash-panel" id="cust-panel-complaints">
+          <h4>ওভাই হেডকোয়ার্টারে অভিযোগ সাবমিট করুন</h4>
+          <form id="customer-complaint-form" onsubmit="event.preventDefault(); window.customerSubmitComplaint();">
+            <div class="form-group">
+              <label>অভিযোগের বিষয় সিলেক্ট করুন</label>
+              <select id="cust-issue-select" class="form-input" required>
+                <option value="CNG Meter Disconnected">সিএনজি ক্যাপ্টেন মিটার ব্যবহার করতে অস্বীকার করেছে</option>
+                <option value="Driver Overcharged">ক্যাপ্টেন অতিরিক্ত ভাড়া দাবি করেছে</option>
+                <option value="Wrong Route">অপ্রয়োজনীয় লম্বা রাস্তা দিয়ে ঘুরিয়েছে</option>
+                <option value="Lost Item">সিএনজিতে মানিব্যাগ/মোবাইল ফেলে এসেছি</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>ট্রিপ আইডি</label>
+              <input type="text" id="cust-trip-id" class="form-input" value="OBHAI-CNG-8492 (মিরপুর ১০ ➔ ফার্মগেট)" required>
+            </div>
+            <div class="form-group">
+              <label>বিস্তারিত বিবরণ</label>
+              <textarea id="cust-complaint-text" class="form-input-textarea" rows="3" placeholder="সমস্যাটির বিবরণ লিখুন..." required></textarea>
+            </div>
+            <button type="submit" class="btn-obhai-primary full-width">অ্যাডমিনের কাছে অভিযোগ পাঠান ➔</button>
+          </form>
+        </div>
+
+        <!-- 3. Dispute History Panel -->
+        <div class="cust-dash-panel" id="cust-panel-tickets">
+          <h4>পূর্ববর্তী অভিযোগ ও রিফান্ড হিস্টোরি</h4>
+          <div class="tickets-list" id="customer-tickets-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DRIVER MATCHING SIMULATION MODAL ==================== -->
+  <div class="modal-overlay" id="ride-modal-overlay">
+    <div class="ride-simulation-modal">
+      <div class="sim-stage active" id="stage-searching">
+        <div class="radar-pulse-wrapper">
+          <div class="radar-ring r1"></div>
+          <div class="radar-ring r2"></div>
+          <div class="radar-ring r3"></div>
+          <div class="radar-center-icon">🛺</div>
+        </div>
+        <h3 class="sim-title">কাছের ওভাই সিএনজি ক্যাপ্টেন খোঁজা হচ্ছে...</h3>
+        <p class="sim-subtitle">মিরপুর ১০ এলাকার সেরা রেটেড চালকের সাথে সংযোগ করা হচ্ছে।</p>
+        <button class="btn-decline" id="cancel-search-btn">বাতিল করুন</button>
+      </div>
+
+      <div class="sim-stage" id="stage-matched">
+        <div class="driver-matched-header">
+          <div class="eta-pill">আসছেন <strong id="live-driver-eta">২ মিনিটে</strong></div>
+          <span class="car-badge" id="modal-car-name">OBHAI CNG</span>
+        </div>
+        <div class="driver-card-details">
+          <div class="driver-profile-pic">👨‍✈️</div>
+          <div class="driver-meta">
+            <h4>ক্যাপ্টেন আবুল কালাম</h4>
+            <div class="driver-rating-badge">★ ৪.৯৩ • ১,৮৪০টি সফল ট্রিপ</div>
+            <div class="vehicle-plate-info">
+              <span class="plate-box">ঢাকা-থ-১২-৩৪৫৬</span>
+              <span class="car-model-name">সবুজ সিএনজি অটোরিকশা</span>
+            </div>
+          </div>
+        </div>
+        <button class="btn-obhai-primary full-width" id="complete-sim-trip-btn">ট্রিপ সমাপ্ত করুন (Complete Trip)</button>
+      </div>
+
+      <div class="sim-stage" id="stage-completed">
+        <div class="trip-completed-icon">🎉</div>
+        <h3 class="sim-title">গন্তব্যে পৌঁছে গেছেন!</h3>
+        <p class="sim-subtitle">ভাড়া bKash / OBHAI Pay দিয়ে পরিশোধ করা হয়েছে।</p>
+        <button class="btn-obhai-primary full-width" id="finish-modal-btn">সমাপ্ত</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- OBHAI App JS -->
+  <script>
+/**
+ * ==========================================================================
+ * OBHAI BANGLADESH - AUTHENTIC ENGINE WITH PERSISTENT REACTIVE PRICING
+ * ==========================================================================
+ */
+
+// Default Pricing
+const defaultObhaiPricing = {
+  storeDiscount: 10,       // 10%
+  couponCode: 'OBHAI10',   // OBHAI10
+  bkashCashback: 150,      // ৳ 150
+  shippingCost: 0,         // ৳ 0 Surge
+  salePrice: 2050,         // ৳ 2,050
+};
+
+// Load saved pricing from LocalStorage
+let initialObhaiPricing = { ...defaultObhaiPricing };
+try {
+  const saved = localStorage.getItem('obhai_admin_pricing');
+  if (saved) initialObhaiPricing = { ...defaultObhaiPricing, ...JSON.parse(saved) };
+} catch (e) {
+  console.warn('Could not load saved OBHAI pricing', e);
+}
+
+// Initial Coupons Array with synced first entry
+const defaultObhaiCoupons = [
+  { code: initialObhaiPricing.couponCode, discount: initialObhaiPricing.storeDiscount, maxCap: initialObhaiPricing.bkashCashback, status: 'Active', title: `${initialObhaiPricing.storeDiscount}% ওভাই প্ল্যাটফর্ম ডিসকাউন্ট` },
+  { code: 'CNG25', discount: 25, maxCap: 80, status: 'Active', title: '৳ ৮০ ডিজিটাল সিএনজি মিটার সেভার' },
+  { code: 'MOTO50', discount: 50, maxCap: 60, status: 'Active', title: '৫০% প্রথম ওভাই বাইক রাইড' },
+  { code: 'PRIME20', discount: 20, maxCap: 120, status: 'Active', title: '২০% এসি প্রাইম কার অফার' },
+];
+
+let initialObhaiCouponsList = [...defaultObhaiCoupons];
+try {
+  const savedCoupons = localStorage.getItem('obhai_coupons_list');
+  if (savedCoupons) {
+    initialObhaiCouponsList = JSON.parse(savedCoupons);
+    if (initialObhaiCouponsList.length > 0) {
+      initialObhaiCouponsList[0].code = initialObhaiPricing.couponCode;
+      initialObhaiCouponsList[0].discount = initialObhaiPricing.storeDiscount;
+      initialObhaiCouponsList[0].maxCap = initialObhaiPricing.bkashCashback;
+    }
+  }
+} catch (e) {
+  console.warn('Could not load saved OBHAI coupons', e);
+}
+
+// Global Application State
+const appState = {
+  currentScreen: 'auth', // 'auth', 'customer', 'driver', 'admin'
+  selectedAuthRole: 'customer',
+  theme: localStorage.getItem('obhai_theme') || 'light',
+
+  // Company Admin Pricing Controls (Matching reference image)
+  adminPricing: initialObhaiPricing,
+
+  // Active Promo Campaigns
+  coupons: initialObhaiCouponsList,
+
+  // Passenger Profile & Wallet
+  customer: {
+    name: 'নাজমুস সাকিব',
+    phone: '+৮৮০ ১৭১১-২৩৪৫৬৭',
+    walletBalance: parseFloat(localStorage.getItem('obhai_customer_wallet')) || 450.00,
+    appliedCoupon: null,
+  },
+
+  // Captain Profile & Earnings
+  driver: {
+    name: 'ক্যাপ্টেন আবুল কালাম',
+    vehicle: 'ঢাকা-থ-১২-৩৪৫৬ (সবুজ সিএনজি)',
+    isOnline: true,
+    todayEarnings: parseFloat(localStorage.getItem('obhai_captain_earnings')) || 2850.00,
+    tripsCompleted: parseInt(localStorage.getItem('obhai_captain_trips')) || 14,
+  },
+
+  // Passenger Complaints / Disputes
+  disputes: [
+    {
+      id: 'OBHAI-TKT-7401',
+      userName: 'নাজমুস সাকিব (যাত্রী)',
+      userPhone: '+880 1711-234567',
+      tripId: 'OBHAI-CNG-8492 (মিরপুর ১০ ➔ ফার্মগেট)',
+      category: 'CNG Meter Disconnected',
+      details: 'সিএনজি ক্যাপ্টেন মিটার ব্যবহার করতে অস্বীকার করেছে এবং অতিরিক্ত ভাড়া দাবি করেছে।',
+      status: 'PENDING',
+      refundAmount: 130.00,
+      adminNote: '',
+      date: '১৫ মিনিট আগে'
+    },
+    {
+      id: 'OBHAI-TKT-6921',
+      userName: 'কাজী ফারহান (যাত্রী)',
+      userPhone: '+880 1912-334455',
+      tripId: 'OBHAI-PRIME-4410 (বনানী ➔ ধানমন্ডি)',
+      category: 'Driver Overcharged',
+      details: 'প্রাইম কার ড্রাইভার ভুল করে অতিরিক্ত পার্কিং চার্জ নিয়েছে।',
+      status: 'RESOLVED',
+      refundAmount: 70.00,
+      adminNote: 'ওভাই পে ওয়ালেটে ৳ ৭০ রিফান্ড যোগ করা হয়েছে।',
+      date: 'গতকাল'
+    }
+  ],
+
+  // Route & Fleet Pricing (Mirpur 10 to Farmgate)
+  route: {
+    pickup: { name: 'মিরপুর ১০ গোলচত্বর, ঢাকা', lat: 23.8069, lng: 90.3687 },
+    dest: { name: 'ফার্মগেট ও কারওয়ান বাজার', lat: 23.7570, lng: 90.3900 },
+    distanceKm: 7.8,
+    durationMins: 22,
+    selectedCar: 'cng',
+  },
+
+  isSearching: false,
+};
+
+// Base Rates for OBHAI Fleet (Government standard CNG meter base)
+const vehicleBaseRates = {
+  cng: { name: 'OBHAI CNG (সিএনজি)', base: 60, perKm: 18 },
+  moto: { name: 'OBHAI Moto (বাইক)', base: 40, perKm: 12 },
+  prime: { name: 'OBHAI Prime AC (কার)', base: 140, perKm: 28 },
+  micro: { name: 'OBHAI Micro (মাইক্রোবাস)', base: 220, perKm: 45 },
+  parcel: { name: 'Express Parcel (পার্সেল)', base: 50, perKm: 15 },
+  seba: { name: 'OBHAI Seba (অ্যাম্বুলেন্স)', base: 500, perKm: 50 },
+};
+
+// Leaflet Map Reference
+let mapInstance = null;
+let pickupMarker = null;
+let destMarker = null;
+let driverCarMarker = null;
+let routePolyline = null;
+let driverAnimInterval = null;
+
+// ==========================================================================
+// INITIALIZATION
+// ==========================================================================
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  initAuthGate();
+  initCustomerView();
+  initDriverView();
+  initAdminView();
+});
+
+// ==========================================================================
+// AUTHENTICATION GATE
+// ==========================================================================
+function initAuthGate() {
+  const roleCards = document.querySelectorAll('.obhai-role-item');
+  const phoneInput = document.getElementById('login-phone-input');
+  const inputLabel = document.getElementById('auth-input-label');
+  const btnText = document.getElementById('login-btn-text');
+
+  roleCards.forEach(card => {
+    card.addEventListener('click', () => {
+      roleCards.forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      const role = card.getAttribute('data-role');
+      appState.selectedAuthRole = role;
+
+      if (role === 'customer') {
+        if (inputLabel) inputLabel.textContent = 'মোবাইল নম্বর (Mobile Number)';
+        if (phoneInput) phoneInput.value = '1711234567';
+        if (btnText) btnText.textContent = 'যাত্রী হিসেবে লগইন করুন (Sign In as Passenger)';
+      } else if (role === 'driver') {
+        if (inputLabel) inputLabel.textContent = 'ক্যাপ্টেন আইডি / মোবাইল (Captain ID)';
+        if (phoneInput) phoneInput.value = '1819556677';
+        if (btnText) btnText.textContent = 'ক্যাপ্টেন হিসেবে প্রবেশ করুন (Sign In as Captain)';
+      } else if (role === 'admin') {
+        if (inputLabel) inputLabel.textContent = 'অ্যাডমিন ইউজারনেম (Admin Email/ID)';
+        if (phoneInput) phoneInput.value = 'admin@obhai.com';
+        if (btnText) btnText.textContent = 'ওভাই হেডকোয়ার্টারে প্রবেশ করুন (Admin HQ)';
+      }
+    });
+  });
+}
+
+window.performLogin = function() {
+  enterPortal(appState.selectedAuthRole);
+};
+
+window.quickLogin = function(role) {
+  appState.selectedAuthRole = role;
+  enterPortal(role);
+};
+
+function enterPortal(role) {
+  const authScreen = document.getElementById('screen-auth');
+  const custScreen = document.getElementById('screen-customer');
+  const driverScreen = document.getElementById('screen-driver');
+  const adminScreen = document.getElementById('screen-admin');
+
+  if (authScreen) authScreen.style.display = 'none';
+  if (custScreen) custScreen.style.display = role === 'customer' ? 'flex' : 'none';
+  if (driverScreen) driverScreen.style.display = role === 'driver' ? 'flex' : 'none';
+  if (adminScreen) adminScreen.style.display = role === 'admin' ? 'flex' : 'none';
+
+  appState.currentScreen = role;
+
+  if (role === 'customer') {
+    showToast('স্বাগতম! ওভাই যাত্রী প্যানেলে প্রবেশ করেছেন।');
+    if (!mapInstance) {
+      setTimeout(() => { initMap(); }, 200);
+    } else {
+      setTimeout(() => { mapInstance.invalidateSize(); }, 200);
+    }
+    updateCustomerPricing();
+    renderCustomerCoupons();
+  } else if (role === 'driver') {
+    showToast('ক্যাপ্টেন আবুল কালাম! ওভাই চালক ড্যাশবোর্ড সচল।');
+  } else if (role === 'admin') {
+    showToast('OBHAI HQ Admin Control Panel Active.');
+    populateAdminInputs();
+    syncPricingToCoupons();
+    updateAdminPricingHints();
+    renderAdminCouponsTable();
+  }
+}
+
+window.logOutToGate = function() {
+  const authScreen = document.getElementById('screen-auth');
+  const custScreen = document.getElementById('screen-customer');
+  const driverScreen = document.getElementById('screen-driver');
+  const adminScreen = document.getElementById('screen-admin');
+
+  if (custScreen) custScreen.style.display = 'none';
+  if (driverScreen) driverScreen.style.display = 'none';
+  if (adminScreen) adminScreen.style.display = 'none';
+  if (authScreen) authScreen.style.display = 'flex';
+
+  appState.currentScreen = 'auth';
+  showToast('লগ আউট সম্পন্ন হয়েছে।');
+};
+
+// ==========================================================================
+// 🧑‍💼 PASSENGER LOGIC & SERVICE BUBBLE SWITCHING
+// ==========================================================================
+function initCustomerView() {
+  initServiceBubbles();
+  initCustomerAccountModal();
+  initCustomerVehicleSelector();
+  initCustomerSimulation();
+  renderCustomerCoupons();
+  renderCustomerTickets();
+  updateCustomerWalletUI();
+
+  // Quick Chips
+  document.querySelectorAll('.dhaka-chips-row .dhaka-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const dest = chip.getAttribute('data-dest');
+      const destInput = document.getElementById('dest-input');
+      if (destInput) destInput.value = dest;
+      showToast(`গন্তব্য সিলেক্ট করা হয়েছে: ${dest}`);
+      renderMapRoute();
+      updateCustomerPricing();
+    });
+  });
+
+  // Remove Coupon
+  const removeCouponBtn = document.getElementById('remove-coupon-btn');
+  if (removeCouponBtn) {
+    removeCouponBtn.addEventListener('click', () => {
+      appState.customer.appliedCoupon = null;
+      document.getElementById('applied-coupon-strip').style.display = 'none';
+      updateCustomerPricing();
+      showToast('Coupon removed');
+    });
+  }
+
+  // Top Announcement Link
+  const announceBtn = document.getElementById('announcement-view-coupons-btn');
+  if (announceBtn) {
+    announceBtn.addEventListener('click', () => {
+      const modal = document.getElementById('customer-account-modal');
+      if (modal) modal.classList.add('active');
+    });
+  }
+
+  const openCouponsBtn = document.getElementById('customer-open-coupons-btn');
+  if (openCouponsBtn) {
+    openCouponsBtn.addEventListener('click', () => {
+      const modal = document.getElementById('customer-account-modal');
+      if (modal) modal.classList.add('active');
+    });
+  }
+}
+
+function initServiceBubbles() {
+  document.querySelectorAll('.obhai-services-bar .service-bubble-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.obhai-services-bar .service-bubble-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      const service = card.getAttribute('data-service');
+      appState.route.selectedCar = service;
+
+      // Highlight vehicle in list if available
+      const matchingVehicle = document.querySelector(`#vehicle-list .vehicle-item-row[data-car="${service}"]`);
+      if (matchingVehicle) {
+        document.querySelectorAll('#vehicle-list .vehicle-item-row').forEach(c => c.classList.remove('selected'));
+        matchingVehicle.classList.add('selected');
+      }
+
+      showToast(`ওভাই ${service.toUpperCase()} সেবা সিলেক্ট করা হয়েছে`);
+      updateCustomerPricing();
+    });
+  });
+}
+
+function updateCustomerWalletUI() {
+  const cashAmount = document.getElementById('cust-cash-amount');
+  const modalWallet = document.getElementById('modal-wallet-balance');
+  const payLabel = document.getElementById('cust-payment-label');
+
+  if (cashAmount) cashAmount.textContent = `৳ ${appState.customer.walletBalance.toFixed(2)}`;
+  if (modalWallet) modalWallet.textContent = `৳ ${appState.customer.walletBalance.toFixed(2)}`;
+  if (payLabel) {
+    payLabel.textContent = `bKash (৳ ${appState.adminPricing.bkashCashback} ক্যাশব্যাক) / OBHAI Pay (৳ ${Math.round(appState.customer.walletBalance)})`;
+  }
+}
+
+function updateCustomerPricing() {
+  const p = appState.adminPricing;
+  const dist = appState.route.distanceKm;
+
+  // Update Announcement Banner
+  const title = document.getElementById('announcement-offer-title');
+  if (title) {
+    title.textContent = `🎉 বিশেষ অফার: ${p.storeDiscount}% ওভাই ডিসকাউন্ট ও ৳ ${p.bkashCashback} bKash ক্যাশব্যাক চালু রয়েছে!`;
+  }
+
+  const sumCashback = document.getElementById('sum-cashback');
+  if (sumCashback) sumCashback.textContent = `৳ ${p.bkashCashback}`;
+
+  const payLabel = document.getElementById('cust-payment-label');
+  if (payLabel) {
+    payLabel.textContent = `bKash (৳ ${p.bkashCashback} ক্যাশব্যাক) / OBHAI Pay (৳ ${Math.round(appState.customer.walletBalance)})`;
+  }
+
+  const meterDiscountLabel = document.getElementById('meter-discount-label');
+  if (meterDiscountLabel) {
+    meterDiscountLabel.textContent = `- ${p.storeDiscount}% OFF`;
+  }
+
+  // Calculate Vehicle Fares
+  document.querySelectorAll('#vehicle-list .vehicle-item-row').forEach(card => {
+    const carKey = card.getAttribute('data-car');
+    const rate = vehicleBaseRates[carKey];
+    if (rate) {
+      let originalFare = Math.round(rate.base + (dist * rate.perKm) + p.shippingCost);
+      let discountAmt = Math.round(originalFare * (p.storeDiscount / 100));
+      let finalFare = Math.max(30, originalFare - discountAmt);
+
+      if (appState.customer.appliedCoupon) {
+        const c = appState.customer.appliedCoupon;
+        const extraDisc = Math.min(c.maxCap, Math.round(finalFare * (c.discount / 100)));
+        finalFare = Math.max(25, finalFare - extraDisc);
+      }
+
+      const priceVal = card.querySelector('.price-val');
+      const oldPrice = card.querySelector('.old-price-val');
+
+      if (priceVal) priceVal.textContent = `৳ ${finalFare}`;
+      if (oldPrice) {
+        if (p.storeDiscount > 0 || appState.customer.appliedCoupon) {
+          oldPrice.style.display = 'block';
+          oldPrice.textContent = `৳ ${originalFare}`;
+        } else {
+          oldPrice.style.display = 'none';
+        }
+      }
+      card.setAttribute('data-final-price', finalFare);
+    }
+  });
+
+  updateMainRequestBtn();
+}
+
+function updateMainRequestBtn() {
+  const selectedCard = document.querySelector('#vehicle-list .vehicle-item-row.selected');
+  const price = selectedCard ? selectedCard.getAttribute('data-final-price') : 198;
+  const carName = selectedCard ? selectedCard.querySelector('.v-name').textContent : 'OBHAI CNG';
+
+  const btnText = document.getElementById('request-btn-text');
+  const btnPrice = document.getElementById('btn-price-display');
+
+  if (btnText) btnText.textContent = `Request ${carName} (বুক করুন)`;
+  if (btnPrice) btnPrice.textContent = `৳ ${price}`;
+}
+
+function initCustomerVehicleSelector() {
+  document.querySelectorAll('#vehicle-list .vehicle-item-row').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('#vehicle-list .vehicle-item-row').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      const carKey = card.getAttribute('data-car');
+      
+      // Update top service bubble
+      document.querySelectorAll('.obhai-services-bar .service-bubble-card').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-service') === carKey);
+      });
+
+      updateMainRequestBtn();
+    });
+  });
+}
+
+function renderCustomerCoupons() {
+  const container = document.getElementById('customer-coupons-container');
+  if (!container) return;
+
+  container.innerHTML = '';
+  appState.coupons.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'coupon-card';
+    card.innerHTML = `
+      <div style="display:flex; justify-content:space-between; font-weight:800;">
+        <span style="font-family:monospace; background:var(--bg-subtle); padding:2px 6px; border-radius:4px;">${c.code}</span>
+        <span style="color:var(--obhai-green-dark);">${c.discount}% OFF</span>
+      </div>
+      <div style="font-size:12px; color:var(--text-sub);">${c.title} • সর্বোচ্চ ছাড় ৳ ${c.maxCap}</div>
+      <button class="btn-apply-coupon">Apply to Ride</button>
+    `;
+
+    card.querySelector('.btn-apply-coupon').addEventListener('click', () => {
+      appState.customer.appliedCoupon = c;
+      const strip = document.getElementById('applied-coupon-strip');
+      const codeTxt = document.getElementById('active-coupon-code-text');
+      const descTxt = document.getElementById('active-coupon-desc-text');
+
+      if (strip) strip.style.display = 'flex';
+      if (codeTxt) codeTxt.textContent = c.code;
+      if (descTxt) descTxt.textContent = `${c.discount}% ডিসকাউন্ট কুপন যুক্ত হয়েছে (সর্বোচ্চ ৳ ${c.maxCap})`;
+
+      document.getElementById('customer-account-modal').classList.remove('active');
+      updateCustomerPricing();
+      showToast(`🎉 কুপন ${c.code} আপনার ওভাই রাইডে যুক্ত হয়েছে!`);
+    });
+
+    container.appendChild(card);
+  });
+}
+
+function renderCustomerTickets() {
+  const container = document.getElementById('customer-tickets-container');
+  if (!container) return;
+
+  container.innerHTML = '';
+  appState.disputes.forEach(d => {
+    const item = document.createElement('div');
+    item.className = 'ticket-item';
+    item.innerHTML = `
+      <div style="display:flex; justify-content:space-between; font-weight:700;">
+        <span>${d.id} • ${d.category}</span>
+        <span class="table-status-pill ${d.status === 'RESOLVED' ? 'status-active' : ''}">${d.status}</span>
+      </div>
+      <div style="color:var(--text-sub);">"${d.details}"</div>
+      ${d.status === 'RESOLVED' ? `
+        <div style="color:var(--obhai-green-dark); font-weight:700; margin-top:4px;">
+          ✓ অ্যাডমিন রিফান্ড: ৳ ${d.refundAmount.toFixed(2)} আপনার ওভাই ওয়ালেটে যুক্ত হয়েছে!
+        </div>
+      ` : `
+        <div style="color:#b45309; font-weight:700; margin-top:4px;">
+          ⏳ ওভাই হেডকোয়ার্টারে পর্যালোচনাধীন রয়েছে।
+        </div>
+      `}
+    `;
+    container.appendChild(item);
+  });
+}
+
+window.customerSubmitComplaint = function() {
+  const issueSelect = document.getElementById('cust-issue-select');
+  const tripInp = document.getElementById('cust-trip-id');
+  const textInp = document.getElementById('cust-complaint-text');
+
+  const newTicket = {
+    id: `OBHAI-TKT-${Math.floor(1000 + Math.random() * 9000)}`,
+    userName: appState.customer.name,
+    userPhone: appState.customer.phone,
+    tripId: tripInp.value,
+    category: issueSelect.value,
+    details: textInp.value.trim(),
+    status: 'PENDING',
+    refundAmount: 130.00,
+    adminNote: '',
+    date: 'এইমাত্র'
+  };
+
+  appState.disputes.unshift(newTicket);
+  textInp.value = '';
+
+  renderCustomerTickets();
+  renderAdminDisputes();
+  showToast('✅ আপনার অভিযোগ ওভাই অ্যাডমিন ইনবক্সে পাঠানো হয়েছে।');
+};
+
+function initCustomerAccountModal() {
+  const modal = document.getElementById('customer-account-modal');
+  const walletNavBtn = document.getElementById('open-wallet-btn');
+  const footerHelpBtn = document.getElementById('footer-help-btn');
+  const closeBtn = document.getElementById('customer-account-close-btn');
+  const topupBtn = document.getElementById('modal-topup-btn');
+
+  const openAccount = (tab = 'coupons') => {
+    if (modal) modal.classList.add('active');
+    document.querySelectorAll('.dash-tab-btn').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('data-cust-tab') === tab);
+    });
+    document.querySelectorAll('.cust-dash-panel').forEach(p => {
+      p.classList.toggle('active', p.id === `cust-panel-${tab}`);
+    });
+  };
+
+  if (walletNavBtn) walletNavBtn.addEventListener('click', () => openAccount('coupons'));
+  if (footerHelpBtn) {
+    footerHelpBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openAccount('complaints');
+    });
+  }
+
+  if (closeBtn) closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+
+  document.querySelectorAll('.dash-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.getAttribute('data-cust-tab');
+      document.querySelectorAll('.dash-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.cust-dash-panel').forEach(p => {
+        p.classList.toggle('active', p.id === `cust-panel-${tab}`);
+      });
+    });
+  });
+
+  if (topupBtn) {
+    topupBtn.addEventListener('click', () => {
+      appState.customer.walletBalance += 500.00;
+      localStorage.setItem('obhai_customer_wallet', appState.customer.walletBalance);
+      updateCustomerWalletUI();
+      showToast('৳ ৫০০.০০ ওভাই পে ওয়ালেটে যোগ করা হয়েছে!');
+    });
+  }
+}
+
+function initCustomerSimulation() {
+  const reqBtn = document.getElementById('request-ride-btn');
+  const modal = document.getElementById('ride-modal-overlay');
+  const cancelBtn = document.getElementById('cancel-search-btn');
+  const completeBtn = document.getElementById('complete-sim-trip-btn');
+  const finishBtn = document.getElementById('finish-modal-btn');
+
+  const stageSearch = document.getElementById('stage-searching');
+  const stageMatched = document.getElementById('stage-matched');
+  const stageCompleted = document.getElementById('stage-completed');
+
+  if (reqBtn) {
+    reqBtn.addEventListener('click', () => {
+      stageSearch.classList.add('active');
+      stageMatched.classList.remove('active');
+      stageCompleted.classList.remove('active');
+      modal.classList.add('active');
+      appState.isSearching = true;
+
+      setTimeout(() => {
+        if (!appState.isSearching) return;
+        stageSearch.classList.remove('active');
+        stageMatched.classList.add('active');
+        startDriverTracking();
+        showToast('ক্যাপ্টেন আবুল কালাম সবুজ সিএনজি নিয়ে রওনা হয়েছেন!');
+      }, 2400);
+    });
+  }
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', () => {
+      appState.isSearching = false;
+      modal.classList.remove('active');
+      showToast('রাইড রিকোয়েস্ট বাতিল করা হয়েছে');
+    });
+  }
+
+  if (completeBtn) {
+    completeBtn.addEventListener('click', () => {
+      clearInterval(driverAnimInterval);
+      stageMatched.classList.remove('active');
+      stageCompleted.classList.add('active');
+    });
+  }
+
+  if (finishBtn) {
+    finishBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+      showToast('ওভাই দিয়ে ভ্রমণ করার জন্য ধন্যবাদ!');
+    });
+  }
+}
+
+function startDriverTracking() {
+  if (!mapInstance) return;
+  let dLat = appState.route.pickup.lat + 0.008;
+  let dLng = appState.route.pickup.lng + 0.006;
+
+  const carIcon = L.divIcon({
+    className: 'custom-car-marker',
+    html: '<span>🛺</span>',
+    iconSize: [28, 28],
+    iconAnchor: [14, 14]
+  });
+
+  if (driverCarMarker) mapInstance.removeLayer(driverCarMarker);
+  driverCarMarker = L.marker([dLat, dLng], { icon: carIcon }).addTo(mapInstance);
+
+  let steps = 0;
+  const total = 15;
+  clearInterval(driverAnimInterval);
+  driverAnimInterval = setInterval(() => {
+    steps++;
+    const progress = steps / total;
+    const curLat = dLat + (appState.route.pickup.lat - dLat) * progress;
+    const curLng = dLng + (appState.route.pickup.lng - dLng) * progress;
+    if (driverCarMarker) driverCarMarker.setLatLng([curLat, curLng]);
+    if (steps >= total) clearInterval(driverAnimInterval);
+  }, 1200);
+}
+
+// ==========================================================================
+// 👨‍✈️ DRIVER / CAPTAIN LOGIC
+// ==========================================================================
+function initDriverView() {
+  const toggleBtn = document.getElementById('toggle-online-btn');
+  const statusText = document.getElementById('driver-status-text');
+  const acceptBtn = document.getElementById('driver-accept-btn');
+  const declineBtn = document.getElementById('driver-decline-btn');
+
+  if (toggleBtn && statusText) {
+    toggleBtn.addEventListener('click', () => {
+      appState.driver.isOnline = !appState.driver.isOnline;
+      if (appState.driver.isOnline) {
+        statusText.textContent = 'অনলাইন আছেন (ONLINE)';
+        toggleBtn.textContent = 'অফলাইন যান';
+        showToast('আপনি এখন অনলাইন আছেন।');
+      } else {
+        statusText.textContent = 'অফলাইন আছেন (OFFLINE)';
+        toggleBtn.textContent = 'অনলাইন যান';
+        showToast('আপনি অফলাইনে গেছেন।');
+      }
+    });
+  }
+
+  if (acceptBtn) {
+    acceptBtn.addEventListener('click', () => {
+      showToast('ট্রিপ গ্রহণ করা হয়েছে! মিরপুর ১০ গোলচত্বরে পৌঁছান...');
+      appState.driver.todayEarnings += 198.00;
+      appState.driver.tripsCompleted += 1;
+      localStorage.setItem('obhai_captain_earnings', appState.driver.todayEarnings);
+      localStorage.setItem('obhai_captain_trips', appState.driver.tripsCompleted);
+      
+      const navEarnings = document.getElementById('driver-nav-earnings');
+      const bodyEarnings = document.getElementById('driver-today-earnings-val');
+      const tripsCount = document.getElementById('driver-completed-trips-count');
+
+      if (navEarnings) navEarnings.textContent = `৳ ${appState.driver.todayEarnings.toFixed(2)}`;
+      if (bodyEarnings) bodyEarnings.textContent = `৳ ${appState.driver.todayEarnings.toFixed(2)}`;
+      if (tripsCount) tripsCount.textContent = `${appState.driver.tripsCompleted}টি সফল ট্রিপ সম্পন্ন`;
+    });
+  }
+
+  if (declineBtn) {
+    declineBtn.addEventListener('click', () => {
+      showToast('ট্রিপ রিকোয়েস্ট বাতিল করা হয়েছে।');
+    });
+  }
+}
+
+// ==========================================================================
+// 🛡️ ADMIN VIEW LOGIC - COMPLETE SYNC WITH COUPONS
+// ==========================================================================
+function initAdminView() {
+  populateAdminInputs();
+  bindRealtimePricingInputs();
+  syncPricingToCoupons();
+  renderAdminCouponsTable();
+  renderAdminDisputes();
+}
+
+function populateAdminInputs() {
+  const p = appState.adminPricing;
+  const storeInput = document.getElementById('admin-store-discount');
+  const couponInput = document.getElementById('admin-coupon-code');
+  const bkashInput = document.getElementById('admin-bkash-cashback');
+  const shippingInput = document.getElementById('admin-shipping-cost');
+  const saleInput = document.getElementById('admin-sale-price');
+
+  if (storeInput) storeInput.value = p.storeDiscount;
+  if (couponInput) couponInput.value = p.couponCode;
+  if (bkashInput) bkashInput.value = p.bkashCashback;
+  if (shippingInput) shippingInput.value = p.shippingCost;
+  if (saleInput) saleInput.value = p.salePrice;
+
+  updateAdminPricingHints();
+}
+
+function syncPricingToCoupons() {
+  const p = appState.adminPricing;
+  if (appState.coupons.length > 0) {
+    appState.coupons[0].code = p.couponCode;
+    appState.coupons[0].discount = p.storeDiscount;
+    appState.coupons[0].maxCap = p.bkashCashback;
+    appState.coupons[0].title = `${p.storeDiscount}% ওভাই প্ল্যাটফর্ম ডিসকাউন্ট`;
+    appState.coupons[0].status = 'Active';
+  } else {
+    appState.coupons.unshift({
+      code: p.couponCode,
+      discount: p.storeDiscount,
+      maxCap: p.bkashCashback,
+      status: 'Active',
+      title: `${p.storeDiscount}% ওভাই প্ল্যাটফর্ম ডিসকাউন্ট`
+    });
+  }
+
+  localStorage.setItem('obhai_coupons_list', JSON.stringify(appState.coupons));
+}
+
+function bindRealtimePricingInputs() {
+  const storeInput = document.getElementById('admin-store-discount');
+  const couponInput = document.getElementById('admin-coupon-code');
+  const bkashInput = document.getElementById('admin-bkash-cashback');
+  const shippingInput = document.getElementById('admin-shipping-cost');
+  const saleInput = document.getElementById('admin-sale-price');
+
+  const syncAll = () => {
+    appState.adminPricing.storeDiscount = parseFloat(storeInput?.value) || 0;
+    appState.adminPricing.couponCode = couponInput?.value.trim().toUpperCase() || 'OBHAI10';
+    appState.adminPricing.bkashCashback = parseFloat(bkashInput?.value) || 0;
+    appState.adminPricing.shippingCost = parseFloat(shippingInput?.value) || 0;
+    appState.adminPricing.salePrice = parseFloat(saleInput?.value) || 2050;
+
+    // 1. Sync to coupons list
+    syncPricingToCoupons();
+
+    // 2. Save to LocalStorage
+    localStorage.setItem('obhai_admin_pricing', JSON.stringify(appState.adminPricing));
+
+    // 3. Update all UI elements
+    updateAdminPricingHints();
+    renderAdminCouponsTable();
+    renderCustomerCoupons();
+    updateCustomerPricing();
+  };
+
+  [storeInput, couponInput, bkashInput, shippingInput, saleInput].forEach(inp => {
+    if (inp) {
+      inp.addEventListener('input', syncAll);
+      inp.addEventListener('change', syncAll);
+    }
+  });
+}
+
+function updateAdminPricingHints() {
+  const p = appState.adminPricing;
+  const hintStore = document.getElementById('hint-store-discount');
+  const hintCoupon = document.getElementById('hint-coupon-code');
+  const hintBkash = document.getElementById('hint-bkash-cashback');
+  const hintShipping = document.getElementById('hint-shipping-cost');
+  const hintSale = document.getElementById('hint-sale-price');
+
+  if (hintStore) hintStore.textContent = `${p.storeDiscount}% off`;
+  if (hintCoupon) hintCoupon.textContent = p.couponCode;
+  if (hintBkash) hintBkash.textContent = `৳ ${p.bkashCashback}`;
+  if (hintShipping) hintShipping.textContent = p.shippingCost === 0 ? 'Free shipping / ৳ 0 Surge' : `৳ ${p.shippingCost} Surge`;
+  if (hintSale) hintSale.textContent = `৳ ${p.salePrice.toLocaleString()}`;
+
+  const campaignMetric = document.getElementById('admin-active-campaign-metric');
+  if (campaignMetric) {
+    campaignMetric.textContent = `${p.couponCode} (${p.storeDiscount}% OFF)`;
+    if (campaignMetric.nextElementSibling) {
+      campaignMetric.nextElementSibling.textContent = `৳ ${p.bkashCashback} bKash Cashback`;
+    }
+  }
+}
+
+window.applyAdminPricingChanges = function() {
+  const storeInput = document.getElementById('admin-store-discount');
+  const couponInput = document.getElementById('admin-coupon-code');
+  const bkashInput = document.getElementById('admin-bkash-cashback');
+  const shippingInput = document.getElementById('admin-shipping-cost');
+  const saleInput = document.getElementById('admin-sale-price');
+
+  appState.adminPricing.storeDiscount = parseFloat(storeInput?.value) || 0;
+  appState.adminPricing.couponCode = couponInput?.value.trim().toUpperCase() || 'OBHAI10';
+  appState.adminPricing.bkashCashback = parseFloat(bkashInput?.value) || 0;
+  appState.adminPricing.shippingCost = parseFloat(shippingInput?.value) || 0;
+  appState.adminPricing.salePrice = parseFloat(saleInput?.value) || 2050;
+
+  // Sync to Coupons list and persist
+  syncPricingToCoupons();
+  localStorage.setItem('obhai_admin_pricing', JSON.stringify(appState.adminPricing));
+
+  updateAdminPricingHints();
+  renderAdminCouponsTable();
+  renderCustomerCoupons();
+  updateCustomerPricing();
+
+  // Visual button animation
+  const applyBtn = document.getElementById('btn-ccp-apply');
+  if (applyBtn) {
+    const originalHTML = applyBtn.innerHTML;
+    applyBtn.innerHTML = `<span>✅ পরিবর্তন সংরক্ষিত হয়েছে!</span>`;
+    applyBtn.style.backgroundColor = '#008746';
+    setTimeout(() => {
+      applyBtn.innerHTML = originalHTML;
+      applyBtn.style.backgroundColor = '';
+    }, 1800);
+  }
+
+  showToast(`✅ ওভাই প্রাইসিং আপডেট হয়েছে: ${appState.adminPricing.couponCode} (${appState.adminPricing.storeDiscount}% OFF, সর্বোচ্চ ছাড় ৳ ${appState.adminPricing.bkashCashback}) লাইভ সক্রিয়!`);
+};
+
+function renderAdminCouponsTable() {
+  const tbody = document.getElementById('admin-coupons-table-body');
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+  appState.coupons.forEach((c, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="coupon-table-code">${c.code}</span></td>
+      <td><strong>${c.discount}% OFF</strong></td>
+      <td>৳ ${c.maxCap}</td>
+      <td><span class="table-status-pill status-active">${c.status}</span></td>
+      <td><button class="btn-delete-row" data-idx="${idx}">Delete</button></td>
+    `;
+
+    tr.querySelector('.btn-delete-row').addEventListener('click', () => {
+      appState.coupons.splice(idx, 1);
+      localStorage.setItem('obhai_coupons_list', JSON.stringify(appState.coupons));
+      renderAdminCouponsTable();
+      renderCustomerCoupons();
+      showToast(`কুপন ${c.code} ডিলিট করা হয়েছে`);
+    });
+
+    tbody.appendChild(tr);
+  });
+
+  const addCouponBtn = document.getElementById('admin-create-coupon-btn');
+  const codeInp = document.getElementById('new-code-input');
+  const discInp = document.getElementById('new-discount-input');
+  const maxInp = document.getElementById('new-max-input');
+
+  if (addCouponBtn && !addCouponBtn.dataset.bound) {
+    addCouponBtn.dataset.bound = "true";
+    addCouponBtn.addEventListener('click', () => {
+      const code = codeInp.value.trim().toUpperCase();
+      const disc = parseFloat(discInp.value);
+      const max = parseFloat(maxInp.value) || 150;
+
+      if (!code || isNaN(disc)) {
+        showToast('অনুগ্রহ করে কুপন কোড ও ডিসকাউন্ট শতকরা লিখুন', 'error');
+        return;
+      }
+
+      appState.coupons.unshift({
+        code: code,
+        discount: disc,
+        maxCap: max,
+        status: 'Active',
+        title: `${disc}% ওভাই প্রোমো ছাড়`
+      });
+
+      localStorage.setItem('obhai_coupons_list', JSON.stringify(appState.coupons));
+
+      codeInp.value = '';
+      discInp.value = '';
+      if (maxInp) maxInp.value = '';
+
+      renderAdminCouponsTable();
+      renderCustomerCoupons();
+      showToast(`🎟️ নতুন কুপন "${code}" পাবলিশ হয়েছে!`);
+    });
+  }
+}
+
+function renderAdminDisputes() {
+  const container = document.getElementById('admin-disputes-list');
+  const pendingCountDisplay = document.getElementById('admin-pending-disputes-count');
+  if (!container) return;
+
+  const pendingCount = appState.disputes.filter(d => d.status === 'PENDING').length;
+  if (pendingCountDisplay) pendingCountDisplay.textContent = `${pendingCount}টি অপেক্ষমান`;
+
+  container.innerHTML = '';
+  appState.disputes.forEach((d, idx) => {
+    const item = document.createElement('div');
+    item.className = `dispute-admin-item ${d.status === 'RESOLVED' ? 'resolved' : ''}`;
+    item.innerHTML = `
+      <div class="dispute-top-bar">
+        <span>👤 ${d.userName} (${d.userPhone})</span>
+        <span class="table-status-pill ${d.status === 'RESOLVED' ? 'status-active' : ''}">${d.status}</span>
+      </div>
+      <div style="font-size:12px; font-weight:700; color:var(--text-main);">
+        বিষয়: ${d.category} • <span style="color:var(--text-muted);">${d.tripId}</span>
+      </div>
+      <div class="dispute-user-note">"${d.details}"</div>
+
+      ${d.status === 'PENDING' ? `
+        <div class="dispute-resolution-controls">
+          <div class="refund-input-row">
+            <label>রিফান্ড অ্যামাউন্ট (৳):</label>
+            <input type="number" class="refund-num-input" id="refund-input-${d.id}" value="${d.refundAmount}">
+          </div>
+          <button class="btn-resolve-credit" id="resolve-btn-${d.id}">
+            ✅ রিফান্ড অনুমোদন করুন ও যাত্রীর ওয়ালেটে ৳ ${d.refundAmount} জমা দিন
+          </button>
+        </div>
+      ` : `
+        <div style="font-size:11px; font-weight:700; color:var(--obhai-green-dark); background:var(--obhai-green-light); padding:6px 10px; border-radius:var(--radius-sm);">
+          ✓ সমাধান সম্পন্ন: ৳ ${d.refundAmount.toFixed(2)} যাত্রীর ওয়ালেটে যুক্ত করা হয়েছে।
+        </div>
+      `}
+    `;
+
+    const resolveBtn = item.querySelector(`#resolve-btn-${d.id}`);
+    if (resolveBtn) {
+      resolveBtn.addEventListener('click', () => {
+        const refundInp = item.querySelector(`#refund-input-${d.id}`);
+        const customRefund = parseFloat(refundInp.value) || d.refundAmount;
+
+        d.status = 'RESOLVED';
+        d.refundAmount = customRefund;
+
+        appState.customer.walletBalance += customRefund;
+        localStorage.setItem('obhai_customer_wallet', appState.customer.walletBalance);
+        updateCustomerWalletUI();
+
+        renderAdminDisputes();
+        renderCustomerTickets();
+        showToast(`✅ অভিযোগ সমাধান হয়েছে! ৳ ${customRefund} যাত্রীর ওয়ালেটে যুক্ত হয়েছে।`);
+      });
+    }
+
+    container.appendChild(item);
+  });
+}
+
+// ==========================================================================
+// LEAFLET MAP
+// ==========================================================================
+function initMap() {
+  const mapElement = document.getElementById('obhai-map');
+  if (!mapElement || typeof L === 'undefined') return;
+
+  mapInstance = L.map('obhai-map', { zoomControl: false, attributionControl: false }).setView([23.7800, 90.3800], 13);
+  L.control.zoom({ position: 'bottomright' }).addTo(mapInstance);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19, subdomains: 'abcd' }).addTo(mapInstance);
+  renderMapRoute();
+
+  const recenterBtn = document.getElementById('map-recenter-btn');
+  if (recenterBtn) {
+    recenterBtn.addEventListener('click', () => {
+      const bounds = L.latLngBounds([
+        [appState.route.pickup.lat, appState.route.pickup.lng],
+        [appState.route.dest.lat, appState.route.dest.lng]
+      ]);
+      mapInstance.fitBounds(bounds, { padding: [50, 50] });
+      showToast('ম্যাপ সেন্টারে আনা হয়েছে');
+    });
+  }
+}
+
+function renderMapRoute() {
+  if (!mapInstance) return;
+  const p = appState.route.pickup;
+  const d = appState.route.dest;
+
+  const pickupIcon = L.divIcon({ className: 'custom-map-pin pin-pickup', html: '●', iconSize: [22, 22] });
+  const destIcon = L.divIcon({ className: 'custom-map-pin pin-dest', html: '■', iconSize: [22, 22] });
+
+  if (pickupMarker) mapInstance.removeLayer(pickupMarker);
+  if (destMarker) mapInstance.removeLayer(destMarker);
+  if (routePolyline) mapInstance.removeLayer(routePolyline);
+
+  pickupMarker = L.marker([p.lat, p.lng], { icon: pickupIcon }).addTo(mapInstance);
+  destMarker = L.marker([d.lat, d.lng], { icon: destIcon }).addTo(mapInstance);
+
+  const midLat = (p.lat + d.lat) / 2 + 0.005;
+  const midLng = (p.lng + d.lng) / 2 - 0.005;
+
+  routePolyline = L.polyline([[p.lat, p.lng], [midLat, midLng], [d.lat, d.lng]], {
+    color: '#00a859',
+    weight: 5,
+    dashArray: '6, 6'
+  }).addTo(mapInstance);
+
+  const bounds = L.latLngBounds([[p.lat, p.lng], [d.lat, d.lng]]);
+  mapInstance.fitBounds(bounds, { padding: [50, 50] });
+}
+
+// ==========================================================================
+// THEME & TOAST
+// ==========================================================================
+function initTheme() {
+  document.documentElement.setAttribute('data-theme', appState.theme);
+}
+
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${type === 'error' ? '⚠️' : '✓'}</span><span>${message}</span>`;
+  container.appendChild(toast);
+
+  setTimeout(() => { toast.remove(); }, 3200);
+}
+
+</script>
+</body>
+</html>

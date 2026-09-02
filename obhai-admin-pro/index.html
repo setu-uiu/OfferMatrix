@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ওভাই (OBHAI) - ডিজিটাল রাইড শেয়ারিং, সিএনজি ও ক্যাপ্টেন পোর্টাল</title>
+  
+  <!-- Google Fonts: Hind Siliguri for Bengali + Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS for Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <!-- OBHAI Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SCREEN 1: OBHAI AUTHENTIC LOGIN GATE (ওভাই লগইন গেট)
+       ========================================================================== -->
+  <section id="screen-auth" class="obhai-auth-screen active">
+    <div class="auth-box-container">
+      
+      <!-- Brand Header -->
+      <div class="auth-brand-area">
+        <div class="obhai-brand">
+          <span class="obhai-main-logo">OBHAI</span>
+          <span class="obhai-yellow-dot"></span>
+        </div>
+        <p class="obhai-tagline">সহজ ও নিরাপদ পথচলা • চলো একসাথে</p>
+      </div>
+
+      <!-- Auth Selection Card -->
+      <div class="auth-selection-card">
+        <h2 class="auth-title">স্বাগতম! আপনার পোর্টাল সিলেক্ট করুন</h2>
+        <p class="auth-desc">Select how you want to use the OBHAI Bangladesh platform:</p>
+
+        <!-- 3-Role Grid -->
+        <div class="obhai-role-grid">
+          
+          <!-- Role 1: Passenger -->
+          <div class="obhai-role-item active" data-role="customer">
+            <div class="role-icon-circle green-circle">🛺</div>
+            <div class="role-text-meta">
+              <h3>ওভাই যাত্রী (Passenger)</h3>
+              <p>সিএনজি মিটার রেট, বাইক ও প্রাইম কার রাইড বুকিং</p>
+            </div>
+            <span class="role-check-mark">✓</span>
+          </div>
+
+          <!-- Role 2: Captain -->
+          <div class="obhai-role-item" data-role="driver">
+            <div class="role-icon-circle yellow-circle">👨‍✈️</div>
+            <div class="role-text-meta">
+              <h3>ওভাই ক্যাপ্টেন (Captain)</h3>
+              <p>সিএনজি ও কার ট্রিপ গ্রহণ, দৈনিক আয় ও বোনাস</p>
+            </div>
+            <span class="role-check-mark">✓</span>
+          </div>
+
+          <!-- Role 3: Admin HQ -->
+          <div class="obhai-role-item" data-role="admin">
+            <div class="role-icon-circle navy-circle">🛡️</div>
+            <div class="role-text-meta">
+              <h3>ওভাই হেডকোয়ার্টার (Admin HQ)</h3>
+              <p>প্রাইসিং ইনপুট, অফার কুপন ও কাস্টমার রিফান্ড কন্ট্রোল</p>
+            </div>
+            <span class="role-check-mark">✓</span>
+          </div>
+
+        </div>
+
+        <!-- Login Input Form -->
+        <form class="obhai-login-form" onsubmit="event.preventDefault(); window.performLogin();">
+          <div class="obhai-form-field">
+            <label id="auth-input-label">মোবাইল নম্বর (Mobile Number)</label>
+            <div class="phone-input-wrap">
+              <span class="country-prefix">🇧🇩 +880</span>
+              <input type="tel" id="login-phone-input" class="obhai-input" value="1711234567" required>
+            </div>
+          </div>
+
+          <div class="obhai-form-field">
+            <label>৪-সংখ্যার গোপন পিন (PIN Code)</label>
+            <input type="password" id="login-pin-input" class="obhai-input" value="1234" maxlength="6" required>
+          </div>
+
+          <button type="submit" class="btn-obhai-primary full-width" id="btn-login-submit">
+            <span id="login-btn-text">যাত্রী হিসেবে লগইন করুন (Sign In as Passenger)</span>
+            <span>➔</span>
+          </button>
+        </form>
+
+        <!-- Fast 1-Click Demo Logins -->
+        <div class="quick-demo-strip">
+          <span class="quick-title">⚡ দ্রুত টেস্টের জন্য ১-ক্লিক লগইন:</span>
+          <div class="quick-btn-row">
+            <button class="btn-demo-chip" onclick="window.quickLogin('customer')">🛺 যাত্রী লগইন</button>
+            <button class="btn-demo-chip" onclick="window.quickLogin('driver')">👨‍✈️ ক্যাপ্টেন লগইন</button>
+            <button class="btn-demo-chip" onclick="window.quickLogin('admin')">🛡️ অ্যাডমিন HQ</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SCREEN 2: 🧑‍💼 OBHAI PASSENGER PORTAL (ওভাই যাত্রী ড্যাশবোর্ড)
+       ========================================================================== -->
+  <section id="screen-customer" class="obhai-app-screen" style="display: none;">
+    
+    <!-- Top Green OBHAI Header -->
+    <header class="obhai-top-navbar">
+      <div class="nav-content-wrap">
+        <div class="nav-left-brand">
+          <div class="obhai-brand mini">
+            <span class="obhai-main-logo">OBHAI</span>
+            <span class="obhai-yellow-dot"></span>
+          </div>
+          <span class="brand-slogan-pill">ঢাকা ও বাংলাদেশ</span>
+        </div>
+
+        <div class="nav-right-actions">
+          <!-- OBHAI Miles Loyalty Badge -->
+          <div class="obhai-miles-badge" id="open-wallet-btn" title="Click to view OBHAI Pay & Vouchers">
+            <span class="miles-star">⭐</span>
+            <div class="miles-info">
+              <span class="m-label">OBHAI Pay Balance</span>
+              <strong class="m-amount" id="cust-cash-amount">৳ 450.00</strong>
+            </div>
+          </div>
+
+          <!-- User Profile -->
+          <div class="obhai-user-pill">
+            <div class="user-avatar-sm">🧑‍💼</div>
+            <span>নাজমুস সাকিব (যাত্রী)</span>
+          </div>
+
+          <!-- Log Out Button -->
+          <button class="btn-obhai-logout" onclick="window.logOutToGate();" title="Log Out">
+            <span>লগ আউট</span>
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Passenger Container -->
+    <main class="passenger-main-container">
+      
+      <!-- Top Live Admin Announcement Banner -->
+      <div class="obhai-live-banner" id="customer-offer-announcement-strip">
+        <div class="banner-left-content">
+          <span class="pulse-green"></span>
+          <span id="announcement-offer-title">🎉 বিশেষ অফার: ১০% ওভাই ডিসকাউন্ট ও ৳ ১৫০ bKash ক্যাশব্যাক চালু রয়েছে!</span>
+        </div>
+        <button class="btn-banner-link" id="announcement-view-coupons-btn">অফার কুপনসমূহ (৫টি) ➔</button>
+      </div>
+
+      <!-- OBHAI Signature 6-Category Service Icons Bar -->
+      <div class="obhai-services-bar">
+        
+        <!-- 1. OBHAI CNG (Hero Service) -->
+        <div class="service-bubble-card active" data-service="cng">
+          <div class="bubble-icon-wrap cng-bg">🛺</div>
+          <span class="service-name">OBHAI CNG</span>
+          <span class="service-badge-sub">ডিজিটাল মিটার</span>
+        </div>
+
+        <!-- 2. OBHAI Moto -->
+        <div class="service-bubble-card" data-service="moto">
+          <div class="bubble-icon-wrap moto-bg">🏍️</div>
+          <span class="service-name">OBHAI Moto</span>
+          <span class="service-badge-sub">দ্রুততম বাইক</span>
+        </div>
+
+        <!-- 3. OBHAI Prime AC -->
+        <div class="service-bubble-card" data-service="prime">
+          <div class="bubble-icon-wrap car-bg">🚗</div>
+          <span class="service-name">OBHAI Prime</span>
+          <span class="service-badge-sub">এসি সেডান কার</span>
+        </div>
+
+        <!-- 4. OBHAI Micro -->
+        <div class="service-bubble-card" data-service="micro">
+          <div class="bubble-icon-wrap micro-bg">🚙</div>
+          <span class="service-name">OBHAI Micro</span>
+          <span class="service-badge-sub">৭-১১ সিট মাইক্রো</span>
+        </div>
+
+        <!-- 5. OBHAI Express -->
+        <div class="service-bubble-card" data-service="parcel">
+          <div class="bubble-icon-wrap parcel-bg">📦</div>
+          <span class="service-name">Express Parcel</span>
+          <span class="service-badge-sub">পার্সেল ডেলিভারি</span>
+        </div>
+
+        <!-- 6. OBHAI Seba -->
+        <div class="service-bubble-card" data-service="seba">
+          <div class="bubble-icon-wrap seba-bg">🚑</div>
+          <span class="service-name">OBHAI Seba</span>
+          <span class="service-badge-sub">অ্যাম্বুলেন্স সাপোর্ট</span>
+        </div>
+
+      </div>
+
+      <!-- Main 2-Column Booking Section & Map -->
+      <div class="obhai-booking-grid">
+        
+        <!-- Left Column: OBHAI Ride Booking Panel -->
+        <div class="obhai-card-booking">
+          
+          <div class="card-top-title">
+            <h2>কোথায় যাবেন? (Where to?)</h2>
+            <p>আপনার পিকআপ ও গন্তব্য লিখুন</p>
+          </div>
+
+          <!-- Locations Form -->
+          <div class="obhai-locations-form">
+            <div class="route-vertical-line">
+              <div class="p-dot green-dot"></div>
+              <div class="v-line"></div>
+              <div class="d-dot red-dot"></div>
+            </div>
+
+            <div class="inputs-column">
+              <div class="obhai-input-box">
+                <span class="input-icon">🟢</span>
+                <input type="text" id="pickup-input" class="route-input" placeholder="পিকআপ লোকেশন" value="মিরপুর ১০ গোলচত্বর, ঢাকা">
+                <button class="btn-gps" id="current-loc-btn" title="আমার বর্তমান লোকেশন">📍 GPS</button>
+              </div>
+
+              <div class="obhai-input-box">
+                <span class="input-icon">🔴</span>
+                <input type="text" id="dest-input" class="route-input" placeholder="কোথায় নামবেন?" value="ফার্মগেট ও কারওয়ান বাজার">
+                <button class="btn-swap" id="swap-locations-btn" title="লোকেশন অদলবদল">⇅</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dhaka Landmark Quick Chips -->
+          <div class="dhaka-chips-row">
+            <span class="chips-title">জনপ্রিয়:</span>
+            <button class="dhaka-chip" data-dest="ধানমন্ডি ২৭">ধানমন্ডি ২৭</button>
+            <button class="dhaka-chip" data-dest="মহাখালী বাস টার্মিনাল">মহাখালী</button>
+            <button class="dhaka-chip" data-dest="গুলশান ২ সার্কেল">গুলশান ২</button>
+            <button class="dhaka-chip" data-dest="মতিঝিল শাপলা চত্বর">মতিঝিল</button>
+            <button class="dhaka-chip" data-dest="উত্তরা হাউজবিল্ডিং">উত্তরা</button>
+          </div>
+
+          <!-- Applied Coupon Strip -->
+          <div class="applied-coupon-strip" id="applied-coupon-strip" style="display: none;">
+            <div class="coupon-left-tag">
+              <span class="tag-icon">🎟️</span>
+              <div class="tag-meta">
+                <strong id="active-coupon-code-text">OBHAI10</strong>
+                <span class="tag-desc" id="active-coupon-desc-text">১০% ওভাই ডিসকাউন্ট ভাউচার যুক্ত হয়েছে</span>
+              </div>
+            </div>
+            <button class="remove-coupon-btn" id="remove-coupon-btn">&times;</button>
+          </div>
+
+          <!-- OBHAI Digital Meter Display Box (Unique to OBHAI CNG!) -->
+          <div class="obhai-meter-box" id="obhai-meter-box">
+            <div class="meter-header">
+              <span>📟 OBHAI ডিজিটাল মিটার ক্যালকুলেশন</span>
+              <span class="gov-rate-tag">সরকারি রেট অনুযায়ী</span>
+            </div>
+            <div class="meter-breakdown-row">
+              <div class="m-col">
+                <span class="m-lbl">প্রথম ২ কিমি বেস</span>
+                <strong class="m-val">৳ ৬০.০০</strong>
+              </div>
+              <div class="m-col">
+                <span class="m-lbl">প্রতি কিমি রেট</span>
+                <strong class="m-val">৳ ১৮.০০ / কিমি</strong>
+              </div>
+              <div class="m-col">
+                <span class="m-lbl">অ্যাডমিন ছাড়</span>
+                <strong class="m-val text-green" id="meter-discount-label">- ১০% OFF</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vehicle Options List (Reactive to Admin Settings) -->
+          <div class="obhai-vehicles-list" id="vehicle-list">
+            
+            <!-- 1. OBHAI CNG -->
+            <div class="vehicle-item-row selected" data-car="cng" data-base-price="220">
+              <div class="v-icon-wrap">🛺</div>
+              <div class="v-details">
+                <div class="v-title-line">
+                  <strong class="v-name">OBHAI CNG (সিএনজি)</strong>
+                  <span class="v-capacity">👥 ৩ জন</span>
+                </div>
+                <div class="v-sub"><span class="eta-green">২ মিনিটে আসবে</span> • ডিজিটাল মিটারে নিরাপদ যাত্রা</div>
+              </div>
+              <div class="v-pricing">
+                <span class="old-price-val" style="display: none;">৳ 220</span>
+                <span class="v-final-price price-val">৳ 198</span>
+              </div>
+            </div>
+
+            <!-- 2. OBHAI Moto -->
+            <div class="vehicle-item-row" data-car="moto" data-base-price="130">
+              <div class="v-icon-wrap">🏍️</div>
+              <div class="v-details">
+                <div class="v-title-line">
+                  <strong class="v-name">OBHAI Moto (বাইক)</strong>
+                  <span class="v-capacity">👥 ১ জন</span>
+                </div>
+                <div class="v-sub"><span class="eta-green">১ মিনিটে আসবে</span> • জ্যামমুক্ত দ্রুত যাতায়াত</div>
+              </div>
+              <div class="v-pricing">
+                <span class="old-price-val" style="display: none;">৳ 130</span>
+                <span class="v-final-price price-val">৳ 117</span>
+              </div>
+            </div>
+
+            <!-- 3. OBHAI Prime AC -->
+            <div class="vehicle-item-row" data-car="prime" data-base-price="390">
+              <div class="v-icon-wrap">🚗</div>
+              <div class="v-details">
+                <div class="v-title-line">
+                  <strong class="v-name">OBHAI Prime AC (কার)</strong>
+                  <span class="v-capacity">👥 ৪ জন</span>
+                </div>
+                <div class="v-sub"><span class="eta-green">৪ মিনিটে আসবে</span> • এসি প্রিমিয়াম সেডান কার</div>
+              </div>
+              <div class="v-pricing">
+                <span class="old-price-val" style="display: none;">৳ 390</span>
+                <span class="v-final-price price-val">৳ 351</span>
+              </div>
+            </div>
+
+            <!-- 4. OBHAI Micro -->
+            <div class="vehicle-item-row" data-car="micro" data-base-price="620">
+              <div class="v-icon-wrap">🚙</div>
+              <div class="v-details">
+                <div class="v-title-line">
+                  <strong class="v-name">OBHAI Micro (মাইক্রোবাস)</strong>
+                  <span class="v-capacity">👥 ৭ জন</span>
+                </div>
+                <div class="v-sub"><span class="eta-green">৬ মিনিটে আসবে</span> • বড় পরিবার বা দলগত ভ্রমণের জন্য</div>
+              </div>
+              <div class="v-pricing">
+                <span class="old-price-val" style="display: none;">৳ 620</span>
+                <span class="v-final-price price-val">৳ 558</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Payment Method & Booking Confirmation Button -->
+          <div class="booking-footer-box">
+            <div class="pay-row">
+              <div class="pay-info">
+                <span>💳 পেমেন্ট মাধ্যম:</span>
+                <strong id="cust-payment-label">bKash (৳ ১৫০ ক্যাশব্যাক) / OBHAI Pay</strong>
+              </div>
+              <button class="btn-text-coupons" id="customer-open-coupons-btn">অফার কুপনসমূহ (৫টি) ➔</button>
+            </div>
+
+            <button class="btn-obhai-confirm" id="request-ride-btn">
+              <span id="request-btn-text">Request OBHAI CNG (সিএনজি বুক করুন)</span>
+              <span class="btn-fare-pill" id="btn-price-display">৳ 198</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Interactive Leaflet Map with CNG Markers -->
+        <div class="obhai-map-wrapper">
+          <div id="obhai-map" class="interactive-map"></div>
+          
+          <div class="map-floating-overlay">
+            <div class="map-live-tag">
+              <span class="pulse-green"></span>
+              <span>ঢাকা লাইভ রাডার: ৬৪টি সিএনজি ও কার সচল রয়েছে</span>
+            </div>
+            <button class="map-tool-btn" id="map-recenter-btn" title="Recenter Route">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            </button>
+          </div>
+
+          <div class="trip-summary-strip">
+            <div class="summary-item">
+              <span class="sum-label">আনুমানিক দূরত্ব</span>
+              <span class="sum-value" id="sum-dist">৭.৮ কিমি</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-item">
+              <span class="sum-label">আনুমানিক সময়</span>
+              <span class="sum-value" id="sum-duration">২২ মিনিট</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-item">
+              <span class="sum-label">bKash ক্যাশব্যাক</span>
+              <span class="sum-value text-green" id="sum-cashback">৳ ১৫০</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- OBHAI Miles & Safety Perks Card -->
+      <div class="obhai-miles-promo-card">
+        <div class="promo-text-wrap">
+          <span class="miles-club-badge">OBHAI MILES CLUB</span>
+          <h3>প্রতিটি রাইডে পয়েন্ট ও ক্যাশব্যাক জিতুন</h3>
+          <p>ওভাই-তে যত বেশি রাইড করবেন, তত বেশি মাইলস পয়েন্ট পাবেন যা পরবর্তীতে ফ্রি রাইডে রিডিম করা যাবে।</p>
+        </div>
+        <div class="promo-metric-wrap">
+          <div class="tier-box">
+            <span class="tier-title">আপনার বর্তমান ক্লাব টিয়ার:</span>
+            <strong class="tier-name">🥈 Silver Passenger</strong>
+            <span class="tier-points">২৪০ মাইলস পয়েন্ট অর্জিত</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="obhai-footer">
+        <div class="footer-container">
+          <div class="footer-top">
+            <div class="obhai-brand mini">
+              <span class="obhai-main-logo" style="color:#fff;">OBHAI</span>
+              <span class="obhai-yellow-dot"></span>
+            </div>
+            <button class="footer-help-link" id="footer-help-btn">সাহায্য ও অভিযোগ জানান (File a Complaint)</button>
+          </div>
+          <div class="footer-bottom">
+            <p>© ২০২৬ ওভাই সলিউশন্স লিমিটেড (OBHAI Solutions Ltd.) • রহিমআফরোজ গ্রুপ (Rahimafrooz Group) • ঢাকা, বাংলাদেশ।</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </section>
+
+  <!-- ==========================================================================
+       SCREEN 3: 👨‍✈️ OBHAI CAPTAIN PORTAL (ওভাই চালক / ক্যাপ্টেন প্যানেল)
+       ========================================================================== -->
+  <section id="screen-driver" class="obhai-app-screen" style="display: none;">
+    
+    <!-- Captain Navbar -->
+    <header class="obhai-top-navbar captain-nav">
+      <div class="nav-content-wrap">
+        <div class="nav-left-brand">
+          <div class="obhai-brand mini">
+            <span class="obhai-main-logo">OBHAI</span>
+            <span class="captain-badge-nav">CAPTAIN</span>
+          </div>
+          <div class="captain-online-status" id="driver-online-indicator">
+            <span class="pulse-green"></span>
+            <span id="driver-status-text">অনলাইন আছেন (ONLINE)</span>
+          </div>
+        </div>
+
+        <div class="nav-right-actions">
+          <div class="captain-income-box">
+            <span class="inc-lbl">আজকের মোট আয়:</span>
+            <strong class="inc-val" id="driver-nav-earnings">৳ ২,৮৫০.০০</strong>
+          </div>
+
+          <div class="obhai-user-pill">
+            <div class="user-avatar-sm">👨‍✈️</div>
+            <span>ক্যাপ্টেন আবুল কালাম (★ ৪.৯৩)</span>
+          </div>
+
+          <button class="btn-obhai-logout" onclick="window.logOutToGate();" title="Log Out">
+            <span>লগ আউট</span>
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Captain Main Body -->
+    <main class="passenger-main-container">
+      <div class="captain-grid-container">
+        
+        <!-- Column 1: Incoming CNG & Car Trip Requests -->
+        <div class="captain-card">
+          <div class="c-card-header">
+            <h3>🛺 নতুন ট্রিপ রিকোয়েস্ট (Live Requests)</h3>
+            <span class="live-radar-tag">● লাইভ রাডার সচল</span>
+          </div>
+
+          <div class="incoming-requests-queue" id="incoming-requests-queue">
+            <div class="incoming-trip-card">
+              <div class="trip-card-top">
+                <div class="passenger-brief">
+                  <div class="p-avatar">🧑‍💼</div>
+                  <div>
+                    <strong>নাজমুস সাকিব</strong>
+                    <div style="font-size:12px; color:var(--text-secondary);">★ ৪.৯৫ রেটিং • OBHAI CNG</div>
+                  </div>
+                </div>
+                <div class="trip-fare-badge">৳ ১৯৮.০০</div>
+              </div>
+
+              <div class="trip-route-meta">
+                <div>🟢 <strong>পিকআপ:</strong> মিরপুর ১০ গোলচত্বর (০.৪ কিমি দূরে)</div>
+                <div>🔴 <strong>ড্রপ-অফ:</strong> ফার্মগেট ও কারওয়ান বাজার (৭.৮ কিমি)</div>
+              </div>
+
+              <div class="trip-actions-row">
+                <button class="btn-obhai-primary full-width" id="driver-accept-btn">✅ ট্রিপ গ্রহণ করুন (Accept Trip)</button>
+                <button class="btn-decline" id="driver-decline-btn">বাতিল</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2: Today's Earnings & Quests -->
+        <div class="captain-card">
+          <div class="c-card-header">
+            <h3>💰 আজকের আয় ও বোনাস ড্যাশবোর্ড</h3>
+            <button class="btn-toggle-online" id="toggle-online-btn">অফলাইন যান</button>
+          </div>
+
+          <div class="earnings-highlight-box">
+            <span class="eh-lbl">আজকের মোট অর্জিত আয় (Today's Earnings)</span>
+            <div class="eh-amount" id="driver-today-earnings-val">৳ ২,৮৫০.০০</div>
+            <div class="eh-sub">
+              <span id="driver-completed-trips-count">১৪টি সফল ট্রিপ সম্পন্ন</span> • <span>৭.২ ঘণ্টা অনলাইন</span>
+            </div>
+          </div>
+
+          <div class="captain-quest-card">
+            <div class="quest-head">
+              <strong>সিএনজি ডেইলি টার্গেট কোয়েস্ট (৯০% সম্পন্ন)</strong>
+              <span class="quest-bonus">+ ৳ ৪০০ বোনাস</span>
+            </div>
+            <div class="quest-bar-bg">
+              <div class="quest-bar-fill" style="width: 90%;"></div>
+            </div>
+            <p style="font-size:12px; color:var(--text-secondary); margin-top:8px;">রাত ১০:৩০ এর মধ্যে আর মাত্র ১টি সিএনজি ট্রিপ সম্পন্ন করলেই ৳ ৪০০ বোনাস পাবেন!</p>
+          </div>
+
+          <div class="captain-vehicle-info-box">
+            <h4>🛺 নিবন্ধিত গাড়ির তথ্য</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">• গাড়ির নম্বর: <strong>ঢাকা-থ-১২-৩৪৫৬ (সবুজ সিএনজি)</strong><br>• লাইসেন্স ভেরিফিকেশন: <strong>অনুমোদিত ✓</strong></p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </section>
+
+  <!-- ==========================================================================
+       SCREEN 4: 🛡️ OBHAI COMPANY ADMIN HQ PORTAL (ওভাই অ্যাডমিন কন্ট্রোল প্যানেল)
+       ========================================================================== -->
+  <section id="screen-admin" class="obhai-app-screen" style="display: none;">
+    
+    <!-- Admin Navbar -->
+    <header class="obhai-top-navbar admin-nav">
+      <div class="nav-content-wrap">
+        <div class="nav-left-brand">
+          <div class="obhai-brand mini">
+            <span class="obhai-main-logo">OBHAI</span>
+            <span class="admin-badge-nav">ADMIN HQ</span>
+          </div>
+          <span class="brand-slogan-pill">কোম্পানি কন্ট্রোল প্যানেল</span>
+        </div>
+
+        <div class="nav-right-actions">
+          <div class="obhai-user-pill">
+            <div class="user-avatar-sm">🛡️</div>
+            <span>Super Admin</span>
+          </div>
+
+          <button class="btn-obhai-logout" onclick="window.logOutToGate();" title="Log Out">
+            <span>লগ আউট</span>
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Admin Main Body -->
+    <main class="passenger-main-container">
+      
+      <!-- Metrics Bar -->
+      <div class="admin-metrics-bar">
+        <div class="metric-card">
+          <div class="metric-icon">💰</div>
+          <div class="metric-info">
+            <span class="metric-label">আজকের মোট প্ল্যাটফর্ম ভলিউম</span>
+            <span class="metric-value">৳ ১,১২,৪০০</span>
+            <span class="metric-delta text-green">↑ ১৬.৮% প্রবৃদ্ধি</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">🛺</div>
+          <div class="metric-info">
+            <span class="metric-label">সচল সিএনজি ও কার (ঢাকা)</span>
+            <span class="metric-value">৮৬</span>
+            <span class="metric-delta text-green">● ২১০ জন ক্যাপ্টেন অনলাইন</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">🎟️</div>
+          <div class="metric-info">
+            <span class="metric-label">সক্রিয় প্রোমো অফার</span>
+            <span class="metric-value" id="admin-active-campaign-metric">OBHAI10 (10% OFF)</span>
+            <span class="metric-delta">৳ ১৫০ bKash ক্যাশব্যাক</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">🎧</div>
+          <div class="metric-info">
+            <span class="metric-label">যাত্রীদের অভিযোগ</span>
+            <span class="metric-value" id="admin-pending-disputes-count">১টি অপেক্ষমান</span>
+            <span class="metric-delta text-green">রিফান্ড প্রস্তুত ⚡</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin 3-Column Grid -->
+      <div class="admin-grid-layout">
+        
+        <!-- CARD 1: YOUR PRICING INPUTS (COMPANY CONTROL PANEL) -->
+        <!-- Exact replica of your reference image! -->
+        <div class="company-control-panel-card">
+          <div class="ccp-header">
+            <h2 class="ccp-title">Your Pricing Inputs</h2>
+            <span class="ccp-subtitle">(Company Control Panel)</span>
+            <p class="ccp-desc">Adjust your offer parameters</p>
+          </div>
+
+          <form id="pricing-control-form" onsubmit="event.preventDefault(); window.applyAdminPricingChanges();">
+            
+            <!-- 1. Store Discount (%) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-store-discount">Store Discount</label>
+                <span class="ccp-info-icon" title="Percentage discount applied to all rides">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-store-discount" class="ccp-input" value="10" min="0" max="90" step="1">
+                <span class="ccp-unit">%</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-store-discount">10% off</span></span>
+            </div>
+
+            <!-- 2. Coupon Code -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-coupon-code">Coupon Code</label>
+                <span class="ccp-info-icon" title="Global promotional voucher code">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="text" id="admin-coupon-code" class="ccp-input text-uppercase" value="OBHAI10">
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-coupon-code">OBHAI10</span></span>
+            </div>
+
+            <!-- 3. bKash Cashback (৳) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-bkash-cashback">bKash Cashback</label>
+                <span class="ccp-info-icon" title="Cashback in BDT credited on digital payment">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-bkash-cashback" class="ccp-input" value="150" min="0" max="1000" step="10">
+                <span class="ccp-unit">৳</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-bkash-cashback">৳ 150</span></span>
+            </div>
+
+            <!-- 4. Shipping / Surge Cost (৳) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-shipping-cost">Shipping Cost / Surge</label>
+                <span class="ccp-info-icon" title="Base pickup fee or peak surge addition in BDT">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-shipping-cost" class="ccp-input" value="0" min="0" max="500" step="10">
+                <span class="ccp-unit">৳</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-shipping-cost">Free shipping / ৳ 0 Surge</span></span>
+            </div>
+
+            <!-- 5. Sale Price (Optional) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-sale-price">Sale Price (Optional)</label>
+                <span class="ccp-info-icon" title="Fixed package price cap or base rate">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-sale-price" class="ccp-input" value="2050" min="100" max="10000" step="50">
+                <span class="ccp-unit">৳</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-sale-price">৳ 2,050</span></span>
+            </div>
+
+            <!-- Apply Changes Button -->
+            <button type="submit" class="btn-ccp-apply" id="btn-ccp-apply">
+              <span class="ccp-refresh-icon">🔄</span>
+              <span>Apply Changes</span>
+            </button>
+
+            <span class="ccp-footer-note">Changes reflect in real-time</span>
+          </form>
+        </div>
+
+        <!-- CARD 2: COUPON & PROMO MANAGER -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h3>🎟️ ওভাই কুপন ও প্রমো ম্যানেজার</h3>
+              <p>নতুন ডিসকাউন্ট ভাউচার তৈরি ও ম্যানেজ করুন</p>
+            </div>
+          </div>
+
+          <div class="admin-sub-box">
+            <h4>+ নতুন কুপন পাবলিশ করুন</h4>
+            <div class="create-coupon-form-grid">
+              <input type="text" id="new-code-input" placeholder="কুপন কোড (যেমন: CNG30)" class="form-input-sm text-uppercase">
+              <input type="number" id="new-discount-input" placeholder="ছাড় % (যেমন: ৩০)" class="form-input-sm" min="1" max="90">
+              <input type="number" id="new-max-input" placeholder="সর্বোচ্চ ৳ (যেমন: ১৫০)" class="form-input-sm" min="10">
+              <button class="btn-obhai-primary btn-sm" id="admin-create-coupon-btn" style="height:36px; padding:0 12px; font-size:12px;">+ পাবলিশ করুন</button>
+            </div>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Discount</th>
+                  <th>Max Cap</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-coupons-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CARD 3: CUSTOMER DISPUTES & REFUNDS INBOX -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h3>🎧 কাস্টমার বিরোধ ও রিফান্ড ইনবক্স</h3>
+              <p>যাত্রীদের অভিযোগ পর্যালোচনা ও ওয়ালেটে রিফান্ড জমা দিন</p>
+            </div>
+          </div>
+
+          <div class="disputes-list" id="admin-disputes-list"></div>
+        </div>
+
+      </div>
+    </main>
+  </section>
+
+  <!-- ==================== CUSTOMER WALLET & COMPLAINTS MODAL ==================== -->
+  <div class="modal-overlay" id="customer-account-modal">
+    <div class="dashboard-modal-card">
+      <button class="modal-close-x" id="customer-account-close-btn">&times;</button>
+      
+      <div class="dashboard-user-header">
+        <div class="user-big-avatar">🧑‍💼</div>
+        <div class="user-meta-details">
+          <div class="user-name-row">
+            <h3>নাজমুস সাকিব (ওভাই যাত্রী)</h3>
+            <span class="verified-badge">✓ ভেরিফাইড ইউজার</span>
+          </div>
+          <div class="user-sub-meta">★ ৪.৯৫ রেটিং • +৮৮০ ১৭১১-২৩৪৫৬৭</div>
+        </div>
+
+        <div class="wallet-balance-card">
+          <span class="wallet-title">OBHAI Pay Balance</span>
+          <div class="wallet-amount" id="modal-wallet-balance">৳ 450.00</div>
+          <button class="btn-wallet-topup" id="modal-topup-btn">+ টাকা যোগ করুন</button>
+        </div>
+      </div>
+
+      <div class="dashboard-nav-tabs">
+        <button class="dash-tab-btn active" data-cust-tab="coupons">🎟️ অফার কুপনসমূহ</button>
+        <button class="dash-tab-btn" data-cust-tab="complaints">🎧 অভিযোগ জানান</button>
+        <button class="dash-tab-btn" data-cust-tab="tickets">📋 বিরোধের ইতিহাস</button>
+      </div>
+
+      <div class="dashboard-tab-content">
+        <!-- 1. Coupons Panel -->
+        <div class="cust-dash-panel active" id="cust-panel-coupons">
+          <h4>আপনার জন্য বিশেষ প্রোমো কুপন</h4>
+          <div class="coupons-grid" id="customer-coupons-container"></div>
+        </div>
+
+        <!-- 2. File Complaint Panel -->
+        <div class="cust-dash-panel" id="cust-panel-complaints">
+          <h4>ওভাই হেডকোয়ার্টারে অভিযোগ সাবমিট করুন</h4>
+          <form id="customer-complaint-form" onsubmit="event.preventDefault(); window.customerSubmitComplaint();">
+            <div class="form-group">
+              <label>অভিযোগের বিষয় সিলেক্ট করুন</label>
+              <select id="cust-issue-select" class="form-input" required>
+                <option value="CNG Meter Disconnected">সিএনজি ক্যাপ্টেন মিটার ব্যবহার করতে অস্বীকার করেছে</option>
+                <option value="Driver Overcharged">ক্যাপ্টেন অতিরিক্ত ভাড়া দাবি করেছে</option>
+                <option value="Wrong Route">অপ্রয়োজনীয় লম্বা রাস্তা দিয়ে ঘুরিয়েছে</option>
+                <option value="Lost Item">সিএনজিতে মানিব্যাগ/মোবাইল ফেলে এসেছি</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>ট্রিপ আইডি</label>
+              <input type="text" id="cust-trip-id" class="form-input" value="OBHAI-CNG-8492 (মিরপুর ১০ ➔ ফার্মগেট)" required>
+            </div>
+            <div class="form-group">
+              <label>বিস্তারিত বিবরণ</label>
+              <textarea id="cust-complaint-text" class="form-input-textarea" rows="3" placeholder="সমস্যাটির বিবরণ লিখুন..." required></textarea>
+            </div>
+            <button type="submit" class="btn-obhai-primary full-width">অ্যাডমিনের কাছে অভিযোগ পাঠান ➔</button>
+          </form>
+        </div>
+
+        <!-- 3. Dispute History Panel -->
+        <div class="cust-dash-panel" id="cust-panel-tickets">
+          <h4>পূর্ববর্তী অভিযোগ ও রিফান্ড হিস্টোরি</h4>
+          <div class="tickets-list" id="customer-tickets-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DRIVER MATCHING SIMULATION MODAL ==================== -->
+  <div class="modal-overlay" id="ride-modal-overlay">
+    <div class="ride-simulation-modal">
+      <div class="sim-stage active" id="stage-searching">
+        <div class="radar-pulse-wrapper">
+          <div class="radar-ring r1"></div>
+          <div class="radar-ring r2"></div>
+          <div class="radar-ring r3"></div>
+          <div class="radar-center-icon">🛺</div>
+        </div>
+        <h3 class="sim-title">কাছের ওভাই সিএনজি ক্যাপ্টেন খোঁজা হচ্ছে...</h3>
+        <p class="sim-subtitle">মিরপুর ১০ এলাকার সেরা রেটেড চালকের সাথে সংযোগ করা হচ্ছে।</p>
+        <button class="btn-decline" id="cancel-search-btn">বাতিল করুন</button>
+      </div>
+
+      <div class="sim-stage" id="stage-matched">
+        <div class="driver-matched-header">
+          <div class="eta-pill">আসছেন <strong id="live-driver-eta">২ মিনিটে</strong></div>
+          <span class="car-badge" id="modal-car-name">OBHAI CNG</span>
+        </div>
+        <div class="driver-card-details">
+          <div class="driver-profile-pic">👨‍✈️</div>
+          <div class="driver-meta">
+            <h4>ক্যাপ্টেন আবুল কালাম</h4>
+            <div class="driver-rating-badge">★ ৪.৯৩ • ১,৮৪০টি সফল ট্রিপ</div>
+            <div class="vehicle-plate-info">
+              <span class="plate-box">ঢাকা-থ-১২-৩৪৫৬</span>
+              <span class="car-model-name">সবুজ সিএনজি অটোরিকশা</span>
+            </div>
+          </div>
+        </div>
+        <button class="btn-obhai-primary full-width" id="complete-sim-trip-btn">ট্রিপ সমাপ্ত করুন (Complete Trip)</button>
+      </div>
+
+      <div class="sim-stage" id="stage-completed">
+        <div class="trip-completed-icon">🎉</div>
+        <h3 class="sim-title">গন্তব্যে পৌঁছে গেছেন!</h3>
+        <p class="sim-subtitle">ভাড়া bKash / OBHAI Pay দিয়ে পরিশোধ করা হয়েছে।</p>
+        <button class="btn-obhai-primary full-width" id="finish-modal-btn">সমাপ্ত</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- OBHAI App JS -->
+  <script src="app.js"></script>
+</body>
+</html>
