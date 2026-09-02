@@ -508,7 +508,7 @@
         id: 'fi-1',
         name: 'Chicken Biryani',
         restaurant: 'Bismillah Biryani House',
-        img: 'https://images.pexels.com/photos/7394819/pexels-photo-7394819.jpeg?auto=compress&cs=tinysrgb&w=600',
+        img: 'images/chicken-biryani-hero.jpg',
         rating: 4.6,
         reviews: '2.3k',
         deliveryTime: '30-40 min',
