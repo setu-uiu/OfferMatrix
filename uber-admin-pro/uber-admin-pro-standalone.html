@@ -1,0 +1,3067 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uber - Official Web Platform & Control Portal</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS for Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <!-- Stylesheet -->
+  <style>
+/* ==========================================================================
+   UBER OFFICIAL 3-IN-1 PLATFORM - AUTH, CUSTOMER, DRIVER & ADMIN HQ
+   ========================================================================== */
+
+:root {
+  --bg-main: #ffffff;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f6f6f6;
+  --bg-secondary: #eeeeee;
+  --bg-card: #ffffff;
+  --border-light: #e2e2e2;
+  --border-focus: #000000;
+  
+  --text-primary: #000000;
+  --text-secondary: #5e5e5e;
+  --text-muted: #888888;
+  --text-inverse: #ffffff;
+
+  --accent-black: #000000;
+  --accent-white: #ffffff;
+  --accent-green: #06c167;
+  --accent-green-dark: #107c41;
+  --accent-green-bg: rgba(6, 193, 103, 0.12);
+  --accent-blue: #276ef1;
+  --accent-yellow: #ffc043;
+  --accent-danger: #e11900;
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.14);
+  --shadow-float: 0 20px 40px rgba(0, 0, 0, 0.18);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+
+  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --transition-fast: 0.15s cubic-bezier(0.2, 0, 0, 1);
+  --transition-normal: 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+[data-theme="dark"] {
+  --bg-main: #000000;
+  --bg-surface: #141414;
+  --bg-subtle: #1c1c1c;
+  --bg-secondary: #282828;
+  --bg-card: #181818;
+  --border-light: #2c2c2c;
+  --border-focus: #ffffff;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #a6a6a6;
+  --text-muted: #757575;
+  --text-inverse: #000000;
+
+  --accent-black: #ffffff;
+  --accent-white: #000000;
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.8);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-family);
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-main);
+  overflow-x: hidden;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; outline: none; }
+
+/* ==========================================================================
+   SCREEN 1: FULLSCREEN AUTH / LOGIN GATE
+   ========================================================================== */
+.auth-fullscreen-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 50% 10%, rgba(6, 193, 103, 0.08) 0%, var(--bg-main) 70%);
+  padding: 24px;
+}
+
+.auth-fullscreen-wrapper {
+  max-width: 620px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.auth-top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+}
+
+.auth-brand-logo {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+}
+
+.auth-card-main {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-main-title {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.auth-main-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Role Selector Cards */
+.role-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.role-login-card {
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  background-color: var(--bg-surface);
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.role-login-card:hover {
+  border-color: var(--accent-black);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.role-login-card.active {
+  border-color: var(--accent-black);
+  background-color: var(--bg-subtle);
+}
+
+[data-theme="dark"] .role-login-card.active {
+  border-color: #ffffff;
+}
+
+.role-card-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.role-login-card.active .role-card-radio {
+  border-color: var(--accent-black);
+}
+
+.role-login-card.active .role-card-radio::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--accent-black);
+}
+
+[data-theme="dark"] .role-login-card.active .role-card-radio::after {
+  background-color: #ffffff;
+}
+
+.role-icon-box {
+  font-size: 26px;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.role-card-info {
+  flex: 1;
+}
+
+.role-card-info h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.role-card-info p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+.role-badge-tag {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  background-color: var(--bg-subtle);
+  color: var(--text-secondary);
+}
+
+.driver-tag { background-color: #fef08a; color: #854d0e; }
+.admin-tag { background-color: #e0f2fe; color: #0369a1; }
+
+.auth-input-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.form-input {
+  height: 46px;
+  padding: 0 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+}
+
+.login-submit-btn {
+  height: 48px;
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.demo-logins-strip {
+  border-top: 1px solid var(--border-light);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.demo-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.demo-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.demo-chip-btn {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+}
+
+.demo-chip-btn:hover {
+  background-color: var(--accent-black);
+  color: var(--accent-white);
+}
+
+/* ==========================================================================
+   APP SCREENS (CUSTOMER, DRIVER & ADMIN)
+   ========================================================================== */
+.app-fullscreen-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  height: 64px;
+  background-color: var(--bg-main);
+  border-bottom: 1px solid var(--border-light);
+  z-index: 1000;
+}
+
+.nav-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-left, .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-logo {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-link {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  transition: background-color var(--transition-fast);
+}
+
+.nav-link:hover, .nav-link.active {
+  background-color: var(--bg-subtle);
+}
+
+.nav-btn {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-ghost { background: transparent; color: var(--text-primary); }
+.btn-ghost:hover { background-color: var(--bg-subtle); }
+
+.btn-ghost-logout {
+  background-color: var(--bg-subtle);
+  color: var(--accent-danger);
+  border: 1px solid var(--border-light);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition-fast);
+}
+
+.btn-ghost-logout:hover {
+  background-color: var(--accent-danger);
+  color: #ffffff;
+}
+
+.uber-cash-chip {
+  background-color: var(--accent-green-bg);
+  border: 1px solid rgba(6, 193, 103, 0.4);
+  color: var(--accent-green-dark);
+  font-size: 13px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.user-profile-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+}
+
+.nav-user-avatar {
+  font-size: 16px;
+}
+
+.icon { width: 18px; height: 18px; }
+.icon-sm { width: 15px; height: 15px; }
+
+.theme-toggle-btn .sun-icon { display: none; }
+.theme-toggle-btn .moon-icon { display: block; }
+[data-theme="dark"] .theme-toggle-btn .sun-icon { display: block; }
+[data-theme="dark"] .theme-toggle-btn .moon-icon { display: none; }
+
+/* Announcement Strip */
+.customer-offer-announcement-strip {
+  max-width: 1400px;
+  margin: 16px auto 0;
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, rgba(6, 193, 103, 0.15) 0%, rgba(39, 110, 241, 0.1) 100%);
+  border: 1px solid rgba(6, 193, 103, 0.4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.offer-left { display: flex; align-items: center; gap: 10px; }
+
+.live-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent-green);
+  box-shadow: 0 0 0 0 rgba(6, 193, 103, 0.7);
+  animation: pulse-ring 1.8s infinite;
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(6, 193, 103, 0.7); }
+  70% { box-shadow: 0 0 0 8px rgba(6, 193, 103, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(6, 193, 103, 0); }
+}
+
+/* ==========================================================================
+   CUSTOMER HERO BOOKING & MAP
+   ========================================================================== */
+.hero-section {
+  padding: 24px 24px 48px;
+}
+
+.hero-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 480px 1fr;
+  gap: 32px;
+  min-height: 640px;
+}
+
+.booking-card-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.booking-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.service-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  background-color: var(--bg-subtle);
+  padding: 4px;
+  border-radius: var(--radius-md);
+}
+
+.tab-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.tab-emoji { font-size: 16px; }
+.tab-text { font-size: 11px; font-weight: 700; }
+.tab-btn.active {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.booking-title { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+.booking-subtitle { font-size: 13px; color: var(--text-secondary); }
+
+.location-form { display: flex; gap: 12px; position: relative; }
+.route-indicator { display: flex; flex-direction: column; align-items: center; padding: 14px 0; width: 14px; }
+.dot.pickup-dot { width: 10px; height: 10px; border-radius: 50%; background-color: var(--text-primary); }
+.connecting-line { width: 2px; flex: 1; background-color: var(--text-muted); margin: 4px 0; }
+.square.dest-dot { width: 10px; height: 10px; background-color: var(--text-primary); }
+
+.inputs-group { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.input-field-wrapper { position: relative; display: flex; align-items: center; }
+
+.location-input {
+  width: 100%;
+  height: 46px;
+  padding: 0 44px 0 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-subtle);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.location-input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  background-color: var(--bg-surface);
+}
+
+.locate-btn, .swap-btn {
+  position: absolute;
+  right: 12px;
+  width: 26px;
+  height: 26px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-chips { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.chips-label { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+.chip {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background-color: var(--bg-subtle);
+  color: var(--text-secondary);
+}
+.chip:hover { background-color: var(--bg-secondary); color: var(--text-primary); }
+
+.applied-coupon-strip {
+  background-color: var(--accent-green-bg);
+  border: 1px dashed var(--accent-green);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.coupon-left-tag { display: flex; align-items: center; gap: 10px; }
+.tag-icon { font-size: 20px; }
+.tag-meta strong { font-size: 13px; color: var(--accent-green-dark); }
+.tag-desc { font-size: 11px; color: var(--text-secondary); display: block; }
+.remove-coupon-btn { font-size: 20px; color: var(--text-muted); }
+
+/* Vehicle Options */
+.vehicle-options-section { display: flex; flex-direction: column; gap: 6px; }
+.section-title-sm { font-size: 13px; font-weight: 700; }
+.vehicle-list { display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; padding-right: 4px; }
+
+.vehicle-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-surface);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.vehicle-card:hover { background-color: var(--bg-subtle); }
+.vehicle-card.selected { background-color: var(--bg-subtle); border-color: var(--accent-black); }
+
+.vehicle-img-wrap { width: 40px; height: 32px; display: flex; align-items: center; justify-content: center; margin-right: 10px; }
+.vehicle-placeholder-icon { font-size: 22px; }
+.vehicle-details { flex: 1; }
+.vehicle-name-row { display: flex; align-items: center; gap: 6px; }
+.vehicle-name { font-size: 14px; font-weight: 700; }
+.passenger-count { font-size: 11px; color: var(--text-secondary); }
+.vehicle-eta { font-size: 11px; color: var(--text-secondary); }
+.eta-mins { font-weight: 700; color: var(--accent-green-dark); }
+
+.vehicle-pricing { text-align: right; }
+.old-price-val { font-size: 11px; text-decoration: line-through; color: var(--text-muted); display: block; }
+.vehicle-pricing .price-val { font-size: 15px; font-weight: 800; }
+
+.booking-footer { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border-light); padding-top: 12px; }
+.payment-method-row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
+.payment-info { font-weight: 600; }
+.btn-text-sm { font-size: 12px; font-weight: 700; color: var(--accent-blue); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 700; padding: 12px 24px; border-radius: var(--radius-sm); transition: all var(--transition-fast); }
+.btn-primary { background-color: var(--accent-black); color: var(--accent-white); }
+.btn-primary:hover { opacity: 0.88; }
+.btn-outline { border: 1px solid var(--border-light); color: var(--text-primary); }
+.btn-outline-sm { padding: 6px 14px; font-size: 12px; font-weight: 700; border: 1px solid var(--border-light); border-radius: var(--radius-pill); }
+.btn-sm { padding: 8px 16px; font-size: 13px; border-radius: var(--radius-sm); }
+.full-width { width: 100%; }
+
+.request-ride-btn { height: 48px; font-size: 15px; display: flex; justify-content: space-between; }
+.btn-price-tag { background: rgba(255, 255, 255, 0.2); padding: 2px 8px; border-radius: var(--radius-pill); font-size: 13px; }
+
+/* Interactive Map */
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 560px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-md);
+  background-color: var(--bg-subtle);
+}
+
+.interactive-map { width: 100%; height: 100%; z-index: 1; }
+[data-theme="dark"] .interactive-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3); }
+
+.map-floating-overlay {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
+}
+.map-floating-overlay > * { pointer-events: auto; }
+
+.map-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+}
+
+.map-tool-btn {
+  width: 36px;
+  height: 36px;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+}
+
+.trip-summary-strip {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  box-shadow: var(--shadow-lg);
+  z-index: 10;
+}
+
+.summary-item { display: flex; flex-direction: column; align-items: center; }
+.sum-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+.sum-value { font-size: 14px; font-weight: 800; }
+.text-green { color: var(--accent-green-dark); }
+.summary-divider { width: 1px; height: 26px; background-color: var(--border-light); }
+
+.custom-map-pin { display: flex; align-items: center; justify-content: center; border-radius: 50%; color: #fff; font-size: 12px; font-weight: 800; }
+.pin-pickup { background-color: #000; border: 2px solid #fff; }
+.pin-dest { background-color: #e11900; border: 2px solid #fff; }
+.custom-car-marker { display: flex; align-items: center; justify-content: center; font-size: 20px; }
+
+/* Suggestions Grid */
+.suggestions-section { padding: 40px 24px; }
+.section-container { max-width: 1400px; margin: 0 auto; }
+.section-title { font-size: 24px; font-weight: 800; margin-bottom: 20px; }
+.suggestions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.suggestion-card {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.suggestion-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.sugg-text h3 { font-size: 15px; font-weight: 700; }
+.sugg-text p { font-size: 12px; color: var(--text-secondary); margin: 4px 0 10px; }
+.sugg-link { font-size: 12px; font-weight: 700; }
+.sugg-icon-box { font-size: 24px; }
+
+.uber-footer { background-color: #000; color: #fff; padding: 40px 24px; margin-top: auto; }
+.footer-container { max-width: 1400px; margin: 0 auto; }
+.footer-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #282828; margin-bottom: 20px; }
+.footer-brand { font-size: 24px; font-weight: 800; }
+.footer-bottom { font-size: 13px; color: #888; }
+
+/* ==========================================================================
+   DRIVER PORTAL STYLES
+   ========================================================================== */
+.driver-nav-badge {
+  background-color: #ffc043;
+  color: #000;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  margin-left: 6px;
+}
+
+.driver-online-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--accent-green-bg);
+  color: var(--accent-green-dark);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.driver-earnings-nav {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  font-size: 13px;
+}
+
+.driver-grid-container {
+  max-width: 1400px;
+  margin: 32px auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.driver-panel-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.d-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.d-card-header h3 { font-size: 18px; font-weight: 800; }
+.live-blink-tag { background: var(--accent-green-bg); color: var(--accent-green-dark); font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: var(--radius-pill); }
+
+.incoming-trip-card {
+  background-color: var(--bg-subtle);
+  border: 2px solid var(--accent-green);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.trip-card-top { display: flex; justify-content: space-between; align-items: center; }
+.passenger-brief { display: flex; align-items: center; gap: 10px; }
+.p-avatar { font-size: 26px; }
+.trip-fare-badge { font-size: 20px; font-weight: 800; color: var(--accent-green-dark); }
+.trip-route-meta { background: var(--bg-surface); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-light); font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
+.trip-actions-row { display: flex; gap: 8px; }
+
+.earnings-summary-box { background: linear-gradient(135deg, #107c41 0%, #059669 100%); color: #fff; border-radius: var(--radius-md); padding: 24px; text-align: center; }
+.earnings-big-number { font-size: 36px; font-weight: 800; }
+.earnings-sub-row { font-size: 13px; opacity: 0.9; margin-top: 4px; }
+
+.daily-quest-box { background-color: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 16px; }
+.quest-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
+.quest-reward { color: var(--accent-green-dark); font-weight: 800; }
+.quest-progress-bar { height: 8px; background-color: var(--bg-secondary); border-radius: var(--radius-pill); overflow: hidden; }
+.quest-fill { height: 100%; background-color: var(--accent-green); }
+.driver-quick-tips { background-color: var(--bg-subtle); border-radius: var(--radius-md); padding: 16px; }
+.driver-quick-tips h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+
+/* ==========================================================================
+   ADMIN HQ CONTROL PANEL STYLES
+   ========================================================================== */
+.admin-nav-badge {
+  background-color: #0284c7;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  margin-left: 6px;
+}
+
+.admin-top-subtitle { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-left: 12px; }
+
+.admin-main-body {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-metrics-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.metric-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.metric-icon { font-size: 24px; width: 44px; height: 44px; border-radius: var(--radius-sm); background-color: var(--bg-subtle); display: flex; align-items: center; justify-content: center; }
+.metric-info { display: flex; flex-direction: column; }
+.metric-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); }
+.metric-value { font-size: 18px; font-weight: 800; margin: 2px 0; }
+.metric-delta { font-size: 11px; font-weight: 700; }
+
+.admin-grid-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Exact Reference Image Replica Card */
+.company-control-panel-card {
+  background: var(--bg-card);
+  border: 2px solid #10b981;
+  border-radius: 20px;
+  padding: 26px 22px;
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ccp-header { display: flex; flex-direction: column; gap: 2px; }
+.ccp-title { font-size: 20px; font-weight: 800; color: #107c41; line-height: 1.2; }
+.ccp-subtitle { font-size: 16px; font-weight: 800; color: #1e1b4b; }
+[data-theme="dark"] .ccp-subtitle { color: #e2e8f0; }
+.ccp-desc { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+.ccp-input-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+.ccp-label-row { display: flex; justify-content: space-between; align-items: center; }
+.ccp-label-row label { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.ccp-info-icon { color: #94a3b8; font-size: 13px; cursor: help; }
+
+.ccp-input-wrapper { position: relative; display: flex; align-items: center; }
+.ccp-input {
+  width: 100%;
+  height: 46px;
+  padding: 0 36px 0 14px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.ccp-input:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.ccp-unit {
+  position: absolute;
+  right: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.text-uppercase { text-transform: uppercase; }
+.ccp-current-hint { font-size: 11px; color: #64748b; font-weight: 500; }
+
+.btn-ccp-apply {
+  width: 100%;
+  height: 46px;
+  background-color: #16a34a;
+  color: #ffffff;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+  transition: all var(--transition-fast);
+  margin-top: 4px;
+}
+
+.btn-ccp-apply:hover { background-color: #15803d; transform: translateY(-1px); }
+.ccp-refresh-icon { font-size: 16px; }
+.ccp-footer-note { font-size: 12px; color: #64748b; text-align: center; display: block; margin-top: 6px; }
+
+/* Admin Extra Cards */
+.admin-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-card-header h3 { font-size: 17px; font-weight: 800; }
+.admin-card-header p { font-size: 12px; color: var(--text-secondary); }
+
+.admin-sub-box {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 12px;
+}
+
+.admin-sub-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+
+.create-coupon-form-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr auto;
+  gap: 6px;
+}
+
+.form-input-sm {
+  height: 36px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.admin-table-wrap { overflow-x: auto; }
+.admin-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+.admin-table th { padding: 8px; border-bottom: 1px solid var(--border-light); color: var(--text-muted); font-weight: 700; }
+.admin-table td { padding: 8px; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
+
+.coupon-table-code { font-family: monospace; font-weight: 800; background-color: var(--bg-subtle); padding: 2px 6px; border-radius: var(--radius-sm); }
+.table-status-pill { font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: var(--radius-pill); }
+.status-active { background-color: var(--accent-green-bg); color: var(--accent-green-dark); }
+.btn-delete-row { color: var(--accent-danger); font-size: 11px; font-weight: 700; }
+
+.disputes-list { display: flex; flex-direction: column; gap: 12px; max-height: 520px; overflow-y: auto; }
+.dispute-admin-item { background-color: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.dispute-admin-item.resolved { border-left: 4px solid var(--accent-green); }
+.dispute-top-bar { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; }
+.dispute-user-note { font-size: 12px; color: var(--text-secondary); background-color: var(--bg-surface); padding: 8px; border-radius: var(--radius-sm); }
+.dispute-resolution-controls { display: flex; flex-direction: column; gap: 8px; background-color: var(--bg-surface); padding: 10px; border-radius: var(--radius-sm); }
+.refund-input-row { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; }
+.refund-num-input { width: 90px; height: 32px; padding: 0 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-light); }
+.btn-resolve-credit { height: 36px; background-color: var(--accent-green); color: #000; font-size: 12px; font-weight: 800; border-radius: var(--radius-sm); }
+
+/* ==========================================================================
+   MODALS
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(5px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 3000;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay.active { display: flex; opacity: 1; }
+.modal-close-x { position: absolute; top: 16px; right: 16px; font-size: 26px; color: var(--text-secondary); }
+
+.dashboard-modal-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 800px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 28px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboard-user-header { display: flex; align-items: center; justify-content: space-between; background-color: var(--bg-subtle); border-radius: var(--radius-md); padding: 16px 20px; }
+.user-big-avatar { font-size: 32px; }
+.verified-badge { font-size: 10px; font-weight: 800; color: var(--accent-green-dark); background-color: var(--accent-green-bg); padding: 2px 6px; border-radius: var(--radius-pill); }
+.wallet-balance-card { text-align: right; }
+.wallet-title { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+.wallet-amount { font-size: 20px; font-weight: 800; color: var(--accent-green-dark); }
+.btn-wallet-topup { font-size: 11px; font-weight: 700; color: var(--accent-blue); }
+
+.dashboard-nav-tabs { display: flex; gap: 8px; border-bottom: 1px solid var(--border-light); padding-bottom: 10px; }
+.dash-tab-btn { padding: 8px 16px; border-radius: var(--radius-pill); font-size: 13px; font-weight: 600; color: var(--text-secondary); background-color: var(--bg-subtle); }
+.dash-tab-btn.active { background-color: var(--accent-black); color: var(--accent-white); }
+
+.cust-dash-panel { display: none; flex-direction: column; gap: 14px; }
+.cust-dash-panel.active { display: flex; }
+
+.coupons-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.coupon-card { background-color: var(--bg-card); border: 1px dashed var(--border-light); border-left: 4px solid var(--accent-green); border-radius: var(--radius-md); padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.btn-apply-coupon { align-self: flex-start; padding: 4px 12px; font-size: 11px; font-weight: 700; border-radius: var(--radius-pill); background-color: var(--accent-black); color: var(--accent-white); }
+.form-input-textarea { padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-light); background-color: var(--bg-subtle); color: var(--text-primary); font-family: inherit; font-size: 13px; }
+.tickets-list { display: flex; flex-direction: column; gap: 10px; }
+.ticket-item { background-color: var(--bg-subtle); border-radius: var(--radius-md); padding: 12px; font-size: 12px; display: flex; flex-direction: column; gap: 6px; }
+
+/* Simulation Modal */
+.ride-simulation-modal { background-color: var(--bg-surface); border-radius: var(--radius-lg); width: 100%; max-width: 420px; padding: 28px; box-shadow: var(--shadow-float); text-align: center; }
+.sim-stage { display: none; flex-direction: column; align-items: center; }
+.sim-stage.active { display: flex; }
+.radar-pulse-wrapper { position: relative; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; margin: 10px 0 20px; }
+.radar-ring { position: absolute; border-radius: 50%; border: 2px solid var(--accent-black); animation: pulseRadar 2s infinite ease-out; }
+.radar-ring.r1 { width: 30px; height: 30px; }
+.radar-ring.r2 { width: 60px; height: 60px; animation-delay: 0.5s; }
+.radar-ring.r3 { width: 100px; height: 100px; animation-delay: 1s; }
+.radar-center-icon { font-size: 26px; }
+@keyframes pulseRadar { 0% { transform: scale(0.3); opacity: 0.9; } 100% { transform: scale(1.3); opacity: 0; } }
+
+.driver-matched-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.driver-card-details { width: 100%; display: flex; align-items: center; gap: 14px; background-color: var(--bg-subtle); border-radius: var(--radius-md); padding: 14px; margin-bottom: 14px; text-align: left; }
+.driver-profile-pic { font-size: 26px; }
+.trip-completed-icon { font-size: 44px; margin-bottom: 10px; }
+
+/* Toast Notifications */
+.toast-container { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 10px; z-index: 4000; }
+.toast { background-color: var(--accent-black); color: var(--accent-white); padding: 12px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 8px; animation: toastSlideIn 0.3s cubic-bezier(0.2, 0, 0, 1), toastFadeOut 0.3s ease 2.7s forwards; }
+@keyframes toastSlideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes toastFadeOut { to { transform: translateY(-10px); opacity: 0; } }
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .admin-grid-layout { grid-template-columns: 1fr; }
+  .driver-grid-container { grid-template-columns: 1fr; }
+  .hero-container { grid-template-columns: 1fr; }
+  .map-wrapper { min-height: 400px; height: 400px; }
+}
+
+@media (max-width: 768px) {
+  .desktop-only { display: none !important; }
+  .admin-metrics-bar { grid-template-columns: 1fr; }
+  .suggestions-grid { grid-template-columns: 1fr; }
+  .coupons-grid { grid-template-columns: 1fr; }
+  .create-coupon-form-grid { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SCREEN 1: OFFICIAL DEDICATED LOGIN / ROLE GATE (লগইন স্ক্রিন)
+       User chooses role here before entering the app!
+       ========================================================================== -->
+  <section id="screen-auth" class="auth-fullscreen-page active">
+    <div class="auth-fullscreen-wrapper">
+      
+      <!-- Top Brand Header -->
+      <div class="auth-top-header">
+        <span class="auth-brand-logo">Uber</span>
+        <div class="auth-top-actions">
+          <button class="nav-btn btn-ghost theme-toggle-btn" id="auth-theme-toggle">
+            <svg class="icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <svg class="icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Auth Container Box -->
+      <div class="auth-card-main">
+        <h1 class="auth-main-title">Welcome to Uber</h1>
+        <p class="auth-main-subtitle">Select how you want to sign in to continue (আপনি কী হিসেবে লগইন করতে চান সিলেক্ট করুন):</p>
+
+        <!-- Role Selector Cards -->
+        <div class="role-cards-container">
+          
+          <!-- Role 1: Customer (Passenger) -->
+          <div class="role-login-card active" data-role="customer">
+            <div class="role-card-radio"></div>
+            <div class="role-icon-box">🧑‍💼</div>
+            <div class="role-card-info">
+              <h3>Customer / Passenger (যাত্রী)</h3>
+              <p>Book rides, send packages, use coupons, and track drivers live on map.</p>
+            </div>
+            <span class="role-badge-tag">Rider</span>
+          </div>
+
+          <!-- Role 2: Driver (Captain) -->
+          <div class="role-login-card" data-role="driver">
+            <div class="role-card-radio"></div>
+            <div class="role-icon-box">👨‍✈️</div>
+            <div class="role-card-info">
+              <h3>Driver / Partner (চালক / ড্রাইভার)</h3>
+              <p>Drive your car/bike, accept passenger trip requests, and track daily earnings.</p>
+            </div>
+            <span class="role-badge-tag driver-tag">Driver</span>
+          </div>
+
+          <!-- Role 3: Admin HQ -->
+          <div class="role-login-card" data-role="admin">
+            <div class="role-card-radio"></div>
+            <div class="role-icon-box">🛡️</div>
+            <div class="role-card-info">
+              <h3>Company Admin HQ (কোম্পানি অ্যাডমিন)</h3>
+              <p>Adjust Pricing Inputs, manage coupons, resolve user disputes, and monitor city fleet.</p>
+            </div>
+            <span class="role-badge-tag admin-tag">Admin HQ</span>
+          </div>
+
+        </div>
+
+        <!-- Login Form -->
+        <form id="main-login-form" onsubmit="event.preventDefault(); window.performLogin();" class="auth-input-form">
+          <div class="form-group">
+            <label for="login-email-input" id="login-email-label">Email or Mobile Number</label>
+            <input type="text" id="login-email-input" class="form-input" value="nazmus.customer@uber.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="login-pass-input">Password</label>
+            <input type="password" id="login-pass-input" class="form-input" value="••••••••" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary full-width login-submit-btn" id="login-submit-btn">
+            <span id="login-btn-text">Sign In as Customer (যাত্রী হিসেবে প্রবেশ করুন)</span>
+            <span>➔</span>
+          </button>
+        </form>
+
+        <!-- 1-Click Fast Demo Logins -->
+        <div class="demo-logins-strip">
+          <span class="demo-label">⚡ 1-Click Quick Demo Login:</span>
+          <div class="demo-btn-group">
+            <button class="demo-chip-btn" onclick="window.quickLogin('customer')">🧑‍💼 Login as Customer</button>
+            <button class="demo-chip-btn" onclick="window.quickLogin('driver')">👨‍✈️ Login as Driver</button>
+            <button class="demo-chip-btn" onclick="window.quickLogin('admin')">🛡️ Login as Admin HQ</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SCREEN 2: 🧑‍💼 CUSTOMER / PASSENGER PORTAL (যাত্রী প্যানেল - আমি রাইড বুক করব)
+       ========================================================================== -->
+  <section id="screen-customer" class="app-fullscreen-screen" style="display: none;">
+    
+    <!-- Customer Navbar -->
+    <header class="navbar">
+      <div class="nav-container">
+        <div class="nav-left">
+          <a href="#" class="brand-logo">Uber</a>
+          <nav class="nav-menu desktop-only">
+            <a href="#ride" class="nav-link active">Ride</a>
+            <a href="#package" class="nav-link">Package</a>
+            <a href="#reserve" class="nav-link">Reserve</a>
+            <a href="#rental" class="nav-link">Rental</a>
+          </nav>
+        </div>
+
+        <div class="nav-right">
+          <!-- Language Selector -->
+          <div class="dropdown-wrapper">
+            <button class="nav-btn btn-ghost lang-btn" id="lang-btn">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10z"/></svg>
+              <span>EN</span>
+            </button>
+          </div>
+
+          <!-- Theme Toggle -->
+          <button class="nav-btn btn-ghost theme-toggle-btn" id="customer-theme-toggle">
+            <svg class="icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <svg class="icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+
+          <!-- Customer Wallet Chip -->
+          <div class="uber-cash-chip" id="customer-wallet-nav-btn" title="Click to view wallet & coupons">
+            <span>💳</span>
+            <span id="cust-cash-amount">৳ 550.00</span>
+          </div>
+
+          <!-- Customer Profile & Switch / Logout -->
+          <button class="user-profile-nav-btn" id="customer-profile-nav-btn">
+            <div class="nav-user-avatar">🧑‍💼</div>
+            <span>Nazmus (Customer)</span>
+          </button>
+
+          <!-- Log Out / Switch Role Button -->
+          <button class="nav-btn btn-ghost-logout" onclick="window.logOutToGate();" title="Log Out and return to Login Screen">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Customer Main Content -->
+    <main class="customer-main-body">
+      
+      <!-- Live Admin Offer Banner on Top of Customer Screen -->
+      <div class="customer-offer-announcement-strip" id="customer-offer-announcement-strip">
+        <div class="offer-left">
+          <span class="live-pulse"></span>
+          <strong id="announcement-offer-title">Special Offer Active: 10% Store Discount & ৳ 150 bKash Cashback!</strong>
+        </div>
+        <button class="btn-text-sm" id="announcement-view-coupons-btn">View All 5 Coupons ➔</button>
+      </div>
+
+      <!-- Hero Booking Card & Interactive Leaflet Map -->
+      <div class="hero-section" id="ride">
+        <div class="hero-container">
+          
+          <!-- Booking Card -->
+          <div class="booking-card-wrapper">
+            <div class="booking-card">
+              
+              <!-- Service Selector Tabs -->
+              <div class="service-tabs">
+                <button class="tab-btn active" data-tab="ride">
+                  <span class="tab-emoji">🚗</span>
+                  <span class="tab-text">Ride</span>
+                </button>
+                <button class="tab-btn" data-tab="moto">
+                  <span class="tab-emoji">🏍️</span>
+                  <span class="tab-text">Moto</span>
+                </button>
+                <button class="tab-btn" data-tab="package">
+                  <span class="tab-emoji">📦</span>
+                  <span class="tab-text">Package</span>
+                </button>
+                <button class="tab-btn" data-tab="rental">
+                  <span class="tab-emoji">🔑</span>
+                  <span class="tab-text">Rent</span>
+                </button>
+              </div>
+
+              <!-- Header Title -->
+              <div class="booking-header">
+                <h1 class="booking-title" id="booking-title">Go anywhere with Uber</h1>
+                <p class="booking-subtitle">Request a ride, hop in, and go safely.</p>
+              </div>
+
+              <!-- Location Inputs Form -->
+              <div class="location-form">
+                <div class="route-indicator">
+                  <div class="dot pickup-dot"></div>
+                  <div class="connecting-line"></div>
+                  <div class="square dest-dot"></div>
+                </div>
+
+                <div class="inputs-group">
+                  <div class="input-field-wrapper">
+                    <input type="text" id="pickup-input" class="location-input" placeholder="Pickup location" value="Gulshan 2, Dhaka">
+                    <button class="locate-btn" id="current-loc-btn" title="Use current GPS location">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+                    </button>
+                  </div>
+
+                  <div class="input-field-wrapper">
+                    <input type="text" id="dest-input" class="location-input" placeholder="Drop-off location" value="Hazrat Shahjalal Int. Airport">
+                    <button class="swap-btn" id="swap-locations-btn" title="Swap locations">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Popular Landmark Chips -->
+              <div class="quick-chips">
+                <span class="chips-label">Popular:</span>
+                <button class="chip" data-dest="Dhanmondi Lake">Dhanmondi</button>
+                <button class="chip" data-dest="Banani 11">Banani</button>
+                <button class="chip" data-dest="Uttara Sector 3">Uttara</button>
+                <button class="chip" data-dest="Motijheel Commercial Area">Motijheel</button>
+              </div>
+
+              <!-- Applied Coupon Banner -->
+              <div class="applied-coupon-strip" id="applied-coupon-strip" style="display: none;">
+                <div class="coupon-left-tag">
+                  <span class="tag-icon">🎟️</span>
+                  <div class="tag-meta">
+                    <strong id="active-coupon-code-text">KIREI10</strong>
+                    <span class="tag-desc" id="active-coupon-desc-text">10% Platform Discount Applied</span>
+                  </div>
+                </div>
+                <button class="remove-coupon-btn" id="remove-coupon-btn" title="Remove coupon">&times;</button>
+              </div>
+
+              <!-- Vehicle Options List (Calculates live with Admin discounts!) -->
+              <div class="vehicle-options-section">
+                <div class="section-title-sm">Available rides (select one):</div>
+                <div class="vehicle-list" id="vehicle-list">
+                  
+                  <!-- Option 1: UberX -->
+                  <div class="vehicle-card selected" data-car="uberx" data-base-price="380">
+                    <div class="vehicle-img-wrap"><div class="vehicle-placeholder-icon">🚗</div></div>
+                    <div class="vehicle-details">
+                      <div class="vehicle-name-row">
+                        <span class="vehicle-name">UberX</span>
+                        <span class="passenger-count">👥 4</span>
+                      </div>
+                      <div class="vehicle-eta"><span class="eta-mins">3 mins away</span> • Everyday affordable ride</div>
+                    </div>
+                    <div class="vehicle-pricing">
+                      <span class="old-price-val" style="display: none;">৳ 380</span>
+                      <div class="price-val">৳ 342</div>
+                    </div>
+                  </div>
+
+                  <!-- Option 2: Uber Comfort -->
+                  <div class="vehicle-card" data-car="comfort" data-base-price="520">
+                    <div class="vehicle-img-wrap"><div class="vehicle-placeholder-icon">🚘</div></div>
+                    <div class="vehicle-details">
+                      <div class="vehicle-name-row">
+                        <span class="vehicle-name">Uber Comfort</span>
+                        <span class="passenger-count">👥 4</span>
+                      </div>
+                      <div class="vehicle-eta"><span class="eta-mins">5 mins away</span> • Newer cars, extra legroom</div>
+                    </div>
+                    <div class="vehicle-pricing">
+                      <span class="old-price-val" style="display: none;">৳ 520</span>
+                      <div class="price-val">৳ 468</div>
+                    </div>
+                  </div>
+
+                  <!-- Option 3: UberXL -->
+                  <div class="vehicle-card" data-car="uberxl" data-base-price="690">
+                    <div class="vehicle-img-wrap"><div class="vehicle-placeholder-icon">🚙</div></div>
+                    <div class="vehicle-details">
+                      <div class="vehicle-name-row">
+                        <span class="vehicle-name">UberXL</span>
+                        <span class="passenger-count">👥 6</span>
+                      </div>
+                      <div class="vehicle-eta"><span class="eta-mins">7 mins away</span> • Rides for groups</div>
+                    </div>
+                    <div class="vehicle-pricing">
+                      <span class="old-price-val" style="display: none;">৳ 690</span>
+                      <div class="price-val">৳ 621</div>
+                    </div>
+                  </div>
+
+                  <!-- Option 4: Uber Moto -->
+                  <div class="vehicle-card" data-car="moto" data-base-price="160">
+                    <div class="vehicle-img-wrap"><div class="vehicle-placeholder-icon">🏍️</div></div>
+                    <div class="vehicle-details">
+                      <div class="vehicle-name-row">
+                        <span class="vehicle-name">Uber Moto</span>
+                        <span class="passenger-count">👥 1</span>
+                      </div>
+                      <div class="vehicle-eta"><span class="eta-mins">2 mins away</span> • Fastest through city traffic</div>
+                    </div>
+                    <div class="vehicle-pricing">
+                      <span class="old-price-val" style="display: none;">৳ 160</span>
+                      <div class="price-val">৳ 144</div>
+                    </div>
+                  </div>
+
+                  <!-- Option 5: Uber Black -->
+                  <div class="vehicle-card" data-car="black" data-base-price="950">
+                    <div class="vehicle-img-wrap"><div class="vehicle-placeholder-icon">💎</div></div>
+                    <div class="vehicle-details">
+                      <div class="vehicle-name-row">
+                        <span class="vehicle-name">Uber Black</span>
+                        <span class="passenger-count">👥 4</span>
+                      </div>
+                      <div class="vehicle-eta"><span class="eta-mins">8 mins away</span> • Premium luxury & top drivers</div>
+                    </div>
+                    <div class="vehicle-pricing">
+                      <span class="old-price-val" style="display: none;">৳ 950</span>
+                      <div class="price-val">৳ 855</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Booking Footer Actions -->
+              <div class="booking-footer">
+                <div class="payment-method-row">
+                  <div class="payment-info">
+                    <span>💳 Payment:</span>
+                    <strong id="cust-payment-label">bKash (৳ 150 Cashback) / Uber Cash</strong>
+                  </div>
+                  <button class="btn-text-sm" id="customer-open-coupons-btn">Coupons (5 Available) ➔</button>
+                </div>
+
+                <button class="btn btn-primary full-width request-ride-btn" id="request-ride-btn">
+                  <span id="request-btn-text">Request UberX</span>
+                  <span class="btn-price-tag" id="btn-price-display">৳ 342</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Interactive Leaflet Map Column -->
+          <div class="map-wrapper">
+            <div id="uber-map" class="interactive-map"></div>
+            
+            <div class="map-floating-overlay">
+              <div class="map-badge">
+                <div class="live-pulse"></div>
+                <span>Live Map: 42 Active Drivers nearby (Dhaka)</span>
+              </div>
+              <button class="map-tool-btn" id="map-recenter-btn" title="Recenter Route">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+              </button>
+            </div>
+
+            <div class="trip-summary-strip">
+              <div class="summary-item">
+                <span class="sum-label">Trip Distance</span>
+                <span class="sum-value" id="sum-dist">11.4 km</span>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-item">
+                <span class="sum-label">Est. Duration</span>
+                <span class="sum-value" id="sum-duration">28 mins</span>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-item">
+                <span class="sum-label">bKash Cashback</span>
+                <span class="sum-value text-green" id="sum-cashback">৳ 150</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Suggestions Section -->
+      <section class="suggestions-section">
+        <div class="section-container">
+          <h2 class="section-title">Suggestions</h2>
+          <div class="suggestions-grid">
+            <div class="suggestion-card" data-action="ride">
+              <div class="sugg-text">
+                <h3>Ride</h3>
+                <p>Go anywhere with ease at the tap of a button.</p>
+                <span class="sugg-link">Details &rarr;</span>
+              </div>
+              <div class="sugg-icon-box"><span class="emoji-icon">🚗</span></div>
+            </div>
+            <div class="suggestion-card" data-action="package">
+              <div class="sugg-text">
+                <h3>Package Delivery</h3>
+                <p>Reliable same-day courier pickup and drop-off.</p>
+                <span class="sugg-link">Send item &rarr;</span>
+              </div>
+              <div class="sugg-icon-box"><span class="emoji-icon">📦</span></div>
+            </div>
+            <div class="suggestion-card" data-action="reserve">
+              <div class="sugg-text">
+                <h3>Reserve Ahead</h3>
+                <p>Plan ahead with rides booked up to 90 days early.</p>
+                <span class="sugg-link">Book early &rarr;</span>
+              </div>
+              <div class="sugg-icon-box"><span class="emoji-icon">⏰</span></div>
+            </div>
+            <div class="suggestion-card" data-action="rental">
+              <div class="sugg-text">
+                <h3>Hourly Rental</h3>
+                <p>Keep a car and driver with you for multiple stops.</p>
+                <span class="sugg-link">Explore &rarr;</span>
+              </div>
+              <div class="sugg-icon-box"><span class="emoji-icon">🔑</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Customer Footer -->
+      <footer class="uber-footer">
+        <div class="footer-container">
+          <div class="footer-top">
+            <span class="footer-brand">Uber</span>
+            <button class="btn-text-sm" id="footer-help-btn" style="color:#fff; text-decoration: underline;">Help & File a Complaint</button>
+          </div>
+          <div class="footer-bottom">
+            <p>© 2026 Uber Technologies Inc. Customer Experience.</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </section>
+
+  <!-- ==========================================================================
+       SCREEN 3: 👨‍✈️ DRIVER / PARTNER PORTAL (চালক / ড্রাইভার প্যানেল)
+       ========================================================================== -->
+  <section id="screen-driver" class="app-fullscreen-screen" style="display: none;">
+    
+    <!-- Driver Navbar -->
+    <header class="navbar driver-nav">
+      <div class="nav-container">
+        <div class="nav-left">
+          <a href="#" class="brand-logo">Uber<span class="driver-nav-badge">DRIVER</span></a>
+          <div class="driver-online-pill" id="driver-online-indicator">
+            <span class="live-pulse"></span>
+            <span id="driver-status-text">ONLINE</span>
+          </div>
+        </div>
+
+        <div class="nav-right">
+          <!-- Today's Earnings Summary -->
+          <div class="driver-earnings-nav">
+            <span style="font-size:11px; opacity:0.8;">Today's Income:</span>
+            <strong id="driver-nav-earnings">৳ 3,450.00</strong>
+          </div>
+
+          <!-- Driver Profile -->
+          <div class="user-profile-nav-btn">
+            <div class="nav-user-avatar">👨‍✈️</div>
+            <span>Mohammad Rafiq (★ 4.96)</span>
+          </div>
+
+          <!-- Log Out Button -->
+          <button class="nav-btn btn-ghost-logout" onclick="window.logOutToGate();" title="Log Out and return to Login Screen">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Driver Main Dashboard Body -->
+    <main class="driver-main-body">
+      <div class="driver-grid-container">
+        
+        <!-- Column 1: Incoming Trip Requests Queue -->
+        <div class="driver-panel-card">
+          <div class="d-card-header">
+            <h3>🚖 Live Incoming Trip Requests</h3>
+            <span class="live-blink-tag">● Live Radar</span>
+          </div>
+
+          <div class="incoming-requests-queue" id="incoming-requests-queue">
+            <!-- Simulated Incoming Request -->
+            <div class="incoming-trip-card">
+              <div class="trip-card-top">
+                <div class="passenger-brief">
+                  <div class="p-avatar">🧑‍💼</div>
+                  <div>
+                    <strong>Nazmus Sakib</strong>
+                    <div style="font-size:12px; color:var(--text-secondary);">★ 4.95 Rating • UberX</div>
+                  </div>
+                </div>
+                <div class="trip-fare-badge">৳ 342.00</div>
+              </div>
+
+              <div class="trip-route-meta">
+                <div>🟢 <strong>Pickup:</strong> Gulshan 2, Dhaka (0.8 km away)</div>
+                <div>🔴 <strong>Drop-off:</strong> Hazrat Shahjalal Airport (11.4 km)</div>
+              </div>
+
+              <div class="trip-actions-row">
+                <button class="btn btn-primary full-width" id="driver-accept-btn">✅ Accept Ride Request</button>
+                <button class="btn btn-outline-sm" id="driver-decline-btn">Decline</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2: Driver Earnings & Daily Quests -->
+        <div class="driver-panel-card">
+          <div class="d-card-header">
+            <h3>💰 Today's Driver Earnings</h3>
+            <button class="btn btn-outline-sm" id="toggle-online-btn">Go Offline</button>
+          </div>
+
+          <div class="earnings-summary-box">
+            <div class="earnings-big-number" id="driver-today-earnings-val">৳ 3,450.00</div>
+            <div class="earnings-sub-row">
+              <span id="driver-completed-trips-count">12 Completed Trips</span> • <span>6.5 Hours Online</span>
+            </div>
+          </div>
+
+          <div class="daily-quest-box">
+            <div class="quest-header">
+              <strong>Daily Target Quest (85% Done)</strong>
+              <span class="quest-reward">+ ৳ 500 Bonus</span>
+            </div>
+            <div class="quest-progress-bar">
+              <div class="quest-fill" style="width: 85%;"></div>
+            </div>
+            <p style="font-size:12px; color:var(--text-secondary); margin-top:8px;">Complete 2 more trips before 11:00 PM to earn the daily quest bonus!</p>
+          </div>
+
+          <div class="driver-quick-tips">
+            <h4>💡 High Demand Surge Zones</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">• Gulshan 1 & 2 (1.5x Surge Active)<br>• Airport Terminal 1 & 2<br>• Dhanmondi Road 27</p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </section>
+
+  <!-- ==========================================================================
+       SCREEN 4: 🛡️ ADMIN / COMPANY HQ CONTROL PANEL (কোম্পানি অ্যাডমিন প্যানেল)
+       ========================================================================== -->
+  <section id="screen-admin" class="app-fullscreen-screen" style="display: none;">
+    
+    <!-- Admin Navbar -->
+    <header class="navbar admin-nav">
+      <div class="nav-container">
+        <div class="nav-left">
+          <a href="#" class="brand-logo">Uber<span class="admin-nav-badge">ADMIN HQ</span></a>
+          <span class="admin-top-subtitle desktop-only">Platform Controls & Dispute Management</span>
+        </div>
+
+        <div class="nav-right">
+          <!-- Theme Toggle -->
+          <button class="nav-btn btn-ghost theme-toggle-btn" id="admin-theme-toggle">
+            <svg class="icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <svg class="icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+
+          <!-- Admin Profile -->
+          <div class="user-profile-nav-btn">
+            <div class="nav-user-avatar">🛡️</div>
+            <span>Super Admin</span>
+          </div>
+
+          <!-- Log Out Button -->
+          <button class="nav-btn btn-ghost-logout" onclick="window.logOutToGate();" title="Log Out and return to Login Screen">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Admin Main Body -->
+    <main class="admin-main-body">
+      
+      <!-- Top Metrics -->
+      <div class="admin-metrics-bar">
+        <div class="metric-card">
+          <div class="metric-icon">💰</div>
+          <div class="metric-info">
+            <span class="metric-label">Today's Platform Volume</span>
+            <span class="metric-value">৳ 1,48,250</span>
+            <span class="metric-delta text-green">↑ 14.2% vs yesterday</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">🚖</div>
+          <div class="metric-info">
+            <span class="metric-label">Active Rides (Dhaka)</span>
+            <span class="metric-value">42</span>
+            <span class="metric-delta text-green">● 128 Drivers Online</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">🎟️</div>
+          <div class="metric-info">
+            <span class="metric-label">Active Promo Campaign</span>
+            <span class="metric-value" id="admin-active-campaign-metric">KIREI10 (10% OFF)</span>
+            <span class="metric-delta">৳ 150 bKash Cashback</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">🎧</div>
+          <div class="metric-info">
+            <span class="metric-label">Customer Complaints</span>
+            <span class="metric-value" id="admin-pending-disputes-count">1 Pending</span>
+            <span class="metric-delta text-green">Auto-Refund Ready ⚡</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin 3-Column Grid -->
+      <div class="admin-grid-layout">
+        
+        <!-- CARD 1: YOUR PRICING INPUTS (COMPANY CONTROL PANEL) -->
+        <!-- Exact replica of your reference image! -->
+        <div class="company-control-panel-card">
+          <div class="ccp-header">
+            <h2 class="ccp-title">Your Pricing Inputs</h2>
+            <span class="ccp-subtitle">(Company Control Panel)</span>
+            <p class="ccp-desc">Adjust your offer parameters</p>
+          </div>
+
+          <form id="pricing-control-form" onsubmit="event.preventDefault(); window.applyAdminPricingChanges();">
+            
+            <!-- 1. Store Discount (%) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-store-discount">Store Discount</label>
+                <span class="ccp-info-icon" title="Global platform discount in percentage">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-store-discount" class="ccp-input" value="10" min="0" max="90" step="1">
+                <span class="ccp-unit">%</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-store-discount">10% off</span></span>
+            </div>
+
+            <!-- 2. Coupon Code -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-coupon-code">Coupon Code</label>
+                <span class="ccp-info-icon" title="Active promo coupon code">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="text" id="admin-coupon-code" class="ccp-input text-uppercase" value="KIREI10">
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-coupon-code">KIREI10</span></span>
+            </div>
+
+            <!-- 3. bKash Cashback (৳) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-bkash-cashback">bKash Cashback</label>
+                <span class="ccp-info-icon" title="Cashback in BDT credited on bKash payment">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-bkash-cashback" class="ccp-input" value="150" min="0" max="1000" step="10">
+                <span class="ccp-unit">৳</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-bkash-cashback">৳ 150</span></span>
+            </div>
+
+            <!-- 4. Shipping / Surge Cost (৳) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-shipping-cost">Shipping Cost / Surge</label>
+                <span class="ccp-info-icon" title="Base pickup fee or peak surge addition in BDT">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-shipping-cost" class="ccp-input" value="0" min="0" max="500" step="10">
+                <span class="ccp-unit">৳</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-shipping-cost">Free shipping / ৳ 0 Surge</span></span>
+            </div>
+
+            <!-- 5. Sale Price (Optional) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-sale-price">Sale Price (Optional)</label>
+                <span class="ccp-info-icon" title="Fixed package price cap or base rate">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-sale-price" class="ccp-input" value="2050" min="100" max="10000" step="50">
+                <span class="ccp-unit">৳</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-sale-price">৳ 2,050</span></span>
+            </div>
+
+            <!-- Apply Changes Button -->
+            <button type="submit" class="btn-ccp-apply" id="btn-ccp-apply">
+              <span class="ccp-refresh-icon">🔄</span>
+              <span>Apply Changes</span>
+            </button>
+
+            <span class="ccp-footer-note">Changes reflect in real-time</span>
+          </form>
+        </div>
+
+        <!-- CARD 2: COUPON & PROMO MANAGER -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h3>🎟️ Coupon & Promo Manager</h3>
+              <p>Create and publish promo codes for all customers</p>
+            </div>
+          </div>
+
+          <div class="admin-sub-box">
+            <h4>+ Publish New Promo Code</h4>
+            <div class="create-coupon-form-grid">
+              <input type="text" id="new-code-input" placeholder="CODE (e.g. DHAKA25)" class="form-input-sm text-uppercase">
+              <input type="number" id="new-discount-input" placeholder="Disc % (e.g. 25)" class="form-input-sm" min="1" max="90">
+              <input type="number" id="new-max-input" placeholder="Max ৳ (e.g. 150)" class="form-input-sm" min="10">
+              <button class="btn btn-primary btn-sm" id="admin-create-coupon-btn">+ Publish</button>
+            </div>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Discount</th>
+                  <th>Max Cap</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-coupons-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CARD 3: CUSTOMER DISPUTES & REFUNDS INBOX -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h3>🎧 Customer Disputes & Refunds</h3>
+              <p>Review customer complaints, issue refunds & credit wallets</p>
+            </div>
+          </div>
+
+          <div class="disputes-list" id="admin-disputes-list"></div>
+        </div>
+
+      </div>
+    </main>
+  </section>
+
+  <!-- ==================== CUSTOMER WALLET & COMPLAINTS MODAL ==================== -->
+  <div class="modal-overlay" id="customer-account-modal">
+    <div class="dashboard-modal-card">
+      <button class="modal-close-x" id="customer-account-close-btn">&times;</button>
+      
+      <div class="dashboard-user-header">
+        <div class="user-big-avatar">🧑‍💼</div>
+        <div class="user-meta-details">
+          <div class="user-name-row">
+            <h3>Nazmus Sakib (Customer)</h3>
+            <span class="verified-badge">✓ Verified Rider</span>
+          </div>
+          <div class="user-sub-meta">★ 4.95 Rating • +880 1711-234567</div>
+        </div>
+
+        <div class="wallet-balance-card">
+          <span class="wallet-title">Uber Cash</span>
+          <div class="wallet-amount" id="modal-wallet-balance">৳ 550.00</div>
+          <button class="btn-wallet-topup" id="modal-topup-btn">+ Add Funds</button>
+        </div>
+      </div>
+
+      <div class="dashboard-nav-tabs">
+        <button class="dash-tab-btn active" data-cust-tab="coupons">🎟️ Available Coupons</button>
+        <button class="dash-tab-btn" data-cust-tab="complaints">🎧 File a Complaint</button>
+        <button class="dash-tab-btn" data-cust-tab="tickets">📋 Dispute History</button>
+      </div>
+
+      <div class="dashboard-tab-content">
+        <!-- 1. Coupons Panel -->
+        <div class="cust-dash-panel active" id="cust-panel-coupons">
+          <h4>Exclusive Discount Codes & Offers</h4>
+          <div class="coupons-grid" id="customer-coupons-container"></div>
+        </div>
+
+        <!-- 2. File Complaint Panel -->
+        <div class="cust-dash-panel" id="cust-panel-complaints">
+          <h4>File a Dispute for Admin Review & Refund</h4>
+          <form id="customer-complaint-form" onsubmit="event.preventDefault(); window.customerSubmitComplaint();">
+            <div class="form-group">
+              <label>Select Issue Type</label>
+              <select id="cust-issue-select" class="form-input" required>
+                <option value="Driver Overcharged">Driver overcharged fare (ভাড়া বেশি কাটা হয়েছে)</option>
+                <option value="AC Broken">AC was not working (এসি চলেনি)</option>
+                <option value="Wrong Route">Driver took unnecessary detour (অপ্রয়োজনীয় লম্বা রাস্তা নিয়েছে)</option>
+                <option value="Lost Item">Forgot wallet/phone in car (গাড়িতে জিনিস ফেলে এসেছি)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Trip ID</label>
+              <input type="text" id="cust-trip-id" class="form-input" value="TRIP-8492 (Gulshan ➔ Airport)" required>
+            </div>
+            <div class="form-group">
+              <label>Details</label>
+              <textarea id="cust-complaint-text" class="form-input-textarea" rows="3" placeholder="Explain the issue in detail..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary full-width">Submit Complaint to Admin HQ ➔</button>
+          </form>
+        </div>
+
+        <!-- 3. Dispute History Panel -->
+        <div class="cust-dash-panel" id="cust-panel-tickets">
+          <h4>Your Past Tickets & Admin Refunds</h4>
+          <div class="tickets-list" id="customer-tickets-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DRIVER MATCHING SIMULATION MODAL ==================== -->
+  <div class="modal-overlay" id="ride-modal-overlay">
+    <div class="ride-simulation-modal">
+      <div class="sim-stage active" id="stage-searching">
+        <div class="radar-pulse-wrapper">
+          <div class="radar-ring r1"></div>
+          <div class="radar-ring r2"></div>
+          <div class="radar-ring r3"></div>
+          <div class="radar-center-icon">🚗</div>
+        </div>
+        <h3 class="sim-title">Connecting to nearby drivers...</h3>
+        <p class="sim-subtitle">Searching for top rated cars around Gulshan.</p>
+        <button class="btn btn-outline-sm cancel-req-btn" id="cancel-search-btn">Cancel</button>
+      </div>
+
+      <div class="sim-stage" id="stage-matched">
+        <div class="driver-matched-header">
+          <div class="eta-pill">Arriving in <strong id="live-driver-eta">3 mins</strong></div>
+          <span class="car-badge" id="modal-car-name">UberX</span>
+        </div>
+        <div class="driver-card-details">
+          <div class="driver-profile-pic">👨‍✈️</div>
+          <div class="driver-meta">
+            <h4>Mohammad Rafiq</h4>
+            <div class="driver-rating-badge">★ 4.96 • 1,420 trips</div>
+            <div class="vehicle-plate-info">
+              <span class="plate-box">DHA-GA-11-8492</span>
+              <span class="car-model-name">Silver Toyota Corolla</span>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary full-width" id="complete-sim-trip-btn">Complete Trip (সিমুলেশন শেষ করুন)</button>
+      </div>
+
+      <div class="sim-stage" id="stage-completed">
+        <div class="trip-completed-icon">🎉</div>
+        <h3 class="sim-title">You've arrived!</h3>
+        <p class="sim-subtitle">Fare settled via Uber Cash / bKash.</p>
+        <button class="btn btn-primary full-width" id="finish-modal-btn">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- Main JS -->
+  <script>
+/**
+ * ==========================================================================
+ * UBER OFFICIAL 3-IN-1 APPLICATION ENGINE
+ * 🧑‍💼 Customer | 👨‍✈️ Driver | 🛡️ Admin HQ with Dedicated Login Gate
+ * ==========================================================================
+ */
+
+// Default Pricing Configuration
+const defaultPricing = {
+  storeDiscount: 10,       // 10%
+  couponCode: 'KIREI10',   // KIREI10
+  bkashCashback: 150,      // ৳ 150
+  shippingCost: 0,         // ৳ 0 Surge
+  salePrice: 2050,         // ৳ 2,050
+};
+
+// Load saved pricing from LocalStorage
+let initialPricing = { ...defaultPricing };
+try {
+  const saved = localStorage.getItem('uber_admin_pricing');
+  if (saved) initialPricing = { ...defaultPricing, ...JSON.parse(saved) };
+} catch (e) {
+  console.warn('Could not load saved pricing', e);
+}
+
+// Initial Coupons Array with synced first entry
+const defaultCoupons = [
+  { code: initialPricing.couponCode, discount: initialPricing.storeDiscount, maxCap: initialPricing.bkashCashback, status: 'Active', title: `${initialPricing.storeDiscount}% Platform Discount` },
+  { code: 'UBER50', discount: 50, maxCap: 180, status: 'Active', title: '50% First Rides Offer' },
+  { code: 'AIRPORT100', discount: 25, maxCap: 100, status: 'Active', title: '৳ 100 Airport Saver' },
+  { code: 'COMFORT20', discount: 20, maxCap: 120, status: 'Active', title: '20% Luxury Comfort' },
+  { code: 'MOTO30', discount: 30, maxCap: 50, status: 'Active', title: '৳ 30 Off Uber Moto' },
+];
+
+let initialCoupons = [...defaultCoupons];
+try {
+  const savedCoupons = localStorage.getItem('uber_coupons_list');
+  if (savedCoupons) {
+    initialCoupons = JSON.parse(savedCoupons);
+    // Keep 1st coupon in sync with current pricing
+    if (initialCoupons.length > 0) {
+      initialCoupons[0].code = initialPricing.couponCode;
+      initialCoupons[0].discount = initialPricing.storeDiscount;
+      initialCoupons[0].maxCap = initialPricing.bkashCashback;
+    }
+  }
+} catch (e) {
+  console.warn('Could not load saved coupons', e);
+}
+
+// Global Application State
+const appState = {
+  currentScreen: 'auth', // 'auth', 'customer', 'driver', 'admin'
+  selectedAuthRole: 'customer', // 'customer', 'driver', 'admin'
+  theme: localStorage.getItem('uber_pro_theme') || 'light',
+
+  // Company Admin Pricing Controls (Matching reference image)
+  adminPricing: initialPricing,
+
+  // Active Promo Campaigns (Synced with adminPricing)
+  coupons: initialCoupons,
+
+  // Customer Profile & Wallet
+  customer: {
+    name: 'Nazmus Sakib',
+    phone: '+880 1711-234567',
+    walletBalance: parseFloat(localStorage.getItem('uber_customer_wallet')) || 550.00,
+    appliedCoupon: null,
+  },
+
+  // Driver Profile & Earnings
+  driver: {
+    name: 'Mohammad Rafiq',
+    car: 'Silver Toyota Corolla (DHA-GA-11-8492)',
+    isOnline: true,
+    todayEarnings: parseFloat(localStorage.getItem('uber_driver_earnings')) || 3450.00,
+    tripsCompleted: parseInt(localStorage.getItem('uber_driver_trips')) || 12,
+  },
+
+  // Customer Complaints / Disputes
+  disputes: [
+    {
+      id: 'TKT-9201',
+      userName: 'Nazmus Sakib (Customer)',
+      userPhone: '+880 1711-234567',
+      tripId: 'TRIP-8492 (Gulshan ➔ Airport)',
+      category: 'Driver Overcharged',
+      details: 'Driver took Mohakhali flyover traffic route instead of expressway and charged extra ৳ 120.',
+      status: 'PENDING',
+      refundAmount: 120.00,
+      adminNote: '',
+      date: '10 mins ago'
+    },
+    {
+      id: 'TKT-8842',
+      userName: 'Tanvir Ahmed (Customer)',
+      userPhone: '+880 1819-987654',
+      tripId: 'TRIP-7921 (Dhanmondi ➔ Banani)',
+      category: 'AC Broken',
+      details: 'Car AC was completely non-functional on Uber Comfort.',
+      status: 'RESOLVED',
+      refundAmount: 80.00,
+      adminNote: 'Verified vehicle AC telemetry. Refunded ৳ 80 to rider wallet.',
+      date: 'Yesterday'
+    }
+  ],
+
+  // Route & Fleet Pricing
+  route: {
+    pickup: { name: 'Gulshan 2, Dhaka', lat: 23.7925, lng: 90.4078 },
+    dest: { name: 'Hazrat Shahjalal Int. Airport', lat: 23.8433, lng: 90.4039 },
+    distanceKm: 11.4,
+    durationMins: 28,
+    selectedCar: 'uberx',
+  },
+
+  isSearching: false,
+};
+
+// Base Vehicle Rate Constants
+const vehicleBaseRates = {
+  uberx: { name: 'UberX', base: 120, perKm: 24 },
+  comfort: { name: 'Uber Comfort', base: 160, perKm: 32 },
+  uberxl: { name: 'UberXL', base: 220, perKm: 42 },
+  black: { name: 'Uber Black', base: 350, perKm: 55 },
+  moto: { name: 'Uber Moto', base: 50, perKm: 10 },
+};
+
+// Leaflet Map Reference
+let mapInstance = null;
+let pickupMarker = null;
+let destMarker = null;
+let driverCarMarker = null;
+let routePolyline = null;
+let driverAnimInterval = null;
+
+// ==========================================================================
+// INITIALIZATION
+// ==========================================================================
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  initAuthGate();
+  initCustomerView();
+  initDriverView();
+  initAdminView();
+});
+
+// ==========================================================================
+// AUTHENTICATION GATE (SCREEN 1)
+// ==========================================================================
+function initAuthGate() {
+  const roleCards = document.querySelectorAll('.role-login-card');
+  const emailInput = document.getElementById('login-email-input');
+  const btnText = document.getElementById('login-btn-text');
+
+  roleCards.forEach(card => {
+    card.addEventListener('click', () => {
+      roleCards.forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      const role = card.getAttribute('data-role');
+      appState.selectedAuthRole = role;
+
+      if (role === 'customer') {
+        if (emailInput) emailInput.value = '+880 1711-234567';
+        if (btnText) btnText.textContent = 'Sign In as Customer (Passenger)';
+      } else if (role === 'driver') {
+        if (emailInput) emailInput.value = '+880 1819-987654';
+        if (btnText) btnText.textContent = 'Sign In as Driver (Partner)';
+      } else if (role === 'admin') {
+        if (emailInput) emailInput.value = 'admin@uber.com';
+        if (btnText) btnText.textContent = 'Sign In to Uber HQ Admin Panel';
+      }
+    });
+  });
+}
+
+window.performLogin = function() {
+  enterPortal(appState.selectedAuthRole);
+};
+
+window.quickLogin = function(role) {
+  appState.selectedAuthRole = role;
+  enterPortal(role);
+};
+
+function enterPortal(role) {
+  const authScreen = document.getElementById('screen-auth');
+  const custScreen = document.getElementById('screen-customer');
+  const driverScreen = document.getElementById('screen-driver');
+  const adminScreen = document.getElementById('screen-admin');
+
+  if (authScreen) authScreen.style.display = 'none';
+  if (custScreen) custScreen.style.display = role === 'customer' ? 'flex' : 'none';
+  if (driverScreen) driverScreen.style.display = role === 'driver' ? 'flex' : 'none';
+  if (adminScreen) adminScreen.style.display = role === 'admin' ? 'flex' : 'none';
+
+  appState.currentScreen = role;
+
+  if (role === 'customer') {
+    showToast('Welcome Nazmus! Logged in as Customer (Passenger).');
+    if (!mapInstance) {
+      setTimeout(() => { initMap(); }, 200);
+    } else {
+      setTimeout(() => { mapInstance.invalidateSize(); }, 200);
+    }
+    updateCustomerPricing();
+    renderCustomerCoupons();
+  } else if (role === 'driver') {
+    showToast('Welcome Mohammad Rafiq! Driver portal online.');
+  } else if (role === 'admin') {
+    showToast('Welcome Super Admin! Company HQ Control Panel active.');
+    populateAdminInputs();
+    syncPricingToCoupons();
+    updateAdminPricingHints();
+    renderAdminCouponsTable();
+  }
+}
+
+window.logOutToGate = function() {
+  const authScreen = document.getElementById('screen-auth');
+  const custScreen = document.getElementById('screen-customer');
+  const driverScreen = document.getElementById('screen-driver');
+  const adminScreen = document.getElementById('screen-admin');
+
+  if (custScreen) custScreen.style.display = 'none';
+  if (driverScreen) driverScreen.style.display = 'none';
+  if (adminScreen) adminScreen.style.display = 'none';
+  if (authScreen) authScreen.style.display = 'flex';
+
+  appState.currentScreen = 'auth';
+  showToast('Logged out successfully. Returned to sign in.');
+};
+
+// ==========================================================================
+// 🧑‍💼 CUSTOMER VIEW LOGIC (SCREEN 2)
+// ==========================================================================
+function initCustomerView() {
+  initCustomerAccountModal();
+  initCustomerVehicleSelector();
+  initCustomerSimulation();
+  renderCustomerCoupons();
+  renderCustomerTickets();
+  updateCustomerWalletUI();
+
+  // Quick Chips
+  document.querySelectorAll('.quick-chips .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const dest = chip.getAttribute('data-dest');
+      const destInput = document.getElementById('dest-input');
+      if (destInput) destInput.value = dest;
+      showToast(`Destination: ${dest}`);
+      renderMapRoute();
+      updateCustomerPricing();
+    });
+  });
+
+  // Remove Coupon
+  const removeCouponBtn = document.getElementById('remove-coupon-btn');
+  if (removeCouponBtn) {
+    removeCouponBtn.addEventListener('click', () => {
+      appState.customer.appliedCoupon = null;
+      document.getElementById('applied-coupon-strip').style.display = 'none';
+      updateCustomerPricing();
+      showToast('Coupon removed');
+    });
+  }
+
+  // Top Announcement Link
+  const announceBtn = document.getElementById('announcement-view-coupons-btn');
+  if (announceBtn) {
+    announceBtn.addEventListener('click', () => {
+      const modal = document.getElementById('customer-account-modal');
+      if (modal) modal.classList.add('active');
+    });
+  }
+
+  const openCouponsBtn = document.getElementById('customer-open-coupons-btn');
+  if (openCouponsBtn) {
+    openCouponsBtn.addEventListener('click', () => {
+      const modal = document.getElementById('customer-account-modal');
+      if (modal) modal.classList.add('active');
+    });
+  }
+}
+
+function updateCustomerWalletUI() {
+  const cashAmount = document.getElementById('cust-cash-amount');
+  const modalWallet = document.getElementById('modal-wallet-balance');
+  const payLabel = document.getElementById('cust-payment-label');
+
+  if (cashAmount) cashAmount.textContent = `৳ ${appState.customer.walletBalance.toFixed(2)}`;
+  if (modalWallet) modalWallet.textContent = `৳ ${appState.customer.walletBalance.toFixed(2)}`;
+  if (payLabel) {
+    payLabel.textContent = `bKash (৳ ${appState.adminPricing.bkashCashback} Cashback) / Uber Cash (৳ ${Math.round(appState.customer.walletBalance)})`;
+  }
+}
+
+function updateCustomerPricing() {
+  const p = appState.adminPricing;
+  const dist = appState.route.distanceKm;
+
+  // Update Announcement Banner
+  const title = document.getElementById('announcement-offer-title');
+  if (title) {
+    title.textContent = `Special Offer Active: ${p.storeDiscount}% Store Discount & ৳ ${p.bkashCashback} bKash Cashback!`;
+  }
+
+  const sumCashback = document.getElementById('sum-cashback');
+  if (sumCashback) sumCashback.textContent = `৳ ${p.bkashCashback}`;
+
+  const payLabel = document.getElementById('cust-payment-label');
+  if (payLabel) {
+    payLabel.textContent = `bKash (৳ ${p.bkashCashback} Cashback) / Uber Cash (৳ ${Math.round(appState.customer.walletBalance)})`;
+  }
+
+  // Calculate Vehicle Fares
+  document.querySelectorAll('#vehicle-list .vehicle-card').forEach(card => {
+    const carKey = card.getAttribute('data-car');
+    const rate = vehicleBaseRates[carKey];
+    if (rate) {
+      let originalFare = Math.round(rate.base + (dist * rate.perKm) + p.shippingCost);
+      let discountAmt = Math.round(originalFare * (p.storeDiscount / 100));
+      let finalFare = Math.max(40, originalFare - discountAmt);
+
+      if (appState.customer.appliedCoupon) {
+        const c = appState.customer.appliedCoupon;
+        const extraDisc = Math.min(c.maxCap, Math.round(finalFare * (c.discount / 100)));
+        finalFare = Math.max(30, finalFare - extraDisc);
+      }
+
+      const priceVal = card.querySelector('.price-val');
+      const oldPrice = card.querySelector('.old-price-val');
+
+      if (priceVal) priceVal.textContent = `৳ ${finalFare}`;
+      if (oldPrice) {
+        if (p.storeDiscount > 0 || appState.customer.appliedCoupon) {
+          oldPrice.style.display = 'block';
+          oldPrice.textContent = `৳ ${originalFare}`;
+        } else {
+          oldPrice.style.display = 'none';
+        }
+      }
+      card.setAttribute('data-final-price', finalFare);
+    }
+  });
+
+  updateMainRequestBtn();
+}
+
+function updateMainRequestBtn() {
+  const selectedCard = document.querySelector('#vehicle-list .vehicle-card.selected');
+  const price = selectedCard ? selectedCard.getAttribute('data-final-price') : 342;
+  const carName = selectedCard ? selectedCard.querySelector('.vehicle-name').textContent : 'UberX';
+
+  const btnText = document.getElementById('request-btn-text');
+  const btnPrice = document.getElementById('btn-price-display');
+
+  if (btnText) btnText.textContent = `Request ${carName}`;
+  if (btnPrice) btnPrice.textContent = `৳ ${price}`;
+}
+
+function initCustomerVehicleSelector() {
+  document.querySelectorAll('#vehicle-list .vehicle-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('#vehicle-list .vehicle-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      updateMainRequestBtn();
+    });
+  });
+}
+
+function renderCustomerCoupons() {
+  const container = document.getElementById('customer-coupons-container');
+  if (!container) return;
+
+  container.innerHTML = '';
+  appState.coupons.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'coupon-card';
+    card.innerHTML = `
+      <div style="display:flex; justify-content:space-between; font-weight:800;">
+        <span style="font-family:monospace; background:var(--bg-subtle); padding:2px 6px; border-radius:4px;">${c.code}</span>
+        <span style="color:var(--accent-green-dark);">${c.discount}% OFF</span>
+      </div>
+      <div style="font-size:12px; color:var(--text-secondary);">${c.title} • Max ৳ ${c.maxCap}</div>
+      <button class="btn-apply-coupon">Apply to Ride</button>
+    `;
+
+    card.querySelector('.btn-apply-coupon').addEventListener('click', () => {
+      appState.customer.appliedCoupon = c;
+      const strip = document.getElementById('applied-coupon-strip');
+      const codeTxt = document.getElementById('active-coupon-code-text');
+      const descTxt = document.getElementById('active-coupon-desc-text');
+
+      if (strip) strip.style.display = 'flex';
+      if (codeTxt) codeTxt.textContent = c.code;
+      if (descTxt) descTxt.textContent = `${c.discount}% Discount Applied (Max ৳ ${c.maxCap})`;
+
+      document.getElementById('customer-account-modal').classList.remove('active');
+      updateCustomerPricing();
+      showToast(`🎉 Coupon ${c.code} applied to your ride!`);
+    });
+
+    container.appendChild(card);
+  });
+}
+
+function renderCustomerTickets() {
+  const container = document.getElementById('customer-tickets-container');
+  if (!container) return;
+
+  container.innerHTML = '';
+  appState.disputes.forEach(d => {
+    const item = document.createElement('div');
+    item.className = 'ticket-item';
+    item.innerHTML = `
+      <div style="display:flex; justify-content:space-between; font-weight:700;">
+        <span>${d.id} • ${d.category}</span>
+        <span class="table-status-pill ${d.status === 'RESOLVED' ? 'status-active' : ''}">${d.status}</span>
+      </div>
+      <div style="color:var(--text-secondary);">"${d.details}"</div>
+      ${d.status === 'RESOLVED' ? `
+        <div style="color:var(--accent-green-dark); font-weight:700; margin-top:4px;">
+          ✓ Admin Refund: ৳ ${d.refundAmount.toFixed(2)} Credited to your Uber Cash!
+        </div>
+      ` : `
+        <div style="color:#b45309; font-weight:700; margin-top:4px;">
+          ⏳ Under review by Company Admin HQ.
+        </div>
+      `}
+    `;
+    container.appendChild(item);
+  });
+}
+
+window.customerSubmitComplaint = function() {
+  const issueSelect = document.getElementById('cust-issue-select');
+  const tripInp = document.getElementById('cust-trip-id');
+  const textInp = document.getElementById('cust-complaint-text');
+
+  const newTicket = {
+    id: `TKT-${Math.floor(1000 + Math.random() * 9000)}`,
+    userName: appState.customer.name,
+    userPhone: appState.customer.phone,
+    tripId: tripInp.value,
+    category: issueSelect.value,
+    details: textInp.value.trim(),
+    status: 'PENDING',
+    refundAmount: 120.00,
+    adminNote: '',
+    date: 'Just now'
+  };
+
+  appState.disputes.unshift(newTicket);
+  textInp.value = '';
+
+  renderCustomerTickets();
+  renderAdminDisputes();
+  showToast('✅ Complaint submitted! Admin HQ will review and credit refund.');
+};
+
+function initCustomerAccountModal() {
+  const modal = document.getElementById('customer-account-modal');
+  const walletNavBtn = document.getElementById('customer-wallet-nav-btn');
+  const profileNavBtn = document.getElementById('customer-profile-nav-btn');
+  const footerHelpBtn = document.getElementById('footer-help-btn');
+  const closeBtn = document.getElementById('customer-account-close-btn');
+  const topupBtn = document.getElementById('modal-topup-btn');
+
+  const openAccount = (tab = 'coupons') => {
+    if (modal) modal.classList.add('active');
+    document.querySelectorAll('.dash-tab-btn').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('data-cust-tab') === tab);
+    });
+    document.querySelectorAll('.cust-dash-panel').forEach(p => {
+      p.classList.toggle('active', p.id === `cust-panel-${tab}`);
+    });
+  };
+
+  if (walletNavBtn) walletNavBtn.addEventListener('click', () => openAccount('coupons'));
+  if (profileNavBtn) profileNavBtn.addEventListener('click', () => openAccount('coupons'));
+  if (footerHelpBtn) {
+    footerHelpBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openAccount('complaints');
+    });
+  }
+
+  if (closeBtn) closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+
+  document.querySelectorAll('.dash-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.getAttribute('data-cust-tab');
+      document.querySelectorAll('.dash-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.cust-dash-panel').forEach(p => {
+        p.classList.toggle('active', p.id === `cust-panel-${tab}`);
+      });
+    });
+  });
+
+  if (topupBtn) {
+    topupBtn.addEventListener('click', () => {
+      appState.customer.walletBalance += 500.00;
+      localStorage.setItem('uber_customer_wallet', appState.customer.walletBalance);
+      updateCustomerWalletUI();
+      showToast('৳ 500.00 added to your Uber Cash balance!');
+    });
+  }
+}
+
+function initCustomerSimulation() {
+  const reqBtn = document.getElementById('request-ride-btn');
+  const modal = document.getElementById('ride-modal-overlay');
+  const cancelBtn = document.getElementById('cancel-search-btn');
+  const completeBtn = document.getElementById('complete-sim-trip-btn');
+  const finishBtn = document.getElementById('finish-modal-btn');
+
+  const stageSearch = document.getElementById('stage-searching');
+  const stageMatched = document.getElementById('stage-matched');
+  const stageCompleted = document.getElementById('stage-completed');
+
+  if (reqBtn) {
+    reqBtn.addEventListener('click', () => {
+      stageSearch.classList.add('active');
+      stageMatched.classList.remove('active');
+      stageCompleted.classList.remove('active');
+      modal.classList.add('active');
+      appState.isSearching = true;
+
+      setTimeout(() => {
+        if (!appState.isSearching) return;
+        stageSearch.classList.remove('active');
+        stageMatched.classList.add('active');
+        startDriverTracking();
+        showToast('Driver Matched: Mohammad Rafiq is arriving in a Silver Toyota Corolla.');
+      }, 2400);
+    });
+  }
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', () => {
+      appState.isSearching = false;
+      modal.classList.remove('active');
+      showToast('Ride request cancelled');
+    });
+  }
+
+  if (completeBtn) {
+    completeBtn.addEventListener('click', () => {
+      clearInterval(driverAnimInterval);
+      stageMatched.classList.remove('active');
+      stageCompleted.classList.add('active');
+    });
+  }
+
+  if (finishBtn) {
+    finishBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+      showToast('Trip completed. Thank you for riding with Uber!');
+    });
+  }
+}
+
+function startDriverTracking() {
+  if (!mapInstance) return;
+  let dLat = appState.route.pickup.lat + 0.009;
+  let dLng = appState.route.pickup.lng + 0.007;
+
+  const carIcon = L.divIcon({
+    className: 'custom-car-marker',
+    html: '<span>🚖</span>',
+    iconSize: [28, 28],
+    iconAnchor: [14, 14]
+  });
+
+  if (driverCarMarker) mapInstance.removeLayer(driverCarMarker);
+  driverCarMarker = L.marker([dLat, dLng], { icon: carIcon }).addTo(mapInstance);
+
+  let steps = 0;
+  const total = 15;
+  clearInterval(driverAnimInterval);
+  driverAnimInterval = setInterval(() => {
+    steps++;
+    const progress = steps / total;
+    const curLat = dLat + (appState.route.pickup.lat - dLat) * progress;
+    const curLng = dLng + (appState.route.pickup.lng - dLng) * progress;
+    if (driverCarMarker) driverCarMarker.setLatLng([curLat, curLng]);
+    if (steps >= total) clearInterval(driverAnimInterval);
+  }, 1200);
+}
+
+// ==========================================================================
+// 👨‍✈️ DRIVER VIEW LOGIC (SCREEN 3)
+// ==========================================================================
+function initDriverView() {
+  const toggleBtn = document.getElementById('toggle-online-btn');
+  const statusText = document.getElementById('driver-status-text');
+  const acceptBtn = document.getElementById('driver-accept-btn');
+  const declineBtn = document.getElementById('driver-decline-btn');
+
+  if (toggleBtn && statusText) {
+    toggleBtn.addEventListener('click', () => {
+      appState.driver.isOnline = !appState.driver.isOnline;
+      if (appState.driver.isOnline) {
+        statusText.textContent = 'ONLINE';
+        toggleBtn.textContent = 'Go Offline';
+        showToast('You are now ONLINE and receiving trip requests.');
+      } else {
+        statusText.textContent = 'OFFLINE';
+        toggleBtn.textContent = 'Go Online';
+        showToast('You are now OFFLINE.');
+      }
+    });
+  }
+
+  if (acceptBtn) {
+    acceptBtn.addEventListener('click', () => {
+      showToast('Trip Accepted! Navigating to pick up Nazmus Sakib (Gulshan 2)...');
+      appState.driver.todayEarnings += 342.00;
+      appState.driver.tripsCompleted += 1;
+      localStorage.setItem('uber_driver_earnings', appState.driver.todayEarnings);
+      localStorage.setItem('uber_driver_trips', appState.driver.tripsCompleted);
+      
+      const navEarnings = document.getElementById('driver-nav-earnings');
+      const bodyEarnings = document.getElementById('driver-today-earnings-val');
+      const tripsCount = document.getElementById('driver-completed-trips-count');
+
+      if (navEarnings) navEarnings.textContent = `৳ ${appState.driver.todayEarnings.toFixed(2)}`;
+      if (bodyEarnings) bodyEarnings.textContent = `৳ ${appState.driver.todayEarnings.toFixed(2)}`;
+      if (tripsCount) tripsCount.textContent = `${appState.driver.tripsCompleted} Completed Trips`;
+    });
+  }
+
+  if (declineBtn) {
+    declineBtn.addEventListener('click', () => {
+      showToast('Trip declined.');
+    });
+  }
+}
+
+// ==========================================================================
+// 🛡️ ADMIN VIEW LOGIC (SCREEN 4) - COMPLETE AUTO-SYNC WITH COUPONS TABLE
+// ==========================================================================
+function initAdminView() {
+  populateAdminInputs();
+  bindRealtimePricingInputs();
+  syncPricingToCoupons();
+  renderAdminCouponsTable();
+  renderAdminDisputes();
+}
+
+function populateAdminInputs() {
+  const p = appState.adminPricing;
+  const storeInput = document.getElementById('admin-store-discount');
+  const couponInput = document.getElementById('admin-coupon-code');
+  const bkashInput = document.getElementById('admin-bkash-cashback');
+  const shippingInput = document.getElementById('admin-shipping-cost');
+  const saleInput = document.getElementById('admin-sale-price');
+
+  if (storeInput) storeInput.value = p.storeDiscount;
+  if (couponInput) couponInput.value = p.couponCode;
+  if (bkashInput) bkashInput.value = p.bkashCashback;
+  if (shippingInput) shippingInput.value = p.shippingCost;
+  if (saleInput) saleInput.value = p.salePrice;
+
+  updateAdminPricingHints();
+}
+
+/**
+ * Ensures that the first coupon in the Coupon Manager table ALWAYS reflects
+ * the Coupon Code, Store Discount, and bKash Cashback set in the Pricing card!
+ */
+function syncPricingToCoupons() {
+  const p = appState.adminPricing;
+  if (appState.coupons.length > 0) {
+    appState.coupons[0].code = p.couponCode;
+    appState.coupons[0].discount = p.storeDiscount;
+    appState.coupons[0].maxCap = p.bkashCashback;
+    appState.coupons[0].title = `${p.storeDiscount}% Platform Discount`;
+    appState.coupons[0].status = 'Active';
+  } else {
+    appState.coupons.unshift({
+      code: p.couponCode,
+      discount: p.storeDiscount,
+      maxCap: p.bkashCashback,
+      status: 'Active',
+      title: `${p.storeDiscount}% Platform Discount`
+    });
+  }
+
+  localStorage.setItem('uber_coupons_list', JSON.stringify(appState.coupons));
+}
+
+function bindRealtimePricingInputs() {
+  const storeInput = document.getElementById('admin-store-discount');
+  const couponInput = document.getElementById('admin-coupon-code');
+  const bkashInput = document.getElementById('admin-bkash-cashback');
+  const shippingInput = document.getElementById('admin-shipping-cost');
+  const saleInput = document.getElementById('admin-sale-price');
+
+  const syncAll = () => {
+    appState.adminPricing.storeDiscount = parseFloat(storeInput?.value) || 0;
+    appState.adminPricing.couponCode = couponInput?.value.trim().toUpperCase() || 'KIREI10';
+    appState.adminPricing.bkashCashback = parseFloat(bkashInput?.value) || 0;
+    appState.adminPricing.shippingCost = parseFloat(shippingInput?.value) || 0;
+    appState.adminPricing.salePrice = parseFloat(saleInput?.value) || 2050;
+
+    // 1. Sync to coupons list
+    syncPricingToCoupons();
+
+    // 2. Save to LocalStorage
+    localStorage.setItem('uber_admin_pricing', JSON.stringify(appState.adminPricing));
+
+    // 3. Update all UI elements in real time
+    updateAdminPricingHints();
+    renderAdminCouponsTable();
+    renderCustomerCoupons();
+    updateCustomerPricing();
+  };
+
+  [storeInput, couponInput, bkashInput, shippingInput, saleInput].forEach(inp => {
+    if (inp) {
+      inp.addEventListener('input', syncAll);
+      inp.addEventListener('change', syncAll);
+    }
+  });
+}
+
+function updateAdminPricingHints() {
+  const p = appState.adminPricing;
+  const hintStore = document.getElementById('hint-store-discount');
+  const hintCoupon = document.getElementById('hint-coupon-code');
+  const hintBkash = document.getElementById('hint-bkash-cashback');
+  const hintShipping = document.getElementById('hint-shipping-cost');
+  const hintSale = document.getElementById('hint-sale-price');
+
+  if (hintStore) hintStore.textContent = `${p.storeDiscount}% off`;
+  if (hintCoupon) hintCoupon.textContent = p.couponCode;
+  if (hintBkash) hintBkash.textContent = `৳ ${p.bkashCashback}`;
+  if (hintShipping) hintShipping.textContent = p.shippingCost === 0 ? 'Free shipping / ৳ 0 Surge' : `৳ ${p.shippingCost} Surge`;
+  if (hintSale) hintSale.textContent = `৳ ${p.salePrice.toLocaleString()}`;
+
+  const campaignMetric = document.getElementById('admin-active-campaign-metric');
+  if (campaignMetric) {
+    campaignMetric.textContent = `${p.couponCode} (${p.storeDiscount}% OFF)`;
+    if (campaignMetric.nextElementSibling) {
+      campaignMetric.nextElementSibling.textContent = `৳ ${p.bkashCashback} bKash Cashback`;
+    }
+  }
+}
+
+window.applyAdminPricingChanges = function() {
+  const storeInput = document.getElementById('admin-store-discount');
+  const couponInput = document.getElementById('admin-coupon-code');
+  const bkashInput = document.getElementById('admin-bkash-cashback');
+  const shippingInput = document.getElementById('admin-shipping-cost');
+  const saleInput = document.getElementById('admin-sale-price');
+
+  appState.adminPricing.storeDiscount = parseFloat(storeInput?.value) || 0;
+  appState.adminPricing.couponCode = couponInput?.value.trim().toUpperCase() || 'KIREI10';
+  appState.adminPricing.bkashCashback = parseFloat(bkashInput?.value) || 0;
+  appState.adminPricing.shippingCost = parseFloat(shippingInput?.value) || 0;
+  appState.adminPricing.salePrice = parseFloat(saleInput?.value) || 2050;
+
+  // Sync to Coupons list and persist
+  syncPricingToCoupons();
+  localStorage.setItem('uber_admin_pricing', JSON.stringify(appState.adminPricing));
+
+  updateAdminPricingHints();
+  renderAdminCouponsTable();
+  renderCustomerCoupons();
+  updateCustomerPricing();
+
+  // Visual button confirmation animation
+  const applyBtn = document.getElementById('btn-ccp-apply');
+  if (applyBtn) {
+    const originalHTML = applyBtn.innerHTML;
+    applyBtn.innerHTML = `<span>✅ Changes Applied & Saved!</span>`;
+    applyBtn.style.backgroundColor = '#16a34a';
+    setTimeout(() => {
+      applyBtn.innerHTML = originalHTML;
+      applyBtn.style.backgroundColor = '';
+    }, 1800);
+  }
+
+  showToast(`✅ Pricing updated: ${appState.adminPricing.couponCode} (${appState.adminPricing.storeDiscount}% OFF, Max Cap ৳ ${appState.adminPricing.bkashCashback}) is now Live!`);
+};
+
+function renderAdminCouponsTable() {
+  const tbody = document.getElementById('admin-coupons-table-body');
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+  appState.coupons.forEach((c, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="coupon-table-code">${c.code}</span></td>
+      <td><strong>${c.discount}% OFF</strong></td>
+      <td>৳ ${c.maxCap}</td>
+      <td><span class="table-status-pill status-active">${c.status}</span></td>
+      <td><button class="btn-delete-row" data-idx="${idx}">Delete</button></td>
+    `;
+
+    tr.querySelector('.btn-delete-row').addEventListener('click', () => {
+      appState.coupons.splice(idx, 1);
+      localStorage.setItem('uber_coupons_list', JSON.stringify(appState.coupons));
+      renderAdminCouponsTable();
+      renderCustomerCoupons();
+      showToast(`Coupon ${c.code} deleted`);
+    });
+
+    tbody.appendChild(tr);
+  });
+
+  const addCouponBtn = document.getElementById('admin-create-coupon-btn');
+  const codeInp = document.getElementById('new-code-input');
+  const discInp = document.getElementById('new-discount-input');
+  const maxInp = document.getElementById('new-max-input');
+
+  if (addCouponBtn && !addCouponBtn.dataset.bound) {
+    addCouponBtn.dataset.bound = "true";
+    addCouponBtn.addEventListener('click', () => {
+      const code = codeInp.value.trim().toUpperCase();
+      const disc = parseFloat(discInp.value);
+      const max = parseFloat(maxInp.value) || 150;
+
+      if (!code || isNaN(disc)) {
+        showToast('Please enter coupon code and discount percentage', 'error');
+        return;
+      }
+
+      appState.coupons.unshift({
+        code: code,
+        discount: disc,
+        maxCap: max,
+        status: 'Active',
+        title: `${disc}% Promo Discount`
+      });
+
+      localStorage.setItem('uber_coupons_list', JSON.stringify(appState.coupons));
+
+      codeInp.value = '';
+      discInp.value = '';
+      if (maxInp) maxInp.value = '';
+
+      renderAdminCouponsTable();
+      renderCustomerCoupons();
+      showToast(`🎟️ New coupon "${code}" published!`);
+    });
+  }
+}
+
+function renderAdminDisputes() {
+  const container = document.getElementById('admin-disputes-list');
+  const pendingCountDisplay = document.getElementById('admin-pending-disputes-count');
+  if (!container) return;
+
+  const pendingCount = appState.disputes.filter(d => d.status === 'PENDING').length;
+  if (pendingCountDisplay) pendingCountDisplay.textContent = `${pendingCount} Pending`;
+
+  container.innerHTML = '';
+  appState.disputes.forEach((d, idx) => {
+    const item = document.createElement('div');
+    item.className = `dispute-admin-item ${d.status === 'RESOLVED' ? 'resolved' : ''}`;
+    item.innerHTML = `
+      <div class="dispute-top-bar">
+        <span>👤 ${d.userName} (${d.userPhone})</span>
+        <span class="table-status-pill ${d.status === 'RESOLVED' ? 'status-active' : ''}">${d.status}</span>
+      </div>
+      <div style="font-size:12px; font-weight:700; color:var(--text-primary);">
+        Issue: ${d.category} • <span style="color:var(--text-muted);">${d.tripId}</span>
+      </div>
+      <div class="dispute-user-note">"${d.details}"</div>
+
+      ${d.status === 'PENDING' ? `
+        <div class="dispute-resolution-controls">
+          <div class="refund-input-row">
+            <label>Credit Refund (৳):</label>
+            <input type="number" class="refund-num-input" id="refund-input-${d.id}" value="${d.refundAmount}">
+          </div>
+          <button class="btn-resolve-credit" id="resolve-btn-${d.id}">
+            ✅ Resolve & Credit ৳ ${d.refundAmount} to Rider Wallet
+          </button>
+        </div>
+      ` : `
+        <div style="font-size:11px; font-weight:700; color:var(--accent-green-dark); background:var(--accent-green-light); padding:6px 10px; border-radius:var(--radius-sm);">
+          ✓ Resolved: ৳ ${d.refundAmount.toFixed(2)} refunded to rider wallet.
+        </div>
+      `}
+    `;
+
+    const resolveBtn = item.querySelector(`#resolve-btn-${d.id}`);
+    if (resolveBtn) {
+      resolveBtn.addEventListener('click', () => {
+        const refundInp = item.querySelector(`#refund-input-${d.id}`);
+        const customRefund = parseFloat(refundInp.value) || d.refundAmount;
+
+        d.status = 'RESOLVED';
+        d.refundAmount = customRefund;
+
+        appState.customer.walletBalance += customRefund;
+        localStorage.setItem('uber_customer_wallet', appState.customer.walletBalance);
+        updateCustomerWalletUI();
+
+        renderAdminDisputes();
+        renderCustomerTickets();
+        showToast(`✅ Dispute resolved! ৳ ${customRefund} credited to customer wallet.`);
+      });
+    }
+
+    container.appendChild(item);
+  });
+}
+
+// ==========================================================================
+// LEAFLET MAP ENGINE
+// ==========================================================================
+function initMap() {
+  const mapElement = document.getElementById('uber-map');
+  if (!mapElement || typeof L === 'undefined') return;
+
+  mapInstance = L.map('uber-map', { zoomControl: false, attributionControl: false }).setView([23.8103, 90.4125], 13);
+  L.control.zoom({ position: 'bottomright' }).addTo(mapInstance);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19, subdomains: 'abcd' }).addTo(mapInstance);
+  renderMapRoute();
+
+  const recenterBtn = document.getElementById('map-recenter-btn');
+  if (recenterBtn) {
+    recenterBtn.addEventListener('click', () => {
+      const bounds = L.latLngBounds([
+        [appState.route.pickup.lat, appState.route.pickup.lng],
+        [appState.route.dest.lat, appState.route.dest.lng]
+      ]);
+      mapInstance.fitBounds(bounds, { padding: [50, 50] });
+      showToast('Map recentered');
+    });
+  }
+}
+
+function renderMapRoute() {
+  if (!mapInstance) return;
+  const p = appState.route.pickup;
+  const d = appState.route.dest;
+
+  const pickupIcon = L.divIcon({ className: 'custom-map-pin pin-pickup', html: '●', iconSize: [20, 20] });
+  const destIcon = L.divIcon({ className: 'custom-map-pin pin-dest', html: '■', iconSize: [20, 20] });
+
+  if (pickupMarker) mapInstance.removeLayer(pickupMarker);
+  if (destMarker) mapInstance.removeLayer(destMarker);
+  if (routePolyline) mapInstance.removeLayer(routePolyline);
+
+  pickupMarker = L.marker([p.lat, p.lng], { icon: pickupIcon }).addTo(mapInstance);
+  destMarker = L.marker([d.lat, d.lng], { icon: destIcon }).addTo(mapInstance);
+
+  const midLat = (p.lat + d.lat) / 2 + 0.006;
+  const midLng = (p.lng + d.lng) / 2 - 0.008;
+
+  routePolyline = L.polyline([[p.lat, p.lng], [midLat, midLng], [d.lat, d.lng]], {
+    color: '#000000',
+    weight: 5,
+    dashArray: '5, 5'
+  }).addTo(mapInstance);
+
+  const bounds = L.latLngBounds([[p.lat, p.lng], [d.lat, d.lng]]);
+  mapInstance.fitBounds(bounds, { padding: [50, 50] });
+}
+
+// ==========================================================================
+// THEME & TOAST
+// ==========================================================================
+function initTheme() {
+  document.documentElement.setAttribute('data-theme', appState.theme);
+  const toggles = [
+    document.getElementById('auth-theme-toggle'),
+    document.getElementById('customer-theme-toggle'),
+    document.getElementById('admin-theme-toggle')
+  ];
+
+  toggles.forEach(toggle => {
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        appState.theme = appState.theme === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', appState.theme);
+        localStorage.setItem('uber_pro_theme', appState.theme);
+        showToast(`Switched to ${appState.theme.toUpperCase()} mode`);
+      });
+    }
+  });
+}
+
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${type === 'error' ? '⚠️' : '✓'}</span><span>${message}</span>`;
+  container.appendChild(toast);
+
+  setTimeout(() => { toast.remove(); }, 3200);
+}
+
+</script>
+</body>
+</html>

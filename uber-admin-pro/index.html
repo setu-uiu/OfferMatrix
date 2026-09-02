@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uber - Official Web Platform & Control Portal</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS for Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SCREEN 1: OFFICIAL DEDICATED LOGIN / ROLE GATE (লগইন স্ক্রিন)
+       User chooses role here before entering the app!
+       ========================================================================== -->
+  <section id="screen-auth" class="auth-fullscreen-page active">
+    <div class="auth-fullscreen-wrapper">
+      
+      <!-- Top Brand Header -->
+      <div class="auth-top-header">
+        <span class="auth-brand-logo">Uber</span>
+        <div class="auth-top-actions">
+          <button class="nav-btn btn-ghost theme-toggle-btn" id="auth-theme-toggle">
+            <svg class="icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <svg class="icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Auth Container Box -->
+      <div class="auth-card-main">
+        <h1 class="auth-main-title">Welcome to Uber</h1>
+        <p class="auth-main-subtitle">Select how you want to sign in to continue (আপনি কী হিসেবে লগইন করতে চান সিলেক্ট করুন):</p>
+
+        <!-- Role Selector Cards -->
+        <div class="role-cards-container">
+          
+          <!-- Role 1: Customer (Passenger) -->
+          <div class="role-login-card active" data-role="customer">
+            <div class="role-card-radio"></div>
+            <div class="role-icon-box">🧑‍💼</div>
+            <div class="role-card-info">
+              <h3>Customer / Passenger (যাত্রী)</h3>
+              <p>Book rides, send packages, use coupons, and track drivers live on map.</p>
+            </div>
+            <span class="role-badge-tag">Rider</span>
+          </div>
+
+          <!-- Role 2: Driver (Captain) -->
+          <div class="role-login-card" data-role="driver">
+            <div class="role-card-radio"></div>
+            <div class="role-icon-box">👨‍✈️</div>
+            <div class="role-card-info">
+              <h3>Driver / Partner (চালক / ড্রাইভার)</h3>
+              <p>Drive your car/bike, accept passenger trip requests, and track daily earnings.</p>
+            </div>
+            <span class="role-badge-tag driver-tag">Driver</span>
+          </div>
+
+          <!-- Role 3: Admin HQ -->
+          <div class="role-login-card" data-role="admin">
+            <div class="role-card-radio"></div>
+            <div class="role-icon-box">🛡️</div>
+            <div class="role-card-info">
+              <h3>Company Admin HQ (কোম্পানি অ্যাডমিন)</h3>
+              <p>Adjust Pricing Inputs, manage coupons, resolve user disputes, and monitor city fleet.</p>
+            </div>
+            <span class="role-badge-tag admin-tag">Admin HQ</span>
+          </div>
+
+        </div>
+
+        <!-- Login Form -->
+        <form id="main-login-form" onsubmit="event.preventDefault(); window.performLogin();" class="auth-input-form">
+          <div class="form-group">
+            <label for="login-email-input" id="login-email-label">Email or Mobile Number</label>
+            <input type="text" id="login-email-input" class="form-input" value="nazmus.customer@uber.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="login-pass-input">Password</label>
+            <input type="password" id="login-pass-input" class="form-input" value="••••••••" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary full-width login-submit-btn" id="login-submit-btn">
+            <span id="login-btn-text">Sign In as Customer (যাত্রী হিসেবে প্রবেশ করুন)</span>
+            <span>➔</span>
+          </button>
+        </form>
+
+        <!-- 1-Click Fast Demo Logins -->
+        <div class="demo-logins-strip">
+          <span class="demo-label">⚡ 1-Click Quick Demo Login:</span>
+          <div class="demo-btn-group">
+            <button class="demo-chip-btn" onclick="window.quickLogin('customer')">🧑‍💼 Login as Customer</button>
+            <button class="demo-chip-btn" onclick="window.quickLogin('driver')">👨‍✈️ Login as Driver</button>
+            <button class="demo-chip-btn" onclick="window.quickLogin('admin')">🛡️ Login as Admin HQ</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SCREEN 2: 🧑‍💼 CUSTOMER / PASSENGER PORTAL (যাত্রী প্যানেল - আমি রাইড বুক করব)
+       ========================================================================== -->
+  <section id="screen-customer" class="app-fullscreen-screen" style="display: none;">
+    
+    <!-- Customer Navbar -->
+    <header class="navbar">
+      <div class="nav-container">
+        <div class="nav-left">
+          <a href="#" class="brand-logo">Uber</a>
+          <nav class="nav-menu desktop-only">
+            <a href="#ride" class="nav-link active">Ride</a>
+            <a href="#package" class="nav-link">Package</a>
+            <a href="#reserve" class="nav-link">Reserve</a>
+            <a href="#rental" class="nav-link">Rental</a>
+          </nav>
+        </div>
+
+        <div class="nav-right">
+          <!-- Language Selector -->
+          <div class="dropdown-wrapper">
+            <button class="nav-btn btn-ghost lang-btn" id="lang-btn">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10z"/></svg>
+              <span>EN</span>
+            </button>
+          </div>
+
+          <!-- Theme Toggle -->
+          <button class="nav-btn btn-ghost theme-toggle-btn" id="customer-theme-toggle">
+            <svg class="icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <svg class="icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+
+          <!-- Customer Wallet Chip -->
+          <div class="uber-cash-chip" id="customer-wallet-nav-btn" title="Click to view wallet & coupons">
+            <span>💳</span>
+            <span id="cust-cash-amount">৳ 550.00</span>
+          </div>
+
+          <!-- Customer Profile & Switch / Logout -->
+          <button class="user-profile-nav-btn" id="customer-profile-nav-btn">
+            <div class="nav-user-avatar">🧑‍💼</div>
+            <span>Nazmus (Customer)</span>
+          </button>
+
+          <!-- Log Out / Switch Role Button -->
+          <button class="nav-btn btn-ghost-logout" onclick="window.logOutToGate();" title="Log Out and return to Login Screen">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Customer Main Content -->
+    <main class="customer-main-body">
+      
+      <!-- Live Admin Offer Banner on Top of Customer Screen -->
+      <div class="customer-offer-announcement-strip" id="customer-offer-announcement-strip">
+        <div class="offer-left">
+          <span class="live-pulse"></span>
+          <strong id="announcement-offer-title">Special Offer Active: 10% Store Discount & ৳ 150 bKash Cashback!</strong>
+        </div>
+        <button class="btn-text-sm" id="announcement-view-coupons-btn">View All 5 Coupons ➔</button>
+      </div>
+
+      <!-- Hero Booking Card & Interactive Leaflet Map -->
+      <div class="hero-section" id="ride">
+        <div class="hero-container">
+          
+          <!-- Booking Card -->
+          <div class="booking-card-wrapper">
+            <div class="booking-card">
+              
+              <!-- Service Selector Tabs -->
+              <div class="service-tabs">
+                <button class="tab-btn active" data-tab="ride">
+                  <span class="tab-emoji">🚗</span>
+                  <span class="tab-text">Ride</span>
+                </button>
+                <button class="tab-btn" data-tab="moto">
+                  <span class="tab-emoji">🏍️</span>
+                  <span class="tab-text">Moto</span>
+                </button>
+                <button class="tab-btn" data-tab="package">
+                  <span class="tab-emoji">📦</span>
+                  <span class="tab-text">Package</span>
+                </button>
+                <button class="tab-btn" data-tab="rental">
+                  <span class="tab-emoji">🔑</span>
+                  <span class="tab-text">Rent</span>
+                </button>
+              </div>
+
+              <!-- Header Title -->
+              <div class="booking-header">
+                <h1 class="booking-title" id="booking-title">Go anywhere with Uber</h1>
+                <p class="booking-subtitle">Request a ride, hop in, and go safely.</p>
+              </div>
+
+              <!-- Location Inputs Form -->
+              <div class="location-form">
+                <div class="route-indicator">
+                  <div class="dot pickup-dot"></div>
+                  <div class="connecting-line"></div>
+                  <div class="square dest-dot"></div>
+                </div>
+
+                <div class="inputs-group">
+                  <div class="input-field-wrapper">
+                    <input type="text" id="pickup-input" class="location-input" placeholder="Pickup location" value="Gulshan 2, Dhaka">
+                    <button class="locate-btn" id="current-loc-btn" title="Use current GPS location">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+                    </button>
+                  </div>
+
+                  <div class="input-field-wrapper">
+                    <input type="text" id="dest-input" class="location-input" placeholder="Drop-off location" value="Hazrat Shahjalal Int. Airport">
+                    <button class="swap-btn" id="swap-locations-btn" title="Swap locations">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Popular Landmark Chips -->
+              <div class="quick-chips">
+                <span class="chips-label">Popular:</span>
+                <button class="chip" data-dest="Dhanmondi Lake">Dhanmondi</button>
+                <button class="chip" data-dest="Banani 11">Banani</button>
+                <button class="chip" data-dest="Uttara Sector 3">Uttara</button>
+                <button class="chip" data-dest="Motijheel Commercial Area">Motijheel</button>
+              </div>
+
+              <!-- Applied Coupon Banner -->
+              <div class="applied-coupon-strip" id="applied-coupon-strip" style="display: none;">
+                <div class="coupon-left-tag">
+                  <span class="tag-icon">🎟️</span>
+                  <div class="tag-meta">
+                    <strong id="active-coupon-code-text">KIREI10</strong>
+                    <span class="tag-desc" id="active-coupon-desc-text">10% Platform Discount Applied</span>
+                  </div>
+                </div>
+                <button class="remove-coupon-btn" id="remove-coupon-btn" title="Remove coupon">&times;</button>
+              </div>
+
+              <!-- Vehicle Options List (Calculates live with Admin discounts!) -->
+              <div class="vehicle-options-section">
+                <div class="section-title-sm">Available rides (select one):</div>
+                <div class="vehicle-list" id="vehicle-list">
+                  
+                  <!-- Option 1: UberX -->
+                  <div class="vehicle-card selected" data-car="uberx" data-base-price="380">
+                    <div class="vehicle-img-wrap"><div class="vehicle-placeholder-icon">🚗</div></div>
+                    <div class="vehicle-details">
+                      <div class="vehicle-name-row">
+                        <span class="vehicle-name">UberX</span>
+                        <span class="passenger-count">👥 4</span>
+                      </div>
+                      <div class="vehicle-eta"><span class="eta-mins">3 mins away</span> • Everyday affordable ride</div>
+                    </div>
+                    <div class="vehicle-pricing">
+                      <span class="old-price-val" style="display: none;">৳ 380</span>
+                      <div class="price-val">৳ 342</div>
+                    </div>
+                  </div>
+
+                  <!-- Option 2: Uber Comfort -->
+                  <div class="vehicle-card" data-car="comfort" data-base-price="520">
+                    <div class="vehicle-img-wrap"><div class="vehicle-placeholder-icon">🚘</div></div>
+                    <div class="vehicle-details">
+                      <div class="vehicle-name-row">
+                        <span class="vehicle-name">Uber Comfort</span>
+                        <span class="passenger-count">👥 4</span>
+                      </div>
+                      <div class="vehicle-eta"><span class="eta-mins">5 mins away</span> • Newer cars, extra legroom</div>
+                    </div>
+                    <div class="vehicle-pricing">
+                      <span class="old-price-val" style="display: none;">৳ 520</span>
+                      <div class="price-val">৳ 468</div>
+                    </div>
+                  </div>
+
+                  <!-- Option 3: UberXL -->
+                  <div class="vehicle-card" data-car="uberxl" data-base-price="690">
+                    <div class="vehicle-img-wrap"><div class="vehicle-placeholder-icon">🚙</div></div>
+                    <div class="vehicle-details">
+                      <div class="vehicle-name-row">
+                        <span class="vehicle-name">UberXL</span>
+                        <span class="passenger-count">👥 6</span>
+                      </div>
+                      <div class="vehicle-eta"><span class="eta-mins">7 mins away</span> • Rides for groups</div>
+                    </div>
+                    <div class="vehicle-pricing">
+                      <span class="old-price-val" style="display: none;">৳ 690</span>
+                      <div class="price-val">৳ 621</div>
+                    </div>
+                  </div>
+
+                  <!-- Option 4: Uber Moto -->
+                  <div class="vehicle-card" data-car="moto" data-base-price="160">
+                    <div class="vehicle-img-wrap"><div class="vehicle-placeholder-icon">🏍️</div></div>
+                    <div class="vehicle-details">
+                      <div class="vehicle-name-row">
+                        <span class="vehicle-name">Uber Moto</span>
+                        <span class="passenger-count">👥 1</span>
+                      </div>
+                      <div class="vehicle-eta"><span class="eta-mins">2 mins away</span> • Fastest through city traffic</div>
+                    </div>
+                    <div class="vehicle-pricing">
+                      <span class="old-price-val" style="display: none;">৳ 160</span>
+                      <div class="price-val">৳ 144</div>
+                    </div>
+                  </div>
+
+                  <!-- Option 5: Uber Black -->
+                  <div class="vehicle-card" data-car="black" data-base-price="950">
+                    <div class="vehicle-img-wrap"><div class="vehicle-placeholder-icon">💎</div></div>
+                    <div class="vehicle-details">
+                      <div class="vehicle-name-row">
+                        <span class="vehicle-name">Uber Black</span>
+                        <span class="passenger-count">👥 4</span>
+                      </div>
+                      <div class="vehicle-eta"><span class="eta-mins">8 mins away</span> • Premium luxury & top drivers</div>
+                    </div>
+                    <div class="vehicle-pricing">
+                      <span class="old-price-val" style="display: none;">৳ 950</span>
+                      <div class="price-val">৳ 855</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Booking Footer Actions -->
+              <div class="booking-footer">
+                <div class="payment-method-row">
+                  <div class="payment-info">
+                    <span>💳 Payment:</span>
+                    <strong id="cust-payment-label">bKash (৳ 150 Cashback) / Uber Cash</strong>
+                  </div>
+                  <button class="btn-text-sm" id="customer-open-coupons-btn">Coupons (5 Available) ➔</button>
+                </div>
+
+                <button class="btn btn-primary full-width request-ride-btn" id="request-ride-btn">
+                  <span id="request-btn-text">Request UberX</span>
+                  <span class="btn-price-tag" id="btn-price-display">৳ 342</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Interactive Leaflet Map Column -->
+          <div class="map-wrapper">
+            <div id="uber-map" class="interactive-map"></div>
+            
+            <div class="map-floating-overlay">
+              <div class="map-badge">
+                <div class="live-pulse"></div>
+                <span>Live Map: 42 Active Drivers nearby (Dhaka)</span>
+              </div>
+              <button class="map-tool-btn" id="map-recenter-btn" title="Recenter Route">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+              </button>
+            </div>
+
+            <div class="trip-summary-strip">
+              <div class="summary-item">
+                <span class="sum-label">Trip Distance</span>
+                <span class="sum-value" id="sum-dist">11.4 km</span>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-item">
+                <span class="sum-label">Est. Duration</span>
+                <span class="sum-value" id="sum-duration">28 mins</span>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-item">
+                <span class="sum-label">bKash Cashback</span>
+                <span class="sum-value text-green" id="sum-cashback">৳ 150</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Suggestions Section -->
+      <section class="suggestions-section">
+        <div class="section-container">
+          <h2 class="section-title">Suggestions</h2>
+          <div class="suggestions-grid">
+            <div class="suggestion-card" data-action="ride">
+              <div class="sugg-text">
+                <h3>Ride</h3>
+                <p>Go anywhere with ease at the tap of a button.</p>
+                <span class="sugg-link">Details &rarr;</span>
+              </div>
+              <div class="sugg-icon-box"><span class="emoji-icon">🚗</span></div>
+            </div>
+            <div class="suggestion-card" data-action="package">
+              <div class="sugg-text">
+                <h3>Package Delivery</h3>
+                <p>Reliable same-day courier pickup and drop-off.</p>
+                <span class="sugg-link">Send item &rarr;</span>
+              </div>
+              <div class="sugg-icon-box"><span class="emoji-icon">📦</span></div>
+            </div>
+            <div class="suggestion-card" data-action="reserve">
+              <div class="sugg-text">
+                <h3>Reserve Ahead</h3>
+                <p>Plan ahead with rides booked up to 90 days early.</p>
+                <span class="sugg-link">Book early &rarr;</span>
+              </div>
+              <div class="sugg-icon-box"><span class="emoji-icon">⏰</span></div>
+            </div>
+            <div class="suggestion-card" data-action="rental">
+              <div class="sugg-text">
+                <h3>Hourly Rental</h3>
+                <p>Keep a car and driver with you for multiple stops.</p>
+                <span class="sugg-link">Explore &rarr;</span>
+              </div>
+              <div class="sugg-icon-box"><span class="emoji-icon">🔑</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Customer Footer -->
+      <footer class="uber-footer">
+        <div class="footer-container">
+          <div class="footer-top">
+            <span class="footer-brand">Uber</span>
+            <button class="btn-text-sm" id="footer-help-btn" style="color:#fff; text-decoration: underline;">Help & File a Complaint</button>
+          </div>
+          <div class="footer-bottom">
+            <p>© 2026 Uber Technologies Inc. Customer Experience.</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </section>
+
+  <!-- ==========================================================================
+       SCREEN 3: 👨‍✈️ DRIVER / PARTNER PORTAL (চালক / ড্রাইভার প্যানেল)
+       ========================================================================== -->
+  <section id="screen-driver" class="app-fullscreen-screen" style="display: none;">
+    
+    <!-- Driver Navbar -->
+    <header class="navbar driver-nav">
+      <div class="nav-container">
+        <div class="nav-left">
+          <a href="#" class="brand-logo">Uber<span class="driver-nav-badge">DRIVER</span></a>
+          <div class="driver-online-pill" id="driver-online-indicator">
+            <span class="live-pulse"></span>
+            <span id="driver-status-text">ONLINE</span>
+          </div>
+        </div>
+
+        <div class="nav-right">
+          <!-- Today's Earnings Summary -->
+          <div class="driver-earnings-nav">
+            <span style="font-size:11px; opacity:0.8;">Today's Income:</span>
+            <strong id="driver-nav-earnings">৳ 3,450.00</strong>
+          </div>
+
+          <!-- Driver Profile -->
+          <div class="user-profile-nav-btn">
+            <div class="nav-user-avatar">👨‍✈️</div>
+            <span>Mohammad Rafiq (★ 4.96)</span>
+          </div>
+
+          <!-- Log Out Button -->
+          <button class="nav-btn btn-ghost-logout" onclick="window.logOutToGate();" title="Log Out and return to Login Screen">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Driver Main Dashboard Body -->
+    <main class="driver-main-body">
+      <div class="driver-grid-container">
+        
+        <!-- Column 1: Incoming Trip Requests Queue -->
+        <div class="driver-panel-card">
+          <div class="d-card-header">
+            <h3>🚖 Live Incoming Trip Requests</h3>
+            <span class="live-blink-tag">● Live Radar</span>
+          </div>
+
+          <div class="incoming-requests-queue" id="incoming-requests-queue">
+            <!-- Simulated Incoming Request -->
+            <div class="incoming-trip-card">
+              <div class="trip-card-top">
+                <div class="passenger-brief">
+                  <div class="p-avatar">🧑‍💼</div>
+                  <div>
+                    <strong>Nazmus Sakib</strong>
+                    <div style="font-size:12px; color:var(--text-secondary);">★ 4.95 Rating • UberX</div>
+                  </div>
+                </div>
+                <div class="trip-fare-badge">৳ 342.00</div>
+              </div>
+
+              <div class="trip-route-meta">
+                <div>🟢 <strong>Pickup:</strong> Gulshan 2, Dhaka (0.8 km away)</div>
+                <div>🔴 <strong>Drop-off:</strong> Hazrat Shahjalal Airport (11.4 km)</div>
+              </div>
+
+              <div class="trip-actions-row">
+                <button class="btn btn-primary full-width" id="driver-accept-btn">✅ Accept Ride Request</button>
+                <button class="btn btn-outline-sm" id="driver-decline-btn">Decline</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2: Driver Earnings & Daily Quests -->
+        <div class="driver-panel-card">
+          <div class="d-card-header">
+            <h3>💰 Today's Driver Earnings</h3>
+            <button class="btn btn-outline-sm" id="toggle-online-btn">Go Offline</button>
+          </div>
+
+          <div class="earnings-summary-box">
+            <div class="earnings-big-number" id="driver-today-earnings-val">৳ 3,450.00</div>
+            <div class="earnings-sub-row">
+              <span id="driver-completed-trips-count">12 Completed Trips</span> • <span>6.5 Hours Online</span>
+            </div>
+          </div>
+
+          <div class="daily-quest-box">
+            <div class="quest-header">
+              <strong>Daily Target Quest (85% Done)</strong>
+              <span class="quest-reward">+ ৳ 500 Bonus</span>
+            </div>
+            <div class="quest-progress-bar">
+              <div class="quest-fill" style="width: 85%;"></div>
+            </div>
+            <p style="font-size:12px; color:var(--text-secondary); margin-top:8px;">Complete 2 more trips before 11:00 PM to earn the daily quest bonus!</p>
+          </div>
+
+          <div class="driver-quick-tips">
+            <h4>💡 High Demand Surge Zones</h4>
+            <p style="font-size:13px; color:var(--text-secondary);">• Gulshan 1 & 2 (1.5x Surge Active)<br>• Airport Terminal 1 & 2<br>• Dhanmondi Road 27</p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </section>
+
+  <!-- ==========================================================================
+       SCREEN 4: 🛡️ ADMIN / COMPANY HQ CONTROL PANEL (কোম্পানি অ্যাডমিন প্যানেল)
+       ========================================================================== -->
+  <section id="screen-admin" class="app-fullscreen-screen" style="display: none;">
+    
+    <!-- Admin Navbar -->
+    <header class="navbar admin-nav">
+      <div class="nav-container">
+        <div class="nav-left">
+          <a href="#" class="brand-logo">Uber<span class="admin-nav-badge">ADMIN HQ</span></a>
+          <span class="admin-top-subtitle desktop-only">Platform Controls & Dispute Management</span>
+        </div>
+
+        <div class="nav-right">
+          <!-- Theme Toggle -->
+          <button class="nav-btn btn-ghost theme-toggle-btn" id="admin-theme-toggle">
+            <svg class="icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <svg class="icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+
+          <!-- Admin Profile -->
+          <div class="user-profile-nav-btn">
+            <div class="nav-user-avatar">🛡️</div>
+            <span>Super Admin</span>
+          </div>
+
+          <!-- Log Out Button -->
+          <button class="nav-btn btn-ghost-logout" onclick="window.logOutToGate();" title="Log Out and return to Login Screen">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Admin Main Body -->
+    <main class="admin-main-body">
+      
+      <!-- Top Metrics -->
+      <div class="admin-metrics-bar">
+        <div class="metric-card">
+          <div class="metric-icon">💰</div>
+          <div class="metric-info">
+            <span class="metric-label">Today's Platform Volume</span>
+            <span class="metric-value">৳ 1,48,250</span>
+            <span class="metric-delta text-green">↑ 14.2% vs yesterday</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">🚖</div>
+          <div class="metric-info">
+            <span class="metric-label">Active Rides (Dhaka)</span>
+            <span class="metric-value">42</span>
+            <span class="metric-delta text-green">● 128 Drivers Online</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">🎟️</div>
+          <div class="metric-info">
+            <span class="metric-label">Active Promo Campaign</span>
+            <span class="metric-value" id="admin-active-campaign-metric">KIREI10 (10% OFF)</span>
+            <span class="metric-delta">৳ 150 bKash Cashback</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">🎧</div>
+          <div class="metric-info">
+            <span class="metric-label">Customer Complaints</span>
+            <span class="metric-value" id="admin-pending-disputes-count">1 Pending</span>
+            <span class="metric-delta text-green">Auto-Refund Ready ⚡</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin 3-Column Grid -->
+      <div class="admin-grid-layout">
+        
+        <!-- CARD 1: YOUR PRICING INPUTS (COMPANY CONTROL PANEL) -->
+        <!-- Exact replica of your reference image! -->
+        <div class="company-control-panel-card">
+          <div class="ccp-header">
+            <h2 class="ccp-title">Your Pricing Inputs</h2>
+            <span class="ccp-subtitle">(Company Control Panel)</span>
+            <p class="ccp-desc">Adjust your offer parameters</p>
+          </div>
+
+          <form id="pricing-control-form" onsubmit="event.preventDefault(); window.applyAdminPricingChanges();">
+            
+            <!-- 1. Store Discount (%) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-store-discount">Store Discount</label>
+                <span class="ccp-info-icon" title="Global platform discount in percentage">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-store-discount" class="ccp-input" value="10" min="0" max="90" step="1">
+                <span class="ccp-unit">%</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-store-discount">10% off</span></span>
+            </div>
+
+            <!-- 2. Coupon Code -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-coupon-code">Coupon Code</label>
+                <span class="ccp-info-icon" title="Active promo coupon code">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="text" id="admin-coupon-code" class="ccp-input text-uppercase" value="KIREI10">
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-coupon-code">KIREI10</span></span>
+            </div>
+
+            <!-- 3. bKash Cashback (৳) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-bkash-cashback">bKash Cashback</label>
+                <span class="ccp-info-icon" title="Cashback in BDT credited on bKash payment">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-bkash-cashback" class="ccp-input" value="150" min="0" max="1000" step="10">
+                <span class="ccp-unit">৳</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-bkash-cashback">৳ 150</span></span>
+            </div>
+
+            <!-- 4. Shipping / Surge Cost (৳) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-shipping-cost">Shipping Cost / Surge</label>
+                <span class="ccp-info-icon" title="Base pickup fee or peak surge addition in BDT">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-shipping-cost" class="ccp-input" value="0" min="0" max="500" step="10">
+                <span class="ccp-unit">৳</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-shipping-cost">Free shipping / ৳ 0 Surge</span></span>
+            </div>
+
+            <!-- 5. Sale Price (Optional) -->
+            <div class="ccp-input-group">
+              <div class="ccp-label-row">
+                <label for="admin-sale-price">Sale Price (Optional)</label>
+                <span class="ccp-info-icon" title="Fixed package price cap or base rate">ⓘ</span>
+              </div>
+              <div class="ccp-input-wrapper">
+                <input type="number" id="admin-sale-price" class="ccp-input" value="2050" min="100" max="10000" step="50">
+                <span class="ccp-unit">৳</span>
+              </div>
+              <span class="ccp-current-hint">Current: <span id="hint-sale-price">৳ 2,050</span></span>
+            </div>
+
+            <!-- Apply Changes Button -->
+            <button type="submit" class="btn-ccp-apply" id="btn-ccp-apply">
+              <span class="ccp-refresh-icon">🔄</span>
+              <span>Apply Changes</span>
+            </button>
+
+            <span class="ccp-footer-note">Changes reflect in real-time</span>
+          </form>
+        </div>
+
+        <!-- CARD 2: COUPON & PROMO MANAGER -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h3>🎟️ Coupon & Promo Manager</h3>
+              <p>Create and publish promo codes for all customers</p>
+            </div>
+          </div>
+
+          <div class="admin-sub-box">
+            <h4>+ Publish New Promo Code</h4>
+            <div class="create-coupon-form-grid">
+              <input type="text" id="new-code-input" placeholder="CODE (e.g. DHAKA25)" class="form-input-sm text-uppercase">
+              <input type="number" id="new-discount-input" placeholder="Disc % (e.g. 25)" class="form-input-sm" min="1" max="90">
+              <input type="number" id="new-max-input" placeholder="Max ৳ (e.g. 150)" class="form-input-sm" min="10">
+              <button class="btn btn-primary btn-sm" id="admin-create-coupon-btn">+ Publish</button>
+            </div>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Discount</th>
+                  <th>Max Cap</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-coupons-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CARD 3: CUSTOMER DISPUTES & REFUNDS INBOX -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h3>🎧 Customer Disputes & Refunds</h3>
+              <p>Review customer complaints, issue refunds & credit wallets</p>
+            </div>
+          </div>
+
+          <div class="disputes-list" id="admin-disputes-list"></div>
+        </div>
+
+      </div>
+    </main>
+  </section>
+
+  <!-- ==================== CUSTOMER WALLET & COMPLAINTS MODAL ==================== -->
+  <div class="modal-overlay" id="customer-account-modal">
+    <div class="dashboard-modal-card">
+      <button class="modal-close-x" id="customer-account-close-btn">&times;</button>
+      
+      <div class="dashboard-user-header">
+        <div class="user-big-avatar">🧑‍💼</div>
+        <div class="user-meta-details">
+          <div class="user-name-row">
+            <h3>Nazmus Sakib (Customer)</h3>
+            <span class="verified-badge">✓ Verified Rider</span>
+          </div>
+          <div class="user-sub-meta">★ 4.95 Rating • +880 1711-234567</div>
+        </div>
+
+        <div class="wallet-balance-card">
+          <span class="wallet-title">Uber Cash</span>
+          <div class="wallet-amount" id="modal-wallet-balance">৳ 550.00</div>
+          <button class="btn-wallet-topup" id="modal-topup-btn">+ Add Funds</button>
+        </div>
+      </div>
+
+      <div class="dashboard-nav-tabs">
+        <button class="dash-tab-btn active" data-cust-tab="coupons">🎟️ Available Coupons</button>
+        <button class="dash-tab-btn" data-cust-tab="complaints">🎧 File a Complaint</button>
+        <button class="dash-tab-btn" data-cust-tab="tickets">📋 Dispute History</button>
+      </div>
+
+      <div class="dashboard-tab-content">
+        <!-- 1. Coupons Panel -->
+        <div class="cust-dash-panel active" id="cust-panel-coupons">
+          <h4>Exclusive Discount Codes & Offers</h4>
+          <div class="coupons-grid" id="customer-coupons-container"></div>
+        </div>
+
+        <!-- 2. File Complaint Panel -->
+        <div class="cust-dash-panel" id="cust-panel-complaints">
+          <h4>File a Dispute for Admin Review & Refund</h4>
+          <form id="customer-complaint-form" onsubmit="event.preventDefault(); window.customerSubmitComplaint();">
+            <div class="form-group">
+              <label>Select Issue Type</label>
+              <select id="cust-issue-select" class="form-input" required>
+                <option value="Driver Overcharged">Driver overcharged fare (ভাড়া বেশি কাটা হয়েছে)</option>
+                <option value="AC Broken">AC was not working (এসি চলেনি)</option>
+                <option value="Wrong Route">Driver took unnecessary detour (অপ্রয়োজনীয় লম্বা রাস্তা নিয়েছে)</option>
+                <option value="Lost Item">Forgot wallet/phone in car (গাড়িতে জিনিস ফেলে এসেছি)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Trip ID</label>
+              <input type="text" id="cust-trip-id" class="form-input" value="TRIP-8492 (Gulshan ➔ Airport)" required>
+            </div>
+            <div class="form-group">
+              <label>Details</label>
+              <textarea id="cust-complaint-text" class="form-input-textarea" rows="3" placeholder="Explain the issue in detail..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary full-width">Submit Complaint to Admin HQ ➔</button>
+          </form>
+        </div>
+
+        <!-- 3. Dispute History Panel -->
+        <div class="cust-dash-panel" id="cust-panel-tickets">
+          <h4>Your Past Tickets & Admin Refunds</h4>
+          <div class="tickets-list" id="customer-tickets-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DRIVER MATCHING SIMULATION MODAL ==================== -->
+  <div class="modal-overlay" id="ride-modal-overlay">
+    <div class="ride-simulation-modal">
+      <div class="sim-stage active" id="stage-searching">
+        <div class="radar-pulse-wrapper">
+          <div class="radar-ring r1"></div>
+          <div class="radar-ring r2"></div>
+          <div class="radar-ring r3"></div>
+          <div class="radar-center-icon">🚗</div>
+        </div>
+        <h3 class="sim-title">Connecting to nearby drivers...</h3>
+        <p class="sim-subtitle">Searching for top rated cars around Gulshan.</p>
+        <button class="btn btn-outline-sm cancel-req-btn" id="cancel-search-btn">Cancel</button>
+      </div>
+
+      <div class="sim-stage" id="stage-matched">
+        <div class="driver-matched-header">
+          <div class="eta-pill">Arriving in <strong id="live-driver-eta">3 mins</strong></div>
+          <span class="car-badge" id="modal-car-name">UberX</span>
+        </div>
+        <div class="driver-card-details">
+          <div class="driver-profile-pic">👨‍✈️</div>
+          <div class="driver-meta">
+            <h4>Mohammad Rafiq</h4>
+            <div class="driver-rating-badge">★ 4.96 • 1,420 trips</div>
+            <div class="vehicle-plate-info">
+              <span class="plate-box">DHA-GA-11-8492</span>
+              <span class="car-model-name">Silver Toyota Corolla</span>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary full-width" id="complete-sim-trip-btn">Complete Trip (সিমুলেশন শেষ করুন)</button>
+      </div>
+
+      <div class="sim-stage" id="stage-completed">
+        <div class="trip-completed-icon">🎉</div>
+        <h3 class="sim-title">You've arrived!</h3>
+        <p class="sim-subtitle">Fare settled via Uber Cash / bKash.</p>
+        <button class="btn btn-primary full-width" id="finish-modal-btn">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- Main JS -->
+  <script src="app.js"></script>
+</body>
+</html>
