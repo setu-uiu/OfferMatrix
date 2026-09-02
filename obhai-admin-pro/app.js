@@ -1,8 +1,6 @@
-/**
- * ==========================================================================
+
  * OBHAI BANGLADESH - AUTHENTIC ENGINE WITH PERSISTENT REACTIVE PRICING
- * ==========================================================================
- */
+ 
 
 // Default Pricing
 const defaultObhaiPricing = {
