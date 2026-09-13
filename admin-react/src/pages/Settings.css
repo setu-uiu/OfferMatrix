@@ -1,0 +1,9 @@
+.settings-layout { display: flex; gap: 1.4rem; min-height: 600px; }
+.settings-tabs-col { width: 200px; flex-shrink: 0; }
+.settings-content { flex: 1; }
+.stab-list { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); padding: .5rem; display: flex; flex-direction: column; gap: .2rem; }
+.stab { display: flex; align-items: center; gap: .6rem; padding: .6rem .8rem; border-radius: var(--radius-sm); font-size: .82rem; font-weight: 600; color: var(--text2); cursor: pointer; transition: all .2s; }
+.stab:hover { color: var(--text); background: rgba(255,255,255,.04); }
+.stab.active { background: rgba(255,42,109,.12); color: var(--pink); }
+.stab-icon { font-size: .9rem; width: 18px; text-align: center; }
+.settings-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; }

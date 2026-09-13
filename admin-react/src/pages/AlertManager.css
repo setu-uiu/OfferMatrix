@@ -1,0 +1,14 @@
+.alert-type-badge { font-size: .65rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; }
+.type-critical { background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,.3); }
+.type-warning  { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,.3); }
+.type-resolved { background: var(--green-dim); color: var(--green); border: 1px solid rgba(16,185,129,.3); }
+.type-info     { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(56,189,248,.3); }
+.alert-title { font-weight: 800; color: var(--text); margin-bottom: 2px; }
+.alert-desc  { font-size: .72rem; color: var(--text2); line-height: 1.4; }
+.alert-source { font-size: .68rem; font-weight: 700; color: var(--text3); background: rgba(255,255,255,.05); padding: 2px 7px; border-radius: 4px; }
+.rules-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+.rule-card { background: rgba(255,255,255,.02); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; display: flex; flex-direction: column; justify-content: space-between; gap: .8rem; }
+.rule-head { display: flex; align-items: flex-start; justify-content: space-between; }
+.rule-name { font-size: .85rem; font-weight: 800; color: var(--text); }
+.rule-metric { font-size: .72rem; color: var(--text2); margin-top: 2px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }

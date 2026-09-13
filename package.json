@@ -1,0 +1,15 @@
+{
+  "name": "offermatrix-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently --names \"API,UI\" --prefix-colors \"cyan,magenta\" \"npm run dev:api\" \"npm run dev:ui\"",
+    "dev:api": "cd server && node src/server.js",
+    "dev:ui": "cd admin-react && npm run dev",
+    "seed": "cd server && node prisma/seed.js",
+    "migrate": "cd server && node -e \"require('child_process').execSync('npx prisma generate', {cwd:'server',stdio:'inherit'})\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

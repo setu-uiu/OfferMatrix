@@ -1,0 +1,5 @@
+.complaints-kpis { display: grid; grid-template-columns: repeat(5,1fr); gap: 1rem; }
+.complaints-status-row { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; padding: .5rem 0; }
+.complaints-status-pill { display: flex; align-items: center; }
+.complaints-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+.complaints-detail-val { font-weight: 700; color: var(--text); font-size: .85rem; margin-top: 2px; }

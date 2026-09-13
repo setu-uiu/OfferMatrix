@@ -1,0 +1,68 @@
+.om-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.om-title  { font-size: 1.1rem; font-weight: 900; color: var(--text); margin-bottom: .3rem; }
+.om-sub    { font-size: .76rem; color: var(--text2); }
+
+.om-sector-card { padding: 1.4rem; }
+.om-sector-head { display: flex; align-items: center; gap: .8rem; margin-bottom: 1.2rem; }
+.om-sector-badge { font-size: .65rem; font-weight: 900; letter-spacing: .5px; padding: 4px 10px; border-radius: 6px; }
+.om-sector-label { font-size: .95rem; font-weight: 800; color: var(--text); flex: 1; }
+.om-sector-stats { font-size: .78rem; }
+
+.om-providers-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+
+.om-provider-card {
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  text-align: center;
+  transition: border-color .2s, background .2s;
+  position: relative;
+}
+.om-provider-card:hover { border-color: var(--sector-color, var(--pink)); background: rgba(255,255,255,.05); }
+.om-provider-card.om-inactive { opacity: .55; }
+
+.om-provider-logo {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; font-weight: 900;
+  margin-bottom: .2rem;
+}
+.om-provider-name { font-weight: 800; font-size: .85rem; color: var(--text); }
+.om-provider-status { font-size: .65rem; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
+.om-provider-status.active   { color: var(--green); }
+.om-provider-status.inactive { color: var(--text3); }
+
+.om-discount-display { font-size: 2rem; font-weight: 900; line-height: 1; display: flex; align-items: baseline; gap: 4px; margin: .3rem 0; }
+.om-discount-label { font-size: .7rem; font-weight: 800; letter-spacing: 1px; }
+
+.om-validity { display: flex; align-items: center; gap: 4px; font-size: .72rem; color: var(--text2); }
+
+.om-provider-actions { display: flex; gap: .4rem; margin-top: .3rem; width: 100%; }
+.om-btn-edit {
+  flex: 1; padding: 5px 8px; font-size: .72rem; font-weight: 700;
+  background: transparent; border: 1.5px solid; border-radius: 6px;
+  cursor: pointer; transition: background .2s;
+}
+.om-btn-edit:hover { background: rgba(255,255,255,.06); }
+.om-btn-toggle {
+  padding: 5px 10px; font-size: .7rem; font-weight: 900; letter-spacing: .5px;
+  color: #fff; border: none; border-radius: 6px; cursor: pointer; transition: opacity .2s;
+}
+.om-btn-toggle:hover { opacity: .85; }
+.om-btn-toggle.off { background: var(--card-border) !important; color: var(--text3) !important; }
+.om-btn-toggle:disabled { opacity: .5; cursor: default; }
+
+.om-edit-current { display: grid; grid-template-columns: repeat(3,1fr); gap: .6rem; margin-bottom: 1rem; }
+.om-edit-current-item { background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 8px; padding: .7rem; text-align: center; }
+.om-edit-current-val { font-size: 1.1rem; font-weight: 900; color: var(--text); }
+.om-edit-current-lbl { font-size: .65rem; color: var(--text3); text-transform: uppercase; font-weight: 600; margin-top: 2px; }
+
+.om-edit-note { display: flex; align-items: center; gap: .4rem; font-size: .72rem; color: var(--blue); background: rgba(56,189,248,.07); border: 1px solid rgba(56,189,248,.2); border-radius: 6px; padding: .5rem .8rem; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+.om-preview { display: flex; align-items: center; gap: .5rem; background: rgba(255,42,109,.05); border: 1px solid rgba(255,42,109,.15); border-radius: 6px; padding: .6rem 1rem; margin-top: .8rem; }
