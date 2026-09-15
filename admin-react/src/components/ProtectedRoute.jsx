@@ -12,10 +12,14 @@ function isTokenValid(token) {
 
 export default function ProtectedRoute({ children }) {
   const token = localStorage.getItem('om_admin_token')
+
   if (!isTokenValid(token)) {
     localStorage.removeItem('om_admin_token')
     localStorage.removeItem('om_admin_user')
     return <Navigate to="/login" replace />
   }
+
   return children
 }
+
+

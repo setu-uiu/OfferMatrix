@@ -24,19 +24,19 @@ export default function Login() {
   }, [step])
 
   function startTimer() {
-    clearInterval(timerRef.current)
     setTimer(299)
+    clearInterval(timerRef.current)
     timerRef.current = setInterval(() => {
-      setTimer(prev => {
-        if (prev <= 1) { clearInterval(timerRef.current); return 0 }
-        return prev - 1
+      setTimer(t => {
+        if (t <= 1) { clearInterval(timerRef.current); return 0 }
+        return t - 1
       })
     }, 1000)
   }
 
   function fmtTime(s) {
-    const m = Math.floor(s/60).toString().padStart(2,'0')
-    const sec = (s%60).toString().padStart(2,'0')
+    const m = Math.floor(s / 60)
+    const sec = String(s % 60).padStart(2, '0')
     return `${m}:${sec}`
   }
 
@@ -120,7 +120,7 @@ export default function Login() {
                 <div className="step-line" /><div className="step step-pending">✓</div>
               </div>
               <div className="info-bar">
-                🔒 Demo: <b>admin@offermatrix.bd</b> / <b>Admin@2026</b>
+                🔒 Admin: <b>admin@offermatrix.bd</b> / <b>Admin@2026</b>
               </div>
               {error && <div className="alert-error">{error}</div>}
               <div className="form-group">
@@ -141,7 +141,7 @@ export default function Login() {
                 <a href="#" className="forgot-link">Forgot password?</a>
               </div>
               <button className="btn-login" onClick={doStep1}>Continue to 2FA →</button>
-              <a href="/index.html"><button className="btn-ghost">← Back to Public Site</button></a>
+              <a href="/index.html"><button className="btn-ghost" style={{ width: '100%', marginTop: '.5rem' }}>← Back to Public Site</button></a>
             </>
           )}
 

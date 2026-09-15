@@ -12,13 +12,16 @@ const PAGE_TITLES = {
   '/alerts': { title: 'Alert & Incident Manager', sub: 'System alarms & automated diagnostics' },
   '/users': { title: 'User Management', sub: 'Manage accounts, roles & trust scores' },
   '/settings': { title: 'Admin Settings', sub: 'Platform configuration & system controls' },
+  '/offer-matrix': { title: 'Offer Matrix Engine', sub: 'Dynamic discount matrix & vendor rules' },
+  '/complaints': { title: 'Customer Complaints', sub: 'Resolve escalations & manage merchant disputes' },
 }
 
 export default function Topbar({ actions }) {
   const { pathname } = useLocation()
   const info = PAGE_TITLES[pathname] || { title: 'Admin Panel', sub: '' }
-  const now = new Date()
-  const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })
+  const user = (() => {
+    try { return JSON.parse(localStorage.getItem('om_admin_user') || '{}') } catch { return {} }
+  })()
 
   return (
     <div className="topbar">
@@ -42,8 +45,8 @@ export default function Topbar({ actions }) {
           <div className="notif-dot" />
         </div>
         <div className="tb-user">
-          <div className="tb-av">A</div>
-          <span style={{ fontSize: '.8rem', fontWeight: 700, color: 'var(--text)' }}>Super Admin</span>
+          <div className="tb-av">{user.name?.charAt(0) || 'A'}</div>
+          <span style={{ fontSize: '.8rem', fontWeight: 700, color: 'var(--text)' }}>{user.name || 'Super Admin'}</span>
         </div>
       </div>
     </div>
