@@ -1,8 +1,17 @@
-import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-const prisma = new PrismaClient()
+// ── Hardcoded admin (no DB required) ─────────────────────
+const ADMIN_EMAIL = 'admin@offermatrix.bd'
+const ADMIN_PASSWORD_HASH = await bcrypt.hash('Admin@2026', 10)
+
+const ADMIN_USER = {
+  id: 'admin-001',
+  name: 'Super Admin',
+  email: ADMIN_EMAIL,
+  role: 'ADMIN',
+  accountStatus: 'ACTIVE',
+}
 
 export async function login(req, res) {
   try {
@@ -12,24 +21,18 @@ export async function login(req, res) {
       return res.status(400).json({ success: false, error: 'Email and password are required.' })
     }
 
-    const user = await prisma.user.findUnique({ where: { email } })
-
-    if (!user) {
+    if (email !== ADMIN_EMAIL) {
       return res.status(401).json({ success: false, error: 'Invalid credentials.' })
     }
 
-    if (user.role !== 'ADMIN') {
-      return res.status(403).json({ success: false, error: 'Access restricted to administrators only.' })
-    }
-
-    const valid = await bcrypt.compare(password, user.passwordHash)
+    const valid = await bcrypt.compare(password, ADMIN_PASSWORD_HASH)
     if (!valid) {
       return res.status(401).json({ success: false, error: 'Invalid credentials.' })
     }
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role, name: user.name },
-      process.env.JWT_SECRET,
+      { id: ADMIN_USER.id, email: ADMIN_USER.email, role: ADMIN_USER.role, name: ADMIN_USER.name },
+      process.env.JWT_SECRET || 'offermatrix_admin_super_secret_2026_xK9mP2nQ',
       { expiresIn: '24h' }
     )
 
@@ -37,13 +40,7 @@ export async function login(req, res) {
       success: true,
       data: {
         token,
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          accountStatus: user.accountStatus,
-        },
+        user: ADMIN_USER,
       },
     })
   } catch (err) {

@@ -13,7 +13,7 @@ export function authenticateToken(req, res, next) {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'offermatrix_admin_super_secret_2026_xK9mP2nQ')
     req.user = decoded
     next()
   } catch (err) {
