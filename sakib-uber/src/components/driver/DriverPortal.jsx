@@ -1,0 +1,201 @@
+import React from 'react';
+import { useApp } from '../../context/AppContext';
+import { Power, MapPin, Navigation, Award, DollarSign, CheckCircle2, Star, Car } from 'lucide-react';
+
+export const DriverPortal = () => {
+  const { driver, toggleDriverOnline, acceptDriverTrip } = useApp();
+
+  return (
+    <div className="flex flex-1 flex-col p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
+      
+      {/* Top Welcome Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="flex items-center gap-4">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 text-2xl text-white">
+            👨‍✈️
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-black text-gray-900 dark:text-white">{driver.name}</h2>
+              <span className="flex items-center gap-0.5 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                <Star size={12} fill="currentColor" /> 4.95
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 dark:text-neutral-400 font-medium">
+              {driver.car}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Current Status</span>
+            <div className={`text-sm font-extrabold ${driver.isOnline ? 'text-emerald-600' : 'text-gray-400'}`}>
+              {driver.isOnline ? '● ONLINE' : '○ OFFLINE'}
+            </div>
+          </div>
+
+          <button
+            onClick={toggleDriverOnline}
+            className={`flex items-center gap-2 rounded-2xl px-6 py-3 text-xs font-black text-white shadow-lg transition ${
+              driver.isOnline
+                ? 'bg-neutral-800 hover:bg-neutral-900 dark:bg-neutral-700'
+                : 'bg-emerald-600 hover:bg-emerald-700'
+            }`}
+          >
+            <Power size={15} />
+            <span>{driver.isOnline ? 'Go Offline' : 'Go Online'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        
+        {/* Left: Incoming Request Queue */}
+        <div className="flex flex-col justify-between rounded-3xl border border-gray-200 bg-white p-6 shadow-md dark:border-neutral-800 dark:bg-neutral-900">
+          <div>
+            <div className="flex items-center justify-between border-b border-gray-100 pb-4 dark:border-neutral-800">
+              <h3 className="text-base font-extrabold text-gray-900 dark:text-white">Live Ride Radar</h3>
+              {driver.isOnline ? (
+                <span className="flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 pulse-green-dot" />
+                  Receiving Requests
+                </span>
+              ) : (
+                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-500 dark:bg-neutral-800 dark:text-neutral-400">
+                  Offline
+                </span>
+              )}
+            </div>
+
+            {driver.isOnline ? (
+              <div className="mt-5 space-y-4">
+                <div className="rounded-2xl border-2 border-emerald-500 bg-emerald-50/50 p-5 dark:bg-emerald-950/20">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white dark:bg-white dark:text-black">
+                        👤
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-black text-gray-900 dark:text-white">Nazmus Sakib</h4>
+                        <span className="text-[11px] font-semibold text-gray-500">★ 4.90 • Cash / bKash</span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase">Estimated Fare</span>
+                      <strong className="block text-xl font-black text-emerald-600 dark:text-emerald-400">৳ 342.00</strong>
+                    </div>
+                  </div>
+
+                  {/* Route details */}
+                  <div className="mt-4 space-y-2 rounded-xl bg-white p-3 text-xs font-semibold shadow-sm dark:bg-neutral-800">
+                    <div className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-black dark:bg-white" />
+                      <span className="text-gray-700 dark:text-neutral-200">Pickup: Gulshan 2 (0.4 km away)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded bg-red-500" />
+                      <span className="text-gray-700 dark:text-neutral-200">Destination: Hazrat Shahjalal Int. Airport</span>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="mt-5 grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => acceptDriverTrip(342.00)}
+                      className="rounded-xl bg-emerald-600 py-3 text-xs font-black text-white shadow-md transition hover:bg-emerald-700"
+                    >
+                      Accept Trip (৳ 342)
+                    </button>
+                    <button
+                      onClick={() => {}}
+                      className="rounded-xl border border-gray-200 bg-white py-3 text-xs font-bold text-gray-600 transition hover:bg-gray-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                    >
+                      Decline
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <Car size={36} className="text-gray-300 dark:text-neutral-700" />
+                <h4 className="mt-3 text-sm font-extrabold text-gray-700 dark:text-neutral-300">You are currently offline</h4>
+                <p className="mt-1 text-xs text-gray-400">Click "Go Online" above to start receiving ride requests.</p>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-6 border-t border-gray-100 pt-4 text-xs font-medium text-gray-500 dark:border-neutral-800">
+            Safety tip: Always verify rider name before starting the trip.
+          </div>
+        </div>
+
+        {/* Right: Earnings & Quest Dashboard */}
+        <div className="space-y-6">
+          
+          {/* Today's Earnings Card */}
+          <div className="rounded-3xl border border-gray-200 bg-gradient-to-br from-emerald-600 to-emerald-800 p-6 text-white shadow-lg dark:border-neutral-700">
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-200">Today's Earnings</span>
+            <div className="mt-1 text-4xl font-black tracking-tight">৳ {driver.todayEarnings.toFixed(2)}</div>
+            <div className="mt-3 flex items-center justify-between text-xs font-semibold text-emerald-100">
+              <span>{driver.tripsCompleted} Completed Trips Today</span>
+              <span>Online: 5h 24m</span>
+            </div>
+          </div>
+
+          {/* Daily Quest Card */}
+          <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-md dark:border-neutral-800 dark:bg-neutral-900">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400">
+                  <Award size={16} />
+                </div>
+                <div>
+                  <h4 className="text-xs font-extrabold text-gray-900 dark:text-white">Daily Target Quest</h4>
+                  <p className="text-[11px] text-gray-400">Complete 15 trips today</p>
+                </div>
+              </div>
+              <span className="text-xs font-black text-emerald-600 dark:text-emerald-400">+ ৳ 500 Bonus</span>
+            </div>
+
+            <div className="mt-4">
+              <div className="flex justify-between text-xs font-bold text-gray-600 dark:text-neutral-400 mb-1.5">
+                <span>Progress</span>
+                <span>{driver.tripsCompleted} / 15 Trips</span>
+              </div>
+              <div className="h-2.5 w-full rounded-full bg-gray-100 dark:bg-neutral-800 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+                  style={{ width: `${Math.min(100, (driver.tripsCompleted / 15) * 100)}%` }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Vehicle Telemetry & Support */}
+          <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-md dark:border-neutral-800 dark:bg-neutral-900">
+            <h4 className="text-xs font-extrabold uppercase tracking-wider text-gray-400">Vehicle Documents</h4>
+            <div className="mt-3 space-y-2 text-xs">
+              <div className="flex justify-between font-semibold">
+                <span className="text-gray-500">Registration:</span>
+                <span className="text-gray-900 dark:text-white font-bold">DHA-GA-11-8492 (Valid till 2027)</span>
+              </div>
+              <div className="flex justify-between font-semibold">
+                <span className="text-gray-500">Commercial Insurance:</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-bold">Verified & Active</span>
+              </div>
+              <div className="flex justify-between font-semibold">
+                <span className="text-gray-500">Driver License:</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-bold">BRTA Verified</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  );
+};
