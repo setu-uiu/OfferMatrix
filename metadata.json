@@ -1,0 +1,6 @@
+{
+  "name": "Foodi — Online Food & Grocery Delivery",
+  "description": "Foodi is Bangladesh's premier online food delivery platform. Order delicious meals from top restaurants across Dhaka with live GPS tracking and fast delivery.",
+  "requestFramePermissions": ["notifications", "geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
