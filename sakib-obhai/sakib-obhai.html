@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sakib OBHAI (ওভাই) - লাইভ রুট সার্চ ও ভাড়া হিসাব (React Edition)</title>
+  
+  <!-- Google Fonts: Hind Siliguri + Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Hind Siliguri"', '"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- React 18 & Babel Standalone -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body { font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; }
+    .custom-map-pin { display: flex; align-items: center; justify-content: center; color: #fff; border-radius: 50%; font-weight: 800; font-size: 11px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    .pin-pickup { background-color: #059669; border: 2px solid #fff; }
+    .pin-dest { background-color: #ef4444; border: 2px solid #fff; border-radius: 4px; }
+    .custom-car-marker { font-size: 24px; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+    @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(5, 150, 105, 0); } 100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); } }
+    .pulse-green-dot { animation: pulseGlow 1.8s infinite; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased selection:bg-emerald-600 selection:text-white dark:bg-neutral-950 dark:text-neutral-100">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, createContext, useContext } = React;
+
+    // --- DHAKA COMPREHENSIVE LOCATION DATABASE ---
+    const DHAKA_LOCATIONS = [
+      { id: 'mirpur10', name: 'Mirpur 10 Roundabout (মিরপুর ১০)', nameBn: 'মিরপুর ১০ গোলচত্বর', area: 'Mirpur Central', landmark: 'Mirpur 10 Metro Station & Stadium', lat: 23.8069, lng: 90.3687 },
+      { id: 'farmgate', name: 'Farmgate & Karwan Bazar (ফার্মগেট)', nameBn: 'ফার্মগেট ও কারওয়ান বাজার', area: 'Tejgaon / Central', landmark: 'Farmgate Metro & Ananda Cinema', lat: 23.7570, lng: 90.3900 },
+      { id: 'gulshan2', name: 'Gulshan 2 Circle (গুলশান ২)', nameBn: 'গুলশান ২ সার্কেল', area: 'Gulshan North', landmark: 'Gulshan 2 Circle & Diplomatic Zone', lat: 23.7925, lng: 90.4078 },
+      { id: 'gulshan1', name: 'Gulshan 1 Circle (গুলশান ১)', nameBn: 'গুলশান ১ সার্কেল', area: 'Gulshan South', landmark: 'Gulshan 1 DCC Market & Police Plaza', lat: 23.7785, lng: 90.4172 },
+      { id: 'banani11', name: 'Road 11, Banani (বনানী ১১)', nameBn: 'রোড ১১, বনানী', area: 'Banani C/A', landmark: 'Food Street, Kemal Ataturk Ave', lat: 23.7937, lng: 90.4048 },
+      { id: 'dhanmondi27', name: 'Dhanmondi 27 (ধানমন্ডি ২৭)', nameBn: 'ধানমন্ডি ২৭ (পুরাতন)', area: 'Dhanmondi R/A', landmark: 'Old 27, Rapa Plaza & Mirpur Rd', lat: 23.7510, lng: 90.3768 },
+      { id: 'dhanmondi32', name: 'Dhanmondi 32 (ধানমন্ডি ৩২)', nameBn: 'ধানমন্ডি ৩২ লেক', area: 'Dhanmondi Lake', landmark: 'Lake View & Metro Station', lat: 23.7525, lng: 90.3785 },
+      { id: 'uttara3', name: 'Sector 3, Uttara (উত্তরা ৩)', nameBn: 'সেক্টর ৩, উত্তরা মডেল টাউন', area: 'Uttara Model Town', landmark: 'Friends Club & Rajlaxmi Complex', lat: 23.8681, lng: 90.3980 },
+      { id: 'uttara7', name: 'Sector 7 / Jasimuddin, Uttara', nameBn: 'সেক্টর ৭ / জসীমউদ্দীন রোড', area: 'Uttara North', landmark: 'Jasimuddin Road Bus Stand', lat: 23.8720, lng: 90.3995 },
+      { id: 'airport', name: 'Hazrat Shahjalal Int. Airport (বিমানবন্দর)', nameBn: 'শাহজালাল আন্তর্জাতিক বিমানবন্দর', area: 'Kurmitola / Airport Rd', landmark: 'Terminal 1 & 2 Departures', lat: 23.8433, lng: 90.4039 },
+      { id: 'mohakhali', name: 'Mohakhali DOHS & Flyover (মহাখালী)', nameBn: 'মহাখালী ডিওএইচএস ও ফ্লাইওভার', area: 'Mohakhali C/A', landmark: 'Amtoli & DOHS Gate', lat: 23.7776, lng: 90.4005 },
+      { id: 'bashundhara', name: 'Bashundhara R/A Gate (বসুন্ধরা)', nameBn: 'বসুন্ধরা আবাসিক এলাকা গেট', area: 'Bashundhara R/A', landmark: 'Evercare Hospital & NSU Campus', lat: 23.8151, lng: 90.4300 },
+      { id: 'motijheel', name: 'Motijheel Commercial Area (মতিঝিল)', nameBn: 'মতিঝিল বাণিজ্যিক এলাকা', area: 'Motijheel C/A', landmark: 'Shapla Chattar & Bangladesh Bank', lat: 23.7330, lng: 90.4172 },
+      { id: 'badda', name: 'Badda / Notun Bazar (বাড্ডা)', nameBn: 'নতুন বাজার / উত্তর বাড্ডা', area: 'North Badda', landmark: 'Notun Bazar 100 Feet Corner', lat: 23.7805, lng: 90.4267 },
+      { id: 'olddhaka', name: 'Lalbagh Fort, Old Dhaka (পুরান ঢাকা)', nameBn: 'লালবাগ কেল্লা, পুরান ঢাকা', area: 'Old Dhaka / Lalbagh', landmark: 'Historical Lalbagh Fort Gate', lat: 23.7188, lng: 90.3882 },
+      { id: 'shahbagh', name: 'Shahbagh & Dhaka University (শাহবাগ)', nameBn: 'শাহবাগ ও ঢাকা বিশ্ববিদ্যালয়', area: 'Shahbagh / DU', landmark: 'BSMMU, National Museum & Curzon Hall', lat: 23.7380, lng: 90.3955 },
+      { id: 'hatirjheel', name: 'Hatirjheel / Rampura (হাতিরঝিল)', nameBn: 'হাতিরঝিল ও রামপুরা ব্রিজ', area: 'Hatirjheel Circle', landmark: 'Rampura Bridge & Water Taxi Station', lat: 23.7635, lng: 90.4180 },
+      { id: 'khilkhet', name: 'Khilkhet / Nikunja 2 (খিলক্ষেত)', nameBn: 'খিলক্ষেত ও নিকুঞ্জ ২', area: 'Nikunja / Khilkhet', landmark: 'Nikunja Gate & Airport Highway', lat: 23.8290, lng: 90.4175 },
+      { id: 'mirpur1', name: 'Mirpur 1 / Sony Cinema (মিরপুর ১)', nameBn: 'মিরপুর ১ / সনি স্কয়ার', area: 'Mirpur South', landmark: 'Sony Square & Mazar Road', lat: 23.7956, lng: 90.3537 },
+      { id: 'panthapath', name: 'Panthapath / Bashundhara City (পান্থপথ)', nameBn: 'পান্থপথ ও বসুন্ধরা সিটি', area: 'Central Dhaka', landmark: 'Bashundhara City Shopping Mall', lat: 23.7515, lng: 90.3890 },
+    ];
+
+    // Real distance formula for Dhaka city road network (~1.32x detour factor)
+    function calculateRouteDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * (Math.PI / 180);
+      const dLon = (lon2 - lon1) * (Math.PI / 180);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const straightKm = R * c;
+      const roadKm = straightKm * 1.32;
+      const finalKm = Math.max(1.5, Math.round(roadKm * 10) / 10);
+      const estMins = Math.max(6, Math.round(finalKm * 2.4 + 4));
+      return { distanceKm: finalKm, durationMins: estMins };
+    }
+
+    const DEFAULT_PRICING = {
+      storeDiscount: 10,
+      couponCode: 'OBHAI10',
+      bkashCashback: 150,
+      shippingCost: 0,
+      salePrice: 2050,
+    };
+
+    const DEFAULT_COUPONS = [
+      { code: 'OBHAI10', discount: 10, maxCap: 150, status: 'Active', title: '১০% ওভাই প্ল্যাটফর্ম ডিসকাউন্ট' },
+      { code: 'CNG25', discount: 25, maxCap: 80, status: 'Active', title: '৳ ৮০ ডিজিটাল সিএনজি মিটার সেভার' },
+      { code: 'MOTO50', discount: 50, maxCap: 60, status: 'Active', title: '৫০% প্রথম ওভাই বাইক রাইড' },
+      { code: 'PRIME20', discount: 20, maxCap: 120, status: 'Active', title: '২০% এসি প্রাইম কার অফার' },
+      { code: 'SEBA100', discount: 15, maxCap: 200, status: 'Active', title: '৳ ২০০ ওভাই সেবা ইমার্জেন্সি রিবেট' },
+    ];
+
+    const VEHICLE_RATES = {
+      cng: { id: 'cng', name: 'OBHAI CNG (সিএনজি)', base: 60, perKm: 18, capacity: '৩ সিট', eta: '২ মিনিট দূরে', icon: '🛺', desc: 'সরকারি নির্ধারিত ডিজিটাল মিটার রেট ও নিরাপত্তা' },
+      moto: { id: 'moto', name: 'OBHAI Moto (বাইক)', base: 40, perKm: 12, capacity: '১ সিট', eta: '১ মিনিট দূরে', icon: '🏍️', desc: 'যানজট এড়িয়ে দ্রুততম যাতায়াত' },
+      prime: { id: 'prime', name: 'OBHAI Prime AC (কার)', base: 140, perKm: 28, capacity: '৪ সিট', eta: '৪ মিনিট দূরে', icon: '🚗', desc: 'প্রিমিয়াম প্রি-কুলড এসি প্রাইভেট কার' },
+      micro: { id: 'micro', name: 'OBHAI Micro (মাইক্রোবাস)', base: 220, perKm: 45, capacity: '৭ সিট', eta: '৬ মিনিট দূরে', icon: '🚙', desc: 'পারিবারিক ও দলগত ভ্রমণের বড় গাড়ি' },
+      parcel: { id: 'parcel', name: 'Express Parcel (পার্সেল)', base: 50, perKm: 15, capacity: '১০ কেজি পর্যন্ত', eta: '৫ মিনিট দূরে', icon: '📦', desc: 'জরুরি পার্সেল ও ডেলিভারি' },
+      seba: { id: 'seba', name: 'OBHAI Seba (অ্যাম্বুলেন্স)', base: 500, perKm: 50, capacity: 'জরুরি সেবা', eta: '৩ মিনিট দূরে', icon: '🚑', desc: '২৪/৭ জরুরি মেডিকেল ট্রান্সপোর্ট' },
+    };
+
+    const AppContext = createContext();
+
+    const AppProvider = ({ children }) => {
+      const [theme, setTheme] = useState(() => localStorage.getItem('obhai_react_theme') || 'light');
+      const [currentScreen, setCurrentScreen] = useState('auth');
+      const [selectedAuthRole, setSelectedAuthRole] = useState('customer');
+
+      const [adminPricing, setAdminPricing] = useState(() => {
+        try {
+          const saved = localStorage.getItem('obhai_react_pricing');
+          return saved ? { ...DEFAULT_PRICING, ...JSON.parse(saved) } : DEFAULT_PRICING;
+        } catch {
+          return DEFAULT_PRICING;
+        }
+      });
+
+      const [coupons, setCoupons] = useState(() => {
+        try {
+          const saved = localStorage.getItem('obhai_react_coupons');
+          const list = saved ? JSON.parse(saved) : DEFAULT_COUPONS;
+          if (list.length > 0) {
+            list[0].code = adminPricing.couponCode;
+            list[0].discount = adminPricing.storeDiscount;
+            list[0].maxCap = adminPricing.bkashCashback;
+          }
+          return list;
+        } catch {
+          return DEFAULT_COUPONS;
+        }
+      });
+
+      const [customer, setCustomer] = useState(() => ({
+        name: 'নাজমুস সাকিব (Nazmus Sakib)',
+        phone: '+৮৮০ ১৭১১-২৩৪৫৬৭',
+        walletBalance: parseFloat(localStorage.getItem('obhai_react_wallet')) || 650.00,
+        milesPoints: 840,
+        appliedCoupon: null,
+      }));
+
+      const [driver, setDriver] = useState(() => ({
+        name: 'ক্যাপ্টেন আবুল কালাম',
+        vehicle: 'ঢাকা-থ-১২-৩৪৫৬ (সবুজ সিএনজি)',
+        isOnline: true,
+        todayEarnings: parseFloat(localStorage.getItem('obhai_react_captain_earnings')) || 2850.00,
+        tripsCompleted: parseInt(localStorage.getItem('obhai_react_captain_trips')) || 14,
+      }));
+
+      const [disputes, setDisputes] = useState(() => [
+        {
+          id: 'OBHAI-TKT-7401',
+          userName: 'নাজমুস সাকিব (যাত্রী)',
+          userPhone: '+880 1711-234567',
+          tripId: 'OBHAI-CNG-8492 (মিরপুর ১০ ➔ ফার্মগেট)',
+          category: 'CNG Meter Disconnected',
+          details: 'সিএনজি ক্যাপ্টেন মিটার ব্যবহার করতে অস্বীকার করেছে এবং অতিরিক্ত ভাড়া দাবি করেছে।',
+          status: 'PENDING',
+          refundAmount: 130.00,
+          adminNote: '',
+          date: '১৫ মিনিট আগে'
+        },
+        {
+          id: 'OBHAI-TKT-6921',
+          userName: 'কাজী ফারহান (যাত্রী)',
+          userPhone: '+880 1912-334455',
+          tripId: 'OBHAI-PRIME-4410 (বনানী ➔ ধানমন্ডি)',
+          category: 'Driver Overcharged',
+          details: 'প্রাইম কার ড্রাইভার ভুল করে অতিরিক্ত পার্কিং চার্জ নিয়েছে।',
+          status: 'RESOLVED',
+          refundAmount: 70.00,
+          adminNote: 'ওভাই পে ওয়ালেটে ৳ ৭০ রিফান্ড যোগ করা হয়েছে।',
+          date: 'গতকাল'
+        }
+      ]);
+
+      const [route, setRoute] = useState({
+        pickup: DHAKA_LOCATIONS[0], // Mirpur 10
+        dest: DHAKA_LOCATIONS[1],   // Farmgate
+        distanceKm: 7.8,
+        durationMins: 22,
+        selectedCar: 'cng',
+      });
+
+      const [toasts, setToasts] = useState([]);
+
+      useEffect(() => {
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+        localStorage.setItem('obhai_react_theme', theme);
+      }, [theme]);
+
+      const showToast = (message, type = 'info') => {
+        const id = Date.now() + Math.random();
+        setToasts(prev => [...prev, { id, message, type }]);
+        setTimeout(() => {
+          setToasts(prev => prev.filter(t => t.id !== id));
+        }, 3200);
+      };
+
+      const toggleTheme = () => {
+        setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+        showToast(theme === 'light' ? 'ডার্ক মোড চালু হয়েছে' : 'লাইট মোড চালু হয়েছে');
+      };
+
+      const enterPortal = (role) => {
+        setSelectedAuthRole(role);
+        setCurrentScreen(role);
+        if (role === 'customer') {
+          showToast('স্বাগতম! ওভাই যাত্রী প্যানেলে প্রবেশ করেছেন।');
+        } else if (role === 'driver') {
+          showToast('স্বাগতম ক্যাপ্টেন আবুল কালাম! ওভাই চালক ড্যাশবোর্ড সচল।');
+        } else if (role === 'admin') {
+          showToast('OBHAI HQ Admin Control Panel Active.');
+        }
+      };
+
+      const logOutToGate = () => {
+        setCurrentScreen('auth');
+        showToast('লগ আউট সম্পন্ন হয়েছে।');
+      };
+
+      const updateAdminPricing = (newPricing) => {
+        setAdminPricing(newPricing);
+        localStorage.setItem('obhai_react_pricing', JSON.stringify(newPricing));
+
+        setCoupons(prev => {
+          const updated = [...prev];
+          if (updated.length > 0) {
+            updated[0] = {
+              ...updated[0],
+              code: newPricing.couponCode,
+              discount: newPricing.storeDiscount,
+              maxCap: newPricing.bkashCashback,
+              title: `${newPricing.storeDiscount}% ওভাই প্ল্যাটফর্ম ডিসকাউন্ট`
+            };
+          }
+          localStorage.setItem('obhai_react_coupons', JSON.stringify(updated));
+          return updated;
+        });
+      };
+
+      const addCoupon = (code, discount, maxCap) => {
+        const newCoupon = {
+          code: code.toUpperCase(),
+          discount: parseFloat(discount),
+          maxCap: parseFloat(maxCap) || 150,
+          status: 'Active',
+          title: `${discount}% ওভাই প্রোমো ছাড়`
+        };
+        setCoupons(prev => {
+          const updated = [newCoupon, ...prev];
+          localStorage.setItem('obhai_react_coupons', JSON.stringify(updated));
+          return updated;
+        });
+        showToast(`🎟️ নতুন কুপন "${code.toUpperCase()}" পাবলিশ হয়েছে!`);
+      };
+
+      const deleteCoupon = (index) => {
+        setCoupons(prev => {
+          const updated = prev.filter((_, i) => i !== index);
+          localStorage.setItem('obhai_react_coupons', JSON.stringify(updated));
+          return updated;
+        });
+        showToast('কুপন ডিলিট করা হয়েছে');
+      };
+
+      const applyCoupon = (coupon) => {
+        setCustomer(prev => ({ ...prev, appliedCoupon: coupon }));
+        showToast(`🎉 কুপন ${coupon.code} যুক্ত হয়েছে!`);
+      };
+
+      const removeCoupon = () => {
+        setCustomer(prev => ({ ...prev, appliedCoupon: null }));
+        showToast('কুপন রিমুভ করা হয়েছে');
+      };
+
+      const topupWallet = (amount) => {
+        setCustomer(prev => {
+          const newBal = prev.walletBalance + amount;
+          localStorage.setItem('obhai_react_wallet', newBal);
+          return { ...prev, walletBalance: newBal };
+        });
+        showToast(`৳ ${amount.toFixed(2)} ওভাই পে ওয়ালেটে জমা হয়েছে!`);
+      };
+
+      const submitComplaint = (category, tripId, details) => {
+        const newTicket = {
+          id: `OBHAI-TKT-${Math.floor(1000 + Math.random() * 9000)}`,
+          userName: customer.name,
+          userPhone: customer.phone,
+          tripId: tripId || 'OBHAI-CNG-8492 (মিরপুর ১০ ➔ ফার্মগেট)',
+          category,
+          details,
+          status: 'PENDING',
+          refundAmount: 130.00,
+          adminNote: '',
+          date: 'এইমাত্র'
+        };
+        setDisputes(prev => [newTicket, ...prev]);
+        showToast('✅ অভিযোগ ওভাই অ্যাডমিন ইনবক্সে পাঠানো হয়েছে।');
+      };
+
+      const resolveDispute = (ticketId, customRefund) => {
+        const refund = parseFloat(customRefund) || 0;
+        setDisputes(prev => prev.map(d => (d.id === ticketId ? { ...d, status: 'RESOLVED', refundAmount: refund } : d)));
+        
+        setCustomer(prev => {
+          const newBal = prev.walletBalance + refund;
+          localStorage.setItem('obhai_react_wallet', newBal);
+          return { ...prev, walletBalance: newBal };
+        });
+
+        showToast(`✅ অভিযোগ সমাধান হয়েছে! ৳ ${refund} যাত্রীর ওয়ালেটে যুক্ত হয়েছে।`);
+      };
+
+      const toggleDriverOnline = () => {
+        setDriver(prev => {
+          const nextOnline = !prev.isOnline;
+          showToast(nextOnline ? 'আপনি এখন অনলাইন আছেন' : 'আপনি অফলাইনে গেছেন');
+          return { ...prev, isOnline: nextOnline };
+        });
+      };
+
+      const acceptDriverTrip = (fare = 194.00) => {
+        setDriver(prev => {
+          const newEarnings = prev.todayEarnings + fare;
+          const newTrips = prev.tripsCompleted + 1;
+          localStorage.setItem('obhai_react_captain_earnings', newEarnings);
+          localStorage.setItem('obhai_react_captain_trips', newTrips);
+          return { ...prev, todayEarnings: newEarnings, tripsCompleted: newTrips };
+        });
+        showToast('ট্রিপ গ্রহণ করা হয়েছে! যাত্রীর অবস্থানের দিকে রওনা হন...');
+      };
+
+      const updateRoutePoints = (newPickup, newDest) => {
+        const p = newPickup || route.pickup;
+        const d = newDest || route.dest;
+        const { distanceKm, durationMins } = calculateRouteDistance(p.lat, p.lng, d.lat, d.lng);
+        setRoute(prev => ({
+          ...prev,
+          pickup: p,
+          dest: d,
+          distanceKm,
+          durationMins,
+        }));
+      };
+
+      const calculateFare = (carKey, customDistanceKm = null) => {
+        const rate = VEHICLE_RATES[carKey] || VEHICLE_RATES.cng;
+        const dist = customDistanceKm !== null ? customDistanceKm : route.distanceKm;
+        const p = adminPricing;
+        
+        const baseFare = rate.base;
+        const distanceFare = Math.round(dist * rate.perKm);
+        const originalFare = Math.round(baseFare + distanceFare + p.shippingCost);
+        let discountAmt = Math.round(originalFare * (p.storeDiscount / 100));
+        let finalFare = Math.max(30, originalFare - discountAmt);
+
+        if (customer.appliedCoupon) {
+          const c = customer.appliedCoupon;
+          const extraDisc = Math.min(c.maxCap, Math.round(finalFare * (c.discount / 100)));
+          discountAmt += extraDisc;
+          finalFare = Math.max(25, finalFare - extraDisc);
+        }
+
+        return { originalFare, finalFare, baseFare, distanceFare, discountAmt, ratePerKm: rate.perKm };
+      };
+
+      return (
+        <AppContext.Provider
+          value={{
+            theme,
+            toggleTheme,
+            currentScreen,
+            selectedAuthRole,
+            setSelectedAuthRole,
+            enterPortal,
+            logOutToGate,
+            adminPricing,
+            updateAdminPricing,
+            coupons,
+            addCoupon,
+            deleteCoupon,
+            customer,
+            applyCoupon,
+            removeCoupon,
+            topupWallet,
+            submitComplaint,
+            driver,
+            toggleDriverOnline,
+            acceptDriverTrip,
+            disputes,
+            resolveDispute,
+            route,
+            setRoute,
+            updateRoutePoints,
+            calculateFare,
+            toasts,
+            showToast,
+          }}
+        >
+          {children}
+        </AppContext.Provider>
+      );
+    };
+
+    const useApp = () => useContext(AppContext);
+
+    // --- LOCATION SEARCH COMPONENT ---
+    const LocationSearchInput = ({ placeholder, selectedLocation, onSelectLocation, isPickup, referenceLocation }) => {
+      const [query, setQuery] = useState(selectedLocation?.name || '');
+      const [isOpen, setIsOpen] = useState(false);
+      const containerRef = useRef(null);
+
+      useEffect(() => {
+        setQuery(selectedLocation?.name || '');
+      }, [selectedLocation]);
+
+      useEffect(() => {
+        const handleClickOutside = (e) => {
+          if (containerRef.current && !containerRef.current.contains(e.target)) {
+            setIsOpen(false);
+          }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+      }, []);
+
+      const filtered = DHAKA_LOCATIONS.filter(loc => {
+        const q = query.toLowerCase().trim();
+        if (!q) return true;
+        return (
+          loc.name.toLowerCase().includes(q) ||
+          (loc.nameBn && loc.nameBn.includes(q)) ||
+          loc.area.toLowerCase().includes(q) ||
+          loc.landmark.toLowerCase().includes(q)
+        );
+      });
+
+      const handleSelect = (loc) => {
+        setQuery(loc.name);
+        setIsOpen(false);
+        onSelectLocation(loc);
+      };
+
+      return (
+        <div ref={containerRef} className="relative w-full">
+          <div
+            onClick={() => setIsOpen(true)}
+            className={`flex items-center rounded-xl border bg-emerald-50/40 px-3 py-2.5 transition-all ${
+              isOpen
+                ? 'border-emerald-600 bg-white ring-2 ring-emerald-500/20 dark:border-emerald-400 dark:bg-neutral-800'
+                : 'border-emerald-100 hover:border-emerald-300 dark:border-neutral-700 dark:bg-neutral-800/80'
+            }`}
+          >
+            <div className="mr-2.5 flex h-4 w-4 items-center justify-center flex-shrink-0">
+              {isPickup ? (
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400 ring-2 ring-emerald-200" />
+              ) : (
+                <span className="h-2.5 w-2.5 rounded bg-rose-500 ring-2 ring-rose-200" />
+              )}
+            </div>
+
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setIsOpen(true);
+              }}
+              onFocus={() => setIsOpen(true)}
+              placeholder={placeholder}
+              className="w-full bg-transparent text-xs font-extrabold text-gray-900 focus:outline-none dark:text-white placeholder:text-gray-400"
+            />
+
+            {query && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setQuery('');
+                  setIsOpen(true);
+                }}
+                className="rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-700 dark:hover:bg-neutral-700 mr-1"
+              >
+                ✕
+              </button>
+            )}
+            <span className="text-emerald-700 dark:text-emerald-400 text-xs">🔍</span>
+          </div>
+
+          {isOpen && (
+            <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-60 overflow-y-auto rounded-2xl border border-emerald-100 bg-white p-2 shadow-2xl dark:border-neutral-700 dark:bg-neutral-900">
+              <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
+                {isPickup ? '📍 পিকআপ পয়েন্ট নির্বাচন করুন' : '🏁 গন্তব্যস্থল নির্বাচন করুন'} ({filtered.length} locations)
+              </div>
+              <div className="space-y-1 mt-1">
+                {filtered.map(loc => {
+                  const isCurrent = selectedLocation?.id === loc.id;
+                  let distBadge = null;
+                  if (referenceLocation && !isPickup && referenceLocation.id !== loc.id) {
+                    const { distanceKm } = calculateRouteDistance(referenceLocation.lat, referenceLocation.lng, loc.lat, loc.lng);
+                    distBadge = `${distanceKm} কিমি`;
+                  }
+                  return (
+                    <div
+                      key={loc.id}
+                      onClick={() => handleSelect(loc)}
+                      className={`flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-xs transition-all ${
+                        isCurrent
+                          ? 'bg-emerald-700 text-white font-bold'
+                          : 'hover:bg-emerald-50 text-gray-800 dark:text-neutral-200 dark:hover:bg-neutral-800'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className={isCurrent ? 'text-amber-300' : 'text-emerald-600'}>📍</span>
+                        <div className="min-w-0">
+                          <div className="font-extrabold truncate">{loc.name}</div>
+                          <div className={`text-[10px] truncate ${isCurrent ? 'text-emerald-100' : 'text-gray-500 dark:text-neutral-400'}`}>
+                            {loc.landmark} • <span className="font-semibold">{loc.area}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                        {distBadge && (
+                          <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${isCurrent ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'}`}>
+                            {distBadge}
+                          </span>
+                        )}
+                        {isCurrent && <span>✓</span>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    // --- LIVE MAP COMPONENT ---
+    const LiveMap = ({ isSimulating }) => {
+      const { route, adminPricing } = useApp();
+      const mapContainerRef = useRef(null);
+      const mapInstanceRef = useRef(null);
+      const driverMarkerRef = useRef(null);
+      const animIntervalRef = useRef(null);
+
+      useEffect(() => {
+        if (!mapContainerRef.current) return;
+        if (!mapInstanceRef.current) {
+          const map = L.map(mapContainerRef.current, { zoomControl: false, attributionControl: false }).setView([23.8103, 90.4125], 13);
+          L.control.zoom({ position: 'bottomright' }).addTo(map);
+          L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
+          mapInstanceRef.current = map;
+        }
+
+        const map = mapInstanceRef.current;
+        map.invalidateSize();
+        map.eachLayer(l => { if (l instanceof L.Marker || l instanceof L.Polyline) map.removeLayer(l); });
+
+        const p = route.pickup;
+        const d = route.dest;
+
+        const pIcon = L.divIcon({
+          className: 'custom-map-pin pin-pickup',
+          html: '<div style="background:#059669;color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 0 10px rgba(5,150,105,0.6);border:2px solid #fff;">●</div>',
+          iconSize: [24, 24], iconAnchor: [12, 12],
+        });
+        const dIcon = L.divIcon({
+          className: 'custom-map-pin pin-dest',
+          html: '<div style="background:#e11d48;color:#fff;width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 0 10px rgba(225,29,72,0.6);border:2px solid #fff;">■</div>',
+          iconSize: [24, 24], iconAnchor: [12, 12],
+        });
+
+        L.marker([p.lat, p.lng], { icon: pIcon }).addTo(map).bindPopup(`<b>পিকআপ:</b> ${p.name}`);
+        L.marker([d.lat, d.lng], { icon: dIcon }).addTo(map).bindPopup(`<b>গন্তব্য:</b> ${d.name}`);
+
+        const midLat = (p.lat + d.lat) / 2 + 0.004;
+        const midLng = (p.lng + d.lng) / 2 - 0.005;
+
+        L.polyline([[p.lat, p.lng], [midLat, midLng], [d.lat, d.lng]], {
+          color: '#059669', weight: 5, dashArray: '6, 6',
+        }).addTo(map);
+
+        const bounds = L.latLngBounds([[p.lat, p.lng], [d.lat, d.lng]]);
+        map.fitBounds(bounds, { padding: [55, 55], maxZoom: 15 });
+      }, [route]);
+
+      useEffect(() => {
+        const map = mapInstanceRef.current;
+        if (!map || !isSimulating) {
+          if (animIntervalRef.current) clearInterval(animIntervalRef.current);
+          if (driverMarkerRef.current && map) {
+            map.removeLayer(driverMarkerRef.current);
+            driverMarkerRef.current = null;
+          }
+          return;
+        }
+
+        let dLat = route.pickup.lat + 0.008;
+        let dLng = route.pickup.lng + 0.006;
+        const carIcon = L.divIcon({
+          className: 'custom-car-marker',
+          html: '<div style="font-size:26px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));">🛺</div>',
+          iconSize: [30, 30], iconAnchor: [15, 15],
+        });
+
+        if (driverMarkerRef.current) map.removeLayer(driverMarkerRef.current);
+        driverMarkerRef.current = L.marker([dLat, dLng], { icon: carIcon }).addTo(map);
+
+        let steps = 0;
+        const total = 14;
+        clearInterval(animIntervalRef.current);
+        animIntervalRef.current = setInterval(() => {
+          steps++;
+          const progress = steps / total;
+          const curLat = dLat + (route.pickup.lat - dLat) * progress;
+          const curLng = dLng + (route.pickup.lng - dLng) * progress;
+          if (driverMarkerRef.current) driverMarkerRef.current.setLatLng([curLat, curLng]);
+          if (steps >= total) clearInterval(animIntervalRef.current);
+        }, 1200);
+
+        return () => { if (animIntervalRef.current) clearInterval(animIntervalRef.current); };
+      }, [isSimulating, route]);
+
+      return (
+        <div className="relative h-full min-h-[580px] w-full overflow-hidden rounded-3xl border border-emerald-100 shadow-md dark:border-neutral-800">
+          <div ref={mapContainerRef} className="h-full w-full" />
+          <div className="pointer-events-none absolute top-4 left-4 right-4 z-[400] flex items-center justify-between">
+            <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-emerald-200 bg-white/95 px-4 py-2 text-xs font-bold text-gray-900 shadow-md dark:border-neutral-700 dark:bg-neutral-900/95 dark:text-white">
+              <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-ping" />
+              <span>রুট: {route.pickup.name.split('(')[0]} ➔ {route.dest.name.split('(')[0]}</span>
+            </div>
+          </div>
+          <div className="absolute bottom-4 left-4 right-4 z-[400] flex items-center justify-around rounded-2xl border border-emerald-100 bg-white/95 py-3 px-4 shadow-xl backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/95">
+            <div className="text-center">
+              <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">মোট দূরত্ব</span>
+              <strong className="text-sm font-extrabold text-emerald-800 dark:text-emerald-400">{route.distanceKm} কিমি</strong>
+            </div>
+            <div className="h-7 w-px bg-gray-200 dark:bg-neutral-800" />
+            <div className="text-center">
+              <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">আনুমানিক সময়</span>
+              <strong className="text-sm font-extrabold text-gray-900 dark:text-white">~{route.durationMins} মিনিট</strong>
+            </div>
+            <div className="h-7 w-px bg-gray-200 dark:bg-neutral-800" />
+            <div className="text-center">
+              <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400">বিকাশ ক্যাশব্যাক</span>
+              <strong className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">৳ {adminPricing.bkashCashback}</strong>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // --- RIDE SIMULATION MODAL ---
+    const RideSimulationModal = ({ isOpen, onClose, selectedVehicle }) => {
+      const { driver, calculateFare, route } = useApp();
+      const [stage, setStage] = useState('searching');
+
+      useEffect(() => {
+        if (isOpen) {
+          setStage('searching');
+          const timer = setTimeout(() => setStage('matched'), 2200);
+          return () => clearTimeout(timer);
+        }
+      }, [isOpen]);
+
+      if (!isOpen) return null;
+      const vehicleInfo = VEHICLE_RATES[selectedVehicle] || VEHICLE_RATES.cng;
+      const { finalFare } = calculateFare(selectedVehicle);
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-3xl border border-emerald-100 bg-white p-6 shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">
+            {stage === 'searching' && (
+              <div className="flex flex-col items-center py-6 text-center">
+                <div className="relative mb-6 flex h-24 w-24 items-center justify-center">
+                  <div className="absolute h-full w-full animate-ping rounded-full border-2 border-emerald-500/40" />
+                  <span className="text-3xl">{vehicleInfo.icon}</span>
+                </div>
+                <h3 className="text-lg font-extrabold text-gray-900 dark:text-white">নিকটস্থ ওভাই ক্যাপ্টেনের সাথে সংযোগ হচ্ছে...</h3>
+                <p className="mt-1 text-xs text-gray-500">{route.pickup.name.split('(')[0]} এলাকার সেরা রেটেড চালক খোঁজা হচ্ছে</p>
+                <button onClick={onClose} className="mt-6 rounded-full border border-gray-300 px-6 py-2 text-xs font-bold">বাতিল করুন</button>
+              </div>
+            )}
+            {stage === 'matched' && (
+              <div className="space-y-5">
+                <div className="flex items-center justify-between border-b pb-3">
+                  <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">২ মিনিটের মধ্যে পৌঁছাবে</span>
+                  <span className="text-xs font-bold text-gray-500">{vehicleInfo.name}</span>
+                </div>
+                <div className="flex items-center gap-4 rounded-2xl bg-emerald-50/60 p-4 border border-emerald-100">
+                  <div className="text-3xl">👨‍✈️</div>
+                  <div className="flex-1">
+                    <h4 className="font-extrabold text-gray-900">{driver.name} ★ 4.95</h4>
+                    <div className="text-xs text-emerald-800 font-medium">{driver.vehicle}</div>
+                  </div>
+                </div>
+                <div className="flex justify-between border p-3 rounded-xl text-xs">
+                  <span>নির্ধারিত মোট ভাড়া:</span>
+                  <strong className="text-emerald-800 font-extrabold">৳ {finalFare}</strong>
+                </div>
+                <button onClick={() => setStage('completed')} className="w-full rounded-xl bg-emerald-700 py-3 text-xs font-bold text-white shadow-lg">রাইড সম্পন্ন করুন (সিমুলেশন)</button>
+              </div>
+            )}
+            {stage === 'completed' && (
+              <div className="flex flex-col items-center py-4 text-center">
+                <div className="text-4xl mb-2">🎉</div>
+                <h3 className="text-xl font-extrabold text-gray-900">গন্তব্যে পৌঁছে গেছেন!</h3>
+                <p className="mt-1 text-xs text-gray-500">ভাড়া ৳ {finalFare} ওভাই পে দিয়ে পরিশোধ সম্পন্ন হয়েছে।</p>
+                <button onClick={onClose} className="mt-4 w-full rounded-xl bg-emerald-700 py-3 text-xs font-bold text-white">সম্পন্ন ও ৫ স্টার দিন ★</button>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    // --- CUSTOMER ACCOUNT MODAL ---
+    const CustomerAccountModal = ({ isOpen, onClose, initialTab }) => {
+      const { customer, topupWallet, coupons, applyCoupon, disputes, submitComplaint, adminPricing, showToast } = useApp();
+      const [activeTab, setActiveTab] = useState(initialTab || 'coupons');
+      const [topupInput, setTopupInput] = useState('500');
+      const [disputeCategory, setDisputeCategory] = useState('CNG Meter Disconnected');
+      const [disputeTripId, setDisputeTripId] = useState('OBHAI-CNG-8492');
+      const [disputeDetails, setDisputeDetails] = useState('');
+
+      if (!isOpen) return null;
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className="flex h-[85vh] max-h-[600px] w-full max-w-2xl flex-col rounded-3xl border border-emerald-100 bg-white shadow-2xl dark:border-neutral-800 dark:bg-neutral-900 overflow-hidden">
+            <div className="flex items-center justify-between border-b px-6 py-4 bg-emerald-50/50">
+              <h3 className="text-base font-extrabold text-gray-900">{customer.name}</h3>
+              <button onClick={onClose} className="rounded-full p-2 text-gray-400">✕</button>
+            </div>
+            <div className="flex border-b px-6">
+              <button onClick={() => setActiveTab('coupons')} className={`py-3 px-3 text-xs font-black border-b-2 ${activeTab === 'coupons' ? 'border-emerald-600 text-emerald-700' : 'border-transparent text-gray-500'}`}>কুপন ও প্রোমো ({coupons.length})</button>
+              <button onClick={() => setActiveTab('wallet')} className={`py-3 px-3 text-xs font-black border-b-2 ${activeTab === 'wallet' ? 'border-emerald-600 text-emerald-700' : 'border-transparent text-gray-500'}`}>ওয়ালেট (৳ {Math.round(customer.walletBalance)})</button>
+              <button onClick={() => setActiveTab('disputes')} className={`py-3 px-3 text-xs font-black border-b-2 ${activeTab === 'disputes' ? 'border-emerald-600 text-emerald-700' : 'border-transparent text-gray-500'}`}>অভিযোগ ({disputes.length})</button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              {activeTab === 'coupons' && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {coupons.map((c, i) => (
+                    <div key={i} className="border p-4 rounded-2xl bg-gray-50/60 flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between font-mono font-bold text-xs"><span className="bg-emerald-700 text-white px-2 py-0.5 rounded">{c.code}</span><span className="text-emerald-700">{c.discount}% OFF</span></div>
+                        <h5 className="mt-2 text-xs font-bold">{c.title}</h5>
+                        <p className="text-[10px] text-gray-500">সর্বোচ্চ সাশ্রয়: ৳ {c.maxCap}</p>
+                      </div>
+                      <button onClick={() => applyCoupon(c)} className="mt-3 w-full bg-emerald-700 text-white py-1.5 rounded-xl text-xs font-bold">কুপন যুক্ত করুন</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {activeTab === 'wallet' && (
+                <div className="space-y-4">
+                  <div className="rounded-3xl bg-emerald-800 p-6 text-white">
+                    <span className="text-xs font-bold text-emerald-200">ওভাই পে ব্যালেন্স</span>
+                    <div className="text-3xl font-black mt-2">৳ {customer.walletBalance.toFixed(2)}</div>
+                  </div>
+                  <div className="flex gap-2">
+                    {['200', '500', '1000'].map(val => (
+                      <button key={val} onClick={() => setTopupInput(val)} className="flex-1 border py-2 text-xs font-bold rounded-xl">৳ {val}</button>
+                    ))}
+                  </div>
+                  <button onClick={() => { topupWallet(parseFloat(topupInput)); showToast(`৳ ${topupInput} ওয়ালেটে যোগ হয়েছে!`); }} className="w-full bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-bold">ওয়ালেট রিচার্জ করুন</button>
+                </div>
+              )}
+              {activeTab === 'disputes' && (
+                <div className="space-y-4">
+                  <form onSubmit={(e) => { e.preventDefault(); if (disputeDetails) { submitComplaint(disputeCategory, disputeTripId, disputeDetails); setDisputeDetails(''); } }} className="border p-4 rounded-2xl space-y-3 bg-emerald-50/30">
+                    <h4 className="text-xs font-bold">নতুন অভিযোগ দাখিল করুন</h4>
+                    <textarea rows="2" value={disputeDetails} onChange={(e) => setDisputeDetails(e.target.value)} placeholder="কি সমস্যা হয়েছিল লিখুন..." className="w-full border rounded-xl p-2 text-xs" />
+                    <button type="submit" className="bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold">অভিযোগ দাখিল করুন</button>
+                  </form>
+                  {disputes.map(d => (
+                    <div key={d.id} className="border p-3 rounded-xl text-xs">
+                      <div className="flex justify-between font-bold"><span className="text-gray-500">{d.id}</span><span className="text-emerald-700">{d.status}</span></div>
+                      <p className="mt-1">{d.details}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // --- CUSTOMER PORTAL ---
+    const CustomerPortal = () => {
+      const { customer, adminPricing, removeCoupon, calculateFare, route, updateRoutePoints, showToast } = useApp();
+      const [selectedCar, setSelectedCar] = useState('cng');
+      const [isSimModalOpen, setIsSimModalOpen] = useState(false);
+      const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+      const [accountTab, setAccountTab] = useState('coupons');
+
+      const popularChips = [
+        { label: 'বিমানবন্দর (Airport)', id: 'airport' },
+        { label: 'ফার্মগেট (Farmgate)', id: 'farmgate' },
+        { label: 'ধানমন্ডি ২৭ (Dhanmondi)', id: 'dhanmondi27' },
+        { label: 'গুলশান ২ (Gulshan 2)', id: 'gulshan2' },
+        { label: 'উত্তরা ৩ (Uttara 3)', id: 'uttara3' },
+        { label: 'মিরপুর ১০ (Mirpur 10)', id: 'mirpur10' },
+        { label: 'মতিঝিল (Motijheel)', id: 'motijheel' },
+      ];
+
+      const selectedVehicleRate = VEHICLE_RATES[selectedCar] || VEHICLE_RATES.cng;
+      const fareDetails = calculateFare(selectedCar);
+
+      return (
+        <div className="flex flex-1 flex-col p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-gradient-to-r from-emerald-600/15 via-emerald-600/5 to-transparent border border-emerald-500/30 p-3.5 px-5 shadow-sm">
+            <div className="text-xs sm:text-sm font-bold text-gray-800 dark:text-neutral-200">
+              ওভাই মেগা অফার: <strong className="text-emerald-700">{adminPricing.storeDiscount}% ডিসকাউন্ট</strong> এবং <strong className="text-emerald-700">৳ {adminPricing.bkashCashback} বিকাশ ক্যাশব্যাক</strong>!
+            </div>
+            <button onClick={() => { setAccountTab('coupons'); setIsAccountModalOpen(true); }} className="text-xs font-black text-emerald-700 hover:underline">সব কুপন দেখুন ➔</button>
+          </div>
+
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
+            {Object.keys(VEHICLE_RATES).map((key) => {
+              const v = VEHICLE_RATES[key];
+              const isSelected = selectedCar === key;
+              const { finalFare } = calculateFare(key);
+              return (
+                <button
+                  key={key}
+                  onClick={() => setSelectedCar(key)}
+                  className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all text-center ${
+                    isSelected ? 'border-emerald-600 bg-emerald-50 shadow-md ring-2 ring-emerald-500/20' : 'border-gray-200 bg-white hover:border-emerald-300'
+                  }`}
+                >
+                  <span className="text-2xl mb-1">{v.icon}</span>
+                  <span className="text-[11px] font-extrabold text-gray-900 truncate w-full">{v.name.split('(')[0]}</span>
+                  <span className="text-[10px] font-black text-emerald-700">৳ {finalFare}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[640px] w-full">
+            <div className="lg:col-span-5 flex flex-col justify-between rounded-3xl border border-emerald-100 bg-white p-5 sm:p-6 shadow-md dark:border-neutral-800 dark:bg-neutral-900">
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-black text-emerald-800">লাইভ সার্চ ও ভাড়া</span>
+                    <span className="text-xs font-bold text-gray-400">ঢাকা মেট্রো রুট</span>
+                  </div>
+                  <h2 className="text-xl font-black text-gray-900 dark:text-white mt-1">কোথায় যেতে চান? লোকেশন সার্চ করুন</h2>
+                  <p className="text-xs text-gray-500">পিকআপ ও গন্তব্য লিখলেই রুট দূরত্ব ও সঠিক ভাড়া দেখা যাবে।</p>
+                </div>
+
+                <div className="space-y-2.5 relative">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 block mb-1">📍 পিকআপ লোকেশন</span>
+                    <LocationSearchInput placeholder="পিকআপ লোকেশন লিখুন..." selectedLocation={route.pickup} onSelectLocation={(loc) => updateRoutePoints(loc, route.dest)} isPickup={true} />
+                  </div>
+                  <div className="relative flex items-center justify-center my-1">
+                    <div className="w-full border-t border-emerald-100" />
+                    <button onClick={() => updateRoutePoints(route.dest, route.pickup)} className="absolute bg-white border border-emerald-200 rounded-full p-1.5 text-emerald-700 shadow-sm">🔄</button>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 block mb-1">🏁 গন্তব্য লোকেশন</span>
+                    <LocationSearchInput placeholder="গন্তব্য লোকেশন লিখুন..." selectedLocation={route.dest} onSelectLocation={(loc) => updateRoutePoints(route.pickup, loc)} isPickup={false} referenceLocation={route.pickup} />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 pt-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">জনপ্রিয় গন্তব্যসমূহ:</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {popularChips.map((chip) => (
+                      <button key={chip.id} onClick={() => { const loc = DHAKA_LOCATIONS.find(l => l.id === chip.id); if (loc) updateRoutePoints(route.pickup, loc); }} className={`rounded-full border px-3 py-1 text-[11px] font-semibold ${route.dest.id === chip.id ? 'border-emerald-700 bg-emerald-700 text-white font-bold' : 'border-emerald-100 bg-emerald-50/50 text-emerald-900'}`}>
+                        {chip.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-2xl bg-gradient-to-br from-emerald-900 via-emerald-950 to-neutral-900 p-3.5 text-white shadow-md border border-emerald-700/50">
+                  <div className="flex items-center justify-between text-xs font-bold text-emerald-300">
+                    <span>📟 ডিজিটাল সিএনজি মিটার সিমুলেটর</span>
+                    <span className="text-[9px] bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-400/30">বিআরটিএ অনুমোদিত রেট</span>
+                  </div>
+                  <div className="mt-2.5 grid grid-cols-3 gap-2 rounded-xl bg-black/40 p-2 text-center text-xs font-mono">
+                    <div><span className="text-[9px] text-gray-400 block">বেস ফেয়ার</span><strong className="text-amber-300">৳ {selectedVehicleRate.base}</strong></div>
+                    <div className="border-x border-white/10"><span className="text-[9px] text-gray-400 block">দূরত্ব ({route.distanceKm} km)</span><strong className="text-emerald-300">৳ {Math.round(route.distanceKm * selectedVehicleRate.perKm)}</strong></div>
+                    <div><span className="text-[9px] text-gray-400 block">মোট প্রাক্কলন</span><strong className="text-white font-bold">৳ {fareDetails.finalFare}</strong></div>
+                  </div>
+                </div>
+
+                <div className="space-y-2 pt-1 max-h-44 overflow-y-auto pr-1">
+                  {Object.keys(VEHICLE_RATES).map((key) => {
+                    const v = VEHICLE_RATES[key];
+                    const { originalFare, finalFare: fare, ratePerKm } = calculateFare(key);
+                    return (
+                      <div key={key} onClick={() => setSelectedCar(key)} className={`flex cursor-pointer items-center justify-between rounded-2xl border-2 p-2.5 ${selectedCar === key ? 'border-emerald-600 bg-emerald-50/80' : 'border-transparent bg-gray-50/70'}`}>
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">{v.icon}</span>
+                          <div>
+                            <h4 className="text-xs font-extrabold">{v.name}</h4>
+                            <p className="text-[10px] text-emerald-700 font-bold">{v.eta} • ৳ {ratePerKm}/কিমি</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          {originalFare > fare && <span className="block text-[10px] text-gray-400 line-through">৳ {originalFare}</span>}
+                          <strong className="text-sm font-black text-emerald-800">৳ {fare}</strong>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="mt-4 border-t border-emerald-100 pt-4 space-y-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-gray-600">ওভাই পে ওয়ালেট: <strong>৳ {Math.round(customer.walletBalance)}</strong></span>
+                  <button onClick={() => { setAccountTab('coupons'); setIsAccountModalOpen(true); }} className="font-bold text-emerald-700 hover:underline">🎟️ প্রোমো কোড</button>
+                </div>
+                <button onClick={() => setIsSimModalOpen(true)} className="flex w-full items-center justify-between rounded-2xl bg-emerald-700 py-3.5 px-6 text-sm font-extrabold text-white shadow-xl hover:bg-emerald-800">
+                  <span>{selectedVehicleRate?.name.split('(')[0]} রিকোয়েস্ট করুন ({route.distanceKm} কিমি)</span>
+                  <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-black">৳ {fareDetails.finalFare}</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="lg:col-span-7 h-full">
+              <LiveMap isSimulating={isSimModalOpen} />
+            </div>
+          </div>
+
+          <RideSimulationModal isOpen={isSimModalOpen} onClose={() => setIsSimModalOpen(false)} selectedVehicle={selectedCar} />
+          <CustomerAccountModal isOpen={isAccountModalOpen} onClose={() => setIsAccountModalOpen(false)} initialTab={accountTab} />
+        </div>
+      );
+    };
+
+    // --- DRIVER PORTAL ---
+    const DriverPortal = () => {
+      const { driver, toggleDriverOnline, acceptDriverTrip, route } = useApp();
+      return (
+        <div className="flex flex-1 flex-col p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-emerald-100 bg-white p-6 shadow-sm">
+            <div className="flex items-center gap-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-700 text-2xl text-white">👨‍✈️</div>
+              <div>
+                <h2 className="text-xl font-black">{driver.name} ★ 4.95</h2>
+                <p className="text-xs text-emerald-800 font-bold">{driver.vehicle}</p>
+              </div>
+            </div>
+            <button onClick={toggleDriverOnline} className={`rounded-2xl px-6 py-3 text-xs font-black text-white ${driver.isOnline ? 'bg-neutral-800' : 'bg-emerald-600'}`}>
+              {driver.isOnline ? 'অফলাইনে যান' : 'অনলাইন চালু করুন'}
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+            <div className="rounded-3xl border border-emerald-100 bg-white p-6 shadow-md">
+              <h3 className="text-base font-extrabold border-b pb-4">লাইভ রাইড রাডার</h3>
+              {driver.isOnline ? (
+                <div className="mt-5 border-2 border-emerald-500 bg-emerald-50/50 p-5 rounded-2xl">
+                  <div className="flex justify-between items-center">
+                    <div><h4 className="text-sm font-black">নাজমুস সাকিব (Nazmus Sakib)</h4><span className="text-xs text-emerald-800">★ ৪.৯০ • ওভাই পে</span></div>
+                    <strong className="text-xl font-black text-emerald-700">৳ ১৯৪.০০</strong>
+                  </div>
+                  <div className="mt-4 bg-white p-3 rounded-xl text-xs font-semibold space-y-1">
+                    <div>📍 পিকআপ: {route.pickup.name.split('(')[0]}</div>
+                    <div>🏁 গন্তব্য: {route.dest.name.split('(')[0]}</div>
+                  </div>
+                  <button onClick={() => acceptDriverTrip(194.00)} className="mt-4 w-full bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-bold">ট্রিপ গ্রহণ করুন (৳ ১৯৪)</button>
+                </div>
+              ) : (
+                <div className="py-12 text-center text-gray-400 text-xs">আপনি অফলাইনে আছেন</div>
+              )}
+            </div>
+            <div className="space-y-6">
+              <div className="rounded-3xl bg-emerald-800 p-6 text-white">
+                <span className="text-xs font-bold text-emerald-200">আজকের মোট আয়</span>
+                <div className="text-4xl font-black mt-1">৳ {driver.todayEarnings.toFixed(2)}</div>
+                <div className="mt-3 text-xs text-emerald-100">{driver.tripsCompleted} টি ট্রিপ সম্পন্ন</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // --- ADMIN PORTAL ---
+    const AdminPortal = () => {
+      const { adminPricing, updateAdminPricing, coupons, addCoupon, deleteCoupon, disputes, resolveDispute, showToast } = useApp();
+      const [formData, setFormData] = useState({
+        storeDiscount: adminPricing.storeDiscount,
+        couponCode: adminPricing.couponCode,
+        bkashCashback: adminPricing.bkashCashback,
+        shippingCost: adminPricing.shippingCost,
+        salePrice: adminPricing.salePrice,
+      });
+      const [newCode, setNewCode] = useState('');
+      const [newDiscount, setNewDiscount] = useState('');
+
+      const handlePricingChange = (field, val) => {
+        const parsedVal = field === 'couponCode' ? val.toUpperCase() : (parseFloat(val) || 0);
+        const updated = { ...formData, [field]: parsedVal };
+        setFormData(updated);
+        updateAdminPricing(updated);
+      };
+
+      return (
+        <div className="flex flex-1 flex-col p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="p-4 rounded-2xl border bg-white"><span className="text-[11px] font-bold text-gray-400 uppercase">মোট বুকিং</span><div className="text-lg font-black">৳ ১,৬৪,৩৫০</div></div>
+            <div className="p-4 rounded-2xl border bg-white"><span className="text-[11px] font-bold text-gray-400 uppercase">সক্রিয় ওভাই বহর</span><div className="text-lg font-black">৪১৮ টি গাড়ি অনলাইন</div></div>
+            <div className="p-4 rounded-2xl border bg-white"><span className="text-[11px] font-bold text-gray-400 uppercase">মেগা অফার</span><div className="text-sm font-black">{adminPricing.couponCode} ({adminPricing.storeDiscount}% OFF)</div></div>
+            <div className="p-4 rounded-2xl border bg-white"><span className="text-[11px] font-bold text-gray-400 uppercase">বিরোধ ও রিফান্ড</span><div className="text-lg font-black text-amber-600">{disputes.filter(d => d.status === 'PENDING').length} টি অমীমাংসিত</div></div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div className="lg:col-span-4 rounded-3xl border-2 border-emerald-600 bg-white p-6 shadow-xl space-y-3">
+              <h2 className="text-lg font-black text-emerald-800">Your Pricing Inputs (Company Control Panel)</h2>
+              <div>
+                <label className="text-xs font-bold block">Store Discount (%)</label>
+                <input type="number" value={formData.storeDiscount} onChange={(e) => handlePricingChange('storeDiscount', e.target.value)} className="w-full border rounded-xl p-2 text-xs font-bold" />
+              </div>
+              <div>
+                <label className="text-xs font-bold block">Coupon Code</label>
+                <input type="text" value={formData.couponCode} onChange={(e) => handlePricingChange('couponCode', e.target.value)} className="w-full border rounded-xl p-2 text-xs font-bold uppercase" />
+              </div>
+              <div>
+                <label className="text-xs font-bold block">bKash Cashback (৳)</label>
+                <input type="number" value={formData.bkashCashback} onChange={(e) => handlePricingChange('bkashCashback', e.target.value)} className="w-full border rounded-xl p-2 text-xs font-bold" />
+              </div>
+              <button onClick={() => { updateAdminPricing(formData); showToast('✅ প্রাইসিং পরিবর্তন সফলভাবে সচল হয়েছে!'); }} className="w-full bg-emerald-700 text-white py-3 rounded-xl text-xs font-bold">🔄 Apply Changes</button>
+            </div>
+
+            <div className="lg:col-span-4 rounded-3xl border bg-white p-6 shadow-md space-y-4">
+              <h3 className="text-base font-extrabold">🎟️ কুপন ও প্রোমো ম্যানেজার</h3>
+              <div className="flex gap-2">
+                <input type="text" value={newCode} onChange={(e) => setNewCode(e.target.value)} placeholder="কুপন" className="w-1/2 border rounded-lg p-2 text-xs uppercase" />
+                <input type="number" value={newDiscount} onChange={(e) => setNewDiscount(e.target.value)} placeholder="ছাড় %" className="w-1/4 border rounded-lg p-2 text-xs" />
+                <button onClick={() => { if (newCode && newDiscount) { addCoupon(newCode, newDiscount, 150); setNewCode(''); setNewDiscount(''); } }} className="w-1/4 bg-emerald-700 text-white rounded-lg text-xs font-bold">+ পাবলিশ</button>
+              </div>
+              <div className="space-y-2">
+                {coupons.map((c, idx) => (
+                  <div key={idx} className="flex justify-between border p-2 rounded-xl text-xs items-center">
+                    <span className="font-mono font-bold">{c.code} ({c.discount}%)</span>
+                    <button onClick={() => deleteCoupon(idx)} className="text-red-500 font-bold">মুছুন</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="lg:col-span-4 rounded-3xl border bg-white p-6 shadow-md space-y-3">
+              <h3 className="text-base font-extrabold">🎧 কাস্টমার বিরোধ ও রিফান্ড</h3>
+              {disputes.map(d => (
+                <div key={d.id} className="border p-3 rounded-2xl text-xs space-y-2 bg-gray-50/70">
+                  <div className="flex justify-between font-bold"><span>{d.userName}</span><span className="text-amber-600">{d.status}</span></div>
+                  <p className="italic">"{d.details}"</p>
+                  {d.status === 'PENDING' && (
+                    <button onClick={() => resolveDispute(d.id, d.refundAmount)} className="w-full bg-emerald-700 text-white py-2 rounded-xl text-xs font-bold">সমাধান ও ৳ {d.refundAmount} রিফান্ড দিন</button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // --- AUTH GATE ---
+    const AuthGate = () => {
+      const { selectedAuthRole, setSelectedAuthRole, enterPortal, theme, toggleTheme } = useApp();
+      return (
+        <div className="relative flex min-h-screen w-full items-center justify-center bg-gradient-to-b from-emerald-50 to-gray-100 p-4">
+          <div className="w-full max-w-lg space-y-6">
+            <div className="text-center">
+              <div className="inline-flex items-center gap-2 mb-2">
+                <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-700 text-white font-black text-xl">ও</span>
+                <h1 className="text-3xl font-black text-emerald-950">OBHAI <span className="text-emerald-700">ওভাই</span></h1>
+              </div>
+              <p className="text-xs font-bold text-gray-600">ডিজিটাল সিএনজি মিটার, বাইক, প্রাইম কার ও জরুরি সেবা • ঢাকা</p>
+            </div>
+            <div className="rounded-3xl border border-emerald-100 bg-white p-6 shadow-xl sm:p-8 space-y-4">
+              <h2 className="text-lg font-extrabold text-gray-900">আপনার পোর্টাল নির্বাচন করুন</h2>
+              <div className="space-y-3">
+                <div onClick={() => setSelectedAuthRole('customer')} className={`flex cursor-pointer items-center justify-between rounded-2xl border-2 p-3.5 ${selectedAuthRole === 'customer' ? 'border-emerald-600 bg-emerald-50/70' : 'border-gray-200'}`}>
+                  <div className="flex items-center gap-3"><span className="text-2xl">👤</span><div><h3 className="text-sm font-extrabold">ওভাই যাত্রী (Passenger)</h3><p className="text-xs text-gray-500">সিএনজি ও কার বুকিং, প্রোমো কোড ও ওয়ালেট</p></div></div>
+                </div>
+                <div onClick={() => setSelectedAuthRole('driver')} className={`flex cursor-pointer items-center justify-between rounded-2xl border-2 p-3.5 ${selectedAuthRole === 'driver' ? 'border-emerald-600 bg-emerald-50/70' : 'border-gray-200'}`}>
+                  <div className="flex items-center gap-3"><span className="text-2xl">👨‍✈️</span><div><h3 className="text-sm font-extrabold">ওভাই ক্যাপ্টেন / চালক</h3><p className="text-xs text-gray-500">ট্রিপ গ্রহণ, ডিজিটাল মিটার ও ইনকাম</p></div></div>
+                </div>
+                <div onClick={() => setSelectedAuthRole('admin')} className={`flex cursor-pointer items-center justify-between rounded-2xl border-2 p-3.5 ${selectedAuthRole === 'admin' ? 'border-emerald-600 bg-emerald-50/70' : 'border-gray-200'}`}>
+                  <div className="flex items-center gap-3"><span className="text-2xl">🛡️</span><div><h3 className="text-sm font-extrabold">ওভাই হেডকোয়ার্টার অ্যাডমিন</h3><p className="text-xs text-gray-500">প্রাইসিং কন্ট্রোল ও রিফান্ড ম্যানেজমেন্ট</p></div></div>
+                </div>
+              </div>
+              <button onClick={() => enterPortal(selectedAuthRole)} className="w-full bg-emerald-700 text-white py-3.5 rounded-xl font-bold shadow-lg">প্রবেশ করুন ➔</button>
+              <div className="border-t pt-3 flex gap-2 justify-center">
+                <button onClick={() => enterPortal('customer')} className="border px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800">🧑‍💼 যাত্রী</button>
+                <button onClick={() => enterPortal('driver')} className="border px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800">👨‍✈️ ক্যাপ্টেন</button>
+                <button onClick={() => enterPortal('admin')} className="border px-3 py-1 rounded-full text-xs font-bold bg-gray-100">🛡️ অ্যাডমিন</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // --- MAIN APP ---
+    const App = () => {
+      const { currentScreen, theme, toggleTheme, logOutToGate, customer, driver, toasts } = useApp();
+      return (
+        <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900 dark:bg-neutral-950 dark:text-neutral-100">
+          {currentScreen === 'auth' ? <AuthGate /> : (
+            <>
+              <header className="sticky top-0 z-40 w-full border-b border-emerald-100 bg-white px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-sm">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-700 text-white font-black">ও</span>
+                  <span className="text-xl font-black text-emerald-950">OBHAI ওভাই</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button onClick={toggleTheme} className="border p-2 rounded-full text-xs">{theme === 'light' ? '🌙' : '☀️'}</button>
+                  <button onClick={logOutToGate} className="border border-red-200 bg-red-50 text-red-600 px-3 py-1.5 rounded-full text-xs font-bold">লগ আউট</button>
+                </div>
+              </header>
+              <main className="flex flex-1 flex-col">
+                {currentScreen === 'customer' && <CustomerPortal />}
+                {currentScreen === 'driver' && <DriverPortal />}
+                {currentScreen === 'admin' && <AdminPortal />}
+              </main>
+            </>
+          )}
+          {toasts.length > 0 && (
+            <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2">
+              {toasts.map(t => (
+                <div key={t.id} className="bg-emerald-950 text-white px-4 py-3 rounded-2xl text-xs font-bold shadow-xl border border-emerald-700">
+                  {t.message}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(
+      <AppProvider>
+        <App />
+      </AppProvider>
+    );
+  </script>
+</body>
+</html>
