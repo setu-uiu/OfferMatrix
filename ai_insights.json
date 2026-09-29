@@ -1,0 +1,140 @@
+[
+  {
+    "as_of_date": "2026-09-24",
+    "current_value": 510.0,
+    "forecast_7_day": [
+      {
+        "day": 1,
+        "date": "2026-09-25",
+        "predicted_value": 410.4,
+        "pct_change_from_today": -19.54,
+        "direction": "PRICE_DECREASE"
+      },
+      {
+        "day": 2,
+        "date": "2026-09-26",
+        "predicted_value": 410.3,
+        "pct_change_from_today": -19.55,
+        "direction": "PRICE_DECREASE"
+      },
+      {
+        "day": 3,
+        "date": "2026-09-27",
+        "predicted_value": 504.0,
+        "pct_change_from_today": -1.18,
+        "direction": "STABLE"
+      },
+      {
+        "day": 4,
+        "date": "2026-09-28",
+        "predicted_value": 506.7,
+        "pct_change_from_today": -0.64,
+        "direction": "STABLE"
+      },
+      {
+        "day": 5,
+        "date": "2026-09-29",
+        "predicted_value": 508.0,
+        "pct_change_from_today": -0.39,
+        "direction": "STABLE"
+      },
+      {
+        "day": 6,
+        "date": "2026-09-30",
+        "predicted_value": 508.5,
+        "pct_change_from_today": -0.29,
+        "direction": "STABLE"
+      },
+      {
+        "day": 7,
+        "date": "2026-10-01",
+        "predicted_value": 511.4,
+        "pct_change_from_today": 0.27,
+        "direction": "STABLE"
+      }
+    ],
+    "week_end_pct_change": 0.27,
+    "nearest_festival": {
+      "name": "11.11_2026",
+      "date": "2026-11-11",
+      "type": "mega_campaign",
+      "days_until": 48
+    },
+    "festival_within_forecast_window": false,
+    "category": "rideshare",
+    "item": "Pathao Moto \u2014 Dhanmondi 27 to Banani",
+    "currency": "BDT",
+    "model_version": "rf-weekly-v1",
+    "training_window_days": 365,
+    "trained_through": "2026-09-24"
+  },
+  {
+    "as_of_date": "2026-09-24",
+    "current_value": 1237.0,
+    "forecast_7_day": [
+      {
+        "day": 1,
+        "date": "2026-09-25",
+        "predicted_value": 1259.1,
+        "pct_change_from_today": 1.78,
+        "direction": "STABLE"
+      },
+      {
+        "day": 2,
+        "date": "2026-09-26",
+        "predicted_value": 1260.7,
+        "pct_change_from_today": 1.92,
+        "direction": "STABLE"
+      },
+      {
+        "day": 3,
+        "date": "2026-09-27",
+        "predicted_value": 1255.2,
+        "pct_change_from_today": 1.47,
+        "direction": "STABLE"
+      },
+      {
+        "day": 4,
+        "date": "2026-09-28",
+        "predicted_value": 1268.1,
+        "pct_change_from_today": 2.51,
+        "direction": "STABLE"
+      },
+      {
+        "day": 5,
+        "date": "2026-09-29",
+        "predicted_value": 1268.2,
+        "pct_change_from_today": 2.52,
+        "direction": "STABLE"
+      },
+      {
+        "day": 6,
+        "date": "2026-09-30",
+        "predicted_value": 1272.7,
+        "pct_change_from_today": 2.89,
+        "direction": "STABLE"
+      },
+      {
+        "day": 7,
+        "date": "2026-10-01",
+        "predicted_value": 1262.0,
+        "pct_change_from_today": 2.02,
+        "direction": "STABLE"
+      }
+    ],
+    "week_end_pct_change": 2.02,
+    "nearest_festival": {
+      "name": "11.11_2026",
+      "date": "2026-11-11",
+      "type": "mega_campaign",
+      "days_until": 48
+    },
+    "festival_within_forecast_window": false,
+    "category": "cosmetics",
+    "item": "Maybelline Lash Sensational Mascara",
+    "currency": "BDT",
+    "model_version": "rf-weekly-v1",
+    "training_window_days": 365,
+    "trained_through": "2026-09-24"
+  }
+]
